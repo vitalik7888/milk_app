@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/img">
+        <file alias="refresh.png">res/img/refresh.png</file>
+        <file alias="setup.png">res/img/setup.png</file>
+        <file alias="info.png">res/img/info.png</file>
+        <file alias="search.png">res/img/search.png</file>
+    </qresource>
+    <qresource prefix="/img/db">
+        <file alias="db_open.png">res/img/db/db_open.png</file>
+        <file alias="db_create.png">res/img/db/db_create.png</file>
+        <file alias="db_clone.png">res/img/db/db_clone.png</file>
+        <file alias="db_remove.png">res/img/db/db_remove.png</file>
+    </qresource>
+    <qresource prefix="/img/user">
+        <file alias="user_add.png">res/img/user/user_add.png</file>
+        <file alias="user_edit.png">res/img/user/user_change.png</file>
+        <file alias="user_remove.png">res/img/user/user_remove.png</file>
+    </qresource>
+    <qresource prefix="/img/locality">
+        <file alias="locality_add.png">res/img/locality/locality_add.png</file>
+        <file alias="locality_edit.png">res/img/locality/locality_edit.png</file>
+        <file alias="locality_remove.png">res/img/locality/locality_remove.png</file>
+    </qresource>
+    <qresource prefix="/img/milk_point">
+        <file alias="milk_point_add.png">res/img/milk_point/milk_point_add.png</file>
+        <file alias="milk_point_edit.png">res/img/milk_point/milk_point_edit.png</file>
+        <file alias="milk_point_remove.png">res/img/milk_point/milk_point_remove.png</file>
+    </qresource>
+    <qresource prefix="/db">
+        <file alias="milk.mdb">res/milk.mdb</file>
+    </qresource>
+</RCC>

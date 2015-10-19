@@ -1,0 +1,108 @@
+#include "DelivererAddDialog.h"
+#include "ui_DelivererAddDialog.h"
+
+#include "DeliverersTable.h"
+// qt
+#include <QMessageBox>
+
+
+DelivererAddDialog::DelivererAddDialog(DeliverersTable *deliverers, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::DelivererAddDialog),
+    m_deliverers(deliverers)
+{
+    ui->setupUi(this);
+
+    ui->comboBoxLocality->setModel(m_deliverers);
+    ui->comboBoxLocality->setModelColumn((int)DeliverersTable::Columns::name);
+}
+
+DelivererAddDialog::~DelivererAddDialog()
+{
+    delete ui;
+}
+
+void DelivererAddDialog::accept()
+{
+    bool isOk = false;
+
+    if (m_currentId < 0)
+        isOk = insertMilkPoint();
+    else {
+		isOk = updateMilkPoint();
+        if (!isOk) 
+            QMessageBox::warning(this, tr("Обновление сдатчика"),
+                             tr("Ошибка обновления сдатчика"));
+    }
+        if (isOk) {
+            clear();
+            QDialog::accept();
+        }
+     
+}
+
+QString DelivererAddDialog::getName() const
+{
+    return ui->lineEditName->text();
+}
+
+qint32 DelivererAddDialog::getLocalityId() const
+{
+    return ui->comboBoxLocality->currentData().toInt();
+}
+
+qint32 DelivererAddDialog::getInn() const
+{
+    return ui->spinBoxInn->value();
+}
+
+QString DelivererAddDialog::getAddress() const
+{
+    return ui->textEditAddress->toPlainText();
+}
+
+qint32 DelivererAddDialog::getPhoneNumber() const
+{
+    return ui->spinBoxPhoneNumber->value();
+}
+
+void DelivererAddDialog::changeDeliverer(const qint32 delivererId)
+{
+    m_currentId = delivererId;
+}
+
+bool DelivererAddDialog::insertDeliverer()
+{
+     QString name = getName();
+    if (name.isEmpty())
+    {
+        QMessageBox::information(this, tr("Добавить сдатчика"),
+                                 tr("Фио сдатчика обязательно для заполнения"));
+        return false;
+    }
+    DeliverersTable::Deliverer deliverer(name,
+                                  getLocalityId(),
+                                    getInn(),
+                                    getAddress(),
+                                    getPhoneNumber());
+    return m_deliverers->insert(deliverer);
+}
+
+bool DelivererAddDialog::updateDeliverer()
+{
+     if (m_deliverers->update(DeliverersTable::Deliverer(getName(), getLocalityId(), getInn(), 
+                                                         getAddress(), getPhoneNumber(), m_currentId))) {
+        m_currentId = -1;
+        return true;
+    }
+
+     return false;
+}
+
+void DelivererAddDialog::clear()
+{
+    ui->lineEditName->clear();
+    ui->spinBoxInn->setValue(0);
+    ui->textEditAddress->clear();
+    ui->spinBoxPhoneNumber->setValue(0);
+}
