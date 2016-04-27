@@ -2,6 +2,7 @@
 #define MILKPOINTADDDIALOG_H
 
 #include <QDialog>
+
 #include "tables/milk_points/MilkPointsTable.h"
 
 namespace Ui {

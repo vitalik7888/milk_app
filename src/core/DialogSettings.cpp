@@ -153,6 +153,7 @@ void DialogSettings::readMainSettingsToUi()
     ui->lineEditFirmName->setText(m_settings->getFirmName());
     ui->lineEditMilkInspector->setText(m_settings->getMilkInspector());
     ui->lineEditMilkInspector_2->setText(m_settings->getMilkInspector_2());
+    ui->checkBoxTablesFetchOnRefresh->setChecked(m_settings->getIsFetchTablesOnRefresh());
 }
 
 void DialogSettings::readCalcSettingsToUi()
@@ -208,6 +209,7 @@ void DialogSettings::readMainSettingsFromUi()
     m_settings->setFirmName(ui->lineEditFirmName->text());
     m_settings->setMilkInspector(ui->lineEditMilkInspector->text());
     m_settings->setMilkInspector_2(ui->lineEditMilkInspector_2->text());
+    m_settings->setIsFetchTablesOnRefresh(ui->checkBoxTablesFetchOnRefresh->isChecked());
 }
 
 void DialogSettings::readCalcSettingsFromUi()
@@ -403,4 +405,5 @@ int DialogSettings::exec()
 void DialogSettings::setDefaultMain()
 {
     m_settings->setDefaultMainSettings();
+    readMainSettingsToUi();
 }

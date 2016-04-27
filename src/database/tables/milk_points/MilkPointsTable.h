@@ -12,7 +12,6 @@ class MilkPointsTable: public Table
     Q_OBJECT
 public:
     MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db);
-    ~MilkPointsTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;

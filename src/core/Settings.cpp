@@ -8,6 +8,7 @@
 
 
 static const char *GROUP_MAIN = "main";
+static const char *FETCH_MORE = "fetchMore";
 static const char *PRICE = "price";
 static const char *LAST_CHOOSEN_DB = "lastChoosenDb";
 static const char *FIRM_NAME = "firmName";
@@ -50,7 +51,8 @@ static const char *C_ALL_RES_COLOR = "allResColor";
 
 Settings::Settings():
     m_settings(new QSettings(Constants::organization(), Constants::appName())),
-    m_priceLiter(.0f)
+    m_priceLiter(.0f),
+    isFetchTablesOnRefresh(false)
 {
 }
 
@@ -68,6 +70,7 @@ void Settings::writeMainSettings()
     m_settings->setValue(FIRM_NAME, firmName);
     m_settings->setValue(MILK_INSPECTOR, milkInspector);
     m_settings->setValue(MILK_INSPECTOR_2, milkInspector_2);
+    m_settings->setValue(FETCH_MORE, isFetchTablesOnRefresh);
 
     m_settings->endGroup();
 }
@@ -140,6 +143,7 @@ void Settings::readMainSettings()
     firmName = m_settings->value(FIRM_NAME, QString()).toString();
     milkInspector = m_settings->value(MILK_INSPECTOR, QString()).toString();
     milkInspector_2 = m_settings->value(MILK_INSPECTOR_2, QString()).toString();
+    isFetchTablesOnRefresh = m_settings->value(FETCH_MORE, false).toBool();
 
     m_settings->endGroup();
 }
@@ -224,6 +228,7 @@ void Settings::setDefaultMainSettings()
     firmName = QString();
     milkInspector = QString();
     milkInspector_2 = QString();
+    isFetchTablesOnRefresh = false;
 }
 
 float Settings::priceLiter() const
@@ -294,6 +299,16 @@ QString Settings::getMilkInspector_2() const
 void Settings::setMilkInspector_2(const QString &value)
 {
     milkInspector_2 = value;
+}
+
+bool Settings::getIsFetchTablesOnRefresh() const
+{
+    return isFetchTablesOnRefresh;
+}
+
+void Settings::setIsFetchTablesOnRefresh(bool value)
+{
+    isFetchTablesOnRefresh = value;
 }
 
 void Settings::setDefaultPrintSettings()

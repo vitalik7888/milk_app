@@ -12,7 +12,6 @@ class DeliverersTable : public Table
     Q_OBJECT
 public:
     DeliverersTable(LocalitiesTable *parent, QSqlDatabase db);
-    ~DeliverersTable();
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 

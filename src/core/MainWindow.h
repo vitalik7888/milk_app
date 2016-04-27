@@ -43,6 +43,8 @@ public slots:
     void removeMilkPoint();
     void updateMilkPoint();
 
+    void showUpdatePriceDialog() const;
+
     void showSettings();
 
     void chooseMainLocality();

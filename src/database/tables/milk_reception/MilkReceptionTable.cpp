@@ -19,8 +19,6 @@ static const char *FN_DELIVERY_DATE = "delivery_date";
 static const char *FN_PRICE_LITER = "price_liter";
 static const char *FN_LITERS = "liters";
 static const char *FN_FAT = "fat";
-//static const char *FN_ = "";
-//static const char *FN_ = "";
 
 
 MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsTable *milkPoints,
@@ -34,11 +32,6 @@ MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsT
 
     initColumns();
     setQuery(selectAll());
-}
-
-MilkReceptionTable::~MilkReceptionTable()
-{
-    qDebug() << "delete " + objectName();
 }
 
 QString MilkReceptionTable::tableName() const
@@ -190,6 +183,24 @@ bool MilkReceptionTable::setLiters(const qlonglong milkReceptionId, const float 
 bool MilkReceptionTable::setFat(const qlonglong milkReceptionId, const float fat) const
 {
     return updateValue(getColumnPosition(FN_FAT), milkReceptionId, fat);
+}
+
+bool MilkReceptionTable::updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const
+{
+    QSqlQuery query;
+    query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 BETWEEN ? AND ?")
+                  .arg(tableName())
+                  .arg(getColumnById(getColumnPosition(FN_PRICE_LITER)).name())
+                  .arg(getColumnById(getColumnPosition(FN_DELIVERY_DATE)).name()));
+    query.addBindValue(price);
+    query.addBindValue(dateFrom.toString(Constants::defaultDateFormat()));
+    query.addBindValue(dateTo.toString(Constants::defaultDateFormat()));
+
+    if (!query.exec()) {
+        emit error(query.lastError().text());
+        return false;
+    }
+    return true;
 }
 
 QSqlField MilkReceptionTable::primaryField() const

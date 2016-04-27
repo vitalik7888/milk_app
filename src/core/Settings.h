@@ -105,6 +105,9 @@ public:
     QString getMilkInspector_2() const;
     void setMilkInspector_2(const QString &value);
 
+    bool getIsFetchTablesOnRefresh() const;
+    void setIsFetchTablesOnRefresh(bool value);
+
 private:
     QSettings *m_settings;
 
@@ -113,6 +116,7 @@ private:
     QString firmName;
     QString milkInspector;
     QString milkInspector_2;
+    bool isFetchTablesOnRefresh;
 
     Print m_print;
     Calc m_calc;

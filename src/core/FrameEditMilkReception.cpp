@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QDebug>
 
+using utm = Utils::Main;
+
 FrameEditMilkReception::FrameEditMilkReception(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::FrameEditMilkReception),
@@ -88,7 +90,7 @@ void FrameEditMilkReception::chooseDeliverer()
     if (ui->groupBoxFilterDeliverers->isChecked()) {
         const auto delivIdCol = deliverers->getColumnPosition(deliverers->getNameColumnId());
 
-        const auto id = Utils::Main::getCurValueFromComboBoxModel(
+    const auto id = utm::getCurValueFromComboBoxModel(
                     ui->comboBoxFilterDeliverers, delivIdCol).toLongLong();
         m_proxy->setFilterDelivererId(id);
     } else
@@ -99,7 +101,7 @@ void FrameEditMilkReception::chooseMilkPoint()
 {
     if (ui->groupBoxFilterMilkPoints->isChecked()) {
         const auto milkPointsIdCol = milkPoints->getColumnPosition(milkPoints->getNameColumnId());
-        m_proxy->setFilterMilkPointId(Utils::Main::getCurValueFromComboBoxModel(
+        m_proxy->setFilterMilkPointId(utm::getCurValueFromComboBoxModel(
                                           ui->comboBoxFilterMilkPoints, milkPointsIdCol).toLongLong());
     } else
         m_proxy->setFilterMilkPointId(-1);
@@ -110,13 +112,10 @@ void FrameEditMilkReception::chooseDates()
     if (ui->dateEditFilterEnd->date() <= ui->dateEditFilterStart->date())
         ui->dateEditFilterEnd->setDate(ui->dateEditFilterStart->date());
 
-    if (ui->groupBoxFilterDate->isChecked()) {
-        m_proxy->setFilterMinimumDate(ui->dateEditFilterStart->date());
-        m_proxy->setFilterMaximumDate(ui->dateEditFilterEnd->date());
-    } else {
-        m_proxy->setFilterMinimumDate(QDate());
-        m_proxy->setFilterMaximumDate(QDate());
-    }
+    if (ui->groupBoxFilterDate->isChecked())
+        m_proxy->setDatesBetween(ui->dateEditFilterStart->date(), ui->dateEditFilterEnd->date());
+    else
+        m_proxy->setDatesBetween(QDate(), QDate());
 }
 
 void FrameEditMilkReception::removeChoosenItems()
@@ -132,7 +131,7 @@ void FrameEditMilkReception::removeChoosenItems()
 
     const auto rowsCount = selectedRows.size();
 
-    if (Utils::Main::yesNoWarnMsgBox(this, tr("Для удаления выбраны(а) %1 строк(а). Желаете продолжить?").arg(rowsCount)))
+    if (utm::yesNoWarnMsgBox(this, tr("Для удаления выбраны(а) %1 строк(а). Желаете продолжить?").arg(rowsCount)))
     {
         for(const auto &index: selectedRows)
         {

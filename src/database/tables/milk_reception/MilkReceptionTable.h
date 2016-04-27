@@ -14,7 +14,6 @@ class MilkReceptionTable : public Table
     Q_OBJECT
 public:
     MilkReceptionTable(DeliverersTable *deliverers, MilkPointsTable *milkPoints, QSqlDatabase db);
-    ~MilkReceptionTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
@@ -50,8 +49,9 @@ public:
     bool setLiters(const qlonglong milkReceptionId, const float liters) const;
     bool setFat(const qlonglong milkReceptionId, const float fate) const;
 
-    DeliverersTable *getDeliverers() const;
+    bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
 
+    DeliverersTable *getDeliverers() const;
     MilkPointsTable *getMilkPoints() const;
 
     QList<float> getMinMaxPriceLiter(const QDate &min, QDate max = QDate()) const;

@@ -9,14 +9,15 @@
 
 Table::Table(QObject *parent, QSqlDatabase db) :
     QSqlQueryModel(parent),
-    m_db(db)
+    m_db(db),
+    m_isFetchOnRefresh(false)
 {
     setObjectName("Table");
 }
 
 Table::~Table()
 {
-
+    qDebug() << "delete " + objectName();
 }
 
 QSqlDatabase Table::database() const
@@ -68,7 +69,15 @@ bool Table::removeAll() const
 
 void Table::refresh()
 {
+    emit startRefresh();
+
     setQuery(query().lastQuery());
+
+    if (m_isFetchOnRefresh)
+    {
+        while (canFetchMore())
+            fetchMore();
+    }
 
     emit refreshed();
 }
@@ -104,6 +113,16 @@ QSqlField Table::getColumnById(const int column) const
 QSqlField Table::getColumnByName(const QString &columnName) const
 {
     return getColumns().field(columnName);
+}
+
+bool Table::getIsFetchOnRefresh() const
+{
+    return m_isFetchOnRefresh;
+}
+
+void Table::setIsFetchOnRefresh(const bool isFetchOnRefresh)
+{
+    m_isFetchOnRefresh = isFetchOnRefresh;
 }
 
 bool Table::updateValue(const QString &columnName, const qlonglong id, const QVariant &value) const
@@ -171,6 +190,8 @@ bool Table::setData(const QModelIndex &_index, const QVariant &value, int role)
     if (updateValue(_index.column(), id, value)) {
         refresh();
         emit dataChanged(_index, _index);
+
+        return true;
     }
 
     return false;

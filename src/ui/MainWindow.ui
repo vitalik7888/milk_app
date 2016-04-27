@@ -23,7 +23,7 @@
          <x>0</x>
          <y>0</y>
          <width>979</width>
-         <height>404</height>
+         <height>425</height>
         </rect>
        </property>
        <attribute name="label">
@@ -47,8 +47,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>30</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -72,8 +72,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>30</height>
+         <width>98</width>
+         <height>28</height>
         </rect>
        </property>
        <attribute name="label">
@@ -103,7 +103,7 @@
      <x>0</x>
      <y>0</y>
      <width>997</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDb">
@@ -136,11 +136,17 @@
      <string>Справка</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuUtils">
+    <property name="title">
+     <string>Утилиты</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDb"/>
    <addaction name="menuLocalities"/>
    <addaction name="menuDeliverers"/>
    <addaction name="menuMilkPoints"/>
+   <addaction name="menuUtils"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBarDb">
@@ -431,6 +437,14 @@
    </property>
    <property name="toolTip">
     <string>Иформация о программе</string>
+   </property>
+  </action>
+  <action name="actionUpdatePrice">
+   <property name="text">
+    <string>Обновить цену</string>
+   </property>
+   <property name="toolTip">
+    <string>Обновить цену</string>
    </property>
   </action>
  </widget>

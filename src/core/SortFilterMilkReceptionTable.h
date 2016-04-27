@@ -17,11 +17,13 @@ public:
 
     void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
-    QDate filterMinimumDate() const { return m_dateMin; }
+    void setDatesBetween(const QDate &dateFrom, const QDate &dateTo);
+
+    /*QDate filterMinimumDate() const { return m_dateMin; }
     void setFilterMinimumDate(const QDate &date);
 
     QDate filterMaximumDate() const { return m_dateMax; }
-    void setFilterMaximumDate(const QDate &date);
+    void setFilterMaximumDate(const QDate &date);*/
 
     qlonglong filterDelivererId() const { return m_delivererId; }
     void setFilterDelivererId(const qlonglong &filterDelivererId);
@@ -41,6 +43,7 @@ private:
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;
 
     bool dateBetween(const QDate &date) const;
+    bool isNeedFilterByDelivId() const;
 };
 
 #endif // SORTFILTERMILKRECEPTIONTABLE_H

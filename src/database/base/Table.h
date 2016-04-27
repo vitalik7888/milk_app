@@ -39,6 +39,9 @@ public:
 
     int getColumnPosition(const QString &name) const;
 
+    bool getIsFetchOnRefresh() const;
+    void setIsFetchOnRefresh(const bool isFetchOnRefresh);
+
 protected:
     QSqlDatabase m_db;
 
@@ -51,13 +54,15 @@ protected:
     QSqlField getColumnById(const int column) const;
     QSqlField getColumnByName(const QString &columnName) const;
 
+    bool m_isFetchOnRefresh;
+
     bool updateValue(const int column, const qlonglong id, const QVariant &value) const;
     bool updateValue(const QString &columnName, const qlonglong id, const QVariant &value) const;
 
 signals:
     void error(const QString &error) const;
+    void startRefresh();
     void refreshed();
-
 };
 
 #endif // ABSTRACT_TABLE

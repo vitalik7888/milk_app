@@ -10,7 +10,6 @@ class LocalitiesTable : public Table
     Q_OBJECT
 public:
     LocalitiesTable(QObject *parent, QSqlDatabase db);
-    ~LocalitiesTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;

@@ -14,7 +14,8 @@ SOURCES += \
     $$PWD/DialogGetItem.cpp \
     $$PWD/PrintTable.cpp \
     $$PWD/DialogSettings.cpp \
-    $$PWD/Settings.cpp
+    $$PWD/Settings.cpp \
+    $$PWD/UpdatePriceDialog.cpp
 
 HEADERS  += \
     $$PWD/MainWindow.h \
@@ -30,7 +31,8 @@ HEADERS  += \
     $$PWD/DialogGetItem.h \
     $$PWD/PrintTable.h \
     $$PWD/DialogSettings.h \
-    $$PWD/Settings.h
+    $$PWD/Settings.h \
+    $$PWD/UpdatePriceDialog.h
 
 FORMS += $$PWD/../ui/MainWindow.ui \
     $$PWD/../ui/DelivererDialog.ui \
@@ -40,4 +42,5 @@ FORMS += $$PWD/../ui/MainWindow.ui \
     $$PWD/../ui/CalcFrame.ui \
     $$PWD/../ui/DialogGetId.ui \
     $$PWD/../ui/FrameEditMilkReception.ui \
-    $$PWD/../ui/DialogSettings.ui
+    $$PWD/../ui/DialogSettings.ui \
+    $$PWD/../ui/UpdatePriceDialog.ui

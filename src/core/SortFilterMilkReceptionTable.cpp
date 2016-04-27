@@ -2,6 +2,10 @@
 
 #include "tables/milk_reception/MilkReceptionTable.h"
 #include "Utils.h"
+// Qt
+#include <QDebug>
+
+using utm = Utils::Main;
 
 
 SortFilterMilkReceptionTable::SortFilterMilkReceptionTable(QObject *parent):
@@ -15,7 +19,7 @@ SortFilterMilkReceptionTable::SortFilterMilkReceptionTable(QObject *parent):
 
 }
 
-void SortFilterMilkReceptionTable::setFilterMinimumDate(const QDate &date)
+/*void SortFilterMilkReceptionTable::setFilterMinimumDate(const QDate &date)
 {
     m_dateMin = date;
     invalidateFilter();
@@ -25,7 +29,7 @@ void SortFilterMilkReceptionTable::setFilterMaximumDate(const QDate &date)
 {
     m_dateMax = date;
     invalidateFilter();
-}
+}*/
 
 void SortFilterMilkReceptionTable::setFilterDelivererId(const qlonglong &delivererId)
 {
@@ -46,23 +50,22 @@ bool SortFilterMilkReceptionTable::filterAcceptsRow(int sourceRow, const QModelI
             mrDelivDateCol = m_milkReceptionTable->getColumnPosition(m_milkReceptionTable->getNameColumnDeliveryDate(false));
 
     const auto indexDelivererId = sourceModel()->index(sourceRow, mrIdDelivererCol, sourceParent),
-    indexMilkPointId = sourceModel()->index(sourceRow, mrIdMilkPointCol, sourceParent),
-    indexDeliveryDate = sourceModel()->index(sourceRow, mrDelivDateCol, sourceParent);
+            indexMilkPointId = sourceModel()->index(sourceRow, mrIdMilkPointCol, sourceParent),
+            indexDeliveryDate = sourceModel()->index(sourceRow, mrDelivDateCol, sourceParent);
 
     const auto delivererId = sourceModel()->data(indexDelivererId).toLongLong(),
             milkPointId = sourceModel()->data(indexMilkPointId).toLongLong();
     const auto deliveryDate = sourceModel()->data(indexDeliveryDate).toDate();
 
-    auto isAccept = true;
-
-    if (Utils::Main::isAutoIncrIdIsValid(m_delivererId))
-        isAccept &= delivererId == m_delivererId;
-    if (Utils::Main::isAutoIncrIdIsValid(m_milkPointId))
-        isAccept &= milkPointId == m_milkPointId;
+    bool isDelivererAccepted = true, isMilkPointAccepted = true, isDateAccepted = true;
+    if (isNeedFilterByDelivId())
+        isDelivererAccepted = (m_delivererId == delivererId);
+    if (utm::isAutoIncrIdIsValid(m_milkPointId))
+        isMilkPointAccepted = (milkPointId == m_milkPointId);
     if (m_dateMin.isValid() && m_dateMax.isValid())
-        isAccept &= dateBetween(deliveryDate);
+        isDateAccepted = (deliveryDate >= m_dateMin && deliveryDate <= m_dateMax);
 
-    return isAccept;
+    return isDelivererAccepted && isMilkPointAccepted && isDateAccepted;
 }
 
 bool SortFilterMilkReceptionTable::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
@@ -82,10 +85,23 @@ bool SortFilterMilkReceptionTable::dateBetween(const QDate &date) const
             && (!m_dateMax.isValid() || date <= m_dateMax);
 }
 
+bool SortFilterMilkReceptionTable::isNeedFilterByDelivId() const
+{
+    return utm::isAutoIncrIdIsValid(m_delivererId);
+}
+
 
 void SortFilterMilkReceptionTable::setSourceModel(QAbstractItemModel *sourceModel)
 {
     m_milkReceptionTable = qobject_cast<MilkReceptionTable *>(sourceModel);
 
     QSortFilterProxyModel::setSourceModel(sourceModel);
+}
+
+void SortFilterMilkReceptionTable::setDatesBetween(const QDate &dateFrom, const QDate &dateTo)
+{
+    m_dateMin = dateFrom;
+    m_dateMax = dateTo;
+
+    invalidateFilter();
 }

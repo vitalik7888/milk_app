@@ -6,6 +6,7 @@
 #include "LocalityDialog.h"
 #include "MilkPointDialog.h"
 #include "DialogSettings.h"
+#include "UpdatePriceDialog.h"
 #include "Settings.h"
 #include "Constants.h"
 #include "Utils.h"
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_groupBoxChooseMainLocality->setParent(this);
     m_groupBoxChooseMainLocality->setCheckable(true);
+
     QHBoxLayout *hbLayout = new QHBoxLayout;
     hbLayout->addWidget(m_comboBoxChooseMainLocality);
     m_groupBoxChooseMainLocality->setLayout(hbLayout);
@@ -55,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // db
     connect(ui->actionCreateDb, &QAction::triggered, this, &MainWindow::createDb);
     connect(ui->actionOpenDb, &QAction::triggered, this, &MainWindow::chooseDb);
-//    connect(ui->actionCloneDb, &QAction::triggered, this, &MainWindow::);
+    //    connect(ui->actionCloneDb, &QAction::triggered, this, &MainWindow::);
     // locality
     connect(ui->actionLocalityAdd, &QAction::triggered, this, &MainWindow::addLocality);
     connect(ui->actionLocalityEdit, &QAction::triggered, this, &MainWindow::updateLocality);
@@ -70,10 +72,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionMilkPointAdd, &QAction::triggered, this, &MainWindow::addMilkPoint);
     connect(ui->actionMilkPointEdit, &QAction::triggered, this, &MainWindow::updateMilkPoint);
     connect(ui->actionMilkPointDel, &QAction::triggered, this, &MainWindow::removeMilkPoint);
+    // utils
+    connect(ui->actionUpdatePrice, &QAction::triggered, this, &MainWindow::showUpdatePriceDialog);
     // help
     connect(ui->actionAbout, &QAction::triggered, this, [=]() {
         QMessageBox::about(this, Constants::appName(), tr("Версия программы: %1")
-                                 .arg(Constants::getCurrentVersion().toString()));
+                           .arg(Constants::getCurrentVersion().toString()));
     });
     connect(ui->actionAboutQt, &QAction::triggered, this, [=]() {
         QMessageBox::aboutQt(this, Constants::appName());
@@ -107,8 +111,8 @@ void MainWindow::addDeliverer()
     if (database->localities()->isEmpty())
     {
         if(Utils::Main::yesNoWarnMsgBox(this, tr("Чтобы добавить хотя бы одного сдатчика "
-                                                "нужно сначала добавить населенный пункт. "
-                                                "Желаете это сделать сейчас?")))
+                                                 "нужно сначала добавить населенный пункт. "
+                                                 "Желаете это сделать сейчас?")))
         {
             addLocality();
 
@@ -136,8 +140,8 @@ void MainWindow::addMilkPoint()
     if (database->localities()->isEmpty())
     {
         if(Utils::Main::yesNoWarnMsgBox(this, tr("Чтобы добавить хотя бы один молокопункт "
-                                                "нужно сначала добавить населенный пункт. "
-                                                "Желаете это сделать сейчас?")))
+                                                 "нужно сначала добавить населенный пункт. "
+                                                 "Желаете это сделать сейчас?")))
         {
             addLocality();
 
@@ -204,6 +208,8 @@ void MainWindow::addActionsToMenu()
 
     ui->menuHelp->addAction(ui->actionAbout);
     ui->menuHelp->addAction(ui->actionAboutQt);
+
+    ui->menuUtils->addAction(ui->actionUpdatePrice);
 }
 
 void MainWindow::addActionsToToolBars()
@@ -289,11 +295,14 @@ void MainWindow::openDb(const QString &dbName)
 
         m_groupBoxChooseMainLocality->setChecked(false);
 
-        // show tables errors
+
         for (auto table: database->tables()) {
+            // show tables errors
             connect(table, &Table::error, this, [=](const QString &error) {
                 QMessageBox::critical(this, table->tableName(), error);
             });
+            // set fetch on refresh
+            table->setIsFetchOnRefresh(m_settings->getIsFetchTablesOnRefresh());
         }
         connect(database->localities(), &Table::refreshed, this, [=]() {
             m_comboBoxChooseMainLocality->setCurrentIndex(0);
@@ -302,6 +311,12 @@ void MainWindow::openDb(const QString &dbName)
         ui->frameEditReceptionMilk->setup();
         ui->frameCalc->setup();
         m_groupBoxChooseMainLocality->setEnabled(!database->localities()->isEmpty());
+
+        if (database->milkReception()->getIsFetchOnRefresh())
+        {
+            while (database->milkReception()->canFetchMore())
+                database->milkReception()->fetchMore();
+        }
     }
 }
 
@@ -405,9 +420,27 @@ void MainWindow::updateMilkPoint()
     }
 }
 
+void MainWindow::showUpdatePriceDialog() const
+{
+    UpdatePriceDialog dialog(database->milkReception());
+    dialog.exec();
+}
+
 void MainWindow::showSettings()
 {
-    getDialogSettings()->exec();
+   if (getDialogSettings()->exec() == QDialog::Accepted)
+   {
+       for (auto table: database->tables()) {
+           const auto isFetchOnRefresh = m_settings->getIsFetchTablesOnRefresh();
+           // set fetch on refresh
+           table->setIsFetchOnRefresh(isFetchOnRefresh);
+           if (isFetchOnRefresh)
+           {
+               while (table->canFetchMore())
+                   table->fetchMore();
+           }
+       }
+   }
 }
 
 void MainWindow::chooseMainLocality()

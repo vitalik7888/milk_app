@@ -25,11 +25,6 @@ MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
     setQuery(selectAll());
 }
 
-MilkPointsTable::~MilkPointsTable()
-{
-    qDebug() << "delete " + objectName();
-}
-
 QString MilkPointsTable::tableName() const
 {
     return "milk_points";

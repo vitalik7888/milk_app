@@ -28,11 +28,6 @@ DeliverersTable::DeliverersTable(LocalitiesTable *parent, QSqlDatabase db) :
     setQuery(selectAll());
 }
 
-DeliverersTable::~DeliverersTable()
-{
-    qDebug() << "delete " + objectName();
-}
-
 QSqlField DeliverersTable::getFieldId() const
 {
     return getColumnByName(FN_ID);

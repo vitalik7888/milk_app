@@ -22,11 +22,6 @@ LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
     setQuery(selectAll());
 }
 
-LocalitiesTable::~LocalitiesTable()
-{
-    qDebug() << "delete " + objectName();
-}
-
 QString LocalitiesTable::tableName() const
 {
     return "localities";
