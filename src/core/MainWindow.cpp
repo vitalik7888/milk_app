@@ -428,19 +428,19 @@ void MainWindow::showUpdatePriceDialog() const
 
 void MainWindow::showSettings()
 {
-   if (getDialogSettings()->exec() == QDialog::Accepted)
-   {
-       for (auto table: database->tables()) {
-           const auto isFetchOnRefresh = m_settings->getIsFetchTablesOnRefresh();
-           // set fetch on refresh
-           table->setIsFetchOnRefresh(isFetchOnRefresh);
-           if (isFetchOnRefresh)
-           {
-               while (table->canFetchMore())
-                   table->fetchMore();
-           }
-       }
-   }
+    if (getDialogSettings()->exec() == QDialog::Accepted)
+    {
+        for (auto table: database->tables()) {
+            const auto isFetchOnRefresh = m_settings->getIsFetchTablesOnRefresh();
+            // set fetch on refresh
+            table->setIsFetchOnRefresh(isFetchOnRefresh);
+            if (isFetchOnRefresh)
+            {
+                while (table->canFetchMore())
+                    table->fetchMore();
+            }
+        }
+    }
 }
 
 void MainWindow::chooseMainLocality()
@@ -453,9 +453,9 @@ void MainWindow::chooseMainLocality()
 
     if (m_groupBoxChooseMainLocality->isChecked())
     {
-        const auto locNameCol = database->localities()->getColumnPosition(database->localities()->getNameColumnName(false));
+        const auto locIdCol = database->localities()->getColumnPosition(database->localities()->getNameColumnId(false));
         const auto idLocality = Utils::Main::getCurValueFromComboBoxModel(
-                    m_comboBoxChooseMainLocality, locNameCol).toLongLong();
+                    m_comboBoxChooseMainLocality, locIdCol).toLongLong();
 
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
