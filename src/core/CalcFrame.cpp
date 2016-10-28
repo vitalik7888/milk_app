@@ -61,15 +61,22 @@ void CalcFrame::calc()
 
 void CalcFrame::setup()
 {
-    const auto delivNameCol = m_mainWindow->getDatabase()->deliverers()->getColumnPosition(
-                m_mainWindow->getDatabase()->deliverers()->getNameColumnName()),
-            milkPointNameCol = m_mainWindow->getDatabase()->milkPoints()->getColumnPosition(
-                m_mainWindow->getDatabase()->milkPoints()->getNameColumnName());
+    const auto deliverers = m_mainWindow->getDatabase()->deliverers();
+    const auto milkPoints = m_mainWindow->getDatabase()->milkPoints();
+    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName()),
+            milkPointNameCol = milkPoints->getColumnPosition(milkPoints->getNameColumnName());
 
     ui->comboBoxFilterDeliverers->setModel(m_mainWindow->getDatabase()->deliverers());
     ui->comboBoxFilterDeliverers->setModelColumn(delivNameCol);
     ui->comboBoxFilterMilkPoints->setModel(m_mainWindow->getDatabase()->milkPoints());
     ui->comboBoxFilterMilkPoints->setModelColumn(milkPointNameCol);
+
+    if (deliverers->rowCount() > 0) {
+        ui->comboBoxFilterDeliverers->setCurrentIndex(0);
+    }
+    if (milkPoints->rowCount() > 0) {
+        ui->comboBoxFilterMilkPoints->setCurrentIndex(0);
+    }
 }
 
 void CalcFrame::setMainWindow(MainWindow *mainWindow)

@@ -453,9 +453,9 @@ void MainWindow::chooseMainLocality()
 
     if (m_groupBoxChooseMainLocality->isChecked())
     {
-        const auto locNameCol = database->localities()->getColumnPosition(database->localities()->getNameColumnName(false));
+        const auto locIdCol = database->localities()->getColumnPosition(database->localities()->getNameColumnId(false));
         const auto idLocality = Utils::Main::getCurValueFromComboBoxModel(
-                    m_comboBoxChooseMainLocality, locNameCol).toLongLong();
+                    m_comboBoxChooseMainLocality, locIdCol).toLongLong();
 
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
@@ -465,6 +465,7 @@ void MainWindow::chooseMainLocality()
                              .arg(milkPoints->selectAll())
                              .arg(milkPoints->getNameColumnLocalityId())
                              .arg(idLocality));
+        ui->frameCalc->setup();
     } else
     {
         deliverers->setQuery(deliverers->selectAll());
