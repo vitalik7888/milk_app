@@ -465,6 +465,7 @@ void MainWindow::chooseMainLocality()
                              .arg(milkPoints->selectAll())
                              .arg(milkPoints->getNameColumnLocalityId())
                              .arg(idLocality));
+        ui->frameCalc->setup();
     } else
     {
         deliverers->setQuery(deliverers->selectAll());
