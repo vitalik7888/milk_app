@@ -122,6 +122,11 @@ QString DelivererDialog::getPhoneNumber() const
     return phoneNumber;
 }
 
+void DelivererDialog::setComboBoxCurIndex(const int position)
+{
+    ui->comboBoxLocality->setCurrentIndex(position);
+}
+
 bool DelivererDialog::isNeedInsert() const
 {
     return m_currentId < 0;

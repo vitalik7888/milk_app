@@ -26,6 +26,8 @@ public:
     QString getAddress() const;
     QString getPhoneNumber() const;
 
+    void setComboBoxCurIndex(const int position);
+
 private:
     Ui::DelivererDialog *ui;
 

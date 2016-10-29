@@ -123,6 +123,7 @@ void MainWindow::addDeliverer()
 
     if (!database->localities()->isEmpty()) { // если добавил
         DelivererDialog dialog(database->deliverers());
+        dialog.setComboBoxCurIndex(m_comboBoxChooseMainLocality->currentIndex());
         dialog.exec();
     }
 }
@@ -152,6 +153,7 @@ void MainWindow::addMilkPoint()
 
     if (!database->localities()->isEmpty()) {// если добавили
         MilkPointDialog dialog(database->milkPoints());
+        dialog.setComboBoxCurIndex(m_comboBoxChooseMainLocality->currentIndex());
         dialog.exec();
     }
 }

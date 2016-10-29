@@ -23,6 +23,8 @@ public:
     QString getDescription() const;
     qlonglong getLocalityId() const;
 
+    void setComboBoxCurIndex(const int position);
+
 private:
     Ui::MilkPointDialog *ui;
 

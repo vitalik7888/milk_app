@@ -93,6 +93,11 @@ qlonglong MilkPointDialog::getLocalityId() const
                                                      locIdColPos).toLongLong();
 }
 
+void MilkPointDialog::setComboBoxCurIndex(const int position)
+{
+    ui->comboBoxLocalities->setCurrentIndex(position);
+}
+
 bool MilkPointDialog::isNeedInsert() const
 {
     return m_currentId < 0;
