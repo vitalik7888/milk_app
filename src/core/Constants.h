@@ -52,7 +52,7 @@ public:
     };
 
     static inline Version getCurrentVersion() {
-        return Version(0, 0, 4);
+        return Version(0, 0, 5);
     }
 };
 
