@@ -5,7 +5,7 @@
 #include "tables/localities/LocalitiesTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "tables/milk_reception/MilkReceptionTable.h"
-// qt
+// Qt
 #include <QMessageBox>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -19,8 +19,10 @@
 #include <QSqlField>
 #include <QDebug>
 
+USE_DB_NAMESPACE
 
-bool Utils::Main::isAutoIncrIdIsValid(const qlonglong id)
+
+bool Utils::Main::isAutoIncrIdIsValid(const milk_id id)
 {
     return id > 0;
 }
@@ -63,7 +65,7 @@ bool Utils::Main::isNeesAddItem(QWidget *parent, Table *table)
     return false;
 }
 
-qlonglong Utils::Main::getIdFromDialog(Table *table, const QString &title, QWidget *parent)
+milk_id Utils::Main::getIdFromDialog(Table *table, const QString &title, QWidget *parent)
 {
     DialogGeItem dialog(table, title, parent);
 
@@ -73,7 +75,7 @@ qlonglong Utils::Main::getIdFromDialog(Table *table, const QString &title, QWidg
     return -1;
 }
 
-QModelIndex Utils::Main::getIndexFromModelById(Table *table, const int column, const qlonglong id)
+QModelIndex Utils::Main::getIndexFromModelById(Table *table, const int column, const milk_id id)
 {
     for (int row = 0; row < table->rowCount(); row++)
     {

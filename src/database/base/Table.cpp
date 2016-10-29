@@ -1,17 +1,19 @@
 #include "Table.h"
 
+#include "dao.h"
 #include "Utils.h"
 // Qt
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
 
-//USE_DB_NAMESPACE
+USE_DB_NAMESPACE
 
 
-Table::Table(QObject *parent, QSqlDatabase db) :
+Table::Table(Dao *dao, QObject *parent, QSqlDatabase db) :
     QSqlQueryModel(parent),
     m_db(db),
+    m_dao(dao),
     m_isFetchOnRefresh(false)
 {
     setObjectName("Table");
@@ -41,7 +43,7 @@ bool Table::isEmpty() const
     return (rowCount() == 0);
 }
 
-bool Table::remove(const qlonglong id) const
+bool Table::remove(const milk_id id) const
 {
     QSqlQuery query;
     query.prepare(QString("DELETE FROM %1 where %2 = ?")
@@ -117,6 +119,17 @@ QSqlField Table::getColumnByName(const QString &columnName) const
     return getColumns().field(columnName);
 }
 
+bool Table::updateValue(const int columnPosition, const milk_id id, const QVariant &value) const
+{
+    try {
+        m_dao->updateValue(getColumnById(columnPosition).name(), id, value);
+        return true;
+    } catch (const QString &err) {
+        emit error(err);
+        return false;
+    }
+}
+
 bool Table::getIsFetchOnRefresh() const
 {
     return m_isFetchOnRefresh;
@@ -125,40 +138,6 @@ bool Table::getIsFetchOnRefresh() const
 void Table::setIsFetchOnRefresh(const bool isFetchOnRefresh)
 {
     m_isFetchOnRefresh = isFetchOnRefresh;
-}
-
-bool Table::updateValue(const QString &columnName, const qlonglong id, const QVariant &value) const
-{
-    QSqlQuery query;
-    query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 = ?")
-                  .arg(tableName())
-                  .arg(columnName)
-                  .arg(primaryField().name()));
-    query.addBindValue(value);
-    query.addBindValue(id);
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-    return true;
-}
-
-bool Table::updateValue(const int column, const qlonglong id, const QVariant &value) const
-{
-    QSqlQuery query;
-    query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 = ?")
-                  .arg(tableName())
-                  .arg(getColumnById(column).name())
-                  .arg(primaryField().name()));
-    query.addBindValue(value);
-    query.addBindValue(id);
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-    return true;
 }
 
 /*QString Deliverers::selectColumns(const int count, ...) const

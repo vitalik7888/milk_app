@@ -1,5 +1,6 @@
 #include "MilkPointsTable.h"
 
+#include <base/dao.h>
 #include "tables/localities/LocalitiesTable.h"
 #include "Utils.h"
 // Qt
@@ -10,6 +11,7 @@
 
 USE_DB_NAMESPACE
 
+static const char *TABLE_NAME = "milk_points";
 static const char *FN_ID = "id";
 static const char *FN_LOCALITY_ID = "locality_id";
 static const char *FN_NAME = "name";
@@ -17,7 +19,7 @@ static const char *FN_DESCRIPTION = "description";
 
 
 MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
-    Table(parent, db),
+    Table(new Dao(TABLE_NAME, FN_ID, db), parent, db),
     m_localities(parent)
 {
     setObjectName("MilkPointsTable");
@@ -34,7 +36,7 @@ MilkPointsTable::~MilkPointsTable()
 
 QString MilkPointsTable::tableName() const
 {
-    return "milk_points";
+    return TABLE_NAME;
 }
 
 QString MilkPointsTable::getNameColumnId(const bool withTableName) const

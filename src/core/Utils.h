@@ -4,8 +4,11 @@
 #include <QtAlgorithms>
 #include <QVariant>
 #include "Constants.h"
+#include "dbconstants.h"
 
-class Table;
+DB_BEGIN_NAMESPACE
+    class Table;
+DB_END_NAMESPACE
 class QToolButton;
 class QWidget;
 class QAbstractItemView;
@@ -15,12 +18,13 @@ class QComboBox;
 namespace Utils {
 class Main {
 public:
-    static bool isAutoIncrIdIsValid(const qlonglong id);
+    static bool isAutoIncrIdIsValid(const milk_id id);
     static bool yesNoWarnMsgBox(QWidget *parent, const QString &question);
-    static bool showWarnMsgIfNoRows(QWidget *parent, const QString &title, Table *table);
-    static bool isNeesAddItem(QWidget *parent, Table *table);
-    static qlonglong getIdFromDialog(Table *table, const QString &title = QString(), QWidget *parent = nullptr);
-    static QModelIndex getIndexFromModelById(Table *table, const int column, const qlonglong id);
+    static bool showWarnMsgIfNoRows(QWidget *parent, const QString &title, DB_NAMESPACE::Table *table);
+    static bool isNeesAddItem(QWidget *parent, DB_NAMESPACE::Table *table);
+    static milk_id getIdFromDialog(DB_NAMESPACE::Table *table, const QString &title = QString(),
+                                     QWidget *parent = nullptr);
+    static QModelIndex getIndexFromModelById(DB_NAMESPACE::Table *table, const int column, const milk_id id);
     static QVariant getCurValueFromComboBoxModel(const QComboBox *combobox, const int column);
     static QVariant getCurValueFromItemViewModel(const QAbstractItemView *itemView, const int column);
 

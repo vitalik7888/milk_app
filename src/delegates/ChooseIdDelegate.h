@@ -1,15 +1,21 @@
 #ifndef CHOOSEIDDELEGATE_H
 #define CHOOSEIDDELEGATE_H
 
+#include "dbconstants.h"
+// Qt
 #include <QItemDelegate>
-class Table;
+
+DB_BEGIN_NAMESPACE
+    class Table;
+DB_END_NAMESPACE
+
 
 class ChooseIdDelegate : public QItemDelegate
 {
     Q_OBJECT
 public:
-    ChooseIdDelegate(Table *table, const int idCol = -1, const QString &title = QString(),
-                     QObject *parent = nullptr);
+    ChooseIdDelegate(DB_NAMESPACE::Table *table, const int idCol = -1,
+                     const QString &title = QString(), QObject *parent = nullptr);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                           const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -22,7 +28,7 @@ public:
                               const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
-    Table *m_table;
+    DB_NAMESPACE::Table *m_table;
     int m_colId;
     QString m_title;
 };

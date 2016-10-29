@@ -9,8 +9,8 @@ namespace Ui {
 class DialogGetId;
 }
 class QSortFilterProxyModel;
-class Table;
 DB_BEGIN_NAMESPACE
+    class Table;
     class LocalitiesTable;
     class DeliverersTable;
     class MilkPointsTable;
@@ -22,18 +22,19 @@ class DialogGeItem : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogGeItem(Table *table, const QString &title = QString(), QWidget *parent = Q_NULLPTR);
+    explicit DialogGeItem(DB_NAMESPACE::Table *table, const QString &title = QString(),
+                          QWidget *parent = Q_NULLPTR);
     ~DialogGeItem();
 
-    Table *getTable() const;
+    DB_NAMESPACE::Table *getTable() const;
 
     QModelIndex getIdModelIndex() const;
 
-    void setCurrentItemById(const qlonglong _id); // TODO
+    void setCurrentItemById(const milk_id _id); // TODO
     void setCurrentItem(const QModelIndex &index); // TODO
 
     QString value() const;
-    qlonglong getId() const;
+    milk_id getId() const;
 
     bool getIsItemChoosed() const;
 

@@ -9,14 +9,14 @@
 #include <QVector>
 #include <QString>
 
-//DB_BEGIN_NAMESPACE
-
+DB_BEGIN_NAMESPACE
+    class Dao;
 
 class Table : public QSqlQueryModel
 {
     Q_OBJECT
 public:
-    Table(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
+    Table(Dao *dao, QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
     virtual ~Table();
 
     QSqlDatabase database() const;
@@ -31,7 +31,7 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
-    bool remove(const qlonglong id) const;
+    bool remove(const milk_id id) const;
     bool removeAll() const;
 
     virtual void refresh();
@@ -46,6 +46,7 @@ public:
 
 protected:
     QSqlDatabase m_db;
+    QScopedPointer<Dao> m_dao;
 
     /*!
      * \brief Столбцы таблицы
@@ -58,16 +59,14 @@ protected:
 
     bool m_isFetchOnRefresh;
 
-    bool updateValue(const int column, const qlonglong id, const QVariant &value) const;
-    bool updateValue(const QString &columnName, const qlonglong id, const QVariant &value) const;
-
+    bool updateValue(const int columnPosition, const milk_id id, const QVariant &value) const;
 signals:
     void error(const QString &error) const;
     void startRefresh();
     void refreshed();
 };
 
-//DB_END_NAMESPACE
+DB_END_NAMESPACE
 
 #endif // MILK_TABLE
 

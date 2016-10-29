@@ -1,5 +1,6 @@
 #include "LocalitiesTable.h"
 
+#include <base/dao.h>
 #include "Utils.h"
 // Qt
 #include <QSqlRecord>
@@ -9,13 +10,14 @@
 
 USE_DB_NAMESPACE
 
+static const char *TABLE_NAME = "localities";
 static const char *FN_ID = "id";
 static const char *FN_NAME = "name";
 static const char *FN_DESCRIPTION = "description";
 
 
 LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
-    Table(parent, db)
+    Table(new Dao(TABLE_NAME, FN_ID, db), parent, db)
 {
     setObjectName("LocalitiesTable");
     qDebug() << "init " + objectName();
@@ -31,7 +33,7 @@ LocalitiesTable::~LocalitiesTable()
 
 QString LocalitiesTable::tableName() const
 {
-    return "localities";
+    return TABLE_NAME;
 }
 
 QSqlField LocalitiesTable::getFieldId() const

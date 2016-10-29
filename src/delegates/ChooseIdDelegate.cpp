@@ -5,9 +5,11 @@
 #include "tables/milk_points/MilkPointsTable.h"
 #include "DialogGetItem.h"
 #include "Utils.h"
-// qt
+// Qt
 #include <QLabel>
 #include  <QMessageBox>
+
+USE_DB_NAMESPACE
 
 
 ChooseIdDelegate::ChooseIdDelegate(Table *table, const int idCol, const QString &title, QObject *parent):

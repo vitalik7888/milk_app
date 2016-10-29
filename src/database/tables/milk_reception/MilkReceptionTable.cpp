@@ -1,5 +1,6 @@
 #include "MilkReceptionTable.h"
 
+#include <base/dao.h>
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "Constants.h"
@@ -12,6 +13,7 @@
 
 USE_DB_NAMESPACE
 
+static const char *TABLE_NAME = "milk_reception";
 static const char *FN_ID = "id";
 static const char *FN_ID_DELIVERER = "id_deliverer";
 static const char *FN_DELIVERER_NAME = "deliverer_name";
@@ -25,7 +27,7 @@ static const char *FN_FAT = "fat";
 
 MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsTable *milkPoints,
                                        QSqlDatabase db):
-    Table(_deliverers, db),
+    Table(new Dao(TABLE_NAME, FN_ID, db), _deliverers, db),
     m_deliverers(_deliverers),
     m_milkPoints(milkPoints)
 {
@@ -43,7 +45,7 @@ MilkReceptionTable::~MilkReceptionTable()
 
 QString MilkReceptionTable::tableName() const
 {
-    return "milk_reception";
+    return TABLE_NAME;
 }
 
 QSqlField MilkReceptionTable::getFieldId() const

@@ -11,6 +11,7 @@ class FrameEditMilkReception;
 class MainWindow;
 class SortFilterMilkReceptionTable;
 DB_BEGIN_NAMESPACE
+    class Table;
     class LocalitiesTable;
     class DeliverersTable;
     class MilkPointsTable;

@@ -1,18 +1,18 @@
 #ifndef DELIVERERSDAO_H
 #define DELIVERERSDAO_H
 
-#include "dbconstants.h"
-// Qt
-#include <QSqlDatabase>
+#include <base/dao.h>
+#include "delivererdata.h"
 
 DB_BEGIN_NAMESPACE
 
-class DeliverersDao {
+class DeliverersDao: public Dao {
 public:
-    DeliverersDao(const QSqlDatabase db = QSqlDatabase()) {}
+    DeliverersDao(const QSqlDatabase db);
 
-private:
-    QSqlDatabase m_db;
+    DelivererData getDeliverer(const milk_id delivererId) const;
+    void insert(const DelivererData &deliverer);
+    void update(const DelivererData &deliverer);
 };
 
 DB_END_NAMESPACE

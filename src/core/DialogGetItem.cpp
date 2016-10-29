@@ -69,7 +69,7 @@ DialogGeItem::~DialogGeItem()
     delete ui;
 }
 
-qlonglong DialogGeItem::getId() const
+milk_id DialogGeItem::getId() const
 {
     const auto idColumn = getTable()->getColumnPosition(getTable()->primaryField().name());
 
@@ -146,7 +146,7 @@ QModelIndex DialogGeItem::getIdModelIndex() const
     return m_proxyModel->mapToSource(proxyIndex);
 }
 
-void DialogGeItem::setCurrentItemById(const qlonglong _id)
+void DialogGeItem::setCurrentItemById(const milk_id _id)
 {
     const auto column = getTable()->getColumnPosition(getTable()->primaryField().name());
     const auto &index = Utils::Main::getIndexFromModelById(getTable(), column,  _id);

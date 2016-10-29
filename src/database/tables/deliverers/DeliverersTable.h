@@ -1,13 +1,13 @@
 #ifndef DELIVERERS_TABLE_H
 #define DELIVERERS_TABLE_H
 
-#include "base/Table.h"
+#include <base/Table.h>
 #include "Deliverer.h"
 
 DB_BEGIN_NAMESPACE
 
 class LocalitiesTable;
-
+class DeliverersDao;
 
 class DeliverersTable : public Table
 {
@@ -50,6 +50,8 @@ private:
     LocalitiesTable *m_localities;
 
     void initColumns() Q_DECL_OVERRIDE;
+
+    DeliverersDao *dao() const;
 };
 
 DB_END_NAMESPACE
