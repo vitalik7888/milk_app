@@ -5,13 +5,15 @@
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
-// qt
+// Qt
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 
 DialogGeItem::DialogGeItem(Table *table, const QString &title, QWidget *parent) :
@@ -83,7 +85,7 @@ qlonglong DialogGeItem::getId() const
 
 void DialogGeItem::showInfo()
 {
-    QString title = QString(), text = QString();
+    QString title, text;
 
     const auto id = getId();
     const auto isIdValid = Utils::Main::isAutoIncrIdIsValid(id);
@@ -91,13 +93,18 @@ void DialogGeItem::showInfo()
     if (isIdValid) {
         if (m_deliverers) {
             title = tr("Информация о сдатчике");
-            text = m_deliverers->getDeliverer(id).toString();
+            const auto data = m_deliverers->getDeliverer(id);
+            text = QString("Сдатчик %1: inn = %2, address = %3, phoneNumber = %4.")
+                    .arg(data.name()).arg(data.inn()).arg(data.address()).arg(data.phoneNumber());
         } else if (m_localities) {
             title = tr("Информация о населенном пункте");
-            text = m_localities->getLocality(id).toString();
+            const auto locality = m_localities->getLocality(id);
+            text = QString::fromUtf8("%1: описание = %2.").
+                    arg(locality.name()).arg(locality.description());
         } else if (m_milkPoints) {
             title = tr("Информация о молокопункте");
-            text = m_milkPoints->getMilkPoint(id).toString();
+            const auto mp = m_milkPoints->getMilkPoint(id);
+            text = QString::fromUtf8("Молочный пункт %1: описание = %2").arg(mp.name()).arg(mp.description());
         }
 
         QMessageBox::information(this, title, text);

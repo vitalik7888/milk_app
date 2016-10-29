@@ -1,13 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "dbconstants.h"
+// Qt
 #include <QMainWindow>
 #include <QFileInfo>
 
 namespace Ui {
 class MainWindow;
 }
-class Database;
+DB_BEGIN_NAMESPACE
+    class Database;
+DB_END_NAMESPACE
 class Settings;
 class QGroupBox;
 class QComboBox;
@@ -21,7 +25,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    Database *getDatabase() const;
+    DB_NAMESPACE::Database *getDatabase() const;
 
     DialogSettings *getDialogSettings();
 
@@ -55,7 +59,7 @@ private:
     QComboBox *m_comboBoxChooseMainLocality;
 
     Settings *m_settings;
-    Database *database;
+    DB_NAMESPACE::Database *database;
 
     DialogSettings *m_dialogSettings;
 

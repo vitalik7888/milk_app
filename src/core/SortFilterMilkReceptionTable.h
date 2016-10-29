@@ -2,10 +2,13 @@
 #define SORTFILTERMILKRECEPTIONTABLE_H
 
 #include "QSortFilterProxyModel"
-
+#include "dbconstants.h"
+// Qt
 #include <QDate>
 
-class MilkReceptionTable;
+DB_BEGIN_NAMESPACE
+    class MilkReceptionTable;
+DB_END_NAMESPACE
 
 
 class SortFilterMilkReceptionTable : public QSortFilterProxyModel
@@ -32,7 +35,7 @@ public:
     void setFilterMilkPointId(const qlonglong &filterMilkPointId);
 
 private:
-    MilkReceptionTable *m_milkReceptionTable;
+    DB_NAMESPACE::MilkReceptionTable *m_milkReceptionTable;
 
     qlonglong m_delivererId;
     qlonglong m_milkPointId;

@@ -4,11 +4,13 @@
 #include "tables/milk_points/MilkPointsTable.h"
 #include "Constants.h"
 #include "Utils.h"
-// qt
+// Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 static const char *FN_ID = "id";
 static const char *FN_ID_DELIVERER = "id_deliverer";
@@ -32,6 +34,11 @@ MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsT
 
     initColumns();
     setQuery(selectAll());
+}
+
+MilkReceptionTable::~MilkReceptionTable()
+{
+
 }
 
 QString MilkReceptionTable::tableName() const
@@ -74,7 +81,7 @@ QSqlField MilkReceptionTable::getFieldFat() const
     return getColumnByName(FN_FAT);
 }
 
-MilkReception MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId) const
+MilkReceptionData MilkReceptionTable::getMilkReception(const milk_id milkReceptionId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -88,22 +95,23 @@ MilkReception MilkReceptionTable::getMilkReception(const qlonglong milkReception
                   .arg(getNameColumnId(true)));
     query.addBindValue(milkReceptionId);
 
+    MilkReceptionData data;
     if (query.exec() && query.first())
     {
-        return MilkReception(m_deliverers->getDeliverer(query.value(0).toLongLong()),
-                             m_milkPoints->getMilkPoint(query.value(1).toLongLong()),
-                             query.value(2).toDate(),
-                             query.value(3).toFloat(),
-                             query.value(4).toFloat(),
-                             query.value(5).toFloat(),
-                             milkReceptionId);
+        data.setId(milkReceptionId);
+        data.setDelivererId(query.value(0).toLongLong());
+        data.setMilkPointId(query.value(1).toLongLong());
+        data.setDeliveryDate(query.value(2).toDate());
+        data.setPriceLiter(query.value(3).toFloat());
+        data.setLiters(query.value(4).toFloat());
+        data.setFat(query.value(5).toFloat());
     } else
         emit error(tr("Отсутствует сдача молока с id = ") + QString::number(milkReceptionId));
 
-    return MilkReception::CREATE_NULL();
+    return data;
 }
 
-bool MilkReceptionTable::insert(const MilkReception &milkReception) const
+bool MilkReceptionTable::insert(const MilkReceptionData &milkReception) const
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
@@ -113,8 +121,8 @@ bool MilkReceptionTable::insert(const MilkReception &milkReception) const
                                                 << getNameColumnPriceLiter()
                                                 << getNameColumnLiters()
                                                 << getNameColumnFat()));
-    query.addBindValue(milkReception.deliverer().id());
-    query.addBindValue(milkReception.milkPoint().id());
+    query.addBindValue(milkReception.delivererId());
+    query.addBindValue(milkReception.milkPointId());
     query.addBindValue(milkReception.deliveryDate().toString(Constants::defaultDateFormat()));
     query.addBindValue(milkReception.priceLiter());
     query.addBindValue(milkReception.liters());
@@ -128,7 +136,7 @@ bool MilkReceptionTable::insert(const MilkReception &milkReception) const
     return true;
 }
 
-bool MilkReceptionTable::update(const MilkReception &milkReception) const
+bool MilkReceptionTable::update(const MilkReceptionData &milkReception) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -140,12 +148,12 @@ bool MilkReceptionTable::update(const MilkReception &milkReception) const
                                                      << getNameColumnLiters()
                                                      << getNameColumnFat()))
                   .arg(getNameColumnId()));
-    query.addBindValue(milkReception.milkPoint().id());
+    query.addBindValue(milkReception.milkPointId());
     query.addBindValue(milkReception.deliveryDate());
     query.addBindValue(milkReception.priceLiter());
     query.addBindValue(milkReception.liters());
     query.addBindValue(milkReception.fat());
-    query.addBindValue(milkReception.deliverer().id());
+    query.addBindValue(milkReception.delivererId());
 
     if (!query.exec()) {
         emit error(query.lastError().text());
@@ -155,32 +163,32 @@ bool MilkReceptionTable::update(const MilkReception &milkReception) const
     return true;
 }
 
-bool MilkReceptionTable::setIdDeliverer(const qlonglong milkReceptionId, const qlonglong delivererId) const
+bool MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const
 {
     return updateValue(getColumnPosition(FN_ID), milkReceptionId, delivererId);
 }
 
-bool MilkReceptionTable::setIdMilkPoint(const qlonglong milkReceptionId, const qlonglong milkPointId) const
+bool MilkReceptionTable::setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const
 {
     return updateValue(getColumnPosition(FN_MILK_POINT_ID), milkReceptionId, milkPointId);
 }
 
-bool MilkReceptionTable::setDeliveryDate(const qlonglong milkReceptionId, const QDate &deliveryDate) const
+bool MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const
 {
     return updateValue(getColumnPosition(FN_DELIVERY_DATE), milkReceptionId, deliveryDate);
 }
 
-bool MilkReceptionTable::setPriceLiter(const qlonglong milkReceptionId, const float priceLiter) const
+bool MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const
 {
     return updateValue(getColumnPosition(FN_PRICE_LITER), milkReceptionId, priceLiter);
 }
 
-bool MilkReceptionTable::setLiters(const qlonglong milkReceptionId, const float liters) const
+bool MilkReceptionTable::setLiters(const milk_id milkReceptionId, const float liters) const
 {
     return updateValue(getColumnPosition(FN_LITERS), milkReceptionId, liters);
 }
 
-bool MilkReceptionTable::setFat(const qlonglong milkReceptionId, const float fat) const
+bool MilkReceptionTable::setFat(const milk_id milkReceptionId, const float fat) const
 {
     return updateValue(getColumnPosition(FN_FAT), milkReceptionId, fat);
 }

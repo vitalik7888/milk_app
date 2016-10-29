@@ -10,8 +10,10 @@
 #include <QMessageBox>
 #include <QDebug>
 
+USE_DB_NAMESPACE
 
-DelivererDialog::DelivererDialog(DeliverersTable *deliverers, const qlonglong delivererId, QWidget *parent) :
+
+DelivererDialog::DelivererDialog(DeliverersTable *deliverers, const milk_id delivererId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DelivererDialog),
     m_deliverers(deliverers),
@@ -94,7 +96,7 @@ QString DelivererDialog::getName() const
     return ui->lineEditName->text().trimmed();
 }
 
-qlonglong DelivererDialog::getLocalityId() const
+milk_id DelivererDialog::getLocalityId() const
 {
     const auto locIdColPos = m_deliverers->getLocalities()->getColumnPosition(
                 m_deliverers->getLocalities()->getNameColumnId());
@@ -102,7 +104,7 @@ qlonglong DelivererDialog::getLocalityId() const
     return Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxLocality, locIdColPos).toLongLong();
 }
 
-qlonglong DelivererDialog::getInn() const
+milk_inn DelivererDialog::getInn() const
 {
     return ui->lineEditInn->text().toLongLong();
 }
@@ -132,12 +134,12 @@ bool DelivererDialog::isNeedInsert() const
     return m_currentId < 0;
 }
 
-void DelivererDialog::loadDelivererToUi(const Deliverer &deliverer)
+void DelivererDialog::loadDelivererToUi(const DelivererData &deliverer)
 {
     const auto locIdColPos = m_deliverers->getLocalities()->getColumnPosition(
                 m_deliverers->getLocalities()->getNameColumnId());
     const auto &index = Utils::Main::getIndexFromModelById(m_deliverers->getLocalities(),
-                                                           locIdColPos, deliverer.locality().id());
+                                                           locIdColPos, deliverer.localityId());
     if (index.isValid())
         ui->comboBoxLocality->setCurrentIndex(index.row());
     else
@@ -150,10 +152,9 @@ void DelivererDialog::loadDelivererToUi(const Deliverer &deliverer)
     ui->lineEditPhoneNumber->setText(deliverer.phoneNumber());
 }
 
-Deliverer DelivererDialog::getDelivererFromUi() const
+db::DelivererData DelivererDialog::getDelivererFromUi() const
 {
-    return Deliverer(getName(), m_deliverers->getLocalities()->getLocality(getLocalityId()),
-                     getInn(), getAddress(), getPhoneNumber(), m_currentId);
+    return DelivererData(m_currentId, getName(), getLocalityId(), getInn(), getAddress(), getPhoneNumber());
 }
 
 bool DelivererDialog::insertDeliverer()

@@ -1,65 +1,53 @@
 #include "Locality.h"
 
+USE_DB_NAMESPACE
 
 
 Locality::Locality():
-    _id(-1),
-    _name(QString()),
-    _description(QString())
+    Locality(-1, "", "")
 {
 
 }
 
-Locality::Locality(const QString &name, const QString &description, const qlonglong id):
-    _id(id),
-    _name(name),
-    _description(description)
+Locality::Locality(const milk_id id, const QString &name, const QString &description):
+    m_id(id),
+    m_name(name),
+    m_description(description)
 {
 
 }
 
-qlonglong Locality::id() const
+milk_id Locality::id() const
 {
-    return _id;
+    return m_id;
 }
 
-void Locality::setId(const qlonglong &id)
+void Locality::setId(const milk_id &id)
 {
-    _id = id;
+    m_id = id;
 }
 
 QString Locality::name() const
 {
-    return _name;
+    return m_name;
 }
 
 void Locality::setName(const QString &name)
 {
-    _name = name;
+    m_name = name;
 }
 
 QString Locality::description() const
 {
-    return _description;
+    return m_description;
 }
 
 void Locality::setDescription(const QString &description)
 {
-    _description = description;
+    m_description = description;
 }
 
-bool Locality::isNull() const
+bool Locality::isValid() const
 {
-    return _id < 0;
-}
-
-QString Locality::toString() const
-{
-    return QString::fromUtf8("%1(id %2): описание = %3;")
-            .arg(_name).arg(_id).arg(_description);
-}
-
-Locality Locality::CREATE_NULL()
-{
-    return Locality();
+    return m_id > 0;
 }

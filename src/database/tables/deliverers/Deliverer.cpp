@@ -1,96 +1,95 @@
 #include "Deliverer.h"
 
+USE_DB_NAMESPACE
+
 
 Deliverer::Deliverer():
-    _id(-1),
-    _name(QString()),
-    _locality(Locality()),
-    _inn(0),
-    _address(QString()),
-    _phoneNumber(QString())
+    m_data()
 {
 
 }
 
-Deliverer::Deliverer(const QString &name, const Locality &locality, const qlonglong inn, const QString &address, const QString &phoneNumber, const qlonglong id):
-    _id(id),
-    _name(name),
-    _locality(locality),
-    _inn(inn),
-    _address(address),
-    _phoneNumber(phoneNumber)
+Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
+                     const QString &phoneNumber, const Locality &locality):
+    m_data(id, name, locality.id(), inn, address, phoneNumber)
 {
+
 }
 
-qlonglong Deliverer::id() const
+Deliverer::Deliverer(const Deliverer &deliverer):
+    m_data(deliverer.data()),
+    m_locality(deliverer.locality())
 {
-    return _id;
+
 }
 
-void Deliverer::setId(const qlonglong &id)
+milk_id Deliverer::id() const
 {
-    _id = id;
+    return m_data.id();
+}
+
+void Deliverer::setId(const milk_id &id)
+{
+    m_data.setId(id);
 }
 
 Locality Deliverer::locality() const
 {
-    return _locality;
+    return m_locality;
 }
 
 QString Deliverer::name() const
 {
-    return _name;
+    return m_data.name();
 }
 
 void Deliverer::setName(const QString &name)
 {
-    _name = name;
+    m_data.setName(name);
 }
 
-qlonglong Deliverer::inn() const
+milk_inn Deliverer::inn() const
 {
-    return _inn;
+    return m_data.inn();
 }
 
-void Deliverer::setInn(const qlonglong &inn)
+void Deliverer::setInn(const milk_inn &inn)
 {
-    _inn = inn;
+    m_data.setInn(inn);
 }
 
 QString Deliverer::address() const
 {
-    return _address;
+    return m_data.address();
 }
 
 void Deliverer::setAddress(const QString &address)
 {
-    _address = address;
+    m_data.setAddress(address);
 }
 
 QString Deliverer::phoneNumber() const
 {
-    return _phoneNumber;
+    return m_data.phoneNumber();
 }
 
 void Deliverer::setPhoneNumber(const QString &phoneNumber)
 {
-    _phoneNumber = phoneNumber;
+    m_data.setPhoneNumber(phoneNumber);
 }
 
-bool Deliverer::isNull() const
+bool Deliverer::isValid() const
 {
-    return _id < 0;
+    return m_data.isValid();
 }
 
-QString Deliverer::toString() const
+DelivererData Deliverer::data() const
 {
-    return QString::fromUtf8("Сдатчик %1(id %2): %3, inn = %4, "
-                             "address = %5, phoneNumber = %6")
-            .arg(_name).arg(_id).arg(_locality.toString()).arg(_inn)
-            .arg(_address).arg(_phoneNumber);
+    return m_data;
 }
 
-Deliverer Deliverer::CREATE_NULL()
+void Deliverer::setLocality(const Locality &locality)
 {
-    return Deliverer();
+    m_locality = locality;
+    m_data.setId(m_locality.id());
 }

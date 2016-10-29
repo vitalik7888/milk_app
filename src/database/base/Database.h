@@ -1,13 +1,16 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <QObject>
-#include <QtSql/QSqlDatabase>
-
+#include "dbconstants.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "tables/milk_reception/MilkReceptionTable.h"
+// Qt
+#include <QObject>
+#include <QtSql/QSqlDatabase>
+
+DB_BEGIN_NAMESPACE
 
 
 class Database : public QObject
@@ -45,5 +48,7 @@ private:
     void clearTables();
     void refreshTables();
 };
+
+DB_END_NAMESPACE
 
 #endif // DATABASE_H

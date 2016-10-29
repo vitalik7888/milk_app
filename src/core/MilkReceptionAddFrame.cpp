@@ -7,9 +7,11 @@
 #include "src/delegates/DoubleSpinBoxDelegate.h"
 #include "Constants.h"
 #include "Utils.h"
-//qt
+// Qt
 #include <QMessageBox>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 
 MilkReceptionAddFrame::MilkReceptionAddFrame(QWidget *parent) :
@@ -49,12 +51,12 @@ void MilkReceptionAddFrame::setMainWindow(MainWindow *mainWindow)
 
 void MilkReceptionAddFrame::setPrice(const float price)
 {
-    ui->doubleSpinBoxPrice->setValue(price);
+    ui->doubleSpinBoxPrice->setValue(static_cast<double>(price));
 }
 
 float MilkReceptionAddFrame::price() const
 {
-    return ui->doubleSpinBoxPrice->value();
+    return static_cast<float>(ui->doubleSpinBoxPrice->value());
 }
 
 void MilkReceptionAddFrame::setup()
@@ -217,13 +219,15 @@ void MilkReceptionAddFrame::insertReceptionMilk()
 
         if (error.isEmpty())
         {
-            auto deliverer = Deliverer();
-            deliverer.setId(idDeliverer);
+            MilkReceptionData mrd;
+            mrd.setDelivererId(idDeliverer);
+            mrd.setMilkPointId(idMilkPoint);
+            mrd.setDeliveryDate(deliveryDate);
+            mrd.setPriceLiter(price());
+            mrd.setLiters(liters);
+            mrd.setFat(fat);
 
-            auto milkPoint = MilkPoint();
-            milkPoint.setId(idMilkPoint);
-
-            if (milkReception->insert(MilkReception(deliverer, milkPoint, deliveryDate, price(), liters, fat))) {
+            if (milkReception->insert(mrd)) {
                 ui->tableWidgetAddMilkReception->model()->setData(indexLiters, .0f);
                 ui->tableWidgetAddMilkReception->model()->setData(indexFat, .0f);
             }

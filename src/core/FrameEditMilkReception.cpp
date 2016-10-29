@@ -7,11 +7,13 @@
 #include "ChooseIdDelegate.h"
 #include "DateEditDelegate.h"
 #include "Utils.h"
-// qt
+// Qt
 #include <QMessageBox>
 #include <QDebug>
 
+USE_DB_NAMESPACE
 using utm = Utils::Main;
+
 
 FrameEditMilkReception::FrameEditMilkReception(QWidget *parent) :
     QFrame(parent),

@@ -1,6 +1,8 @@
 #ifndef FRAMEEDITMILKRECEPTION_H
 #define FRAMEEDITMILKRECEPTION_H
 
+#include "dbconstants.h"
+// Qt
 #include <QFrame>
 
 namespace Ui {
@@ -8,10 +10,12 @@ class FrameEditMilkReception;
 }
 class MainWindow;
 class SortFilterMilkReceptionTable;
-class LocalitiesTable;
-class DeliverersTable;
-class MilkPointsTable;
-class MilkReceptionTable;
+DB_BEGIN_NAMESPACE
+    class LocalitiesTable;
+    class DeliverersTable;
+    class MilkPointsTable;
+    class MilkReceptionTable;
+DB_END_NAMESPACE
 
 
 class FrameEditMilkReception : public QFrame
@@ -29,10 +33,10 @@ private:
     Ui::FrameEditMilkReception *ui;
 
     MainWindow *m_mainWindow;
-    LocalitiesTable *localities;
-    DeliverersTable *deliverers;
-    MilkPointsTable *milkPoints;
-    MilkReceptionTable *milkReception;
+    DB_NAMESPACE::LocalitiesTable *localities;
+    DB_NAMESPACE::DeliverersTable *deliverers;
+    DB_NAMESPACE::MilkPointsTable *milkPoints;
+    DB_NAMESPACE::MilkReceptionTable *milkReception;
     SortFilterMilkReceptionTable *m_proxy;
 
 private slots:

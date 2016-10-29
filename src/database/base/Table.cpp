@@ -1,10 +1,12 @@
 #include "Table.h"
 
 #include "Utils.h"
-// qt
+// Qt
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+//USE_DB_NAMESPACE
 
 
 Table::Table(QObject *parent, QSqlDatabase db) :

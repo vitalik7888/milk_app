@@ -1,9 +1,12 @@
 #ifndef UPDATEPRICEDIALOG_H
 #define UPDATEPRICEDIALOG_H
 
+#include "dbconstants.h"
+// Qt
 #include <QDialog>
-
-class MilkReceptionTable;
+DB_BEGIN_NAMESPACE
+    class MilkReceptionTable;
+DB_END_NAMESPACE
 
 namespace Ui {
 class UpdatePriceDialog;
@@ -14,13 +17,13 @@ class UpdatePriceDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UpdatePriceDialog(MilkReceptionTable *mrTable, QWidget *parent = 0);
+    explicit UpdatePriceDialog(DB_NAMESPACE::MilkReceptionTable *mrTable, QWidget *parent = 0);
     ~UpdatePriceDialog();
 
 private:
     Ui::UpdatePriceDialog *ui;
 
-    MilkReceptionTable *m_mrTable;
+    DB_NAMESPACE::MilkReceptionTable *m_mrTable;
 
     double getPrice() const;
     QDate getDateFrom() const;

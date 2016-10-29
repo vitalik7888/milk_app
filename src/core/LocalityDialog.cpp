@@ -2,15 +2,17 @@
 #include "ui_LocalityDialog.h"
 
 #include "Utils.h"
-// qt
+// Qt
 #include <QSqlField>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
 #include <QDebug>
 
+USE_DB_NAMESPACE
 
-LocalityDialog::LocalityDialog(LocalitiesTable *localities, const qlonglong localityId, QWidget *parent) :
+
+LocalityDialog::LocalityDialog(LocalitiesTable *localities, const milk_id localityId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LocalityDialog),
     m_localities(localities),
@@ -50,7 +52,7 @@ void LocalityDialog::loadToUi(const Locality &locality)
 
 Locality LocalityDialog::getLocalityFromUi() const
 {
-    return Locality(getName(), getDescription(), m_currentId);
+    return Locality(m_currentId, getName(), getDescription());
 }
 
 bool LocalityDialog::insertLocality()

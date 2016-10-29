@@ -1,6 +1,8 @@
 #ifndef DIALOG_GET_ITEM_H
 #define DIALOG_GET_ITEM_H
 
+#include "dbconstants.h"
+// Qt
 #include <QDialog>
 
 namespace Ui {
@@ -8,9 +10,11 @@ class DialogGetId;
 }
 class QSortFilterProxyModel;
 class Table;
-class DeliverersTable;
-class LocalitiesTable;
-class MilkPointsTable;
+DB_BEGIN_NAMESPACE
+    class LocalitiesTable;
+    class DeliverersTable;
+    class MilkPointsTable;
+DB_END_NAMESPACE
 
 
 class DialogGeItem : public QDialog
@@ -18,7 +22,7 @@ class DialogGeItem : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogGeItem(Table *table, const QString &title = QString(), QWidget *parent = 0);
+    explicit DialogGeItem(Table *table, const QString &title = QString(), QWidget *parent = Q_NULLPTR);
     ~DialogGeItem();
 
     Table *getTable() const;
@@ -44,9 +48,9 @@ private:
     Ui::DialogGetId *ui;
 
     QSortFilterProxyModel *m_proxyModel;
-    LocalitiesTable *m_localities;
-    DeliverersTable *m_deliverers;
-    MilkPointsTable *m_milkPoints;
+    DB_NAMESPACE::LocalitiesTable *m_localities;
+    DB_NAMESPACE::DeliverersTable *m_deliverers;
+    DB_NAMESPACE::MilkPointsTable *m_milkPoints;
 
     bool m_isItemChoosed; // необходима, т. к. в не случаях exec нельзя проверить result()
 

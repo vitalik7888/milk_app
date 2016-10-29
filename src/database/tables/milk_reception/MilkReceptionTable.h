@@ -3,7 +3,10 @@
 
 #include "base/Table.h"
 #include "MilkReception.h"
+// Qt
 #include <QDate>
+
+DB_BEGIN_NAMESPACE
 
 class DeliverersTable;
 class MilkPointsTable;
@@ -14,6 +17,7 @@ class MilkReceptionTable : public Table
     Q_OBJECT
 public:
     MilkReceptionTable(DeliverersTable *deliverers, MilkPointsTable *milkPoints, QSqlDatabase db);
+    ~MilkReceptionTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
@@ -39,15 +43,15 @@ public:
     QSqlField getFieldLiters() const;
     QSqlField getFieldFat() const;
 
-    MilkReception getMilkReception(const qlonglong milkPointId) const;
-    bool insert(const MilkReception &milkReception) const;
-    bool update(const MilkReception &milkReception) const;
-    bool setIdDeliverer(const qlonglong milkReceptionId, const qlonglong delivererId) const;
-    bool setIdMilkPoint(const qlonglong milkReceptionId, const qlonglong milkPointId) const;
-    bool setDeliveryDate(const qlonglong milkReceptionId, const QDate &deliveryDate) const;
-    bool setPriceLiter(const qlonglong milkReceptionId, const float priceLiter) const;
-    bool setLiters(const qlonglong milkReceptionId, const float liters) const;
-    bool setFat(const qlonglong milkReceptionId, const float fate) const;
+    MilkReceptionData getMilkReception(const milk_id milkPointId) const;
+    bool insert(const MilkReceptionData &milkReception) const;
+    bool update(const MilkReceptionData &milkReception) const;
+    bool setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
+    bool setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
+    bool setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
+    bool setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const;
+    bool setLiters(const milk_id milkReceptionId, const float liters) const;
+    bool setFat(const milk_id milkReceptionId, const float fate) const;
 
     bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
 
@@ -64,5 +68,7 @@ private:
 
     void initColumns() Q_DECL_OVERRIDE;
 };
+
+DB_END_NAMESPACE
 
 #endif // MILKRECEPTION_TABLE_H

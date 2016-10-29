@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QDebug>
 
+USE_DB_NAMESPACE
+
 //#include <cstdarg>
 
 static const char *FN_ID = "id";
@@ -26,6 +28,11 @@ DeliverersTable::DeliverersTable(LocalitiesTable *parent, QSqlDatabase db) :
 
     initColumns();
     setQuery(selectAll());
+}
+
+DeliverersTable::~DeliverersTable()
+{
+
 }
 
 QSqlField DeliverersTable::getFieldId() const
@@ -58,7 +65,7 @@ QSqlField DeliverersTable::getFieldPhoneNumber() const
     return getColumnByName(FN_PHONE_NUMBER);
 }
 
-Deliverer DeliverersTable::getDeliverer(const qlonglong delivererId) const
+DelivererData DeliverersTable::getDeliverer(const milk_id delivererId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -71,21 +78,22 @@ Deliverer DeliverersTable::getDeliverer(const qlonglong delivererId) const
                     .arg(getNameColumnId(true)));
     query.addBindValue(delivererId);
 
+    DelivererData deliverer;
     if (query.exec() && query.first())
     {
-        return Deliverer(query.value(0).toString(),
-                         m_localities->getLocality(query.value(1).toLongLong()),
-                         query.value(2).toLongLong(),
-                         query.value(3).toString(),
-                         query.value(4).toString(),
-                         delivererId);
+        deliverer.setName(query.value(0).toString());
+                         deliverer.setLocalityId(query.value(1).toLongLong());
+                         deliverer.setInn(query.value(2).toInt());
+                         deliverer.setAddress(query.value(3).toString());
+                         deliverer.setPhoneNumber(query.value(4).toString());
+                         deliverer.setId(delivererId);
     } else
         emit error(tr("Отсутствует сдатчик с id = ") + QString::number(delivererId));
 
-    return Deliverer::CREATE_NULL();
+    return deliverer;
 }
 
-bool DeliverersTable::insert(const Deliverer &deliverer)
+bool DeliverersTable::insert(const DelivererData &deliverer)
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
@@ -95,7 +103,7 @@ bool DeliverersTable::insert(const Deliverer &deliverer)
                                    << getNameColumnAddress()
                                    << getNameColumnPhoneNumber()));
     query.addBindValue(deliverer.name());
-    query.addBindValue(deliverer.locality().id());
+    query.addBindValue(deliverer.localityId());
     query.addBindValue(deliverer.inn());
     query.addBindValue(deliverer.address());
     query.addBindValue(deliverer.phoneNumber());
@@ -109,7 +117,7 @@ bool DeliverersTable::insert(const Deliverer &deliverer)
     return true;
 }
 
-bool DeliverersTable::update(const Deliverer &deliverer)
+bool DeliverersTable::update(const DelivererData &deliverer)
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -122,7 +130,7 @@ bool DeliverersTable::update(const Deliverer &deliverer)
                   .arg(getNameColumnId()));
 
     query.addBindValue(deliverer.name());
-    query.addBindValue(deliverer.locality().id());
+    query.addBindValue(deliverer.localityId());
     query.addBindValue(deliverer.inn());
     query.addBindValue(deliverer.address());
     query.addBindValue(deliverer.phoneNumber());
@@ -135,27 +143,27 @@ bool DeliverersTable::update(const Deliverer &deliverer)
     return true;
 }
 
-bool DeliverersTable::setName(const qlonglong delivererId, const QString &_name) const
+bool DeliverersTable::setName(const milk_id delivererId, const QString &_name) const
 {
     return updateValue(getNameColumnId(true), delivererId, _name);
 }
 
-bool DeliverersTable::setLocalityId(const qlonglong delivererId, const qlonglong localityId) const
+bool DeliverersTable::setLocalityId(const milk_id delivererId, const milk_id localityId) const
 {
     return updateValue(getNameColumnLocalityId(true), delivererId, localityId);
 }
 
-bool DeliverersTable::setInn(const qlonglong delivererId, const qlonglong inn) const
+bool DeliverersTable::setInn(const milk_id delivererId, const milk_inn inn) const
 {
     return updateValue(getNameColumnInn(true), delivererId, inn);
 }
 
-bool DeliverersTable::setAddress(const qlonglong delivererId, const QString &address) const
+bool DeliverersTable::setAddress(const milk_id delivererId, const QString &address) const
 {
     return updateValue(getNameColumnAddress(true), delivererId, address);
 }
 
-bool DeliverersTable::setPhoneNumber(const qlonglong delivererId, const QString &phoneNumber) const
+bool DeliverersTable::setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const
 {
     return updateValue(getNameColumnPhoneNumber(true), delivererId, phoneNumber);
 }

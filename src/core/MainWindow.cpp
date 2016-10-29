@@ -10,7 +10,7 @@
 #include "Settings.h"
 #include "Constants.h"
 #include "Utils.h"
-// qt
+// Qt
 #include <QGroupBox>
 #include <QPushButton>
 #include <QComboBox>
@@ -19,6 +19,8 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 
 MainWindow::MainWindow(QWidget *parent) :

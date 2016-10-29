@@ -5,6 +5,7 @@
 // Qt
 #include <QDebug>
 
+USE_DB_NAMESPACE
 using utm = Utils::Main;
 
 

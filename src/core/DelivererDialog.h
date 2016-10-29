@@ -1,9 +1,9 @@
 #ifndef DELIVERERADDDIALOG_H
 #define DELIVERERADDDIALOG_H
 
-#include <QDialog>
-
 #include "tables/deliverers/DeliverersTable.h"
+// Qt
+#include <QDialog>
 
 namespace Ui {
 class DelivererDialog;
@@ -15,14 +15,15 @@ class DelivererDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit DelivererDialog(DeliverersTable *deliverers, const qlonglong delivererId = -1, QWidget *parent = 0);
+    explicit DelivererDialog(DB_NAMESPACE::DeliverersTable *deliverers,
+                             const milk_id delivererId = -1, QWidget *parent = Q_NULLPTR);
     ~DelivererDialog();
 
     void accept() override;
 
     QString getName() const;
-    qlonglong getLocalityId() const;
-    qlonglong getInn() const;
+    milk_id getLocalityId() const;
+    milk_inn getInn() const;
     QString getAddress() const;
     QString getPhoneNumber() const;
 
@@ -31,12 +32,12 @@ public:
 private:
     Ui::DelivererDialog *ui;
 
-    DeliverersTable *m_deliverers;
-    qlonglong m_currentId;
+    DB_NAMESPACE::DeliverersTable *m_deliverers;
+    milk_id m_currentId;
 
     bool isNeedInsert() const;
-    void loadDelivererToUi(const Deliverer &deliverer);
-    Deliverer getDelivererFromUi() const;
+    void loadDelivererToUi(const DB_NAMESPACE::DelivererData &deliverer);
+    DB_NAMESPACE::DelivererData getDelivererFromUi() const;
 
     void loadLocalities();
 

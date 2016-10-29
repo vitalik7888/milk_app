@@ -2,11 +2,13 @@
 
 #include "tables/localities/LocalitiesTable.h"
 #include "Utils.h"
-// qt
+// Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 static const char *FN_ID = "id";
 static const char *FN_LOCALITY_ID = "locality_id";
@@ -23,6 +25,11 @@ MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
 
     initColumns();
     setQuery(selectAll());
+}
+
+MilkPointsTable::~MilkPointsTable()
+{
+
 }
 
 QString MilkPointsTable::tableName() const
@@ -78,7 +85,7 @@ QSqlField MilkPointsTable::getFieldDescription() const
     return getColumnByName(FN_DESCRIPTION);
 }
 
-MilkPoint MilkPointsTable::getMilkPoint(const qint32 milkPointId) const
+MilkPointData MilkPointsTable::getMilkPoint(const milk_id milkPointId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -89,26 +96,27 @@ MilkPoint MilkPointsTable::getMilkPoint(const qint32 milkPointId) const
                     .arg(getFieldId().name()));
     query.addBindValue(milkPointId);
 
+    MilkPointData data;
     if (query.exec() && query.first())
     {
-        return MilkPoint(m_localities->getLocality(query.value(0).toLongLong()),
-                         query.value(1).toString(),
-                         query.value(2).toString(),
-                         milkPointId);
+        data.setLocalityId(query.value(0).toLongLong());
+        data.setName(query.value(1).toString());
+        data.setDescription(query.value(2).toString());
+        data.setId(milkPointId);
     } else
         emit error(tr("Отсутствует молокопункт с id = ") + QString::number(milkPointId));
 
-    return MilkPoint::CREATE_NULL();
+    return data;
 }
 
-bool MilkPointsTable::insert(const MilkPoint &milkPoint)
+bool MilkPointsTable::insert(const MilkPointData &milkPoint)
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
                                    << getNameColumnLocalityId()
                                    << getNameColumnName()
                                    << getNameColumnDescription()));
-    query.addBindValue(milkPoint.locality().id());
+    query.addBindValue(milkPoint.localityId());
     query.addBindValue(milkPoint.name());
     query.addBindValue(milkPoint.description());
 
@@ -120,7 +128,7 @@ bool MilkPointsTable::insert(const MilkPoint &milkPoint)
     return true;
 }
 
-bool MilkPointsTable::update(const MilkPoint &milkPoint) const
+bool MilkPointsTable::update(const MilkPointData &milkPoint) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -129,7 +137,7 @@ bool MilkPointsTable::update(const MilkPoint &milkPoint) const
                                    << getNameColumnName()
                                    << getNameColumnDescription()))
                   .arg(getNameColumnId()));
-    query.addBindValue(milkPoint.locality().id());
+    query.addBindValue(milkPoint.localityId());
     query.addBindValue(milkPoint.name());
     query.addBindValue(milkPoint.description());
     query.addBindValue(milkPoint.id());
@@ -142,12 +150,12 @@ bool MilkPointsTable::update(const MilkPoint &milkPoint) const
     return true;
 }
 
-bool MilkPointsTable::setName(const qint32 milkPointId, const QString &milkPointName) const
+bool MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
 {
     return updateValue(getColumnPosition(FN_NAME), milkPointId, milkPointName);
 }
 
-bool MilkPointsTable::setDescription(const qint32 milkPointId, const QString &description) const
+bool MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
 {
     return updateValue(getColumnPosition(FN_DESCRIPTION), milkPointId, description);
 }

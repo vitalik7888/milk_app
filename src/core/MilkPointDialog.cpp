@@ -10,8 +10,10 @@
 #include <QMessageBox>
 #include <QDebug>
 
+USE_DB_NAMESPACE
 
-MilkPointDialog::MilkPointDialog(MilkPointsTable *milkPoints, const qlonglong milkPointId, QWidget *parent) :
+
+MilkPointDialog::MilkPointDialog(MilkPointsTable *milkPoints, const milk_id milkPointId, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MilkPointDialog),
     m_milkPointsTable(milkPoints),
@@ -84,7 +86,7 @@ QString MilkPointDialog::getDescription() const
     return ui->textEditDescription->toPlainText().trimmed();
 }
 
-qlonglong MilkPointDialog::getLocalityId() const
+milk_id MilkPointDialog::getLocalityId() const
 {
     const auto locIdColPos = m_milkPointsTable->getLocalities()->getColumnPosition(
                 m_milkPointsTable->getLocalities()->getNameColumnId(false));
@@ -118,13 +120,13 @@ void MilkPointDialog::loadLocalities()
     });
 }
 
-void MilkPointDialog::loadToUi(const MilkPoint &milkPoint)
+void MilkPointDialog::loadToUi(const db::MilkPointData &milkPoint)
 {
     const auto locIdColPos = m_milkPointsTable->getLocalities()->getColumnPosition(
                 m_milkPointsTable->getLocalities()->getNameColumnId(false));
 
     const auto &index = Utils::Main::getIndexFromModelById(m_milkPointsTable->getLocalities(),
-                                                             locIdColPos, milkPoint.locality().id());
+                                                             locIdColPos, milkPoint.localityId());
     ui->lineEditName->setText(milkPoint.name());
     ui->textEditDescription->setText(milkPoint.description());
 
@@ -136,10 +138,9 @@ void MilkPointDialog::loadToUi(const MilkPoint &milkPoint)
                                                           milkPoint.name() + "\"");
 }
 
-MilkPoint MilkPointDialog::getFromUi() const
+db::MilkPointData MilkPointDialog::getFromUi() const
 {
-    return MilkPoint(m_milkPointsTable->getLocalities()->getLocality(getLocalityId()),
-                     getName(), getDescription(), m_currentId);
+    return MilkPointData(m_currentId, getLocalityId(), getName(), getDescription());
 }
 
 bool MilkPointDialog::insertMilkPoint()

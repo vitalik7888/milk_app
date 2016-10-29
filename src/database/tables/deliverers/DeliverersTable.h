@@ -4,6 +4,8 @@
 #include "base/Table.h"
 #include "Deliverer.h"
 
+DB_BEGIN_NAMESPACE
+
 class LocalitiesTable;
 
 
@@ -12,6 +14,7 @@ class DeliverersTable : public Table
     Q_OBJECT
 public:
     DeliverersTable(LocalitiesTable *parent, QSqlDatabase db);
+    ~DeliverersTable();
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
@@ -34,14 +37,14 @@ public:
 
     LocalitiesTable *getLocalities() const;
 
-    Deliverer getDeliverer(const qlonglong delivererId) const;
-    bool insert(const Deliverer &deliverer);
-    bool update(const Deliverer &deliverer);
-    bool setName(const qlonglong delivererId, const QString &tableName) const;
-    bool setLocalityId(const qlonglong delivererId, const qlonglong localityId) const;
-    bool setInn(const qlonglong delivererId, const qlonglong inn) const;
-    bool setAddress(const qlonglong delivererId, const QString &address) const;
-    bool setPhoneNumber(const qlonglong delivererId, const QString &phoneNumber) const;
+    DelivererData getDeliverer(const milk_id delivererId) const;
+    bool insert(const DelivererData &deliverer);
+    bool update(const DelivererData &deliverer);
+    bool setName(const milk_id delivererId, const QString &tableName) const;
+    bool setLocalityId(const milk_id delivererId, const milk_id localityId) const;
+    bool setInn(const milk_id delivererId, const milk_inn inn) const;
+    bool setAddress(const milk_id delivererId, const QString &address) const;
+    bool setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const;
 
 private:
     LocalitiesTable *m_localities;
@@ -49,5 +52,6 @@ private:
     void initColumns() Q_DECL_OVERRIDE;
 };
 
+DB_END_NAMESPACE
 
 #endif // DELIVERERS_TABLE_H

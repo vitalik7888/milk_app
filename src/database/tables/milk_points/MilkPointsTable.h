@@ -1,17 +1,19 @@
 #ifndef MILKPOINTS_TABLE_H
 #define MILKPOINTS_TABLE_H
-
+#include "dbconstants.h"
 #include "base/Table.h"
 #include "MilkPoint.h"
 
-class LocalitiesTable;
+DB_BEGIN_NAMESPACE
 
+class LocalitiesTable;
 
 class MilkPointsTable: public Table
 {
     Q_OBJECT
 public:
     MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db);
+    ~MilkPointsTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
@@ -26,11 +28,11 @@ public:
     QSqlField getFieldName() const;
     QSqlField getFieldDescription() const;
 
-    MilkPoint getMilkPoint(const qint32 milkPointId) const;
-    bool insert(const MilkPoint &milkPoint);
-    bool update(const MilkPoint &milkPoint) const;
-    bool setName(const qint32 milkPointId, const QString &milkPointName) const;
-    bool setDescription(const qint32 milkPointId, const QString &description) const;
+    MilkPointData getMilkPoint(const milk_id milkPointId) const;
+    bool insert(const MilkPointData &milkPoint);
+    bool update(const MilkPointData &milkPoint) const;
+    bool setName(const milk_id milkPointId, const QString &milkPointName) const;
+    bool setDescription(const milk_id milkPointId, const QString &description) const;
 
     LocalitiesTable *getLocalities() const;
 
@@ -39,5 +41,7 @@ private:
 
     void initColumns() Q_DECL_OVERRIDE;
 };
+
+DB_END_NAMESPACE
 
 #endif // MILKPOINTS_TABLE_H

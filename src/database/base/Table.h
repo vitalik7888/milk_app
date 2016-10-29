@@ -1,20 +1,22 @@
-#ifndef ABSTRACT_TABLE
-#define ABSTRACT_TABLE
+#ifndef MILK_TABLE
+#define MILK_TABLE
 
-#include <QString>
-#include <QVector>
-
+#include "dbconstants.h"
+// Qt
 #include <QSqlQueryModel>
-
 #include <QSqlRecord>
 #include <QSqlField>
+#include <QVector>
+#include <QString>
+
+//DB_BEGIN_NAMESPACE
 
 
 class Table : public QSqlQueryModel
 {
     Q_OBJECT
 public:
-    Table(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
+    Table(QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
     virtual ~Table();
 
     QSqlDatabase database() const;
@@ -65,5 +67,7 @@ signals:
     void refreshed();
 };
 
-#endif // ABSTRACT_TABLE
+//DB_END_NAMESPACE
+
+#endif // MILK_TABLE
 

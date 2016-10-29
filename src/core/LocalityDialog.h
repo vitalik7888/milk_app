@@ -1,9 +1,9 @@
 #ifndef LOCALITYADDDIALOG_H
 #define LOCALITYADDDIALOG_H
 
-#include <QDialog>
-
 #include "tables/localities/LocalitiesTable.h"
+// Qt
+#include <QDialog>
 
 namespace Ui {
 class LocalityDialog;
@@ -15,7 +15,8 @@ class LocalityDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit LocalityDialog(LocalitiesTable *localities, const qlonglong localityId = -1, QWidget *parent = 0);
+    explicit LocalityDialog(DB_NAMESPACE::LocalitiesTable *localities, const milk_id localityId = -1,
+                            QWidget *parent = Q_NULLPTR);
     ~LocalityDialog();
 
     void accept() Q_DECL_OVERRIDE;
@@ -26,12 +27,12 @@ public:
 private:
     Ui::LocalityDialog *ui;
 
-    LocalitiesTable *m_localities;
-    qlonglong m_currentId;
+    DB_NAMESPACE::LocalitiesTable *m_localities;
+    milk_id m_currentId;
 
     bool isNeedInsert() const;
-    void loadToUi(const Locality &locality);
-    Locality getLocalityFromUi() const;
+    void loadToUi(const DB_NAMESPACE::Locality &locality);
+    DB_NAMESPACE::Locality getLocalityFromUi() const;
     bool insertLocality();
     bool updateLocality();
 

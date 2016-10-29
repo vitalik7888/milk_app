@@ -2,111 +2,116 @@
 
 #include "Utils.h"
 
+USE_DB_NAMESPACE
+
 
 MilkReception::MilkReception():
-    _id(-1),
-    _deliverer(Deliverer()),
-    _milkPoint(MilkPoint()),
-    _deliveryDate(QDate()),
-    _priceLiter(.0f),
-    _liters(.0f),
-    _fat(.0f)
+    MilkReception(-1, Deliverer(), MilkPoint(), QDate(), .0f, .0f, .0f)
 {
 
 }
 
-MilkReception::MilkReception(const Deliverer &deliverer, const MilkPoint &milkPoint,
+MilkReception::MilkReception(const milk_id id, const Deliverer &deliverer, const MilkPoint &milkPoint,
                              const QDate deliveryDate, const float priceLiter,
-                             const float liters, const float fat, const qint32 id):
-    _id(id),
-    _deliverer(deliverer),
-    _milkPoint(milkPoint),
-    _deliveryDate(deliveryDate),
-    _priceLiter(priceLiter),
-    _liters(liters),
-    _fat(fat)
+                             const float liters, const float fat):
+    m_data(id, deliverer.id(), milkPoint.id(), deliveryDate, priceLiter, liters, fat),
+    m_deliverer(deliverer),
+    m_milkPoint(milkPoint)
 {
 
 }
 
-qint32 MilkReception::id() const
+MilkReception::MilkReception(const MilkReception &milkReception):
+    m_data(milkReception.data()),
+    m_deliverer(milkReception.deliverer()),
+    m_milkPoint(milkReception.milkPoint())
 {
-    return _id;
+
 }
 
-void MilkReception::setId(const qint32 &id)
+MilkReception::~MilkReception()
 {
-    _id = id;
+
+}
+
+milk_id MilkReception::id() const
+{
+    return m_data.id();
+}
+
+void MilkReception::setId(const milk_id &id)
+{
+    m_data.setId(id);
 }
 
 Deliverer MilkReception::deliverer() const
 {
-    return _deliverer;
+    return m_deliverer;
 }
 
 MilkPoint MilkReception::milkPoint() const
 {
-    return _milkPoint;
+    return m_milkPoint;
+}
+
+void MilkReception::setDeliverer(const Deliverer &deliverer)
+{
+    m_deliverer = deliverer;
+    m_data.setDelivererId(m_deliverer.id());
+}
+
+void MilkReception::setMilkPoint(const MilkPoint &milkPoint)
+{
+    m_milkPoint = milkPoint;
+    m_data.setMilkPointId(m_milkPoint.id());
+}
+
+MilkReceptionData MilkReception::data() const
+{
+    return m_data;
 }
 
 QDate MilkReception::deliveryDate() const
 {
-    return _deliveryDate;
+    return m_data.deliveryDate();
 }
 
 void MilkReception::setDeliveryDate(const QDate &deliveryDate)
 {
-    _deliveryDate = deliveryDate;
+    m_data.setDeliveryDate(deliveryDate);
 }
 
 float MilkReception::priceLiter() const
 {
-    return _priceLiter;
+    return m_data.priceLiter();
 }
 
 void MilkReception::setPriceLiter(float priceLiter)
 {
-    _priceLiter = priceLiter;
+    m_data.setPriceLiter(priceLiter);
 }
 
 float MilkReception::liters() const
 {
-    return _liters;
+    return m_data.liters();
 }
 
 void MilkReception::setLiters(float liters)
 {
-    _liters = liters;
+    m_data.setLiters(liters);
 }
 
 float MilkReception::fat() const
 {
-    return _fat;
+    return m_data.fat();
 }
 
 void MilkReception::setFat(float fat)
 {
-    _fat = fat;
+    m_data.setFat(fat);
 }
 
-bool MilkReception::isNull() const
+bool MilkReception::isValid() const
 {
-    return (_id < 0 || _deliverer.isNull() || _milkPoint.isNull());
-}
-
-QString MilkReception::toString() const
-{
-    return QString("Сдача молока(id: %1): %2, %3, delivery date: %4, price: %5, liters: %6, fat: %7")
-            .arg(id())
-            .arg(_deliverer.toString())
-            .arg(_milkPoint.toString())
-            .arg(_deliveryDate.toString())
-            .arg(_priceLiter)
-            .arg(_liters).arg(_fat);
-}
-
-MilkReception MilkReception::CREATE_NULL()
-{
-    return MilkReception(Deliverer::CREATE_NULL(), MilkPoint::CREATE_NULL(), QDate(),
-                         .0f, .0f, .0f, -1);
+    return m_data.isValid();
 }

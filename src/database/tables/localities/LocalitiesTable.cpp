@@ -1,11 +1,13 @@
 #include "LocalitiesTable.h"
 
 #include "Utils.h"
-// qt
+// Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 static const char *FN_ID = "id";
 static const char *FN_NAME = "name";
@@ -20,6 +22,11 @@ LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
 
     initColumns();
     setQuery(selectAll());
+}
+
+LocalitiesTable::~LocalitiesTable()
+{
+
 }
 
 QString LocalitiesTable::tableName() const
@@ -42,7 +49,7 @@ QSqlField LocalitiesTable::getFieldDescription() const
     return getColumnByName(FN_DESCRIPTION);
 }
 
-Locality LocalitiesTable::getLocality(const qlonglong localityId) const
+Locality LocalitiesTable::getLocality(const milk_id localityId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -52,15 +59,16 @@ Locality LocalitiesTable::getLocality(const qlonglong localityId) const
                     .arg(getNameColumnId()));
     query.addBindValue(localityId);
 
+    Locality data;
     if (query.exec() && query.first())
     {
-        return Locality(query.value(0).toString(),
-                         query.value(1).toString(),
-                         localityId);
+        data.setId(localityId);
+        data.setName(query.value(0).toString());
+        data.setDescription(query.value(1).toString());
     } else
         emit error(tr("Отсутствует населенный пункт с id = ")+ QString::number(localityId));
 
-    return Locality::CREATE_NULL();
+    return data;
 }
 
 bool LocalitiesTable::insert(const Locality &locality)
@@ -100,12 +108,12 @@ bool LocalitiesTable::update(const Locality &locality) const
     return true;
 }
 
-bool LocalitiesTable::setName(const qlonglong localityId, const QString &localityName) const
+bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
 {
     return updateValue(getColumnPosition(FN_ID), localityId, localityName);
 }
 
-bool LocalitiesTable::setDescription(const qlonglong localityId, const QString &description) const
+bool LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
 {
     return updateValue(getColumnPosition(FN_DESCRIPTION), localityId, description);
 }

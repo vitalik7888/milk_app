@@ -1,9 +1,12 @@
 #include "Database.h"
 
+// Qt
 #include <QFile>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+USE_DB_NAMESPACE
 
 
 Database::Database(QObject *parent) :

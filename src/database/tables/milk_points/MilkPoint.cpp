@@ -1,72 +1,81 @@
 #include "MilkPoint.h"
 
+USE_DB_NAMESPACE
+
 
 MilkPoint::MilkPoint():
-    _id(-1),
-    _locality(Locality()),
-    _name(QString()),
-    _description(QString())
+    MilkPoint(-1, Locality(), "", "")
 {
 
 }
 
-MilkPoint::MilkPoint(const Locality &locality, const QString &name,
-                     const QString &description, const qlonglong id):
-    _id(id),
-    _locality(locality),
-    _name(name),
-    _description(description)
+MilkPoint::MilkPoint(const milk_id id, const Locality &locality, const QString &name,
+                     const QString &description):
+    m_data(id, locality.id(), name, description),
+    m_locality(locality)
 {
 
 }
 
-qlonglong MilkPoint::id() const
+MilkPoint::MilkPoint(const MilkPoint &milkPoint):
+    m_data(milkPoint.data()),
+    m_locality(milkPoint.locality())
 {
-    return _id;
+
 }
 
-void MilkPoint::setId(const qlonglong &id)
+MilkPoint::~MilkPoint()
 {
-    _id = id;
+
+}
+
+milk_id MilkPoint::id() const
+{
+    return m_data.id();
+}
+
+void MilkPoint::setId(const milk_id &id)
+{
+    m_data.setId(id);
 }
 
 Locality MilkPoint::locality() const
 {
-    return _locality;
+    return m_locality;
 }
 
 QString MilkPoint::name() const
 {
-    return _name;
+    return m_data.name();
 }
 
 void MilkPoint::setName(const QString &name)
 {
-    _name = name;
+    m_data.setName(name);
 }
 
 QString MilkPoint::description() const
 {
-    return _description;
+    return m_data.description();
 }
 
 void MilkPoint::setDescription(const QString &description)
 {
-    _description = description;
+    m_data.setDescription(description);
 }
 
-bool MilkPoint::isNull() const
+bool MilkPoint::isValid() const
 {
-    return _id < 0;
+    return m_data.isValid();
 }
 
-QString MilkPoint::toString() const
+MilkPointData MilkPoint::data() const
 {
-    return QString::fromUtf8("Молочный пункт %1(id %2): %3, описание = %4")
-            .arg(_name).arg(_locality.toString()).arg(_id).arg(_description);
+    return m_data;
 }
 
-MilkPoint MilkPoint::CREATE_NULL()
+void MilkPoint::setLocality(const Locality &locality)
 {
-    return MilkPoint(Locality::CREATE_NULL(), "", "", -1);
+    m_locality = locality;
+    m_data.setLocalityId(m_locality.id());
 }

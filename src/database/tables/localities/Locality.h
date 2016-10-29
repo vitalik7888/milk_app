@@ -1,16 +1,19 @@
 #ifndef LOCALITY_H
 #define LOCALITY_H
 
+#include "dbconstants.h"
+// Qt
 #include <QString>
 
+DB_BEGIN_NAMESPACE
 
 class Locality {
 public:
     Locality();
-    Locality(const QString &name, const QString &description = "", const qlonglong id = -1);
+    Locality(const milk_id id, const QString &name, const QString &description);
 
-    qlonglong id() const;
-    void setId(const qlonglong &id);
+    milk_id id() const;
+    void setId(const milk_id &id);
 
     QString name() const;
     void setName(const QString &name);
@@ -18,16 +21,14 @@ public:
     QString description() const;
     void setDescription(const QString &description);
 
-    bool isNull() const;
-
-    QString toString() const;
-
-    static Locality CREATE_NULL();
+    bool isValid() const;
 
 private:
-    qlonglong _id;
-    QString _name;
-    QString _description;
+    milk_id m_id;
+    QString m_name;
+    QString m_description;
 };
+
+DB_END_NAMESPACE
 
 #endif // LOCALITY_H

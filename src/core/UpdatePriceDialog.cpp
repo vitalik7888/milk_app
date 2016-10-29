@@ -7,6 +7,8 @@
 #include <QSqlQuery>
 #include <QMessageBox>
 
+USE_DB_NAMESPACE
+
 
 UpdatePriceDialog::UpdatePriceDialog(MilkReceptionTable *mrTable, QWidget *parent) :
     QDialog(parent),

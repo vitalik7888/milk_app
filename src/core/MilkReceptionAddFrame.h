@@ -1,16 +1,20 @@
 #ifndef MILKRECEPTIONADDFRAME_H
 #define MILKRECEPTIONADDFRAME_H
 
+#include "dbconstants.h"
+// Qt
 #include <QFrame>
 
 namespace Ui {
 class MilkReceptionAddFrame;
 }
 class MainWindow;
-class LocalitiesTable;
-class DeliverersTable;
-class MilkPointsTable;
-class MilkReceptionTable;
+DB_BEGIN_NAMESPACE
+    class LocalitiesTable;
+    class DeliverersTable;
+    class MilkPointsTable;
+    class MilkReceptionTable;
+DB_END_NAMESPACE
 
 
 class MilkReceptionAddFrame : public QFrame
@@ -42,10 +46,10 @@ private:
     Ui::MilkReceptionAddFrame *ui;
 
     MainWindow *m_mainWindow;
-    LocalitiesTable *localities;
-    DeliverersTable *deliverers;
-    MilkPointsTable *milkPoints;
-    MilkReceptionTable *milkReception;
+    DB_NAMESPACE::LocalitiesTable *localities;
+    DB_NAMESPACE::DeliverersTable *deliverers;
+    DB_NAMESPACE::MilkPointsTable *milkPoints;
+    DB_NAMESPACE::MilkReceptionTable *milkReception;
 
 
 private slots:

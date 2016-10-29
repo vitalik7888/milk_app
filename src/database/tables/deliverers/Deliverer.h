@@ -1,26 +1,29 @@
 #ifndef DELIVERER_H
 #define DELIVERER_H
 
+#include "delivererdata.h"
 #include "tables/localities/Locality.h"
 
+DB_BEGIN_NAMESPACE
 
 class Deliverer {
 public:
     Deliverer();
-    Deliverer(const QString &name, const Locality &locality, const qlonglong inn = 0,
-              const QString &address = QString(), const QString &phoneNumber = "+7",
-              const qlonglong id = -1);
+    Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
+              const QString &phoneNumber, const Locality &locality = Locality());
+    Deliverer(const Deliverer &deliverer);
 
-    qlonglong id() const;
-    void setId(const qlonglong &id);
+    milk_id id() const;
+    void setId(const milk_id &id);
 
     Locality locality() const;
+    void setLocality(const Locality &locality);
 
     QString name() const;
     void setName(const QString &name);
 
-    qlonglong inn() const;
-    void setInn(const qlonglong &inn);
+    milk_inn inn() const;
+    void setInn(const milk_inn &inn);
 
     QString address() const;
     void setAddress(const QString &address);
@@ -28,18 +31,16 @@ public:
     QString phoneNumber() const;
     void setPhoneNumber(const QString &phoneNumber);
 
-    bool isNull() const;
+    bool isValid() const;
     // bool save(DeliverersTable *deliverers);
-    QString toString() const;
 
-    static Deliverer CREATE_NULL();
+    DelivererData data() const;
+
 private:
-    qlonglong _id;
-    QString _name;
-    Locality _locality;
-    qlonglong _inn;
-    QString _address;
-    QString _phoneNumber; // +9(999)999-99-99
+    DelivererData m_data;
+    Locality m_locality;
 };
+
+DB_END_NAMESPACE
 
 #endif // DELIVERER_H
