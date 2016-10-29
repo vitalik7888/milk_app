@@ -451,12 +451,9 @@ void MainWindow::chooseMainLocality()
     auto deliverers = database->deliverers();
     auto milkPoints = database->milkPoints();
 
-    if (m_groupBoxChooseMainLocality->isChecked())
+    const auto idLocality = getCurrentLocalityId();
+    if (Utils::Main::isAutoIncrIdIsValid(idLocality))
     {
-        const auto locIdCol = database->localities()->getColumnPosition(database->localities()->getNameColumnId(false));
-        const auto idLocality = Utils::Main::getCurValueFromComboBoxModel(
-                    m_comboBoxChooseMainLocality, locIdCol).toLongLong();
-
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
                              .arg(deliverers->getNameColumnLocalityId())
@@ -465,12 +462,13 @@ void MainWindow::chooseMainLocality()
                              .arg(milkPoints->selectAll())
                              .arg(milkPoints->getNameColumnLocalityId())
                              .arg(idLocality));
-        ui->frameCalc->setup();
     } else
     {
         deliverers->setQuery(deliverers->selectAll());
         milkPoints->setQuery(milkPoints->selectAll());
     }
+
+    ui->frameCalc->setup();
 }
 
 Settings *MainWindow::getSettings() const
@@ -499,8 +497,8 @@ qlonglong MainWindow::getCurrentLocalityId() const
     if (!m_groupBoxChooseMainLocality->isChecked())
         return -1;
 
-    const auto locNameCol = database->localities()->getColumnPosition(database->localities()->getNameColumnName(false));
-    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, locNameCol).toLongLong();
+    const auto locIdCol = database->localities()->getColumnPosition(database->localities()->getNameColumnId(false));
+    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, locIdCol).toLongLong();
 }
 
 void MainWindow::_writeSettings()
