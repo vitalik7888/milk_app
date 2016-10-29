@@ -9,7 +9,8 @@ SOURCES += \
     $$PWD/tables/deliverers/Deliverer.cpp \
     $$PWD/tables/localities/Locality.cpp \
     $$PWD/tables/milk_points/MilkPoint.cpp \
-    $$PWD/tables/milk_reception/MilkReception.cpp
+    $$PWD/tables/milk_reception/MilkReception.cpp \
+    $$PWD/tables/deliverers/delivererdata.cpp
 
 HEADERS  += \
     $$PWD/base/Database.h \
@@ -21,4 +22,6 @@ HEADERS  += \
     $$PWD/tables/deliverers/Deliverer.h \
     $$PWD/tables/localities/Locality.h \
     $$PWD/tables/milk_points/MilkPoint.h \
-    $$PWD/tables/milk_reception/MilkReception.h
+    $$PWD/tables/milk_reception/MilkReception.h \
+    $$PWD/tables/deliverers/delivererdata.h \
+    $$PWD/dbconstants.h
