@@ -13,7 +13,7 @@ DelivererData::DelivererData():
 }
 
 DelivererData::DelivererData(const milk_id id, const QString &name, const milk_id localityId,
-                             const int inn, const QString &address, const QString &phoneNumber):
+                             const milk_inn inn, const QString &address, const QString &phoneNumber):
     m_inn(inn),
     m_id(id),
     m_localityId(localityId),
@@ -42,15 +42,15 @@ DelivererData::~DelivererData()
 
 bool DelivererData::isValid() const
 {
-    return m_id <= 0;
+    return m_id > 0;
 }
 
-int DelivererData::inn() const
+milk_inn DelivererData::inn() const
 {
     return m_inn;
 }
 
-void DelivererData::setInn(int inn)
+void DelivererData::setInn(const milk_inn inn)
 {
     m_inn = inn;
 }

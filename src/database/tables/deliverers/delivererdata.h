@@ -11,15 +11,15 @@ class DelivererData
 {
 public:
     DelivererData();
-    DelivererData(const milk_id id, const QString &name, const milk_id localityId, const int inn,
+    DelivererData(const milk_id id, const QString &name, const milk_id localityId, const milk_inn inn,
               const QString &address, const QString &phoneNumber);
     DelivererData(const DelivererData &data);
     ~DelivererData();
 
     bool isValid() const;
 
-    int inn() const;
-    void setInn(int inn);
+    milk_inn inn() const;
+    void setInn(const milk_inn inn);
 
     milk_id id() const;
     void setId(const milk_id &id);
@@ -37,7 +37,7 @@ public:
     void setPhoneNumber(const QString &phoneNumber);
 
 private:
-    int m_inn;
+    milk_inn m_inn;
     milk_id m_id;
     milk_id m_localityId;
     QString m_name;
