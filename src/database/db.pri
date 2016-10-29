@@ -28,4 +28,5 @@ HEADERS  += \
     $$PWD/tables/deliverers/Deliverer.h \
     $$PWD/tables/localities/Locality.h \
     $$PWD/tables/milk_points/MilkPoint.h \
-    $$PWD/tables/milk_reception/MilkReception.h
+    $$PWD/tables/milk_reception/MilkReception.h \
+    $$PWD/tables/deliverers/deliverersdao.h
