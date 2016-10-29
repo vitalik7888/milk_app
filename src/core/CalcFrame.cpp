@@ -373,30 +373,35 @@ CalcFrame::CalcItems CalcFrame::getItemsData()
 QString CalcFrame::getPrepQueryStr() const
 {
     auto milkReception = m_mainWindow->getDatabase()->milkReception();
-    const auto select = milkReception->selectAll();
+    const auto localityId = m_mainWindow->getCurrentLocalityId();
+    auto select = milkReception->selectAll();
 
-    auto where = QString();
-
+    QStringList whereList;
+    if (Utils::Main::isAutoIncrIdIsValid(localityId)) {
+        whereList.append(QString("milk_point_id IN(SELECT id FROM milk_points WHERE locality_id = %1)").
+                         arg(localityId));
+    }
     if (isCalcByDeliverer() || isCalcByDate() || isCalcByMilkPoint()) {
-
         if (isCalcByDeliverer())
-            where.append(milkReception->getNameColumnIdDeliverer(true) + " = ?");
+            whereList.append(milkReception->getNameColumnIdDeliverer(true) + " = ?");
 
         if (isCalcByDate()) {
-            if (!where.isEmpty())
-                where.append(" AND ");
-            where.append(milkReception->getNameColumnDeliveryDate(true) + " BETWEEN ? and ?");
+            whereList.append(milkReception->getNameColumnDeliveryDate(true) + " BETWEEN ? and ?");
         }
         if (isCalcByMilkPoint()) {
-            if (!where.isEmpty())
-                where.append(" AND ");
-            where.append(milkReception->getNameColumnMilkPointId(true) + " = ?");
+            whereList.append(milkReception->getNameColumnMilkPointId(true) + " = ?");
         }
-
-        if (!where.isEmpty())
-            where.prepend(" WHERE ");
     }
 
+    QString where = whereList.isEmpty() ? "" : " WHERE ";
+    const auto itEnd = whereList.constEnd();
+    for (auto it = whereList.constBegin(); it != itEnd;) {
+        where.append(*it);
+        ++it;
+        if (it != itEnd) {
+            where.append(" AND ");
+        }
+    }
     return select + where;
 }
 
