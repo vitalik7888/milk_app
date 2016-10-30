@@ -18,7 +18,7 @@ public:
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
 
-    QString getColName(const LocalityTableColumns position, const bool withTableName = false) const;
+    QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
     Locality getLocality(const milk_id localityId) const;
     void insert(const Locality &locality);

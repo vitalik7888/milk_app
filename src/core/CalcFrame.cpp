@@ -63,13 +63,12 @@ void CalcFrame::setup()
 {
     const auto deliverers = m_mainWindow->getDatabase()->deliverers();
     const auto milkPoints = m_mainWindow->getDatabase()->milkPoints();
-    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName()),
-            milkPointNameCol = milkPoints->getColumnPosition(milkPoints->getNameColumnName());
+    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName());
 
     ui->comboBoxFilterDeliverers->setModel(m_mainWindow->getDatabase()->deliverers());
     ui->comboBoxFilterDeliverers->setModelColumn(delivNameCol);
     ui->comboBoxFilterMilkPoints->setModel(m_mainWindow->getDatabase()->milkPoints());
-    ui->comboBoxFilterMilkPoints->setModelColumn(milkPointNameCol);
+    ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
 
     if (deliverers->rowCount() > 0) {
         ui->comboBoxFilterDeliverers->setCurrentIndex(0);
@@ -430,9 +429,7 @@ bool CalcFrame::addBindValueToQuery(QSqlQuery &query)
         }
     }
     if (isCalcByMilkPoint()) {
-        const auto idColumn = milkReception->getMilkPoints()->getColumnPosition(
-                    milkReception->getMilkPoints()->getNameColumnId());
-        const auto _id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterMilkPoints, idColumn).toLongLong();
+        const auto _id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterMilkPoints, MPT_ID).toLongLong();
         if (Utils::Main::isAutoIncrIdIsValid(_id))
             query.addBindValue(_id);
         else {

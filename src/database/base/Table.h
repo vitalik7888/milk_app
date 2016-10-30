@@ -22,6 +22,7 @@ public:
     QSqlDatabase database() const;
 
     virtual QString tableName() const = 0;
+    virtual QString getColName(const int position, const bool withTableName = false) const { return QString(); }
     virtual void initColumns() {};
     virtual QSqlField primaryField() const = 0;
 

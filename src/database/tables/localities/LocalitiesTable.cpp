@@ -120,7 +120,7 @@ QSqlField LocalitiesTable::primaryField() const
     return getColumnByName(FN_ID);
 }
 
-QString LocalitiesTable::getColName(const LocalityTableColumns position, const bool withTableName) const
+QString LocalitiesTable::getColName(const int position, const bool withTableName) const
 {
     QString columnName;
     switch (position) {
@@ -132,6 +132,9 @@ QString LocalitiesTable::getColName(const LocalityTableColumns position, const b
         break;
     case LocalityTableColumns::LT_DESCRIPTION:
         columnName = FN_DESCRIPTION;
+        break;
+    default:
+        columnName = "";
         break;
     }
 

@@ -51,7 +51,7 @@ DialogGeItem::DialogGeItem(Table *table, const QString &title, QWidget *parent) 
     } else if (m_milkPoints) {
         if (title.isEmpty())
             setWindowTitle(tr("Молокопункты"));
-        showColumn = m_milkPoints->getColumnPosition(m_milkPoints->getNameColumnName());
+        showColumn = MPT_NAME;
         ui->toolButtonInfo->setToolTip(tr("Информация о молокопункте"));
     }
 

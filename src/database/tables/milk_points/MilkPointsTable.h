@@ -18,15 +18,7 @@ public:
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
 
-    QString getNameColumnId(const bool withTableName = false) const;
-    QString getNameColumnLocalityId(const bool withTableName = false) const;
-    QString getNameColumnName(const bool withTableName = false) const;
-    QString getNameColumnDescription(const bool withTableName = false) const;
-
-    QSqlField getFieldId() const;
-    QSqlField getFieldLocalityId() const;
-    QSqlField getFieldName() const;
-    QSqlField getFieldDescription() const;
+    QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
     MilkPointData getMilkPoint(const milk_id milkPointId) const;
     void insert(const MilkPointData &milkPoint);

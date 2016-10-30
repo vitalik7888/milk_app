@@ -103,54 +103,6 @@ QString MilkPointsTable::tableName() const
     return TABLE_NAME;
 }
 
-QString MilkPointsTable::getNameColumnId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_ID;
-    return QString(tableName() + "." + FN_ID);
-}
-
-QString MilkPointsTable::getNameColumnLocalityId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_LOCALITY_ID;
-    return QString(tableName() + "." + FN_LOCALITY_ID);
-}
-
-QString MilkPointsTable::getNameColumnName(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_NAME;
-    return QString(tableName() + "." + FN_NAME);
-}
-
-QString MilkPointsTable::getNameColumnDescription(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_DESCRIPTION;
-    return QString(tableName() + "." + FN_DESCRIPTION);
-}
-
-QSqlField MilkPointsTable::getFieldId() const
-{
-    return getColumnByName(FN_ID);
-}
-
-QSqlField MilkPointsTable::getFieldLocalityId() const
-{
-    return getColumnByName(FN_LOCALITY_ID);
-}
-
-QSqlField MilkPointsTable::getFieldName() const
-{
-    return getColumnByName(FN_NAME);
-}
-
-QSqlField MilkPointsTable::getFieldDescription() const
-{
-    return getColumnByName(FN_DESCRIPTION);
-}
-
 MilkPointData MilkPointsTable::getMilkPoint(const milk_id milkPointId) const
 {
     return dao()->get(milkPointId);
@@ -184,6 +136,30 @@ LocalitiesTable *MilkPointsTable::getLocalities() const
 QSqlField MilkPointsTable::primaryField() const
 {
     return getColumnByName(FN_ID);
+}
+
+QString MilkPointsTable::getColName(const int position, const bool withTableName) const
+{
+    QString columnName;
+    switch (position) {
+    case MilkPointsTableColumns::MPT_ID:
+        columnName = FN_ID;
+        break;
+    case MilkPointsTableColumns::MPT_LOCALITY_ID:
+        columnName = FN_LOCALITY_ID;
+        break;
+    case MilkPointsTableColumns::MPT_NAME:
+        columnName = FN_NAME;
+        break;
+    case MilkPointsTableColumns::MPT_DESCRIPTION:
+        columnName = FN_DESCRIPTION;
+        break;
+    default:
+        columnName = "";
+        break;
+    }
+
+    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
 }
 
 void MilkPointsTable::initColumns()

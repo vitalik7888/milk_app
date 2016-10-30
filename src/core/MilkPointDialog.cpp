@@ -172,12 +172,12 @@ QString MilkPointDialog::getDublNameQueryPrepStr() const
     auto query = QString("%1 LEFT JOIN %2 ON %4 = %5 WHERE %6 = ?")
             .arg(select)
             .arg(m_milkPointsTable->getLocalities()->tableName())
-            .arg(m_milkPointsTable->getNameColumnLocalityId(true))
+            .arg(m_milkPointsTable->getColName(MPT_LOCALITY_ID, true))
             .arg(m_milkPointsTable->getLocalities()->getColName(LT_ID, true))
-            .arg(m_milkPointsTable->getNameColumnName(true));
+            .arg(m_milkPointsTable->getColName(MPT_NAME, true));
 
     if (!isNeedInsert())
-        query.append(" AND " + m_milkPointsTable->getNameColumnId(true) + " != ?");
+        query.append(" AND " + m_milkPointsTable->getColName(MPT_ID, true) + " != ?");
 
     return query;
 }

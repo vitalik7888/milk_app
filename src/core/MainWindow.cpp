@@ -465,7 +465,7 @@ void MainWindow::chooseMainLocality()
                              .arg(idLocality));
         milkPoints->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(milkPoints->selectAll())
-                             .arg(milkPoints->getNameColumnLocalityId())
+                             .arg(milkPoints->getColName(MPT_LOCALITY_ID))
                              .arg(idLocality));
         ui->frameCalc->setup();
     } else

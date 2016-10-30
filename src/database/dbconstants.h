@@ -17,4 +17,11 @@ enum LocalityTableColumns {
     LT_DESCRIPTION
 };
 
+enum MilkPointsTableColumns {
+    MPT_ID = 0,
+    MPT_LOCALITY_ID,
+    MPT_NAME,
+    MPT_DESCRIPTION
+};
+
 #endif // DBCONSTANTS_H

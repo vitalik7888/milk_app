@@ -62,7 +62,6 @@ void FrameEditMilkReception::setup()
     ui->tableViewEditMilkReceptions->setModel(m_proxy);
 
     const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName()),
-            milkPointNameCol = milkPoints->getColumnPosition(milkPoints->getNameColumnName()),
             mrColId = milkReception->getColumnPosition(milkReception->getNameColumnId()),
             mrColNameDeliv = milkReception->getColumnPosition(milkReception->getNameColumnDelivererName()),
             mrColNameMilkPoint = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointName()),
@@ -74,7 +73,7 @@ void FrameEditMilkReception::setup()
     ui->comboBoxFilterDeliverers->setModelColumn(delivNameCol);
 
     ui->comboBoxFilterMilkPoints->setModel(milkPoints);
-    ui->comboBoxFilterMilkPoints->setModelColumn(milkPointNameCol);
+    ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
 
     ui->tableViewEditMilkReceptions->setItemDelegateForColumn(mrColNameDeliv, new ChooseIdDelegate(deliverers, mrColIdDeliv,
                                                                                                    tr("Выбор сдатчика"), this));
@@ -102,9 +101,8 @@ void FrameEditMilkReception::chooseDeliverer()
 void FrameEditMilkReception::chooseMilkPoint()
 {
     if (ui->groupBoxFilterMilkPoints->isChecked()) {
-        const auto milkPointsIdCol = milkPoints->getColumnPosition(milkPoints->getNameColumnId());
         m_proxy->setFilterMilkPointId(utm::getCurValueFromComboBoxModel(
-                                          ui->comboBoxFilterMilkPoints, milkPointsIdCol).toLongLong());
+                                          ui->comboBoxFilterMilkPoints, MPT_ID).toLongLong());
     } else
         m_proxy->setFilterMilkPointId(-1);
 }

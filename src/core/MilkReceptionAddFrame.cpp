@@ -66,13 +66,12 @@ void MilkReceptionAddFrame::setup()
     milkPoints = m_mainWindow->getDatabase()->milkPoints();
     milkReception = m_mainWindow->getDatabase()->milkReception();
 
-    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName()),
-            milkPointNameCol = milkPoints->getColumnPosition(milkPoints->getNameColumnName());
+    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName());
 
     ui->listViewDeliverers->setModel(deliverers);
     ui->listViewDeliverers->setModelColumn(delivNameCol);
     ui->comboBoxMilkPoints->setModel(milkPoints);
-    ui->comboBoxMilkPoints->setModelColumn(milkPointNameCol);
+    ui->comboBoxMilkPoints->setModelColumn(MPT_NAME);
 
     connect(localities, &Table::refreshed, this, &MilkReceptionAddFrame::refresheLocalities);
     connect(deliverers, &Table::refreshed, this, &MilkReceptionAddFrame::refresheDeliverers);
@@ -162,7 +161,7 @@ void MilkReceptionAddFrame::insertReceptionMilk()
     }
 
     const auto idMilkPoint = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxMilkPoints,
-                                          milkPoints->getColumnPosition(milkPoints->getNameColumnId())).toLongLong();
+                                          MPT_ID).toLongLong();
 
     if (!Utils::Main::isAutoIncrIdIsValid(idMilkPoint)) {
         QMessageBox::critical(this, Constants::appName(), tr("Ошибка получения id молокопункта"));
