@@ -99,7 +99,6 @@ DeliverersTable::DeliverersTable(LocalitiesTable *parent, QSqlDatabase db) :
     setObjectName("DeliverersTable");
     qDebug() << "init " + objectName();
 
-    initColumns();
     setQuery(selectAll());
 }
 
@@ -210,44 +209,33 @@ QString DeliverersTable::tableName() const
 
 QVariant DeliverersTable::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (section == getColumnPosition(FN_ID)) {
+    switch (section) {
+    case DT_ID:
         return QVariant(tr("ID"));
-    } else if (section == getColumnPosition(FN_NAME)) {
+    case DT_NAME:
         return QVariant(tr("ФИО"));
-    } /*else if (section == getColumnPosition(FN_LOCALITY_ID)) {
+    case DT_LOCALITY_ID:
         return QVariant(tr("Населенный пункт"));
-    }*/ else if (section == getColumnPosition(FN_INN)) {
+    case DT_INN:
         return QVariant(tr("ИНН"));
-    } else if (section == getColumnPosition(FN_ADDRESS)) {
+    case DT_ADDRESS:
         return QVariant(tr("Адрес"));
-    } else if (section == getColumnPosition(FN_PHONE_NUMBER)) {
+    case DT_PHONE_NUMBER:
         return QVariant(tr("Номер телефона"));
     }
 
     return Table::headerData(section, orientation, role);
 }
 
-
-QSqlField DeliverersTable::primaryField() const
+QString DeliverersTable::primaryField() const
 {
-    return getColumnByName(FN_ID);
-}
-
-void DeliverersTable::initColumns()
-{
-    m_columns.append(QSqlField(FN_ID, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_NAME, QVariant::String));
-    m_columns.append(QSqlField(FN_LOCALITY_ID, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_INN, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_ADDRESS, QVariant::String));
-    m_columns.append(QSqlField(FN_PHONE_NUMBER, QVariant::String));
+    return FN_ID;
 }
 
 DeliverersDao *DeliverersTable::dao() const
 {
     return dynamic_cast<DeliverersDao *>(m_dao.data());
 }
-
 
 QString db::DeliverersTable::getColName(const int position, const bool withTableName) const
 {
@@ -265,6 +253,9 @@ QString db::DeliverersTable::getColName(const int position, const bool withTable
     case DeliverersTableColumns::DT_INN:
         columnName = FN_INN;
         break;
+    case DeliverersTableColumns::DT_ADDRESS:
+        columnName = FN_ADDRESS;
+        break;
     case DeliverersTableColumns::DT_PHONE_NUMBER:
         columnName = FN_PHONE_NUMBER;
         break;
@@ -274,4 +265,21 @@ QString db::DeliverersTable::getColName(const int position, const bool withTable
     }
 
     return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
+}
+
+int db::DeliverersTable::getColPosition(const QString &columnName) const
+{
+    if (columnName == FN_ID)
+        return DeliverersTableColumns::DT_ID;
+    if (columnName == FN_NAME)
+        return DeliverersTableColumns::DT_NAME;
+    if (columnName == FN_LOCALITY_ID)
+        return DeliverersTableColumns::DT_LOCALITY_ID;
+    if (columnName == FN_INN)
+        return DeliverersTableColumns::DT_INN;
+    if (columnName == FN_ADDRESS)
+        return DeliverersTableColumns::DT_ADDRESS;
+    if (columnName == FN_PHONE_NUMBER)
+        return DeliverersTableColumns::DT_PHONE_NUMBER;
+    return -1;
 }

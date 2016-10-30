@@ -16,6 +16,7 @@ enum DeliverersTableColumns {
     DT_NAME,
     DT_LOCALITY_ID,
     DT_INN,
+    DT_ADDRESS,
     DT_PHONE_NUMBER
 };
 

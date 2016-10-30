@@ -71,7 +71,7 @@ DialogGeItem::~DialogGeItem()
 
 milk_id DialogGeItem::getId() const
 {
-    const auto idColumn = getTable()->getColumnPosition(getTable()->primaryField().name());
+    const auto idColumn = getTable()->getColPosition(getTable()->primaryField());
 
     const auto index = getIdModelIndex();
     const auto record = getTable()->record(index.row());
@@ -155,7 +155,7 @@ Table *DialogGeItem::getTable() const
 
 QModelIndex DialogGeItem::getIdModelIndex() const
 {
-    const auto idColumn = getTable()->getColumnPosition(getTable()->primaryField().name());
+    const auto idColumn = getTable()->getColPosition(getTable()->primaryField());
     const auto proxyIndex = m_proxyModel->index(ui->comboBox->currentIndex(), idColumn);
 
     return m_proxyModel->mapToSource(proxyIndex);
@@ -163,7 +163,7 @@ QModelIndex DialogGeItem::getIdModelIndex() const
 
 void DialogGeItem::setCurrentItemById(const milk_id _id)
 {
-    const auto column = getTable()->getColumnPosition(getTable()->primaryField().name());
+    const auto column = getTable()->getColPosition(getTable()->primaryField());
     const auto &index = Utils::Main::getIndexFromModelById(getTable(), column,  _id);
 
     if (index.isValid())

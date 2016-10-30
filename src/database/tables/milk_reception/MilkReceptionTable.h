@@ -20,8 +20,9 @@ public:
     ~MilkReceptionTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
+    QString primaryField() const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
-    QSqlField primaryField() const Q_DECL_OVERRIDE;
+    int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
 
     QString selectAll() const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
@@ -30,12 +31,12 @@ public:
     void insert(const MilkReceptionData &milkReception) const;
     void update(const MilkReceptionData &milkReception) const;
     bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
-    bool setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
-    bool setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
-    bool setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
-    bool setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const;
-    bool setLiters(const milk_id milkReceptionId, const float liters) const;
-    bool setFat(const milk_id milkReceptionId, const float fate) const;
+    void setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
+    void setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
+    void setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
+    void setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const;
+    void setLiters(const milk_id milkReceptionId, const float liters) const;
+    void setFat(const milk_id milkReceptionId, const float fate) const;
 
     DeliverersTable *getDeliverers() const;
     MilkPointsTable *getMilkPoints() const;
@@ -47,8 +48,6 @@ public:
 private:
     DeliverersTable *m_deliverers;
     MilkPointsTable *m_milkPoints;
-
-    void initColumns() Q_DECL_OVERRIDE;
 
     MilkReceptionDao *dao() const;
 };

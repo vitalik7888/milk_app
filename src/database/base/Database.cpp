@@ -89,10 +89,6 @@ bool Database::isTablesCreated() const
 
 void Database::removeTables()
 {
-    /*if (!m_tables.empty()) {
-        qDeleteAll(m_tables);
-        m_tables.clear();
-    }*/
     for (Table *table : m_tables)
         table->deleteLater();
     m_tables.clear();

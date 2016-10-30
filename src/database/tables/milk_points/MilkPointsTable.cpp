@@ -89,7 +89,6 @@ MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
     setObjectName("MilkPointsTable");
     qDebug() << "init " + objectName();
 
-    initColumns();
     setQuery(selectAll());
 }
 
@@ -118,14 +117,14 @@ void MilkPointsTable::update(const MilkPointData &milkPoint) const
     dao()->update(milkPoint);
 }
 
-bool MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
+void MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
 {
-    return updateValue(getColumnPosition(FN_NAME), milkPointId, milkPointName);
+    m_dao->updateValue(FN_NAME, milkPointId, milkPointName);
 }
 
-bool MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
+void MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
 {
-    return updateValue(getColumnPosition(FN_DESCRIPTION), milkPointId, description);
+    m_dao->updateValue(FN_DESCRIPTION, milkPointId, description);
 }
 
 LocalitiesTable *MilkPointsTable::getLocalities() const
@@ -133,9 +132,9 @@ LocalitiesTable *MilkPointsTable::getLocalities() const
     return m_localities;
 }
 
-QSqlField MilkPointsTable::primaryField() const
+QString MilkPointsTable::primaryField() const
 {
-    return getColumnByName(FN_ID);
+    return FN_ID;
 }
 
 QString MilkPointsTable::getColName(const int position, const bool withTableName) const
@@ -162,15 +161,20 @@ QString MilkPointsTable::getColName(const int position, const bool withTableName
     return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
 }
 
-void MilkPointsTable::initColumns()
-{
-    m_columns.append(QSqlField(FN_ID, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_LOCALITY_ID, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_NAME, QVariant::String));
-    m_columns.append(QSqlField(FN_DESCRIPTION, QVariant::String));
-}
-
 MilkPointDao *MilkPointsTable::dao() const
 {
     return dynamic_cast<MilkPointDao *>(m_dao.data());
+}
+
+int db::MilkPointsTable::getColPosition(const QString &columnName) const
+{
+    if (columnName == FN_ID)
+        return MilkPointsTableColumns::MPT_ID;
+    if (columnName == FN_LOCALITY_ID)
+        return MilkPointsTableColumns::MPT_LOCALITY_ID;
+    if (columnName == FN_NAME)
+        return MilkPointsTableColumns::MPT_NAME;
+    if (columnName == FN_DESCRIPTION)
+        return MilkPointsTableColumns::MPT_DESCRIPTION;
+    return -1;
 }

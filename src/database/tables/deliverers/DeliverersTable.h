@@ -19,8 +19,9 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
     QString tableName() const Q_DECL_OVERRIDE;
+    int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
-    QSqlField primaryField() const Q_DECL_OVERRIDE;
+    QString primaryField() const Q_DECL_OVERRIDE;
 
     LocalitiesTable *getLocalities() const;
 
@@ -35,8 +36,6 @@ public:
 
 private:
     LocalitiesTable *m_localities;
-
-    void initColumns() Q_DECL_OVERRIDE;
 
     DeliverersDao *dao() const;
 };

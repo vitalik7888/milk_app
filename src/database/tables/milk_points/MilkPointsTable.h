@@ -16,22 +16,20 @@ public:
     ~MilkPointsTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
-    QSqlField primaryField() const Q_DECL_OVERRIDE;
-
+    QString primaryField() const Q_DECL_OVERRIDE;
+    int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
     MilkPointData getMilkPoint(const milk_id milkPointId) const;
     void insert(const MilkPointData &milkPoint);
     void update(const MilkPointData &milkPoint) const;
-    bool setName(const milk_id milkPointId, const QString &milkPointName) const;
-    bool setDescription(const milk_id milkPointId, const QString &description) const;
+    void setName(const milk_id milkPointId, const QString &milkPointName) const;
+    void setDescription(const milk_id milkPointId, const QString &description) const;
 
     LocalitiesTable *getLocalities() const;
 
 private:
     LocalitiesTable *m_localities;
-
-    void initColumns() Q_DECL_OVERRIDE;
 
     MilkPointDao *dao() const;
 };

@@ -76,7 +76,6 @@ LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
     setObjectName("LocalitiesTable");
     qDebug() << "init " + objectName();
 
-    initColumns();
     setQuery(QString("SELECT * FROM %1").arg(TABLE_NAME));
 }
 
@@ -105,19 +104,19 @@ void LocalitiesTable::update(const Locality &locality) const
     dao()->update(locality);
 }
 
-bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
+void LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
 {
-    return updateValue(getColumnPosition(FN_ID), localityId, localityName);
+    m_dao->updateValue(FN_ID, localityId, localityName);
 }
 
-bool LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
+void LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
 {
-    return updateValue(getColumnPosition(FN_DESCRIPTION), localityId, description);
+    m_dao->updateValue(FN_DESCRIPTION, localityId, description);
 }
 
-QSqlField LocalitiesTable::primaryField() const
+QString LocalitiesTable::primaryField() const
 {
-    return getColumnByName(FN_ID);
+    return FN_ID;
 }
 
 QString LocalitiesTable::getColName(const int position, const bool withTableName) const
@@ -144,4 +143,15 @@ QString LocalitiesTable::getColName(const int position, const bool withTableName
 LocalitiesDao *LocalitiesTable::dao() const
 {
     return dynamic_cast<LocalitiesDao *>(m_dao.data());
+}
+
+int db::LocalitiesTable::getColPosition(const QString &columnName) const
+{
+    if (columnName == FN_ID)
+        return LocalityTableColumns::LT_ID;
+    if (columnName == FN_NAME)
+        return LocalityTableColumns::LT_NAME;
+    if (columnName == FN_DESCRIPTION)
+        return LocalityTableColumns::LT_DESCRIPTION;
+    return -1;
 }

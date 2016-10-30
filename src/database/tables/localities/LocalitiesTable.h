@@ -16,15 +16,16 @@ public:
     ~LocalitiesTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
-    QSqlField primaryField() const Q_DECL_OVERRIDE;
-
+    QString primaryField() const Q_DECL_OVERRIDE;
+    int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
+
 
     Locality getLocality(const milk_id localityId) const;
     void insert(const Locality &locality);
     void update(const Locality &locality) const;
-    bool setName(const milk_id localityId, const QString &localityName) const;
-    bool setDescription(const milk_id localityId, const QString &description) const;
+    void setName(const milk_id localityId, const QString &localityName) const;
+    void setDescription(const milk_id localityId, const QString &description) const;
 
 private:
     LocalitiesDao *dao() const;
