@@ -453,11 +453,9 @@ void MainWindow::chooseMainLocality()
     auto deliverers = m_database->deliverers();
     auto milkPoints = m_database->milkPoints();
 
-    if (m_groupBoxChooseMainLocality->isChecked())
+    const auto idLocality = getCurrentLocalityId();
+    if (Utils::Main::isAutoIncrIdIsValid(idLocality))
     {
-        const auto idLocality = Utils::Main::getCurValueFromComboBoxModel(
-                    m_comboBoxChooseMainLocality, LT_ID).toLongLong();
-
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
                              .arg(deliverers->getColName(DT_LOCALITY_ID))
@@ -466,12 +464,13 @@ void MainWindow::chooseMainLocality()
                              .arg(milkPoints->selectAll())
                              .arg(milkPoints->getColName(MPT_LOCALITY_ID))
                              .arg(idLocality));
-        ui->frameCalc->setup();
     } else
     {
         deliverers->setQuery(deliverers->selectAll());
         milkPoints->setQuery(milkPoints->selectAll());
     }
+
+    ui->frameCalc->setup();
 }
 
 Settings *MainWindow::getSettings() const

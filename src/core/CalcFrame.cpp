@@ -357,29 +357,36 @@ CalcFrame::CalcItems CalcFrame::getItemsData()
 QString CalcFrame::getPrepQueryStr() const
 {
     auto milkReception = m_mainWindow->getDatabase()->milkReception();
-    const auto select = milkReception->selectAll();
+    const auto localityId = m_mainWindow->getCurrentLocalityId();
+    auto select = milkReception->selectAll();
 
-    auto where = QString();
-
-    if (isCalcByDeliverer() || isCalcByDate() || isCalcByMilkPoint()) {
-
-        if (isCalcByDeliverer())
-            where.append(milkReception->getColName(RMT_ID_DELIVERER, true) + " = ?");
-
-        if (isCalcByDate()) {
-            if (!where.isEmpty())
-                where.append(" AND ");
-            where.append(milkReception->getColName(RMT_DELIVERY_DATE, true) + " BETWEEN ? and ?");
-        }
-        if (isCalcByMilkPoint()) {
-            if (!where.isEmpty())
-                where.append(" AND ");
-            where.append(milkReception->getColName(RMT_MILK_POINT_ID, true) + " = ?");
-        }
-
-        if (!where.isEmpty())
-            where.prepend(" WHERE ");
+    QStringList whereList;
+    if (Utils::Main::isAutoIncrIdIsValid(localityId)) {
+        whereList.append(QString("milk_point_id IN(SELECT id FROM milk_points WHERE locality_id = %1)").
+                         arg(localityId));
     }
+    if (isCalcByDeliverer() || isCalcByDate() || isCalcByMilkPoint()) {
+        if (isCalcByDeliverer())
+            whereList.append(milkReception->getColName(RMT_ID_DELIVERER, true) + " = ?");
+
+        if (isCalcByDate())
+            whereList.append(milkReception->getColName(RMT_DELIVERY_DATE, true) + " BETWEEN ? and ?");
+
+        if (isCalcByMilkPoint()) {
+            whereList.append(milkReception->getColName(RMT_MILK_POINT_ID, true) + " = ?");
+        }
+    }
+
+    QString where = whereList.isEmpty() ? "" : " WHERE ";
+    const auto itEnd = whereList.constEnd();
+    for (auto it = whereList.constBegin(); it != itEnd;) {
+        where.append(*it);
+        ++it;
+        if (it != itEnd) {
+            where.append(" AND ");
+        }
+    }
+
     return select + where;
 }
 
