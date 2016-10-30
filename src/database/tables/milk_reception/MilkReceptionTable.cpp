@@ -29,7 +29,7 @@ MilkReceptionDao::MilkReceptionDao(const QSqlDatabase &db) : Dao(TABLE_NAME, FN_
 
 MilkReceptionData MilkReceptionDao::get(const milk_id id) const
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME,
     { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
@@ -57,7 +57,7 @@ MilkReceptionData MilkReceptionDao::get(const milk_id id) const
 
 void MilkReceptionDao::insert(const MilkReceptionData &data) const
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME,
         { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }));
     query.addBindValue(data.delivererId());
@@ -76,7 +76,7 @@ void MilkReceptionDao::insert(const MilkReceptionData &data) const
 
 void MilkReceptionDao::update(const MilkReceptionData &data) const
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(QString("%1 WHERE %2 = ?").arg(Utils::Main::getPrepUpdateStr(TABLE_NAME,
         { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
                   .arg(FN_ID));
@@ -116,41 +116,6 @@ MilkReceptionTable::~MilkReceptionTable()
 QString MilkReceptionTable::tableName() const
 {
     return TABLE_NAME;
-}
-
-QSqlField MilkReceptionTable::getFieldId() const
-{
-    return getColumnByName(FN_ID);
-}
-
-QSqlField MilkReceptionTable::getFieldIdDeliverer() const
-{
-    return getColumnByName(FN_ID_DELIVERER);
-}
-
-QSqlField MilkReceptionTable::getFieldMilkPointId() const
-{
-    return getColumnByName(FN_MILK_POINT_ID);
-}
-
-QSqlField MilkReceptionTable::getFieldDeliveryDate() const
-{
-    return getColumnByName(FN_DELIVERY_DATE);
-}
-
-QSqlField MilkReceptionTable::getFieldPriceLiter() const
-{
-    return getColumnByName(FN_PRICE_LITER);
-}
-
-QSqlField MilkReceptionTable::getFieldLiters() const
-{
-    return getColumnByName(FN_LITERS);
-}
-
-QSqlField MilkReceptionTable::getFieldFat() const
-{
-    return getColumnByName(FN_FAT);
 }
 
 MilkReceptionData MilkReceptionTable::getMilkReception(const milk_id milkReceptionId) const
@@ -200,11 +165,11 @@ bool MilkReceptionTable::setFat(const milk_id milkReceptionId, const float fat) 
 
 bool MilkReceptionTable::updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 BETWEEN ? AND ?")
-                  .arg(tableName())
-                  .arg(getColumnById(getColumnPosition(FN_PRICE_LITER)).name())
-                  .arg(getColumnById(getColumnPosition(FN_DELIVERY_DATE)).name()));
+                  .arg(TABLE_NAME)
+                  .arg(FN_PRICE_LITER)
+                  .arg(FN_DELIVERY_DATE));
     query.addBindValue(price);
     query.addBindValue(dateFrom.toString(Constants::defaultDateFormat()));
     query.addBindValue(dateTo.toString(Constants::defaultDateFormat()));
@@ -223,91 +188,27 @@ QSqlField MilkReceptionTable::primaryField() const
 
 QString MilkReceptionTable::selectAll() const
 {
-    const auto select = Utils::Main::getSelectStr(
-                tableName(),
+    const auto select = Utils::Main::getSelectStr(TABLE_NAME,
     {
-                getNameColumnId(true),
-                getNameColumnIdDeliverer(true),
+                getColName(RMT_ID, true),
+                getColName(RMT_ID_DELIVERER, true),
                 m_deliverers->getColName(DT_NAME, true) + " AS " + FN_DELIVERER_NAME,
-                getNameColumnMilkPointId(true),
+                getColName(RMT_MILK_POINT_ID, true),
                 m_milkPoints->getColName(MPT_NAME, true) + " AS " + FN_MILK_POINT_NAME,
-                getNameColumnDeliveryDate(true),
-                getNameColumnPriceLiter(true),
-                getNameColumnLiters(true),
-                getNameColumnFat(true)
+                getColName(RMT_DELIVERY_DATE, true),
+                getColName(RMT_PRICE_LITER, true),
+                getColName(RMT_LITERS, true),
+                getColName(RMT_FAT, true)
                 });
-
     const auto join = QString("LEFT JOIN %2 ON %3 = %4 LEFT JOIN %5 ON %6 = %7")
             .arg(m_deliverers->tableName())
-            .arg(getNameColumnIdDeliverer(true))
+            .arg(getColName(RMT_ID_DELIVERER, true))
             .arg(m_deliverers->getColName(DT_ID, true))
             .arg(m_milkPoints->tableName())
-            .arg(getNameColumnMilkPointId(true))
+            .arg(getColName(RMT_MILK_POINT_ID, true))
             .arg(m_milkPoints->getColName(MPT_ID, true));
+
     return select + " " + join;
-}
-
-QString MilkReceptionTable::getNameColumnId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_ID;
-    return QString(tableName() + "." + FN_ID);
-}
-
-QString MilkReceptionTable::getNameColumnIdDeliverer(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_ID_DELIVERER;
-    return QString(tableName() + "." + FN_ID_DELIVERER);
-}
-
-QString MilkReceptionTable::getNameColumnDelivererName(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_DELIVERER_NAME;
-    return QString(tableName() + "." + FN_DELIVERER_NAME);
-}
-
-QString MilkReceptionTable::getNameColumnMilkPointId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_MILK_POINT_ID;
-    return QString(tableName() + "." + FN_MILK_POINT_ID);
-}
-
-QString MilkReceptionTable::getNameColumnMilkPointName(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_MILK_POINT_NAME;
-    return QString(tableName() + "." + FN_MILK_POINT_NAME);
-}
-
-QString MilkReceptionTable::getNameColumnDeliveryDate(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_DELIVERY_DATE;
-    return QString(tableName() + "." + FN_DELIVERY_DATE);
-}
-
-QString MilkReceptionTable::getNameColumnPriceLiter(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_PRICE_LITER;
-    return QString(tableName() + "." + FN_PRICE_LITER);
-}
-
-QString MilkReceptionTable::getNameColumnLiters(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_LITERS;
-    return QString(tableName() + "." + FN_LITERS);
-}
-
-QString MilkReceptionTable::getNameColumnFat(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_FAT;
-    return QString(tableName() + "." + FN_FAT);
 }
 
 QVariant MilkReceptionTable::headerData(int section, Qt::Orientation orientation, int role) const
@@ -350,11 +251,11 @@ QList<float> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max
 
     QList<float> minMax;
 
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(QString("SELECT MIN(%1), MAX(%1) FROM %2 WHERE %3 BETWEEN '%4' AND '%5'")
-                  .arg(getNameColumnPriceLiter(true))
-                  .arg(tableName())
-                  .arg(getNameColumnDeliveryDate(true))
+                  .arg(FN_PRICE_LITER)
+                  .arg(TABLE_NAME)
+                  .arg(FN_DELIVERY_DATE)
                   .arg(min.toString(Constants::defaultDateFormat()))
                   .arg(max.toString(Constants::defaultDateFormat())));
 
@@ -368,10 +269,10 @@ QList<float> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max
 
 QDate MilkReceptionTable::getMinDeliveryDate() const
 {
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     query.prepare(QString("SELECT MIN(%1) FROM %2")
-                  .arg(getNameColumnDeliveryDate(true))
-                  .arg(tableName())) ;
+                  .arg(FN_DELIVERY_DATE)
+                  .arg(TABLE_NAME));
 
     if (query.exec() && query.first())
         return query.value(0).toDate();
@@ -381,13 +282,50 @@ QDate MilkReceptionTable::getMinDeliveryDate() const
 
 QDate MilkReceptionTable::getMaxDeliveryDate() const
 {
-    QSqlQuery query;
-    query.prepare(QString("SELECT MAX(%1) FROM %2")
-                  .arg(getNameColumnDeliveryDate(true))
-                  .arg(tableName())) ;
+    QSqlQuery query(m_db);
+    query.prepare(QString("SELECT MAX(%1) FROM %2").arg(FN_DELIVERY_DATE).arg(TABLE_NAME));
 
     if (query.exec() && query.first())
         return query.value(0).toDate();
 
     return QDate();
+}
+
+QString db::MilkReceptionTable::getColName(const int position, const bool withTableName) const
+{
+    QString columnName;
+    switch (position) {
+    case ReceptionMilkTableColumns::RMT_ID:
+        columnName = FN_ID;
+        break;
+    case ReceptionMilkTableColumns::RMT_ID_DELIVERER:
+        columnName = FN_ID_DELIVERER;
+        break;
+    case ReceptionMilkTableColumns::RMT_DELIVERER_NAME:
+        columnName = FN_DELIVERER_NAME;
+        break;
+    case ReceptionMilkTableColumns::RMT_MILK_POINT_ID:
+        columnName = FN_MILK_POINT_ID;
+        break;
+    case ReceptionMilkTableColumns::RMT_MILK_POINT_NAME:
+        columnName = FN_MILK_POINT_NAME;
+        break;
+    case ReceptionMilkTableColumns::RMT_DELIVERY_DATE:
+        columnName = FN_DELIVERY_DATE;
+        break;
+    case ReceptionMilkTableColumns::RMT_PRICE_LITER:
+        columnName = FN_PRICE_LITER;
+        break;
+    case ReceptionMilkTableColumns::RMT_LITERS:
+        columnName = FN_LITERS;
+        break;
+    case ReceptionMilkTableColumns::RMT_FAT:
+        columnName = FN_FAT;
+        break;
+    default:
+        columnName = "";
+        break;
+    }
+
+    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
 }

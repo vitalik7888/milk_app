@@ -46,13 +46,9 @@ void SortFilterMilkReceptionTable::setFilterMilkPointId(const qlonglong &milkPoi
 
 bool SortFilterMilkReceptionTable::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    const auto mrIdDelivererCol = m_milkReceptionTable->getColumnPosition(m_milkReceptionTable->getNameColumnIdDeliverer(false)),
-            mrIdMilkPointCol = m_milkReceptionTable->getColumnPosition(m_milkReceptionTable->getNameColumnMilkPointId(false)),
-            mrDelivDateCol = m_milkReceptionTable->getColumnPosition(m_milkReceptionTable->getNameColumnDeliveryDate(false));
-
-    const auto indexDelivererId = sourceModel()->index(sourceRow, mrIdDelivererCol, sourceParent),
-            indexMilkPointId = sourceModel()->index(sourceRow, mrIdMilkPointCol, sourceParent),
-            indexDeliveryDate = sourceModel()->index(sourceRow, mrDelivDateCol, sourceParent);
+    const auto indexDelivererId = sourceModel()->index(sourceRow, RMT_ID_DELIVERER, sourceParent),
+            indexMilkPointId = sourceModel()->index(sourceRow, RMT_MILK_POINT_ID, sourceParent),
+            indexDeliveryDate = sourceModel()->index(sourceRow, RMT_DELIVERY_DATE, sourceParent);
 
     const auto delivererId = sourceModel()->data(indexDelivererId).toLongLong(),
             milkPointId = sourceModel()->data(indexMilkPointId).toLongLong();

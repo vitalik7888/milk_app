@@ -29,14 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_groupBoxChooseMainLocality(new QGroupBox(tr("Выбрать населенный пункт"))),
     m_comboBoxChooseMainLocality(new QComboBox()),
     m_settings(new Settings),
-    database(new Database()),
+    m_database(new Database()),
     m_dialogSettings(nullptr)
 {
     ui->setupUi(this);
 
     setWindowTitle("version: " + Constants::getCurrentVersion().toString());
 
-    database->setParent(this);
+    m_database->setParent(this);
 
     ui->frameMilkReceptionAdd->setMainWindow(this);
     ui->frameCalc->setMainWindow(this);
@@ -110,7 +110,7 @@ void MainWindow::chooseDb()
 
 void MainWindow::addDeliverer()
 {
-    if (database->localities()->isEmpty())
+    if (m_database->localities()->isEmpty())
     {
         if(Utils::Main::yesNoWarnMsgBox(this, tr("Чтобы добавить хотя бы одного сдатчика "
                                                  "нужно сначала добавить населенный пункт. "
@@ -118,13 +118,13 @@ void MainWindow::addDeliverer()
         {
             addLocality();
 
-            if (!database->localities()->isEmpty()) // если добавил
+            if (!m_database->localities()->isEmpty()) // если добавил
                 QMessageBox::information(this, Constants::appName(), "Теперь можете добавить сдатчика!");
         }
     }
 
-    if (!database->localities()->isEmpty()) { // если добавил
-        DelivererDialog dialog(database->deliverers());
+    if (!m_database->localities()->isEmpty()) { // если добавил
+        DelivererDialog dialog(m_database->deliverers());
         dialog.setComboBoxCurIndex(m_comboBoxChooseMainLocality->currentIndex());
         dialog.exec();
     }
@@ -132,15 +132,15 @@ void MainWindow::addDeliverer()
 
 void MainWindow::addLocality()
 {
-    LocalityDialog dialog(database->localities());
+    LocalityDialog dialog(m_database->localities());
     dialog.exec();
 
-    m_groupBoxChooseMainLocality->setEnabled(!database->localities()->isEmpty());
+    m_groupBoxChooseMainLocality->setEnabled(!m_database->localities()->isEmpty());
 }
 
 void MainWindow::addMilkPoint()
 {
-    if (database->localities()->isEmpty())
+    if (m_database->localities()->isEmpty())
     {
         if(Utils::Main::yesNoWarnMsgBox(this, tr("Чтобы добавить хотя бы один молокопункт "
                                                  "нужно сначала добавить населенный пункт. "
@@ -148,13 +148,13 @@ void MainWindow::addMilkPoint()
         {
             addLocality();
 
-            if (!database->localities()->isEmpty()) // если добавил
+            if (!m_database->localities()->isEmpty()) // если добавил
                 QMessageBox::information(this, Constants::appName(), "Теперь можете добавить молокопункт!");
         }
     }
 
-    if (!database->localities()->isEmpty()) {// если добавили
-        MilkPointDialog dialog(database->milkPoints());
+    if (!m_database->localities()->isEmpty()) {// если добавили
+        MilkPointDialog dialog(m_database->milkPoints());
         dialog.setComboBoxCurIndex(m_comboBoxChooseMainLocality->currentIndex());
         dialog.exec();
     }
@@ -286,20 +286,19 @@ bool MainWindow::createDbFromTemplate(const QString &pathWithName)
 
 void MainWindow::openDb(const QString &dbName)
 {
-    if (database->openDb(dbName))
+    if (m_database->openDb(dbName))
     {
         setWindowTitle(QString("%1: %2 version %3")
                        .arg(Constants::appName())
-                       .arg(database->choosenDatabase())
+                       .arg(m_database->choosenDatabase())
                        .arg(Constants::getCurrentVersion().toString()));
 
-        m_comboBoxChooseMainLocality->setModel(database->localities());
+        m_comboBoxChooseMainLocality->setModel(m_database->localities());
         m_comboBoxChooseMainLocality->setModelColumn(LT_NAME);
 
         m_groupBoxChooseMainLocality->setChecked(false);
 
-
-        for (auto table: database->tables()) {
+        for (auto table: m_database->tables()) {
             // show tables errors
             connect(table, &Table::error, this, [=](const QString &error) {
                 QMessageBox::critical(this, table->tableName(), error);
@@ -307,18 +306,18 @@ void MainWindow::openDb(const QString &dbName)
             // set fetch on refresh
             table->setIsFetchOnRefresh(m_settings->getIsFetchTablesOnRefresh());
         }
-        connect(database->localities(), &Table::refreshed, this, [=]() {
+        connect(m_database->localities(), &Table::refreshed, this, [=]() {
             m_comboBoxChooseMainLocality->setCurrentIndex(0);
         });
         ui->frameMilkReceptionAdd->setup();
         ui->frameEditReceptionMilk->setup();
         ui->frameCalc->setup();
-        m_groupBoxChooseMainLocality->setEnabled(!database->localities()->isEmpty());
+        m_groupBoxChooseMainLocality->setEnabled(!m_database->localities()->isEmpty());
 
-        if (database->milkReception()->getIsFetchOnRefresh())
+        if (m_database->milkReception()->getIsFetchOnRefresh())
         {
-            while (database->milkReception()->canFetchMore())
-                database->milkReception()->fetchMore();
+            while (m_database->milkReception()->canFetchMore())
+                m_database->milkReception()->fetchMore();
         }
     }
 }
@@ -326,15 +325,15 @@ void MainWindow::openDb(const QString &dbName)
 void MainWindow::removeDeliverer()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют сдатчики"),
-                                          database->deliverers()))
+                                          m_database->deliverers()))
     {
-        const auto idDeliverer = Utils::Main::getIdFromDialog(database->deliverers(), tr("Удаление сдатчика"));
+        const auto idDeliverer = Utils::Main::getIdFromDialog(m_database->deliverers(), tr("Удаление сдатчика"));
         if (Utils::Main::isAutoIncrIdIsValid(idDeliverer))
         {
             if (Utils::Main::yesNoWarnMsgBox(this, tr("Это также удалит все сдачи молока этого сдатчика."
                                                       "Продолжить?"))) {
-                if (database->deliverers()->remove(idDeliverer))
-                    database->deliverers()->refresh();
+                if (m_database->deliverers()->remove(idDeliverer))
+                    m_database->deliverers()->refresh();
             }
         }
     }
@@ -343,11 +342,11 @@ void MainWindow::removeDeliverer()
 void MainWindow::updateDeliverer()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют сдатчики"),
-                                          database->deliverers()))
+                                          m_database->deliverers()))
     {
-        const auto idDeliverer = Utils::Main::getIdFromDialog(database->deliverers(), tr("Изменение сдатчика"));
+        const auto idDeliverer = Utils::Main::getIdFromDialog(m_database->deliverers(), tr("Изменение сдатчика"));
         if (Utils::Main::isAutoIncrIdIsValid(idDeliverer)) {
-            DelivererDialog dialog(database->deliverers(), idDeliverer);
+            DelivererDialog dialog(m_database->deliverers(), idDeliverer);
             dialog.exec();
         }
     }
@@ -356,10 +355,10 @@ void MainWindow::updateDeliverer()
 void MainWindow::removeLocality()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют населенные пункты"),
-                                          database->localities()))
+                                          m_database->localities()))
     {
 
-        const auto idLocality = Utils::Main::getIdFromDialog(database->localities(), tr("Удаление населенного пункта"));
+        const auto idLocality = Utils::Main::getIdFromDialog(m_database->localities(), tr("Удаление населенного пункта"));
         if (Utils::Main::isAutoIncrIdIsValid(idLocality))
         {
             if (Utils::Main::yesNoWarnMsgBox(this, tr("Это также удалит все молокопункты населенного пункта, "
@@ -367,13 +366,13 @@ void MainWindow::removeLocality()
                                                       "а также сдатчиков, относящихся к этому населенному пункту."
                                                       "Продолжить?")))
             {
-                if (database->localities()->remove(idLocality))
+                if (m_database->localities()->remove(idLocality))
                 {
-                    database->localities()->refresh();
-                    database->milkPoints()->refresh();
-                    database->deliverers()->refresh();
+                    m_database->localities()->refresh();
+                    m_database->milkPoints()->refresh();
+                    m_database->deliverers()->refresh();
 
-                    m_groupBoxChooseMainLocality->setEnabled(!database->localities()->isEmpty());
+                    m_groupBoxChooseMainLocality->setEnabled(!m_database->localities()->isEmpty());
                 }
             }
         }
@@ -383,11 +382,11 @@ void MainWindow::removeLocality()
 void MainWindow::updateLocality()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют населенные пункты"),
-                                          database->localities()))
+                                          m_database->localities()))
     {
-        const auto idLocality = Utils::Main::getIdFromDialog(database->localities(), tr("Изменение населенного пункта"));
+        const auto idLocality = Utils::Main::getIdFromDialog(m_database->localities(), tr("Изменение населенного пункта"));
         if (Utils::Main::isAutoIncrIdIsValid(idLocality)) {
-            LocalityDialog dialog(database->localities(), idLocality);
+            LocalityDialog dialog(m_database->localities(), idLocality);
             dialog.exec();
         }
     }
@@ -396,15 +395,15 @@ void MainWindow::updateLocality()
 void MainWindow::removeMilkPoint()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют молокопункты"),
-                                          database->milkPoints()))
+                                          m_database->milkPoints()))
     {
-        const auto idMilkPoint = Utils::Main::getIdFromDialog(database->milkPoints(), tr("Удаление молокопункта"));
+        const auto idMilkPoint = Utils::Main::getIdFromDialog(m_database->milkPoints(), tr("Удаление молокопункта"));
         if (Utils::Main::isAutoIncrIdIsValid(idMilkPoint)) {
             if (Utils::Main::yesNoWarnMsgBox(this, tr("Это также удалит все сдачи молока, "
                                                       "относящиеся к этому молокопункту. Продолжить?")))
             {
-                if (database->milkPoints()->remove(idMilkPoint))
-                    database->milkPoints()->refresh();
+                if (m_database->milkPoints()->remove(idMilkPoint))
+                    m_database->milkPoints()->refresh();
             }
         }
     }
@@ -413,11 +412,11 @@ void MainWindow::removeMilkPoint()
 void MainWindow::updateMilkPoint()
 {
     if (!Utils::Main::showWarnMsgIfNoRows(this, tr("Отсутствуют молокопункты"),
-                                          database->milkPoints()))
+                                          m_database->milkPoints()))
     {
-        const auto idMilkPoint = Utils::Main::getIdFromDialog(database->milkPoints(), tr("Изменение молокопункта"));
+        const auto idMilkPoint = Utils::Main::getIdFromDialog(m_database->milkPoints(), tr("Изменение молокопункта"));
         if (Utils::Main::isAutoIncrIdIsValid(idMilkPoint)) {
-            MilkPointDialog dialog(database->milkPoints(), idMilkPoint);
+            MilkPointDialog dialog(m_database->milkPoints(), idMilkPoint);
             dialog.exec();
         }
     }
@@ -425,7 +424,7 @@ void MainWindow::updateMilkPoint()
 
 void MainWindow::showUpdatePriceDialog() const
 {
-    UpdatePriceDialog dialog(database->milkReception());
+    UpdatePriceDialog dialog(m_database->milkReception());
     dialog.exec();
 }
 
@@ -433,7 +432,7 @@ void MainWindow::showSettings()
 {
     if (getDialogSettings()->exec() == QDialog::Accepted)
     {
-        for (auto table: database->tables()) {
+        for (auto table: m_database->tables()) {
             const auto isFetchOnRefresh = m_settings->getIsFetchTablesOnRefresh();
             // set fetch on refresh
             table->setIsFetchOnRefresh(isFetchOnRefresh);
@@ -448,11 +447,11 @@ void MainWindow::showSettings()
 
 void MainWindow::chooseMainLocality()
 {    
-    if (!database->isTablesCreated())
+    if (!m_database->isTablesCreated())
         return;
 
-    auto deliverers = database->deliverers();
-    auto milkPoints = database->milkPoints();
+    auto deliverers = m_database->deliverers();
+    auto milkPoints = m_database->milkPoints();
 
     if (m_groupBoxChooseMainLocality->isChecked())
     {
@@ -482,7 +481,7 @@ Settings *MainWindow::getSettings() const
 
 QString MainWindow::getCurrentLocalityName() const
 {
-    const auto localities = database->localities();
+    const auto localities = m_database->localities();
 
     if (localities->isEmpty())
         return QString();
@@ -501,13 +500,13 @@ qlonglong MainWindow::getCurrentLocalityId() const
     if (!m_groupBoxChooseMainLocality->isChecked())
         return -1;
 
-    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, LT_NAME).toLongLong();
+    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, LT_ID).toLongLong();
 }
 
 void MainWindow::_writeSettings()
 {
     m_settings->setPriceLiter(ui->frameMilkReceptionAdd->price());
-    m_settings->setLastChoosenDb(database->choosenDatabase());
+    m_settings->setLastChoosenDb(m_database->choosenDatabase());
 
     m_settings->writeMainSettings();
 }
@@ -522,5 +521,5 @@ DialogSettings *MainWindow::getDialogSettings()
 
 Database *MainWindow::getDatabase() const
 {
-    return database;
+    return m_database;
 }

@@ -321,46 +321,32 @@ void CalcFrame::printCalc()
 
 CalcFrame::CalcItems CalcFrame::getItemsData()
 {
-    auto milkReception = m_mainWindow->getDatabase()->milkReception();
-
     CalcItems items;
 
     QSqlQuery query;
     query.prepare(getPrepQueryStr());
     if (!addBindValueToQuery(query))
         return items;
+
     if (!query.exec()) {
         QMessageBox::critical(this, Constants::appName(), tr("Не удалось выполнить запрос данных для расчетов "
                                                              "по причине: \n\t\"") + query.lastError().text() + "\"");
         return items;
     }
 
-    // номера столбцов соответствуют запросу
-    const auto //mrIdColPos = milkReception->getColumnPosition(milkReception->getNameColumnId()),
-            mrIdDelivColPos = milkReception->getColumnPosition(milkReception->getNameColumnIdDeliverer()),
-            mrNameDelivColPos = milkReception->getColumnPosition(milkReception->getNameColumnDelivererName()),
-            //            mrIdMilkPointColPos = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointId()),
-            mrNameMilkPointColPos = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointName()),
-            mrDeliveryDateColPos = milkReception->getColumnPosition(milkReception->getNameColumnDeliveryDate()),
-            mrPriceLiterColPos = milkReception->getColumnPosition(milkReception->getNameColumnPriceLiter()),
-            mrLitersColPos = milkReception->getColumnPosition(milkReception->getNameColumnLiters()),
-            mrFatColPos = milkReception->getColumnPosition(milkReception->getNameColumnFat());
     int row = 0;
-
     while (query.next())
     {
-        /*      query.value(mrIdMilkPointColPos).toLongLong();
-        query.value(mrIdColPos).toLongLong();*/
         Item item;
-        item.delivererName = query.value(mrNameDelivColPos).toString();
-        item.milkPointName = query.value(mrNameMilkPointColPos).toString();
-        item.deliveryDate = query.value(mrDeliveryDateColPos).toDate();
-        item.priceLiter = query.value(mrPriceLiterColPos).toFloat();
-        item.liters = query.value(mrLitersColPos).toFloat();
-        item.fat = query.value(mrFatColPos).toFloat();
+        item.delivererName = query.value(RMT_DELIVERER_NAME).toString();
+        item.milkPointName = query.value(RMT_MILK_POINT_NAME).toString();
+        item.deliveryDate = query.value(RMT_DELIVERY_DATE).toDate();
+        item.priceLiter = query.value(RMT_PRICE_LITER).toFloat();
+        item.liters = query.value(RMT_LITERS).toFloat();
+        item.fat = query.value(RMT_FAT).toFloat();
 
         setAllCalc(item);
-        items.insert(query.value(mrIdDelivColPos).toLongLong(), item);
+        items.insert(query.value(RMT_ID_DELIVERER).toLongLong(), item);
 
         row++;
     }
@@ -378,30 +364,27 @@ QString CalcFrame::getPrepQueryStr() const
     if (isCalcByDeliverer() || isCalcByDate() || isCalcByMilkPoint()) {
 
         if (isCalcByDeliverer())
-            where.append(milkReception->getNameColumnIdDeliverer(true) + " = ?");
+            where.append(milkReception->getColName(RMT_ID_DELIVERER, true) + " = ?");
 
         if (isCalcByDate()) {
             if (!where.isEmpty())
                 where.append(" AND ");
-            where.append(milkReception->getNameColumnDeliveryDate(true) + " BETWEEN ? and ?");
+            where.append(milkReception->getColName(RMT_DELIVERY_DATE, true) + " BETWEEN ? and ?");
         }
         if (isCalcByMilkPoint()) {
             if (!where.isEmpty())
                 where.append(" AND ");
-            where.append(milkReception->getNameColumnMilkPointId(true) + " = ?");
+            where.append(milkReception->getColName(RMT_MILK_POINT_ID, true) + " = ?");
         }
 
         if (!where.isEmpty())
             where.prepend(" WHERE ");
     }
-
     return select + where;
 }
 
 bool CalcFrame::addBindValueToQuery(QSqlQuery &query)
 {
-    auto milkReception = m_mainWindow->getDatabase()->milkReception();
-
     auto isOk = true;
 
     if (isCalcByDeliverer()) {
@@ -503,8 +486,6 @@ void CalcFrame::fillTableWidget(const CalcItems &items)
         setTableWidgetItem(row, itemResults, calcSettings.allResultColor,
                            calcSettings.allResultFont);
     }
-
-    //    ui->tableWidgetCalc->resizeColumnsToContents();
 }
 
 void CalcFrame::setTableWidgetItem(const int row, const Item &item, const QColor &color, const QFont &font)
@@ -565,8 +546,6 @@ QString CalcFrame::getValueFromItem(const CalcFrame::Item &item, const Columns c
     case Columns::Sum:
         value = item.sum;
         break;
-    default:
-        return QString();
     }
 
     const auto &calcColumn = m_mainWindow->getSettings()->getCalc().columns[(int)column];

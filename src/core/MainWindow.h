@@ -59,7 +59,7 @@ private:
     QComboBox *m_comboBoxChooseMainLocality;
 
     Settings *m_settings;
-    DB_NAMESPACE::Database *database;
+    DB_NAMESPACE::Database *m_database;
 
     DialogSettings *m_dialogSettings;
 

@@ -19,6 +19,18 @@ enum DeliverersTableColumns {
     DT_PHONE_NUMBER
 };
 
+enum ReceptionMilkTableColumns {
+    RMT_ID = 0,
+    RMT_ID_DELIVERER,
+    RMT_DELIVERER_NAME,
+    RMT_MILK_POINT_ID,
+    RMT_MILK_POINT_NAME,
+    RMT_DELIVERY_DATE,
+    RMT_PRICE_LITER,
+    RMT_LITERS,
+    RMT_FAT
+};
+
 enum LocalityTableColumns {
     LT_ID = 0,
     LT_NAME,

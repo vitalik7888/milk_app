@@ -61,28 +61,25 @@ void FrameEditMilkReception::setup()
     m_proxy->setSourceModel(m_mainWindow->getDatabase()->milkReception());
     ui->tableViewEditMilkReceptions->setModel(m_proxy);
 
-    const auto mrColId = milkReception->getColumnPosition(milkReception->getNameColumnId()),
-            mrColNameDeliv = milkReception->getColumnPosition(milkReception->getNameColumnDelivererName()),
-            mrColNameMilkPoint = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointName()),
-            mrColIdDeliv = milkReception->getColumnPosition(milkReception->getNameColumnIdDeliverer()),
-            mrColIdMilkPoint = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointId()),
-            mrColDelivDate = milkReception->getColumnPosition(milkReception->getNameColumnDeliveryDate());
-
     ui->comboBoxFilterDeliverers->setModel(deliverers);
     ui->comboBoxFilterDeliverers->setModelColumn(DT_NAME);
 
     ui->comboBoxFilterMilkPoints->setModel(milkPoints);
     ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
 
-    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(mrColNameDeliv, new ChooseIdDelegate(deliverers, mrColIdDeliv,
-                                                                                                   tr("Выбор сдатчика"), this));
-    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(mrColNameMilkPoint, new ChooseIdDelegate(milkPoints, mrColIdMilkPoint,
-                                                                                                       tr("Выбор молокопункта"), this));
-    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(mrColDelivDate, new DateEditDelegate);
+    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(RMT_DELIVERER_NAME,
+                                                              new ChooseIdDelegate(deliverers,
+                                                                                   RMT_ID_DELIVERER,
+                                                                                   tr("Выбор сдатчика"), this));
+    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(RMT_MILK_POINT_NAME,
+                                                              new ChooseIdDelegate(milkPoints,
+                                                                                   RMT_MILK_POINT_ID,
+                                                                                   tr("Выбор молокопункта"), this));
+    ui->tableViewEditMilkReceptions->setItemDelegateForColumn(RMT_DELIVERY_DATE, new DateEditDelegate);
 
-    ui->tableViewEditMilkReceptions->hideColumn(mrColId);
-    ui->tableViewEditMilkReceptions->hideColumn(mrColIdDeliv);
-    ui->tableViewEditMilkReceptions->hideColumn(mrColIdMilkPoint);
+    ui->tableViewEditMilkReceptions->hideColumn(RMT_ID);
+    ui->tableViewEditMilkReceptions->hideColumn(RMT_ID_DELIVERER);
+    ui->tableViewEditMilkReceptions->hideColumn(RMT_MILK_POINT_ID);
 }
 
 void FrameEditMilkReception::chooseDeliverer()

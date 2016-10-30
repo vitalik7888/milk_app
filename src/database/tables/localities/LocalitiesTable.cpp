@@ -77,7 +77,7 @@ LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
     qDebug() << "init " + objectName();
 
     initColumns();
-    setQuery(selectAll());
+    setQuery(QString("SELECT * FROM %1").arg(TABLE_NAME));
 }
 
 LocalitiesTable::~LocalitiesTable()
