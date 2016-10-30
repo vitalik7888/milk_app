@@ -227,9 +227,12 @@ void MilkReceptionAddFrame::insertReceptionMilk()
             mrd.setLiters(liters);
             mrd.setFat(fat);
 
-            if (milkReception->insert(mrd)) {
+            try {
+                milkReception->insert(mrd);
                 ui->tableWidgetAddMilkReception->model()->setData(indexLiters, .0f);
                 ui->tableWidgetAddMilkReception->model()->setData(indexFat, .0f);
+            } catch (const QString &err) {
+                QMessageBox::warning(this, tr("Сдача молока"), tr("Ошибка присдаче молока: ") + err);
             }
         } else
             allErrors.append("\n" + error);

@@ -33,4 +33,5 @@ HEADERS  += \
     $$PWD/tables/deliverers/deliverersdao.h \
     $$PWD/base/dao.h \
     $$PWD/tables/localities/localitiesdao.h \
-    $$PWD/tables/milk_points/milkpointdao.h
+    $$PWD/tables/milk_points/milkpointdao.h \
+    $$PWD/tables/milk_reception/milkrecepriondao.h

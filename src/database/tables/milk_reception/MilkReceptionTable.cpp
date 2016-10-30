@@ -1,6 +1,6 @@
 #include "MilkReceptionTable.h"
 
-#include <base/dao.h>
+#include "milkrecepriondao.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "Constants.h"
@@ -24,10 +24,80 @@ static const char *FN_PRICE_LITER = "price_liter";
 static const char *FN_LITERS = "liters";
 static const char *FN_FAT = "fat";
 
+//--------------------------------------------------------------------------------------------------
+MilkReceptionDao::MilkReceptionDao(const QSqlDatabase &db) : Dao(TABLE_NAME, FN_ID, db) { }
 
+MilkReceptionData MilkReceptionDao::get(const milk_id id) const
+{
+    QSqlQuery query;
+    query.prepare(QString("%1 WHERE %2 = ?")
+                  .arg(Utils::Main::getSelectStr(TABLE_NAME,
+    { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
+                  .arg(FN_ID));
+    query.addBindValue(id);
+
+    MilkReceptionData data;
+    if (query.exec() && query.first())
+    {
+        data.setId(id);
+        data.setDelivererId(query.value(0).toLongLong());
+        data.setMilkPointId(query.value(1).toLongLong());
+        data.setDeliveryDate(query.value(2).toDate());
+        data.setPriceLiter(query.value(3).toFloat());
+        data.setLiters(query.value(4).toFloat());
+        data.setFat(query.value(5).toFloat());
+    } else {
+        const auto err = QString("Отсутствует сдача молока с id = %1").arg(id);
+        qDebug() << err;
+        throw err;
+    }
+
+    return data;
+}
+
+void MilkReceptionDao::insert(const MilkReceptionData &data) const
+{
+    QSqlQuery query;
+    query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME,
+        { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }));
+    query.addBindValue(data.delivererId());
+    query.addBindValue(data.milkPointId());
+    query.addBindValue(data.deliveryDate().toString(Constants::defaultDateFormat()));
+    query.addBindValue(data.priceLiter());
+    query.addBindValue(data.liters());
+    query.addBindValue(data.fat());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+void MilkReceptionDao::update(const MilkReceptionData &data) const
+{
+    QSqlQuery query;
+    query.prepare(QString("%1 WHERE %2 = ?").arg(Utils::Main::getPrepUpdateStr(TABLE_NAME,
+        { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
+                  .arg(FN_ID));
+    query.addBindValue(data.milkPointId());
+    query.addBindValue(data.deliveryDate());
+    query.addBindValue(data.priceLiter());
+    query.addBindValue(data.liters());
+    query.addBindValue(data.fat());
+    query.addBindValue(data.delivererId());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
 MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsTable *milkPoints,
                                        QSqlDatabase db):
-    Table(new Dao(TABLE_NAME, FN_ID, db), _deliverers, db),
+    Table(new MilkReceptionDao(db), _deliverers, db),
     m_deliverers(_deliverers),
     m_milkPoints(milkPoints)
 {
@@ -40,7 +110,7 @@ MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsT
 
 MilkReceptionTable::~MilkReceptionTable()
 {
-
+    qDebug() << "delete " + objectName();
 }
 
 QString MilkReceptionTable::tableName() const
@@ -85,84 +155,17 @@ QSqlField MilkReceptionTable::getFieldFat() const
 
 MilkReceptionData MilkReceptionTable::getMilkReception(const milk_id milkReceptionId) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getSelectStr(tableName(), QStringList()
-                                                 << getNameColumnIdDeliverer(true)
-                                                 << getNameColumnMilkPointId(true)
-                                                 << getNameColumnDeliveryDate(true)
-                                                 << getNameColumnPriceLiter(true)
-                                                 << getNameColumnLiters(true)
-                                                 << getNameColumnFat(true)))
-                  .arg(getNameColumnId(true)));
-    query.addBindValue(milkReceptionId);
-
-    MilkReceptionData data;
-    if (query.exec() && query.first())
-    {
-        data.setId(milkReceptionId);
-        data.setDelivererId(query.value(0).toLongLong());
-        data.setMilkPointId(query.value(1).toLongLong());
-        data.setDeliveryDate(query.value(2).toDate());
-        data.setPriceLiter(query.value(3).toFloat());
-        data.setLiters(query.value(4).toFloat());
-        data.setFat(query.value(5).toFloat());
-    } else
-        emit error(tr("Отсутствует сдача молока с id = ") + QString::number(milkReceptionId));
-
-    return data;
+    return dao()->get(milkReceptionId);
 }
 
-bool MilkReceptionTable::insert(const MilkReceptionData &milkReception) const
+void MilkReceptionTable::insert(const MilkReceptionData &milkReception) const
 {
-    QSqlQuery query;
-    query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
-                                                << getNameColumnIdDeliverer()
-                                                << getNameColumnMilkPointId()
-                                                << getNameColumnDeliveryDate()
-                                                << getNameColumnPriceLiter()
-                                                << getNameColumnLiters()
-                                                << getNameColumnFat()));
-    query.addBindValue(milkReception.delivererId());
-    query.addBindValue(milkReception.milkPointId());
-    query.addBindValue(milkReception.deliveryDate().toString(Constants::defaultDateFormat()));
-    query.addBindValue(milkReception.priceLiter());
-    query.addBindValue(milkReception.liters());
-    query.addBindValue(milkReception.fat());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->insert(milkReception);
 }
 
-bool MilkReceptionTable::update(const MilkReceptionData &milkReception) const
+void MilkReceptionTable::update(const MilkReceptionData &milkReception) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(tableName(), QStringList()
-                                                     << getNameColumnIdDeliverer()
-                                                     << getNameColumnMilkPointId()
-                                                     << getNameColumnDeliveryDate()
-                                                     << getNameColumnPriceLiter()
-                                                     << getNameColumnLiters()
-                                                     << getNameColumnFat()))
-                  .arg(getNameColumnId()));
-    query.addBindValue(milkReception.milkPointId());
-    query.addBindValue(milkReception.deliveryDate());
-    query.addBindValue(milkReception.priceLiter());
-    query.addBindValue(milkReception.liters());
-    query.addBindValue(milkReception.fat());
-    query.addBindValue(milkReception.delivererId());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->update(milkReception);
 }
 
 bool MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const
@@ -322,6 +325,11 @@ void MilkReceptionTable::initColumns()
     m_columns.append(QSqlField(FN_PRICE_LITER, QVariant::Double));
     m_columns.append(QSqlField(FN_LITERS, QVariant::Double));
     m_columns.append(QSqlField(FN_FAT, QVariant::Double));
+}
+
+MilkReceptionDao *MilkReceptionTable::dao() const
+{
+    return dynamic_cast<MilkReceptionDao *>(m_dao.data());
 }
 
 DeliverersTable *MilkReceptionTable::getDeliverers() const

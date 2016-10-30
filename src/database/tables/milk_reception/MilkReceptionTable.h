@@ -7,9 +7,9 @@
 #include <QDate>
 
 DB_BEGIN_NAMESPACE
-
-class DeliverersTable;
-class MilkPointsTable;
+    class MilkReceptionDao;
+    class DeliverersTable;
+    class MilkPointsTable;
 
 
 class MilkReceptionTable : public Table
@@ -44,8 +44,8 @@ public:
     QSqlField getFieldFat() const;
 
     MilkReceptionData getMilkReception(const milk_id milkPointId) const;
-    bool insert(const MilkReceptionData &milkReception) const;
-    bool update(const MilkReceptionData &milkReception) const;
+    void insert(const MilkReceptionData &milkReception) const;
+    void update(const MilkReceptionData &milkReception) const;
     bool setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
     bool setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
     bool setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
@@ -67,6 +67,8 @@ private:
     MilkPointsTable *m_milkPoints;
 
     void initColumns() Q_DECL_OVERRIDE;
+
+    MilkReceptionDao *dao() const;
 };
 
 DB_END_NAMESPACE
