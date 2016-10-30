@@ -34,12 +34,9 @@ DelivererDialog::~DelivererDialog()
 
 void DelivererDialog::loadLocalities()
 {
-    const auto locNameColPos = m_deliverers->getLocalities()->getColumnPosition(
-                m_deliverers->getLocalities()->getNameColumnName());
-
     LocalitiesTable *localities = m_deliverers->getLocalities();
     ui->comboBoxLocality->setModel(localities);
-    ui->comboBoxLocality->setModelColumn(locNameColPos);
+    ui->comboBoxLocality->setModelColumn(LT_NAME);
 
     QObject::connect(ui->toolButtonRefresh, &QToolButton::clicked, [=](){
         localities->refresh();
@@ -98,10 +95,7 @@ QString DelivererDialog::getName() const
 
 milk_id DelivererDialog::getLocalityId() const
 {
-    const auto locIdColPos = m_deliverers->getLocalities()->getColumnPosition(
-                m_deliverers->getLocalities()->getNameColumnId());
-
-    return Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxLocality, locIdColPos).toLongLong();
+    return Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxLocality, LT_ID).toLongLong();
 }
 
 milk_inn DelivererDialog::getInn() const
@@ -136,10 +130,8 @@ bool DelivererDialog::isNeedInsert() const
 
 void DelivererDialog::loadDelivererToUi(const DelivererData &deliverer)
 {
-    const auto locIdColPos = m_deliverers->getLocalities()->getColumnPosition(
-                m_deliverers->getLocalities()->getNameColumnId());
     const auto &index = Utils::Main::getIndexFromModelById(m_deliverers->getLocalities(),
-                                                           locIdColPos, deliverer.localityId());
+                                                           LT_ID, deliverer.localityId());
     if (index.isValid())
         ui->comboBoxLocality->setCurrentIndex(index.row());
     else
@@ -180,12 +172,12 @@ bool DelivererDialog::updateDeliverer()
 QString DelivererDialog::getDublNameQueryPrepStr() const
 {
     const auto select = Utils::Main::getSelectStr(m_deliverers->tableName(),
-                    QStringList() << m_deliverers->getLocalities()->getNameColumnName(true));
+                    { m_deliverers->getLocalities()->getColName(LT_NAME, true) });
     auto query = QString("%1 LEFT JOIN %2 ON %4 = %5 WHERE %6 = ?")
             .arg(select)
             .arg(m_deliverers->getLocalities()->tableName())
             .arg(m_deliverers->getNameColumnLocalityId(true))
-            .arg(m_deliverers->getLocalities()->getNameColumnId(true))
+            .arg(m_deliverers->getLocalities()->getColName(LT_ID, true))
             .arg(m_deliverers->getNameColumnName(true));
 
     if (!isNeedInsert())

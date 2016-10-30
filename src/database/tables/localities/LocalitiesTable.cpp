@@ -90,21 +90,6 @@ QString LocalitiesTable::tableName() const
     return TABLE_NAME;
 }
 
-QSqlField LocalitiesTable::getFieldId() const
-{
-    return getColumnByName(FN_ID);
-}
-
-QSqlField LocalitiesTable::getFieldName() const
-{
-    return getColumnByName(FN_NAME);
-}
-
-QSqlField LocalitiesTable::getFieldDescription() const
-{
-    return getColumnByName(FN_DESCRIPTION);
-}
-
 Locality LocalitiesTable::getLocality(const milk_id localityId) const
 {
     return dao()->get(localityId);
@@ -135,32 +120,22 @@ QSqlField LocalitiesTable::primaryField() const
     return getColumnByName(FN_ID);
 }
 
-QString LocalitiesTable::getNameColumnId(const bool withTableName) const
+QString LocalitiesTable::getColName(const LocalityTableColumns position, const bool withTableName) const
 {
-    if (!withTableName)
-        return FN_ID;
-    return QString(tableName() + "." + FN_ID);
-}
+    QString columnName;
+    switch (position) {
+    case LocalityTableColumns::LT_ID:
+        columnName = FN_ID;
+        break;
+    case LocalityTableColumns::LT_NAME:
+        columnName = FN_NAME;
+        break;
+    case LocalityTableColumns::LT_DESCRIPTION:
+        columnName = FN_DESCRIPTION;
+        break;
+    }
 
-QString LocalitiesTable::getNameColumnName(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_NAME;
-    return QString(tableName() + "." + FN_NAME);
-}
-
-QString LocalitiesTable::getNameColumnDescription(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_DESCRIPTION;
-    return QString(tableName() + "." + FN_DESCRIPTION);
-}
-
-void LocalitiesTable::initColumns()
-{
-    m_columns.append(QSqlField(FN_ID, QVariant::LongLong));
-    m_columns.append(QSqlField(FN_NAME, QVariant::String));
-    m_columns.append(QSqlField(FN_DESCRIPTION, QVariant::String));
+    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
 }
 
 LocalitiesDao *LocalitiesTable::dao() const

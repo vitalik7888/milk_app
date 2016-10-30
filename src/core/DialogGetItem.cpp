@@ -36,7 +36,7 @@ DialogGeItem::DialogGeItem(Table *table, const QString &title, QWidget *parent) 
 
     ui->comboBox->setModel(m_proxyModel);
 
-    auto showColumn = -1;
+    int showColumn = -1;
     if (m_deliverers) {
         //        setWindowIcon();
         if (title.isEmpty())
@@ -46,7 +46,7 @@ DialogGeItem::DialogGeItem(Table *table, const QString &title, QWidget *parent) 
     } else if (m_localities) {
         if (title.isEmpty())
             setWindowTitle(tr("Населенные пункты"));
-        showColumn = m_localities->getColumnPosition(m_localities->getNameColumnName());
+        showColumn = LT_NAME;
         ui->toolButtonInfo->setToolTip(tr("Информация о населенном пункте"));
     } else if (m_milkPoints) {
         if (title.isEmpty())

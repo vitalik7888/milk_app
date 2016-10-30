@@ -93,11 +93,7 @@ QString MilkPointDialog::getDescription() const
 
 milk_id MilkPointDialog::getLocalityId() const
 {
-    const auto locIdColPos = m_milkPointsTable->getLocalities()->getColumnPosition(
-                m_milkPointsTable->getLocalities()->getNameColumnId(false));
-
-    return Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxLocalities,
-                                                     locIdColPos).toLongLong();
+    return Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxLocalities, LT_ID).toLongLong();
 }
 
 void MilkPointDialog::setComboBoxCurIndex(const int position)
@@ -112,12 +108,9 @@ bool MilkPointDialog::isNeedInsert() const
 
 void MilkPointDialog::loadLocalities()
 {
-    const auto locNameColPos = m_milkPointsTable->getLocalities()->getColumnPosition(
-                m_milkPointsTable->getLocalities()->getNameColumnName(false));
-
     LocalitiesTable *localities = m_milkPointsTable->getLocalities();
     ui->comboBoxLocalities->setModel(localities);
-    ui->comboBoxLocalities->setModelColumn(locNameColPos);
+    ui->comboBoxLocalities->setModelColumn(LT_NAME);
 
     QObject::connect(ui->toolButtonRefresh, &QToolButton::clicked, [=](){
         localities->refresh();
@@ -127,11 +120,8 @@ void MilkPointDialog::loadLocalities()
 
 void MilkPointDialog::loadToUi(const db::MilkPointData &milkPoint)
 {
-    const auto locIdColPos = m_milkPointsTable->getLocalities()->getColumnPosition(
-                m_milkPointsTable->getLocalities()->getNameColumnId(false));
-
     const auto &index = Utils::Main::getIndexFromModelById(m_milkPointsTable->getLocalities(),
-                                                           locIdColPos, milkPoint.localityId());
+                                                           LT_ID, milkPoint.localityId());
     ui->lineEditName->setText(milkPoint.name());
     ui->textEditDescription->setText(milkPoint.description());
 
@@ -178,12 +168,12 @@ bool MilkPointDialog::updateMilkPoint()
 QString MilkPointDialog::getDublNameQueryPrepStr() const
 {
     const auto select = Utils::Main::getSelectStr(m_milkPointsTable->tableName(),
-                                                  QStringList() << m_milkPointsTable->getLocalities()->getNameColumnName(true));
+                           { m_milkPointsTable->getLocalities()->getColName(LT_NAME, true) });
     auto query = QString("%1 LEFT JOIN %2 ON %4 = %5 WHERE %6 = ?")
             .arg(select)
             .arg(m_milkPointsTable->getLocalities()->tableName())
             .arg(m_milkPointsTable->getNameColumnLocalityId(true))
-            .arg(m_milkPointsTable->getLocalities()->getNameColumnId(true))
+            .arg(m_milkPointsTable->getLocalities()->getColName(LT_ID, true))
             .arg(m_milkPointsTable->getNameColumnName(true));
 
     if (!isNeedInsert())

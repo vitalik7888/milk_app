@@ -22,7 +22,7 @@ public:
     QSqlDatabase database() const;
 
     virtual QString tableName() const = 0;
-    virtual void initColumns() = 0;
+    virtual void initColumns() {};
     virtual QSqlField primaryField() const = 0;
 
     virtual QString selectAll() const;

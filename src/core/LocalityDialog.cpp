@@ -89,12 +89,11 @@ bool LocalityDialog::updateLocality()
 
 QString LocalityDialog::getDublNameQueryPrepStr() const
 {
-    auto query = QString("%1 WHERE %2 = ?")
-            .arg(Utils::Main::getSelectStr(m_localities->tableName(),
-                                           QStringList() << m_localities->getNameColumnName(true)))
-            .arg(m_localities->getNameColumnName(true));
+    auto query = QString("%1 WHERE %2 = ?").arg(Utils::Main::getSelectStr(m_localities->tableName(),
+                                                { m_localities->getColName(LT_NAME, true) }))
+            .arg(m_localities->getColName(LT_NAME, true));
     if (!isNeedInsert())
-        query.append(" AND " + m_localities->getFieldId().name() + " != ?");
+        query.append(" AND " + m_localities->getColName(LT_ID) + " != ?");
     return query;
 }
 

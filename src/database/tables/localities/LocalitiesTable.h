@@ -18,13 +18,7 @@ public:
     QString tableName() const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
 
-    QString getNameColumnId(const bool withTableName = false) const;
-    QString getNameColumnName(const bool withTableName = false) const;
-    QString getNameColumnDescription(const bool withTableName = false) const;
-
-    QSqlField getFieldId() const;
-    QSqlField getFieldName() const;
-    QSqlField getFieldDescription() const;
+    QString getColName(const LocalityTableColumns position, const bool withTableName = false) const;
 
     Locality getLocality(const milk_id localityId) const;
     void insert(const Locality &locality);
@@ -32,10 +26,7 @@ public:
     bool setName(const milk_id localityId, const QString &localityName) const;
     bool setDescription(const milk_id localityId, const QString &description) const;
 
-
 private:
-    void initColumns() Q_DECL_OVERRIDE;
-
     LocalitiesDao *dao() const;
 };
 

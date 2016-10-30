@@ -293,9 +293,8 @@ void MainWindow::openDb(const QString &dbName)
                        .arg(database->choosenDatabase())
                        .arg(Constants::getCurrentVersion().toString()));
 
-        const auto locNameCol = database->localities()->getColumnPosition(database->localities()->getNameColumnName(false));
         m_comboBoxChooseMainLocality->setModel(database->localities());
-        m_comboBoxChooseMainLocality->setModelColumn(locNameCol);
+        m_comboBoxChooseMainLocality->setModelColumn(LT_NAME);
 
         m_groupBoxChooseMainLocality->setChecked(false);
 
@@ -457,9 +456,8 @@ void MainWindow::chooseMainLocality()
 
     if (m_groupBoxChooseMainLocality->isChecked())
     {
-        const auto locIdCol = database->localities()->getColumnPosition(database->localities()->getNameColumnId(false));
         const auto idLocality = Utils::Main::getCurValueFromComboBoxModel(
-                    m_comboBoxChooseMainLocality, locIdCol).toLongLong();
+                    m_comboBoxChooseMainLocality, LT_ID).toLongLong();
 
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
@@ -503,8 +501,7 @@ qlonglong MainWindow::getCurrentLocalityId() const
     if (!m_groupBoxChooseMainLocality->isChecked())
         return -1;
 
-    const auto locNameCol = database->localities()->getColumnPosition(database->localities()->getNameColumnName(false));
-    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, locNameCol).toLongLong();
+    return Utils::Main::getCurValueFromComboBoxModel(m_comboBoxChooseMainLocality, LT_NAME).toLongLong();
 }
 
 void MainWindow::_writeSettings()

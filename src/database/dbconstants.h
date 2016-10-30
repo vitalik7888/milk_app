@@ -11,5 +11,10 @@
 using milk_id = qlonglong;
 using milk_inn = qlonglong;
 
+enum LocalityTableColumns {
+    LT_ID = 0,
+    LT_NAME,
+    LT_DESCRIPTION
+};
 
 #endif // DBCONSTANTS_H
