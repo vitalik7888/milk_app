@@ -5,8 +5,8 @@
 #include "MilkPoint.h"
 
 DB_BEGIN_NAMESPACE
-
-class LocalitiesTable;
+    class MilkPointDao;
+    class LocalitiesTable;
 
 class MilkPointsTable: public Table
 {
@@ -29,8 +29,8 @@ public:
     QSqlField getFieldDescription() const;
 
     MilkPointData getMilkPoint(const milk_id milkPointId) const;
-    bool insert(const MilkPointData &milkPoint);
-    bool update(const MilkPointData &milkPoint) const;
+    void insert(const MilkPointData &milkPoint);
+    void update(const MilkPointData &milkPoint) const;
     bool setName(const milk_id milkPointId, const QString &milkPointName) const;
     bool setDescription(const milk_id milkPointId, const QString &description) const;
 
@@ -40,6 +40,8 @@ private:
     LocalitiesTable *m_localities;
 
     void initColumns() Q_DECL_OVERRIDE;
+
+    MilkPointDao *dao() const;
 };
 
 DB_END_NAMESPACE

@@ -6,6 +6,7 @@
 #include "Locality.h"
 
 DB_BEGIN_NAMESPACE
+    class LocalitiesDao;
 
 class LocalitiesTable : public Table
 {
@@ -26,14 +27,16 @@ public:
     QSqlField getFieldDescription() const;
 
     Locality getLocality(const milk_id localityId) const;
-    bool insert(const Locality &locality);
-    bool update(const Locality &locality) const;
+    void insert(const Locality &locality);
+    void update(const Locality &locality) const;
     bool setName(const milk_id localityId, const QString &localityName) const;
     bool setDescription(const milk_id localityId, const QString &description) const;
 
 
 private:
     void initColumns() Q_DECL_OVERRIDE;
+
+    LocalitiesDao *dao() const;
 };
 
 DB_END_NAMESPACE

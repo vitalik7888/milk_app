@@ -21,7 +21,7 @@ static const char *FN_ADDRESS = "address";
 static const char *FN_PHONE_NUMBER = "phone_number";
 
 //--------------------------------------------------------------------------------------------------
-DeliverersDao::DeliverersDao(const QSqlDatabase db):
+DeliverersDao::DeliverersDao(const QSqlDatabase &db):
     Dao(TABLE_NAME, FN_ID, db)
 {  }
 
@@ -52,7 +52,7 @@ DelivererData DeliverersDao::getDeliverer(const milk_id delivererId) const
 
 }
 
-void DeliverersDao::insert(const DelivererData &deliverer)
+void DeliverersDao::insert(const DelivererData &deliverer) const
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME,
@@ -70,7 +70,7 @@ void DeliverersDao::insert(const DelivererData &deliverer)
     }
 }
 
-void DeliverersDao::update(const DelivererData &deliverer)
+void DeliverersDao::update(const DelivererData &deliverer) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")

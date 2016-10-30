@@ -1,12 +1,12 @@
 #include "LocalitiesTable.h"
 
-#include <base/dao.h>
+#include "localitiesdao.h"
 #include "Utils.h"
 // Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
+#include <QtDebug>
 
 USE_DB_NAMESPACE
 
@@ -15,9 +15,63 @@ static const char *FN_ID = "id";
 static const char *FN_NAME = "name";
 static const char *FN_DESCRIPTION = "description";
 
+//--------------------------------------------------------------------------------------------------
+LocalitiesDao::LocalitiesDao(const QSqlDatabase &db):
+    Dao(TABLE_NAME, FN_ID, db) {}
 
+Locality LocalitiesDao::get(const milk_id id) const {
+    QSqlQuery query(m_db);
+    query.prepare(QString("%1 WHERE %2 = ?")
+                  .arg(Utils::Main::getSelectStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION })).arg(FN_ID));
+    query.addBindValue(id);
+
+    Locality data;
+    if (query.exec() && query.first())
+    {
+        data.setId(id);
+        data.setName(query.value(0).toString());
+        data.setDescription(query.value(1).toString());
+    } else {
+        const auto err = QString("Отсутствует населенный пункт с id = %1").arg(id);
+        qDebug() << err;
+        throw err;
+    }
+
+    return data;
+}
+
+void LocalitiesDao::insert(const Locality &data) {
+    QSqlQuery query(m_db);
+    query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }));
+    query.addBindValue(data.name());
+    query.addBindValue(data.description());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+void LocalitiesDao::update(const Locality &data) {
+    QSqlQuery query;
+    query.prepare(QString("%1 WHERE %2 = ?")
+                  .arg(Utils::Main::getPrepUpdateStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }))
+                  .arg(FN_ID));
+    query.addBindValue(data.name());
+    query.addBindValue(data.description());
+    query.addBindValue(data.id());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
 LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
-    Table(new Dao(TABLE_NAME, FN_ID, db), parent, db)
+    Table(new LocalitiesDao(db), parent, db)
 {
     setObjectName("LocalitiesTable");
     qDebug() << "init " + objectName();
@@ -28,7 +82,7 @@ LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
 
 LocalitiesTable::~LocalitiesTable()
 {
-
+    qDebug() << "delete " + objectName();
 }
 
 QString LocalitiesTable::tableName() const
@@ -53,61 +107,17 @@ QSqlField LocalitiesTable::getFieldDescription() const
 
 Locality LocalitiesTable::getLocality(const milk_id localityId) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                    .arg(Utils::Main::getSelectStr(tableName(), QStringList()
-                                      << getNameColumnName(true)
-                                      << getNameColumnDescription(true)))
-                    .arg(getNameColumnId()));
-    query.addBindValue(localityId);
-
-    Locality data;
-    if (query.exec() && query.first())
-    {
-        data.setId(localityId);
-        data.setName(query.value(0).toString());
-        data.setDescription(query.value(1).toString());
-    } else
-        emit error(tr("Отсутствует населенный пункт с id = ")+ QString::number(localityId));
-
-    return data;
+    return dao()->get(localityId);
 }
 
-bool LocalitiesTable::insert(const Locality &locality)
+void LocalitiesTable::insert(const Locality &locality)
 {
-    QSqlQuery query;
-    query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
-                                   << getNameColumnName()
-                                   << getNameColumnDescription()));
-    query.addBindValue(locality.name());
-    query.addBindValue(locality.description());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->insert(locality);
 }
 
-bool LocalitiesTable::update(const Locality &locality) const
+void LocalitiesTable::update(const Locality &locality) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(tableName(), QStringList()
-                                   << getNameColumnName()
-                                   << getNameColumnDescription()))
-                  .arg(getNameColumnId()));
-    query.addBindValue(locality.name());
-    query.addBindValue(locality.description());
-    query.addBindValue(locality.id());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->update(locality);
 }
 
 bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
@@ -151,4 +161,9 @@ void LocalitiesTable::initColumns()
     m_columns.append(QSqlField(FN_ID, QVariant::LongLong));
     m_columns.append(QSqlField(FN_NAME, QVariant::String));
     m_columns.append(QSqlField(FN_DESCRIPTION, QVariant::String));
+}
+
+LocalitiesDao *LocalitiesTable::dao() const
+{
+    return dynamic_cast<LocalitiesDao *>(m_dao.data());
 }

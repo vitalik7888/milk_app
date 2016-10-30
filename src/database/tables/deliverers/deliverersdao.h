@@ -8,11 +8,11 @@ DB_BEGIN_NAMESPACE
 
 class DeliverersDao: public Dao {
 public:
-    DeliverersDao(const QSqlDatabase db);
+    DeliverersDao(const QSqlDatabase &db);
 
     DelivererData getDeliverer(const milk_id delivererId) const;
-    void insert(const DelivererData &deliverer);
-    void update(const DelivererData &deliverer);
+    void insert(const DelivererData &deliverer) const;
+    void update(const DelivererData &deliverer) const;
 };
 
 DB_END_NAMESPACE

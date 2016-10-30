@@ -11,7 +11,7 @@ DB_BEGIN_NAMESPACE
 class Dao
 {
 public:
-    Dao(const QString &tableName, const QString &primeryFieldName, const QSqlDatabase db = QSqlDatabase());
+    Dao(const QString &tableName, const QString &primeryFieldName, const QSqlDatabase &db = QSqlDatabase());
     virtual ~Dao();
 
     void updateValue(const QString &columnName, const milk_id id, const QVariant &value) const;

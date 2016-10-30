@@ -23,8 +23,13 @@ MilkPointDialog::MilkPointDialog(MilkPointsTable *milkPoints, const milk_id milk
 
     loadLocalities();
 
-    if (!isNeedInsert())
-        loadToUi(m_milkPointsTable->getMilkPoint(m_currentId));
+    if (!isNeedInsert()) {
+        try {
+            loadToUi(m_milkPointsTable->getMilkPoint(m_currentId));
+        } catch(const QString &err) {
+            QMessageBox::warning(this, tr("Молочный пункт"), tr("Ошибка получения данных") + err);
+        }
+    }
 }
 
 MilkPointDialog::~MilkPointDialog()
@@ -51,7 +56,7 @@ void MilkPointDialog::accept()
 
     if (!query.exec()) {
         isOk = Utils::Main::yesNoWarnMsgBox(this, tr("Ошибка при проверке существующих наименований в бд: ") +
-                                             query.lastError().text() + ".\n" +
+                                            query.lastError().text() + ".\n" +
                                             tr("Все равно желаете продолжить?"));
     } else {
         QString dublicates = QString();
@@ -126,7 +131,7 @@ void MilkPointDialog::loadToUi(const db::MilkPointData &milkPoint)
                 m_milkPointsTable->getLocalities()->getNameColumnId(false));
 
     const auto &index = Utils::Main::getIndexFromModelById(m_milkPointsTable->getLocalities(),
-                                                             locIdColPos, milkPoint.localityId());
+                                                           locIdColPos, milkPoint.localityId());
     ui->lineEditName->setText(milkPoint.name());
     ui->textEditDescription->setText(milkPoint.description());
 
@@ -135,7 +140,7 @@ void MilkPointDialog::loadToUi(const db::MilkPointData &milkPoint)
     else
         QMessageBox::critical(this, tr("Молокопункт"), tr("Не удалось установить текущий "
                                                           "населенный пункт у молокопункта \"") +
-                                                          milkPoint.name() + "\"");
+                              milkPoint.name() + "\"");
 }
 
 db::MilkPointData MilkPointDialog::getFromUi() const
@@ -145,29 +150,35 @@ db::MilkPointData MilkPointDialog::getFromUi() const
 
 bool MilkPointDialog::insertMilkPoint()
 {
-    if (m_milkPointsTable->insert(getFromUi())) {
+    try {
+        m_milkPointsTable->insert(getFromUi());
         m_milkPointsTable->refresh();
-        return true;
+    } catch(const QString &err) {
+        QMessageBox::warning(this, tr("Молочный пункт"), tr("Ошибка добавления данных") + err);
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool MilkPointDialog::updateMilkPoint()
 {
-    if (m_milkPointsTable->update(getFromUi())) {
+    try {
+        m_milkPointsTable->update(getFromUi());
         m_currentId = -1;
         m_milkPointsTable->refresh();
-        return true;
+    } catch(const QString &err) {
+        QMessageBox::warning(this, tr("Молочный пункт"), tr("Ошибка обновления данных") + err);
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 QString MilkPointDialog::getDublNameQueryPrepStr() const
 {
     const auto select = Utils::Main::getSelectStr(m_milkPointsTable->tableName(),
-                    QStringList() << m_milkPointsTable->getLocalities()->getNameColumnName(true));
+                                                  QStringList() << m_milkPointsTable->getLocalities()->getNameColumnName(true));
     auto query = QString("%1 LEFT JOIN %2 ON %4 = %5 WHERE %6 = ?")
             .arg(select)
             .arg(m_milkPointsTable->getLocalities()->tableName())

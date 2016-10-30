@@ -93,18 +93,33 @@ void DialogGeItem::showInfo()
     if (isIdValid) {
         if (m_deliverers) {
             title = tr("Информация о сдатчике");
-            const auto data = m_deliverers->getDeliverer(id);
-            text = QString("Сдатчик %1: inn = %2, address = %3, phoneNumber = %4.")
-                    .arg(data.name()).arg(data.inn()).arg(data.address()).arg(data.phoneNumber());
+            try {
+                const auto data = m_deliverers->getDeliverer(id);
+                text = QString("Сдатчик %1: inn = %2, address = %3, phoneNumber = %4.")
+                        .arg(data.name()).arg(data.inn()).arg(data.address()).arg(data.phoneNumber());
+            } catch (const QString &errDescr) {
+                QMessageBox::warning(this, title,
+                                     tr("Ошибка получения данных о сдатчике: ") + errDescr);
+            }
         } else if (m_localities) {
             title = tr("Информация о населенном пункте");
-            const auto locality = m_localities->getLocality(id);
-            text = QString::fromUtf8("%1: описание = %2.").
-                    arg(locality.name()).arg(locality.description());
+            try {
+                const auto locality = m_localities->getLocality(id);
+                text = QString::fromUtf8("%1: описание = %2.").
+                        arg(locality.name()).arg(locality.description());
+            } catch (const QString &errDescr) {
+                QMessageBox::warning(this, title,
+                                     tr("Ошибка получения данных о населенном пункте: ") + errDescr);
+            }
         } else if (m_milkPoints) {
             title = tr("Информация о молокопункте");
-            const auto mp = m_milkPoints->getMilkPoint(id);
-            text = QString::fromUtf8("Молочный пункт %1: описание = %2").arg(mp.name()).arg(mp.description());
+            try {
+                const auto mp = m_milkPoints->getMilkPoint(id);
+                text = QString::fromUtf8("Молочный пункт %1: описание = %2").arg(mp.name()).arg(mp.description());
+            } catch (const QString &errDescr) {
+                QMessageBox::warning(this, title,
+                                     tr("Ошибка получения данных о молокопункте: ") + errDescr);
+            }
         }
 
         QMessageBox::information(this, title, text);

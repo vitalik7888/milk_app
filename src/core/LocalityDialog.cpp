@@ -20,8 +20,13 @@ LocalityDialog::LocalityDialog(LocalitiesTable *localities, const milk_id locali
 {
     ui->setupUi(this);
 
-    if (!isNeedInsert())
-        loadToUi(m_localities->getLocality(m_currentId));
+    if (!isNeedInsert()) {
+        try {
+            loadToUi(m_localities->getLocality(m_currentId));
+        } catch (const QString &errDescr) {
+            QMessageBox::warning(this, "", tr("Ошибка получения данных о населенном пункте: ") + errDescr);
+        }
+    }
 }
 
 LocalityDialog::~LocalityDialog()
@@ -57,31 +62,37 @@ Locality LocalityDialog::getLocalityFromUi() const
 
 bool LocalityDialog::insertLocality()
 {
-    if (m_localities->insert(getLocalityFromUi())) {
+    try {
+        m_localities->insert(getLocalityFromUi());
         m_localities->refresh();
-        return true;
+    } catch (const QString &errorDescr) {
+        QMessageBox::warning(this, tr("Населенный пункт"), tr("Ошибка внесения данных: ") + errorDescr);
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool LocalityDialog::updateLocality()
 {
-    if (m_localities->update(getLocalityFromUi())) {
+    try {
+        m_localities->update(getLocalityFromUi());
         m_currentId = -1;
         m_localities->refresh();
-        return true;
+    } catch (const QString &errorDescr) {
+        QMessageBox::warning(this, tr("Населенный пункт"), tr("Ошибка обновления данных: ") + errorDescr);
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 QString LocalityDialog::getDublNameQueryPrepStr() const
 {
     auto query = QString("%1 WHERE %2 = ?")
-                      .arg(Utils::Main::getSelectStr(m_localities->tableName(),
-                           QStringList() << m_localities->getNameColumnName(true)))
-                      .arg(m_localities->getNameColumnName(true));
+            .arg(Utils::Main::getSelectStr(m_localities->tableName(),
+                                           QStringList() << m_localities->getNameColumnName(true)))
+            .arg(m_localities->getNameColumnName(true));
     if (!isNeedInsert())
         query.append(" AND " + m_localities->getFieldId().name() + " != ?");
     return query;
@@ -105,7 +116,7 @@ void LocalityDialog::accept()
 
     if (!query.exec()) {
         isOk = Utils::Main::yesNoWarnMsgBox(this, tr("Ошибка при проверке существующих названий в бд: ") +
-                                             query.lastError().text() + ".\n" +
+                                            query.lastError().text() + ".\n" +
                                             tr("Все равно желаете продолжить?"));
     } else {
         int count = 0;

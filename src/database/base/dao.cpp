@@ -8,7 +8,7 @@
 USE_DB_NAMESPACE
 
 
-Dao::Dao(const QString &tableName, const QString &primeryFieldName, const QSqlDatabase db):
+Dao::Dao(const QString &tableName, const QString &primeryFieldName, const QSqlDatabase &db):
     m_tableName(tableName),
     m_primeryFieldName(primeryFieldName),
     m_db(db)

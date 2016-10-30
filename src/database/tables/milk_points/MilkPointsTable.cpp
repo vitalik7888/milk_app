@@ -1,6 +1,6 @@
 #include "MilkPointsTable.h"
 
-#include <base/dao.h>
+#include "milkpointdao.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "Utils.h"
 // Qt
@@ -17,7 +17,71 @@ static const char *FN_LOCALITY_ID = "locality_id";
 static const char *FN_NAME = "name";
 static const char *FN_DESCRIPTION = "description";
 
+//--------------------------------------------------------------------------------------------------
+MilkPointDao::MilkPointDao(const QSqlDatabase &db):
+    Dao(TABLE_NAME, FN_ID, db) {}
 
+MilkPointData MilkPointDao::get(const milk_id id) const
+{
+    QSqlQuery query;
+    query.prepare(QString("%1 WHERE %2 = ?")
+                    .arg(Utils::Main::getSelectStr(
+                             TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
+                    .arg(FN_ID));
+    query.addBindValue(id);
+
+    MilkPointData data;
+    if (query.exec() && query.first())
+    {
+        data.setLocalityId(query.value(0).toLongLong());
+        data.setName(query.value(1).toString());
+        data.setDescription(query.value(2).toString());
+        data.setId(id);
+    } else {
+        const auto err = QString("Отсутствует молокопункт с id = %1").arg(id);
+        qDebug() << err;
+        throw err;
+    }
+
+    return data;
+}
+
+void MilkPointDao::insert(const MilkPointData &data) const
+{
+    QSqlQuery query;
+    query.prepare(Utils::Main::getPrepInsertStr(
+                      TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }));
+    query.addBindValue(data.localityId());
+    query.addBindValue(data.name());
+    query.addBindValue(data.description());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+void MilkPointDao::update(const MilkPointData &data) const
+{
+    QSqlQuery query;
+    query.prepare(QString("%1 WHERE %2 = ?")
+                  .arg(Utils::Main::getPrepUpdateStr(
+                           TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
+                  .arg(FN_ID));
+    query.addBindValue(data.localityId());
+    query.addBindValue(data.name());
+    query.addBindValue(data.description());
+    query.addBindValue(data.id());
+
+    if (!query.exec()) {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
 MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
     Table(new Dao(TABLE_NAME, FN_ID, db), parent, db),
     m_localities(parent)
@@ -89,67 +153,17 @@ QSqlField MilkPointsTable::getFieldDescription() const
 
 MilkPointData MilkPointsTable::getMilkPoint(const milk_id milkPointId) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                    .arg(Utils::Main::getSelectStr(tableName(), QStringList()
-                                      << getNameColumnLocalityId(true)
-                                      << getNameColumnName(true)
-                                      << getNameColumnDescription()))
-                    .arg(getFieldId().name()));
-    query.addBindValue(milkPointId);
-
-    MilkPointData data;
-    if (query.exec() && query.first())
-    {
-        data.setLocalityId(query.value(0).toLongLong());
-        data.setName(query.value(1).toString());
-        data.setDescription(query.value(2).toString());
-        data.setId(milkPointId);
-    } else
-        emit error(tr("Отсутствует молокопункт с id = ") + QString::number(milkPointId));
-
-    return data;
+    return dao()->get(milkPointId);
 }
 
-bool MilkPointsTable::insert(const MilkPointData &milkPoint)
+void MilkPointsTable::insert(const MilkPointData &milkPoint)
 {
-    QSqlQuery query;
-    query.prepare(Utils::Main::getPrepInsertStr(tableName(), QStringList()
-                                   << getNameColumnLocalityId()
-                                   << getNameColumnName()
-                                   << getNameColumnDescription()));
-    query.addBindValue(milkPoint.localityId());
-    query.addBindValue(milkPoint.name());
-    query.addBindValue(milkPoint.description());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->insert(milkPoint);
 }
 
-bool MilkPointsTable::update(const MilkPointData &milkPoint) const
+void MilkPointsTable::update(const MilkPointData &milkPoint) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(tableName(), QStringList()
-                                   << getNameColumnLocalityId()
-                                   << getNameColumnName()
-                                   << getNameColumnDescription()))
-                  .arg(getNameColumnId()));
-    query.addBindValue(milkPoint.localityId());
-    query.addBindValue(milkPoint.name());
-    query.addBindValue(milkPoint.description());
-    query.addBindValue(milkPoint.id());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    dao()->update(milkPoint);
 }
 
 bool MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
@@ -178,4 +192,9 @@ void MilkPointsTable::initColumns()
     m_columns.append(QSqlField(FN_LOCALITY_ID, QVariant::LongLong));
     m_columns.append(QSqlField(FN_NAME, QVariant::String));
     m_columns.append(QSqlField(FN_DESCRIPTION, QVariant::String));
+}
+
+MilkPointDao *MilkPointsTable::dao() const
+{
+    return dynamic_cast<MilkPointDao *>(m_dao.data());
 }
