@@ -108,36 +108,6 @@ DeliverersTable::~DeliverersTable()
 
 }
 
-QSqlField DeliverersTable::getFieldId() const
-{
-    return getColumnByName(FN_ID);
-}
-
-QSqlField DeliverersTable::getFieldName() const
-{
-    return getColumnByName(FN_NAME);
-}
-
-QSqlField DeliverersTable::getFieldLocalityId() const
-{
-    return getColumnByName(FN_LOCALITY_ID);
-}
-
-QSqlField DeliverersTable::getFieldInn() const
-{
-    return getColumnByName(FN_INN);
-}
-
-QSqlField DeliverersTable::getFieldAddress() const
-{
-    return getColumnByName(FN_ADDRESS);
-}
-
-QSqlField DeliverersTable::getFieldPhoneNumber() const
-{
-    return getColumnByName(FN_PHONE_NUMBER);
-}
-
 DelivererData DeliverersTable::getDeliverer(const milk_id delivererId) const
 {
     DelivererData data;
@@ -263,48 +233,6 @@ QSqlField DeliverersTable::primaryField() const
     return getColumnByName(FN_ID);
 }
 
-QString DeliverersTable::getNameColumnId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_ID;
-    return QString(tableName() + "." + FN_ID);
-}
-
-QString DeliverersTable::getNameColumnName(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_NAME;
-    return QString(tableName() + "." + FN_NAME);
-}
-
-QString DeliverersTable::getNameColumnLocalityId(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_LOCALITY_ID;
-    return QString(tableName() + "." + FN_LOCALITY_ID);
-}
-
-QString DeliverersTable::getNameColumnInn(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_INN;
-    return QString(tableName() + "." + FN_INN);
-}
-
-QString DeliverersTable::getNameColumnAddress(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_ADDRESS;
-    return QString(tableName() + "." + FN_ADDRESS);
-}
-
-QString DeliverersTable::getNameColumnPhoneNumber(const bool withTableName) const
-{
-    if (!withTableName)
-        return FN_PHONE_NUMBER;
-    return QString(tableName() + "." + FN_PHONE_NUMBER);
-}
-
 void DeliverersTable::initColumns()
 {
     m_columns.append(QSqlField(FN_ID, QVariant::LongLong));
@@ -318,4 +246,32 @@ void DeliverersTable::initColumns()
 DeliverersDao *DeliverersTable::dao() const
 {
     return dynamic_cast<DeliverersDao *>(m_dao.data());
+}
+
+
+QString db::DeliverersTable::getColName(const int position, const bool withTableName) const
+{
+    QString columnName;
+    switch (position) {
+    case DeliverersTableColumns::DT_ID:
+        columnName = FN_ID;
+        break;
+    case DeliverersTableColumns::DT_NAME:
+        columnName = FN_NAME;
+        break;
+    case DeliverersTableColumns::DT_LOCALITY_ID:
+        columnName = FN_LOCALITY_ID;
+        break;
+    case DeliverersTableColumns::DT_INN:
+        columnName = FN_INN;
+        break;
+    case DeliverersTableColumns::DT_PHONE_NUMBER:
+        columnName = FN_PHONE_NUMBER;
+        break;
+    default:
+        columnName = "";
+        break;
+    }
+
+    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
 }

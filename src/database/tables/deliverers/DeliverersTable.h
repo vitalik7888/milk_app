@@ -19,21 +19,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
     QString tableName() const Q_DECL_OVERRIDE;
+    QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
     QSqlField primaryField() const Q_DECL_OVERRIDE;
-
-    QString getNameColumnId(const bool withTableName = false) const;
-    QString getNameColumnName(const bool withTableName = false) const;
-    QString getNameColumnLocalityId(const bool withTableName = false) const;
-    QString getNameColumnInn(const bool withTableName = false) const;
-    QString getNameColumnAddress(const bool withTableName = false) const;
-    QString getNameColumnPhoneNumber(const bool withTableName = false) const;
-
-    QSqlField getFieldId() const;
-    QSqlField getFieldName() const;
-    QSqlField getFieldLocalityId() const;
-    QSqlField getFieldInn() const;
-    QSqlField getFieldAddress() const;
-    QSqlField getFieldPhoneNumber() const;
 
     LocalitiesTable *getLocalities() const;
 

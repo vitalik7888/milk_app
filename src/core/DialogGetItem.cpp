@@ -41,7 +41,7 @@ DialogGeItem::DialogGeItem(Table *table, const QString &title, QWidget *parent) 
         //        setWindowIcon();
         if (title.isEmpty())
             setWindowTitle(tr("Сдатчики"));
-        showColumn = m_deliverers->getColumnPosition(m_deliverers->getNameColumnName());
+        showColumn = DT_NAME;
         ui->toolButtonInfo->setToolTip(tr("Информация о сдатчике"));
     } else if (m_localities) {
         if (title.isEmpty())

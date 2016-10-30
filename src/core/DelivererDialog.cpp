@@ -176,12 +176,12 @@ QString DelivererDialog::getDublNameQueryPrepStr() const
     auto query = QString("%1 LEFT JOIN %2 ON %4 = %5 WHERE %6 = ?")
             .arg(select)
             .arg(m_deliverers->getLocalities()->tableName())
-            .arg(m_deliverers->getNameColumnLocalityId(true))
+            .arg(m_deliverers->getColName(DT_LOCALITY_ID, true))
             .arg(m_deliverers->getLocalities()->getColName(LT_ID, true))
-            .arg(m_deliverers->getNameColumnName(true));
+            .arg(m_deliverers->getColName(DT_NAME, true));
 
     if (!isNeedInsert())
-        query.append(" AND " + m_deliverers->getNameColumnId(true) + " != ?");
+        query.append(" AND " + m_deliverers->getColName(DT_ID, true) + " != ?");
 
     return query;
 }

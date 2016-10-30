@@ -461,7 +461,7 @@ void MainWindow::chooseMainLocality()
 
         deliverers->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(deliverers->selectAll())
-                             .arg(deliverers->getNameColumnLocalityId())
+                             .arg(deliverers->getColName(DT_LOCALITY_ID))
                              .arg(idLocality));
         milkPoints->setQuery(QString("%1 WHERE %2 = %3")
                              .arg(milkPoints->selectAll())

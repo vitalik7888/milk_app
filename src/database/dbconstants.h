@@ -11,6 +11,14 @@
 using milk_id = qlonglong;
 using milk_inn = qlonglong;
 
+enum DeliverersTableColumns {
+    DT_ID = 0,
+    DT_NAME,
+    DT_LOCALITY_ID,
+    DT_INN,
+    DT_PHONE_NUMBER
+};
+
 enum LocalityTableColumns {
     LT_ID = 0,
     LT_NAME,

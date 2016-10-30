@@ -228,7 +228,7 @@ QString MilkReceptionTable::selectAll() const
     {
                 getNameColumnId(true),
                 getNameColumnIdDeliverer(true),
-                m_deliverers->getNameColumnName(true) + " AS " + FN_DELIVERER_NAME,
+                m_deliverers->getColName(DT_NAME, true) + " AS " + FN_DELIVERER_NAME,
                 getNameColumnMilkPointId(true),
                 m_milkPoints->getColName(MPT_NAME, true) + " AS " + FN_MILK_POINT_NAME,
                 getNameColumnDeliveryDate(true),
@@ -240,7 +240,7 @@ QString MilkReceptionTable::selectAll() const
     const auto join = QString("LEFT JOIN %2 ON %3 = %4 LEFT JOIN %5 ON %6 = %7")
             .arg(m_deliverers->tableName())
             .arg(getNameColumnIdDeliverer(true))
-            .arg(m_deliverers->getNameColumnId(true))
+            .arg(m_deliverers->getColName(DT_ID, true))
             .arg(m_milkPoints->tableName())
             .arg(getNameColumnMilkPointId(true))
             .arg(m_milkPoints->getColName(MPT_ID, true));

@@ -61,8 +61,7 @@ void FrameEditMilkReception::setup()
     m_proxy->setSourceModel(m_mainWindow->getDatabase()->milkReception());
     ui->tableViewEditMilkReceptions->setModel(m_proxy);
 
-    const auto delivNameCol = deliverers->getColumnPosition(deliverers->getNameColumnName()),
-            mrColId = milkReception->getColumnPosition(milkReception->getNameColumnId()),
+    const auto mrColId = milkReception->getColumnPosition(milkReception->getNameColumnId()),
             mrColNameDeliv = milkReception->getColumnPosition(milkReception->getNameColumnDelivererName()),
             mrColNameMilkPoint = milkReception->getColumnPosition(milkReception->getNameColumnMilkPointName()),
             mrColIdDeliv = milkReception->getColumnPosition(milkReception->getNameColumnIdDeliverer()),
@@ -70,7 +69,7 @@ void FrameEditMilkReception::setup()
             mrColDelivDate = milkReception->getColumnPosition(milkReception->getNameColumnDeliveryDate());
 
     ui->comboBoxFilterDeliverers->setModel(deliverers);
-    ui->comboBoxFilterDeliverers->setModelColumn(delivNameCol);
+    ui->comboBoxFilterDeliverers->setModelColumn(DT_NAME);
 
     ui->comboBoxFilterMilkPoints->setModel(milkPoints);
     ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
@@ -89,10 +88,8 @@ void FrameEditMilkReception::setup()
 void FrameEditMilkReception::chooseDeliverer()
 {
     if (ui->groupBoxFilterDeliverers->isChecked()) {
-        const auto delivIdCol = deliverers->getColumnPosition(deliverers->getNameColumnId());
-
-    const auto id = utm::getCurValueFromComboBoxModel(
-                    ui->comboBoxFilterDeliverers, delivIdCol).toLongLong();
+        const auto id = utm::getCurValueFromComboBoxModel(
+                    ui->comboBoxFilterDeliverers, DT_ID).toLongLong();
         m_proxy->setFilterDelivererId(id);
     } else
         m_proxy->setFilterDelivererId(-1);
