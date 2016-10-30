@@ -83,7 +83,7 @@ void MilkPointDao::update(const MilkPointData &data) const
 
 //--------------------------------------------------------------------------------------------------
 MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
-    Table(new Dao(TABLE_NAME, FN_ID, db), parent, db),
+    Table(new MilkPointDao(db), parent, db),
     m_localities(parent)
 {
     setObjectName("MilkPointsTable");
