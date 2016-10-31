@@ -63,9 +63,15 @@ void FrameEditMilkReception::setup()
 
     ui->comboBoxFilterDeliverers->setModel(deliverers);
     ui->comboBoxFilterDeliverers->setModelColumn(DT_NAME);
+    if (deliverers->rowCount() > 0) {
+        ui->comboBoxFilterDeliverers->setCurrentIndex(0);
+    }
 
     ui->comboBoxFilterMilkPoints->setModel(milkPoints);
     ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
+    if (milkPoints->rowCount() > 0) {
+        ui->comboBoxFilterMilkPoints->setCurrentIndex(0);
+    }
 
     ui->tableViewEditMilkReceptions->setItemDelegateForColumn(RMT_DELIVERER_NAME,
                                                               new ChooseIdDelegate(deliverers,
