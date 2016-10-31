@@ -452,6 +452,7 @@ void MainWindow::chooseMainLocality()
 
     auto deliverers = m_database->deliverers();
     auto milkPoints = m_database->milkPoints();
+    auto milkReception = m_database->milkReception();
 
     const auto idLocality = getCurrentLocalityId();
     if (Utils::Main::isAutoIncrIdIsValid(idLocality))
@@ -464,10 +465,19 @@ void MainWindow::chooseMainLocality()
                              .arg(milkPoints->selectAll())
                              .arg(milkPoints->getColName(MPT_LOCALITY_ID))
                              .arg(idLocality));
+
+        milkReception->setQuery(QString("%1 WHERE %2 IN(SELECT %3 FROM %4 WHERE %5 = %6)")
+                                .arg(milkReception->selectAll())
+                                .arg(milkReception->getColName(RMT_MILK_POINT_ID))
+                                .arg(milkPoints->getColName(MPT_ID))
+                                .arg(milkPoints->tableName())
+                                .arg(milkPoints->getColName(MPT_LOCALITY_ID))
+                                .arg(idLocality));
     } else
     {
         deliverers->setQuery(deliverers->selectAll());
         milkPoints->setQuery(milkPoints->selectAll());
+        milkReception->setQuery(milkReception->selectAll());
     }
 
     ui->frameMilkReceptionAdd->setup();
