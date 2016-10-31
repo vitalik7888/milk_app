@@ -99,7 +99,7 @@ DeliverersTable::DeliverersTable(LocalitiesTable *parent, QSqlDatabase db) :
     setObjectName("DeliverersTable");
     qDebug() << "init " + objectName();
 
-    setQuery(selectAll());
+    setQuery(QString("SELECT * FROM %1").arg(TABLE_NAME));
 }
 
 DeliverersTable::~DeliverersTable()

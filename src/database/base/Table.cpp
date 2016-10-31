@@ -29,6 +29,11 @@ QSqlDatabase Table::database() const
     return m_db;
 }
 
+QString Table::selectAll() const
+{
+    return QString("SELECT * FROM %1").arg(tableName());
+}
+
 bool Table::isEmpty() const
 {
     return (rowCount() == 0);

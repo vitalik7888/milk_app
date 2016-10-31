@@ -26,7 +26,7 @@ public:
     virtual int getColPosition(const QString &columnName) const = 0;
     virtual QString primaryField() const = 0;
 
-    virtual QString selectAll() const { return QString(); }
+    virtual QString selectAll() const;
     bool isEmpty() const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
