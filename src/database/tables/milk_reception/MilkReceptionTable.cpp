@@ -104,7 +104,7 @@ MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsT
     setObjectName("MilkReceptionTable");
     qDebug() << "init " + objectName();
 
-    setQuery(QString("SELECT * FROM %1").arg(TABLE_NAME));
+    setQuery(selectAll());
 }
 
 MilkReceptionTable::~MilkReceptionTable()

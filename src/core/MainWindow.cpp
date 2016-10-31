@@ -470,6 +470,8 @@ void MainWindow::chooseMainLocality()
         milkPoints->setQuery(milkPoints->selectAll());
     }
 
+    ui->frameMilkReceptionAdd->setup();
+    ui->frameEditReceptionMilk->setup();
     ui->frameCalc->setup();
 }
 
