@@ -2,7 +2,7 @@
 #define MILKPOINTS_TABLE_H
 #include "dbconstants.h"
 #include "base/Table.h"
-#include "MilkPoint.h"
+#include "milkpointdata.h"
 
 DB_BEGIN_NAMESPACE
     class MilkPointDao;
