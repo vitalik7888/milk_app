@@ -19,13 +19,13 @@ static const char *FN_DESCRIPTION = "description";
 LocalitiesDao::LocalitiesDao(const QSqlDatabase &db):
     Dao(TABLE_NAME, FN_ID, db) {}
 
-Locality LocalitiesDao::get(const milk_id id) const {
+LocalityData LocalitiesDao::get(const milk_id id) const {
     QSqlQuery query(m_db);
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION })).arg(FN_ID));
     query.addBindValue(id);
 
-    Locality data;
+    LocalityData data;
     if (query.exec() && query.first())
     {
         data.setId(id);
@@ -40,7 +40,7 @@ Locality LocalitiesDao::get(const milk_id id) const {
     return data;
 }
 
-void LocalitiesDao::insert(const Locality &data) {
+void LocalitiesDao::insert(const LocalityData &data) {
     QSqlQuery query(m_db);
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }));
     query.addBindValue(data.name());
@@ -53,7 +53,7 @@ void LocalitiesDao::insert(const Locality &data) {
     }
 }
 
-void LocalitiesDao::update(const Locality &data) {
+void LocalitiesDao::update(const LocalityData &data) {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getPrepUpdateStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }))
@@ -89,17 +89,17 @@ QString LocalitiesTable::tableName() const
     return TABLE_NAME;
 }
 
-Locality LocalitiesTable::getLocality(const milk_id localityId) const
+LocalityData LocalitiesTable::getLocality(const milk_id localityId) const
 {
     return dao()->get(localityId);
 }
 
-void LocalitiesTable::insert(const Locality &locality)
+void LocalitiesTable::insert(const LocalityData &locality)
 {
     dao()->insert(locality);
 }
 
-void LocalitiesTable::update(const Locality &locality) const
+void LocalitiesTable::update(const LocalityData &locality) const
 {
     dao()->update(locality);
 }

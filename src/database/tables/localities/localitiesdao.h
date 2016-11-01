@@ -2,7 +2,7 @@
 #define LOCALITIESDAO_H
 
 #include <base/dao.h>
-#include "Locality.h"
+#include "localitydata.h"
 
 DB_BEGIN_NAMESPACE
 
@@ -10,9 +10,9 @@ class LocalitiesDao: public Dao {
 public:
     LocalitiesDao(const QSqlDatabase &db);
 
-    Locality get(const milk_id id) const;
-    void insert(const Locality &data);
-    void update(const Locality &data);
+    LocalityData get(const milk_id id) const;
+    void insert(const LocalityData &data);
+    void update(const LocalityData &data);
 };
 
 DB_END_NAMESPACE

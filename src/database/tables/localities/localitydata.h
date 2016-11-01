@@ -1,5 +1,5 @@
-#ifndef LOCALITY_H
-#define LOCALITY_H
+#ifndef LOCALITYDATA_H
+#define LOCALITYDATA_H
 
 #include "dbconstants.h"
 // Qt
@@ -7,10 +7,10 @@
 
 DB_BEGIN_NAMESPACE
 
-class Locality {
+class LocalityData {
 public:
-    Locality();
-    Locality(const milk_id id, const QString &name, const QString &description);
+    LocalityData();
+    LocalityData(const milk_id id, const QString &name, const QString &description);
 
     milk_id id() const;
     void setId(const milk_id &id);
@@ -31,4 +31,4 @@ private:
 
 DB_END_NAMESPACE
 
-#endif // LOCALITY_H
+#endif // LOCALITYDATA_H

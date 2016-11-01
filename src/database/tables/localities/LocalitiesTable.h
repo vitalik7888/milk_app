@@ -3,7 +3,7 @@
 
 #include "dbconstants.h"
 #include "base/Table.h"
-#include "Locality.h"
+#include "localitydata.h"
 
 DB_BEGIN_NAMESPACE
     class LocalitiesDao;
@@ -21,9 +21,9 @@ public:
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
 
-    Locality getLocality(const milk_id localityId) const;
-    void insert(const Locality &locality);
-    void update(const Locality &locality) const;
+    LocalityData getLocality(const milk_id localityId) const;
+    void insert(const LocalityData &locality);
+    void update(const LocalityData &locality) const;
     void setName(const milk_id localityId, const QString &localityName) const;
     void setDescription(const milk_id localityId, const QString &description) const;
 

@@ -49,15 +49,15 @@ bool LocalityDialog::isNeedInsert() const
     return m_currentId < 0;
 }
 
-void LocalityDialog::loadToUi(const Locality &locality)
+void LocalityDialog::loadToUi(const LocalityData &locality)
 {
     ui->lineEditName->setText(locality.name());
     ui->textEditDescription->setText(locality.description());
 }
 
-Locality LocalityDialog::getLocalityFromUi() const
+LocalityData LocalityDialog::getLocalityFromUi() const
 {
-    return Locality(m_currentId, getName(), getDescription());
+    return LocalityData(m_currentId, getName(), getDescription());
 }
 
 bool LocalityDialog::insertLocality()

@@ -4,12 +4,12 @@ USE_DB_NAMESPACE
 
 
 MilkPoint::MilkPoint():
-    MilkPoint(-1, Locality(), "", "")
+    MilkPoint(-1, LocalityData(), "", "")
 {
 
 }
 
-MilkPoint::MilkPoint(const milk_id id, const Locality &locality, const QString &name,
+MilkPoint::MilkPoint(const milk_id id, const LocalityData &locality, const QString &name,
                      const QString &description):
     m_data(id, locality.id(), name, description),
     m_locality(locality)
@@ -39,7 +39,7 @@ void MilkPoint::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-Locality MilkPoint::locality() const
+LocalityData MilkPoint::locality() const
 {
     return m_locality;
 }
@@ -74,7 +74,7 @@ MilkPointData MilkPoint::data() const
     return m_data;
 }
 
-void MilkPoint::setLocality(const Locality &locality)
+void MilkPoint::setLocality(const LocalityData &locality)
 {
     m_locality = locality;
     m_data.setLocalityId(m_locality.id());

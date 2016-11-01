@@ -31,8 +31,8 @@ private:
     milk_id m_currentId;
 
     bool isNeedInsert() const;
-    void loadToUi(const DB_NAMESPACE::Locality &locality);
-    DB_NAMESPACE::Locality getLocalityFromUi() const;
+    void loadToUi(const DB_NAMESPACE::LocalityData &locality);
+    DB_NAMESPACE::LocalityData getLocalityFromUi() const;
     bool insertLocality();
     bool updateLocality();
 
