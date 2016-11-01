@@ -5,7 +5,7 @@
 
 
 Deliverer::Deliverer():
-    m_data()
+    Deliverer(-1, QString(), -1, QString(), QString(), QWeakPointer<Locality>())
 {
 
 }
