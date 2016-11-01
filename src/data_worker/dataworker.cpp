@@ -27,19 +27,14 @@ SharDeliverer DataWorker::getDeliverer(const milk_id id)
     SharDeliverer shpDeliverer;
 
     if (!m_deliverers.contains(id)) {
-        DelivererData dd;
+        DelivererData data;
         try {
-            dd = m_db->deliverers()->getDeliverer(id);
+            data = m_db->deliverers()->getDeliverer(id);
         } catch (const QString &err) {
             qDebug() << err;
         }
-        if (dd.isValid()) {
-            const auto locality = getLocality(dd.localityId());
-            const auto deliverer = new Deliverer(dd.id(), dd.name(), dd.inn(), dd.address(),
-                                                 dd.phoneNumber(), locality.toWeakRef());
-            shpDeliverer = SharDeliverer(deliverer);
-            m_deliverers.insert(id, shpDeliverer);
-        }
+        if (data.isValid())
+            m_deliverers.insert(id, fromData(data));
     } else {
         shpDeliverer = m_deliverers[id];
     }
@@ -52,26 +47,50 @@ SharMilkRecep DataWorker::getMilkReception(const milk_id id)
     SharMilkRecep shpMilkRecep;
 
     if (!m_milkReceptions.contains(id)) {
-        MilkReceptionData mrd;
+        MilkReceptionData data;
         try {
-            mrd = m_db->milkReception()->getMilkReception(id);
+            data = m_db->milkReception()->getMilkReception(id);
         } catch (const QString &err) {
             qDebug() << err;
         }
-        if (mrd.isValid()) {
-            const auto deliverer = getDeliverer(mrd.delivererId());
-            const auto milkPoint = getMilkPoint(mrd.milkPointId());
-            const auto milkRecep = new MilkReception(mrd.id(), mrd.deliveryDate(), mrd.priceLiter(),
-                                                     mrd.liters(), mrd.fat(), deliverer.toWeakRef(),
-                                                     milkPoint.toWeakRef());
-            shpMilkRecep = SharMilkRecep(milkRecep);
-            m_milkReceptions.insert(id, shpMilkRecep);
-        }
+        if (data.isValid())
+            m_milkReceptions.insert(id, fromData(data));
     } else {
         shpMilkRecep = m_milkReceptions[id];
     }
 
     return shpMilkRecep;
+}
+
+SharDeliverer DataWorker::fromData(const DelivererData &data)
+{
+    const auto locality = getLocality(data.localityId());
+    const auto deliverer = new Deliverer(data.id(), data.name(), data.inn(), data.address(),
+                                         data.phoneNumber(), locality.toWeakRef());
+    return SharDeliverer(deliverer);
+}
+
+SharMilkRecep DataWorker::fromData(const MilkReceptionData &data)
+{
+    const auto deliverer = getDeliverer(data.delivererId());
+    const auto milkPoint = getMilkPoint(data.milkPointId());
+    const auto milkRecep = new MilkReception(data.id(), data.deliveryDate(), data.priceLiter(),
+                                             data.liters(), data.fat(), deliverer.toWeakRef(),
+                                             milkPoint.toWeakRef());
+    return SharMilkRecep(milkRecep);
+}
+
+SharLocality DataWorker::fromData(const LocalityData &data)
+{
+    const auto locality = new Locality(data.id(), data.name(), data.description());
+    return SharLocality(locality);
+}
+
+SharMilkPoint DataWorker::fromData(const db::MilkPointData &data)
+{
+    const auto locality = getLocality(data.localityId());
+    const auto milkPoint = new MilkPoint(data.id(), data.name(), data.description(), locality.toWeakRef());
+    return SharMilkPoint(milkPoint);
 }
 
 SharLocality DataWorker::getLocality(const milk_id id)
@@ -86,9 +105,8 @@ SharLocality DataWorker::getLocality(const milk_id id)
             qDebug() << err;
         }
         if (ld.isValid()) {
-            const auto locality = new Locality(ld.id(), ld.name(), ld.description());
-            shpLocality = SharLocality(locality);
-            m_localities.insert(id, shpLocality);
+
+            m_localities.insert(id, fromData(ld));
         }
     } else {
         shpLocality = m_localities[id];
@@ -102,18 +120,14 @@ SharMilkPoint DataWorker::getMilkPoint(const milk_id id)
     SharMilkPoint shpMilkPoint;
 
     if (!m_milkPoints.contains(id)) {
-        MilkPointData md;
+        MilkPointData data;
         try {
-            md = m_db->milkPoints()->getMilkPoint(id);
+            data = m_db->milkPoints()->getMilkPoint(id);
         } catch (const QString &err) {
             qDebug() << err;
         }
-        if (md.isValid()) {
-            const auto locality = getLocality(md.localityId());
-            const auto milkPoint = new MilkPoint(md.id(), md.name(), md.description(), locality.toWeakRef());
-            shpMilkPoint = SharMilkPoint(milkPoint);
-            m_milkPoints.insert(id, shpMilkPoint);
-        }
+        if (data.isValid())
+            m_milkPoints.insert(id, fromData(data));
     } else {
         shpMilkPoint = m_milkPoints[id];
     }

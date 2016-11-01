@@ -9,6 +9,8 @@
 
 DB_BEGIN_NAMESPACE
     class Database;
+    class DelivererData;
+    class MilkPointData;
 DB_END_NAMESPACE
 
 using SharLocality = QSharedPointer<Locality>;
@@ -35,6 +37,11 @@ private:
     QMap< milk_id, SharMilkPoint > m_milkPoints;
     QMap< milk_id, SharDeliverer > m_deliverers;
     QMap< milk_id, SharMilkRecep > m_milkReceptions;
+
+    SharLocality fromData(const DB_NAMESPACE::LocalityData &data);
+    SharMilkPoint fromData(const DB_NAMESPACE::MilkPointData &data);
+    SharDeliverer fromData(const DB_NAMESPACE::DelivererData &data);
+    SharMilkRecep fromData(const DB_NAMESPACE::MilkReceptionData &data);
 };
 
 #endif // DATAWORKER_H
