@@ -22,6 +22,23 @@ void DataWorker::clear()
     m_localities.clear();
 }
 
+void DataWorker::reload()
+{
+    const QList<milk_id> localities = m_localities.keys(),
+            milkPoints = m_milkPoints.keys(),
+            deliverers = m_deliverers.keys(),
+            milkReceptions = m_milkReceptions.keys();
+    clear();
+    for (const auto id: localities)
+        getLocality(id);
+    for (const auto id: milkPoints)
+        getMilkPoint(id);
+    for (const auto id: deliverers)
+        getDeliverer(id);
+    for (const auto id: milkReceptions)
+        getMilkReception(id);
+}
+
 SharLocality DataWorker::getLocality(const milk_id id)
 {
     SharLocality shpLocality;

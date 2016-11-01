@@ -24,6 +24,7 @@ public:
     DataWorker(DB_NAMESPACE::Database *db);
 
     void clear();
+    void reload();
 
     SharLocality getLocality(const milk_id id);
     SharMilkPoint getMilkPoint(const milk_id id);
