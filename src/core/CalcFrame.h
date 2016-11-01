@@ -3,8 +3,8 @@
 
 #include <QFrame>
 #include <QVector>
+#include <QDate>
 
-#include "tables/milk_reception/MilkReception.h"
 #include <QTextTableFormat>
 
 namespace Ui {

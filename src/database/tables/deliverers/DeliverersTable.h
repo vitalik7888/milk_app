@@ -2,7 +2,7 @@
 #define DELIVERERS_TABLE_H
 
 #include <base/Table.h>
-#include "Deliverer.h"
+#include "delivererdata.h"
 
 DB_BEGIN_NAMESPACE
 

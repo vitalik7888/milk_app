@@ -2,7 +2,7 @@
 #define MILKRECEPTION_TABLE_H
 
 #include "base/Table.h"
-#include "MilkReception.h"
+#include "milkreceptiondata.h"
 // Qt
 #include <QDate>
 
