@@ -55,6 +55,38 @@ MilkReceptionData MilkReceptionDao::get(const milk_id id) const
     return data;
 }
 
+QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
+{
+    QSqlQuery query(m_db);
+    query.prepare(QString("%1 WHERE %2")
+                  .arg(Utils::Main::getSelectStr(TABLE_NAME,
+    { FN_ID, FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
+                  .arg(where));
+
+    QList<MilkReceptionData> mrd;
+    if (query.exec())
+    {
+        while (query.next()) {
+            MilkReceptionData data;
+            data.setId(query.value(RMT_ID).toLongLong());
+            data.setDelivererId(query.value(RMT_ID_DELIVERER).toLongLong());
+            data.setMilkPointId(query.value(RMT_MILK_POINT_ID).toLongLong());
+            data.setDeliveryDate(query.value(RMT_DELIVERY_DATE).toDate());
+            data.setPriceLiter(query.value(RMT_PRICE_LITER).toFloat());
+            data.setLiters(query.value(RMT_LITERS).toFloat());
+            data.setFat(query.value(RMT_FAT).toFloat());
+
+            mrd.append(mrd);
+        }
+    } else {
+        const auto err = query.lastError().text();
+        qDebug() << err;
+        throw err;
+    }
+
+    return mrd;
+}
+
 void MilkReceptionDao::insert(const MilkReceptionData &data) const
 {
     QSqlQuery query(m_db);
@@ -120,6 +152,11 @@ QString MilkReceptionTable::tableName() const
 MilkReceptionData MilkReceptionTable::getMilkReception(const milk_id milkReceptionId) const
 {
     return dao()->get(milkReceptionId);
+}
+
+QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &where) const
+{
+    return dao()->get(where);
 }
 
 void MilkReceptionTable::insert(const MilkReceptionData &milkReception) const
