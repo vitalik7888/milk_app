@@ -17,6 +17,7 @@ CONFIG += c++11
 include(src/database/db.pri)
 include(src/core/core.pri)
 include(src/delegates/delegates.pri)
+include(src/data_worker/data_worker.pri)
 
 SOURCES += src/main.cpp
 
