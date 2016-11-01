@@ -1,6 +1,7 @@
 #ifndef MILKRECEPTION_H
 #define MILKRECEPTION_H
 
+#include "calculateditem.h"
 #include <tables/milk_reception/milkreceptiondata.h>
 // Qt
 #include <QDate>
@@ -38,8 +39,6 @@ public:
     float fat() const;
     void setFat(float fat);
 
-    bool isValid() const;
-
     WpDeliverer deliverer() const;
     void setDeliverer(const WpDeliverer deliverer);
 
@@ -47,6 +46,10 @@ public:
     void setMilkPoint(const WpMilkPoint milkPoint);
 
     DB_NAMESPACE::MilkReceptionData data() const;
+
+    CalculatedItem getCalculations() const;
+
+    bool isValid() const;
 
 private:
     DB_NAMESPACE::MilkReceptionData m_data;

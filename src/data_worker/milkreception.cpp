@@ -72,6 +72,11 @@ DB_NAMESPACE::MilkReceptionData MilkReception::data() const
     return m_data;
 }
 
+CalculatedItem MilkReception::getCalculations() const
+{
+    return CalculatedItem(liters(), fat(), priceLiter());
+}
+
 QDate MilkReception::deliveryDate() const
 {
     return m_data.deliveryDate();
