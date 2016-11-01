@@ -4,14 +4,14 @@
 
 
 MilkPoint::MilkPoint():
-    MilkPoint(-1, Q_NULLPTR, QString(), QString())
+    MilkPoint(-1, QString(), QString(), QWeakPointer<Locality>())
 {
 
 }
 
-MilkPoint::MilkPoint(const milk_id id, Locality *locality, const QString &name,
-                     const QString &description):
-    m_data(id, locality->id(), name, description),
+MilkPoint::MilkPoint(const milk_id id, const QString &name, const QString &description,
+                     const QWeakPointer<Locality> &locality):
+    m_data(id, locality.isNull() ? -1 : locality.data()->id(), name, description),
     m_locality(locality)
 {
 
@@ -39,7 +39,7 @@ void MilkPoint::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-Locality *MilkPoint::locality() const
+QWeakPointer<Locality> MilkPoint::locality() const
 {
     return m_locality;
 }
@@ -74,8 +74,8 @@ DB_NAMESPACE::MilkPointData MilkPoint::data() const
     return m_data;
 }
 
-void MilkPoint::setLocality(Locality *locality)
+void MilkPoint::setLocality(const QWeakPointer<Locality> &locality)
 {
     m_locality = locality;
-    m_data.setLocalityId(m_locality->id());
+    m_data.setLocalityId(locality.isNull() ? -1 : locality.data()->id());
 }

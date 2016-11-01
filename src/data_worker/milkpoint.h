@@ -2,6 +2,8 @@
 #define MILKPOINT_H
 
 #include <tables/milk_points/milkpointdata.h>
+// Qt
+#include <QWeakPointer>
 
 class Locality;
 
@@ -9,15 +11,16 @@ class Locality;
 class MilkPoint {
 public:
     MilkPoint();
-    MilkPoint(const milk_id id, Locality *locality, const QString &name, const QString &description);
+    MilkPoint(const milk_id id, const QString &name, const QString &description,
+              const QWeakPointer<Locality> &locality = QWeakPointer<Locality>());
     MilkPoint(const MilkPoint &milkPoint);
     ~MilkPoint();
 
     milk_id id() const;
     void setId(const milk_id &id);
 
-    Locality *locality() const;
-    void setLocality(Locality *locality);
+    QWeakPointer<Locality> locality() const;
+    void setLocality(const QWeakPointer<Locality> &locality);
 
     QString name() const;
     void setName(const QString &name);
@@ -31,7 +34,7 @@ public:
 
 private:
     DB_NAMESPACE::MilkPointData m_data;
-    Locality *m_locality;
+    QWeakPointer<Locality> m_locality;
 };
 
 #endif // MILKPOINT_H
