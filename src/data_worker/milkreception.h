@@ -4,16 +4,22 @@
 #include <tables/milk_reception/milkreceptiondata.h>
 // Qt
 #include <QDate>
+#include <QWeakPointer>
 
 class MilkPoint;
 class Deliverer;
+
+using WpDeliverer = QWeakPointer<Deliverer>;
+using WpMilkPoint = QWeakPointer<MilkPoint>;
 
 
 class MilkReception {
 public:
     MilkReception();
-    MilkReception(const milk_id id, Deliverer *deliverer, MilkPoint *milkPoint,
-                  const QDate deliveryDate, const float priceLiter, const float liters, const float fat);
+    MilkReception(const milk_id id, const QDate deliveryDate, const float priceLiter,
+                  const float liters, const float fat,
+                  const WpDeliverer &deliverer = WpDeliverer(),
+                  const WpMilkPoint &milkPoint = WpMilkPoint());
     MilkReception(const MilkReception &milkReception);
     ~MilkReception();
 
@@ -34,18 +40,18 @@ public:
 
     bool isValid() const;
 
-    Deliverer *deliverer() const;
-    void setDeliverer(Deliverer *deliverer);
+    WpDeliverer deliverer() const;
+    void setDeliverer(const WpDeliverer deliverer);
 
-    MilkPoint *milkPoint() const;
-    void setMilkPoint(MilkPoint *milkPoint);
+    WpMilkPoint milkPoint() const;
+    void setMilkPoint(const WpMilkPoint milkPoint);
 
     DB_NAMESPACE::MilkReceptionData data() const;
 
 private:
     DB_NAMESPACE::MilkReceptionData m_data;
-    Deliverer *m_deliverer;
-    MilkPoint *m_milkPoint;
+    WpDeliverer m_deliverer;
+    WpMilkPoint m_milkPoint;
 };
 
 #endif // MILKRECEPTION_H

@@ -5,15 +5,17 @@
 
 
 MilkReception::MilkReception():
-    MilkReception(-1, Q_NULLPTR, Q_NULLPTR, QDate(), .0f, .0f, .0f)
+    MilkReception(-1, QDate(), .0f, .0f, .0f, WpDeliverer(), WpMilkPoint())
 {
 
 }
 
-MilkReception::MilkReception(const milk_id id, Deliverer *deliverer, MilkPoint *milkPoint,
-                             const QDate deliveryDate, const float priceLiter,
-                             const float liters, const float fat):
-    m_data(id, deliverer->id(), milkPoint->id(), deliveryDate, priceLiter, liters, fat),
+MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const float priceLiter,
+                             const float liters, const float fat,
+                             const WpDeliverer &deliverer,
+                             const WpMilkPoint &milkPoint):
+    m_data(id, deliverer.isNull() ? -1 : deliverer.data()->id(),
+           milkPoint.isNull() ? -1 : milkPoint.data()->id(), deliveryDate, priceLiter, liters, fat),
     m_deliverer(deliverer),
     m_milkPoint(milkPoint)
 {
@@ -43,26 +45,26 @@ void MilkReception::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-Deliverer *MilkReception::deliverer() const
+WpDeliverer MilkReception::deliverer() const
 {
     return m_deliverer;
 }
 
-MilkPoint *MilkReception::milkPoint() const
+WpMilkPoint MilkReception::milkPoint() const
 {
     return m_milkPoint;
 }
 
-void MilkReception::setDeliverer(Deliverer *deliverer)
+void MilkReception::setDeliverer(const WpDeliverer deliverer)
 {
     m_deliverer = deliverer;
-    m_data.setDelivererId(m_deliverer->id());
+    m_data.setDelivererId(deliverer.isNull() ? -1 : deliverer.data()->id());
 }
 
-void MilkReception::setMilkPoint(MilkPoint *milkPoint)
+void MilkReception::setMilkPoint(const WpMilkPoint milkPoint)
 {
     m_milkPoint = milkPoint;
-    m_data.setMilkPointId(m_milkPoint->id());
+    m_data.setMilkPointId(milkPoint.isNull() ? -1 : milkPoint.data()->id());
 }
 
 DB_NAMESPACE::MilkReceptionData MilkReception::data() const
