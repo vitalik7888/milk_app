@@ -11,8 +11,9 @@ Deliverer::Deliverer():
 }
 
 Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
-                     const QString &phoneNumber, Locality *locality):
-    m_data(id, name, locality->id(), inn, address, phoneNumber)
+                     const QString &phoneNumber, const QWeakPointer<Locality> &locality):
+    m_data(id, name, locality.isNull() ? -1 : locality.data()->id(), inn, address, phoneNumber),
+    m_locality(locality)
 {
 
 }
@@ -20,6 +21,11 @@ Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn, 
 Deliverer::Deliverer(const Deliverer &deliverer):
     m_data(deliverer.data()),
     m_locality(deliverer.locality())
+{
+
+}
+
+Deliverer::~Deliverer()
 {
 
 }
@@ -34,7 +40,7 @@ void Deliverer::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-Locality *Deliverer::locality() const
+QWeakPointer<Locality> Deliverer::locality() const
 {
     return m_locality;
 }
@@ -89,8 +95,8 @@ DB_NAMESPACE::DelivererData Deliverer::data() const
     return m_data;
 }
 
-void Deliverer::setLocality(Locality *locality)
+void Deliverer::setLocality(const QWeakPointer<Locality> &locality)
 {
     m_locality = locality;
-    m_data.setId(m_locality->id());
+    m_data.setId(locality.isNull() ? -1 : locality.data()->id());
 }

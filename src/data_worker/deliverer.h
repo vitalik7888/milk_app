@@ -2,6 +2,8 @@
 #define DELIVERER_H
 
 #include <tables/deliverers/delivererdata.h>
+// Qt
+#include <QWeakPointer>
 
 class Locality;
 
@@ -10,14 +12,15 @@ class Deliverer {
 public:
     Deliverer();
     Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
-              const QString &phoneNumber, Locality *locality);
+              const QString &phoneNumber, const QWeakPointer<Locality> &locality = QWeakPointer<Locality>());
     Deliverer(const Deliverer &deliverer);
+    ~Deliverer();
 
     milk_id id() const;
     void setId(const milk_id &id);
 
-    Locality *locality() const;
-    void setLocality(Locality *locality);
+    QWeakPointer<Locality> locality() const;
+    void setLocality(const QWeakPointer<Locality> &locality);
 
     QString name() const;
     void setName(const QString &name);
@@ -38,7 +41,7 @@ public:
 
 private:
     DB_NAMESPACE::DelivererData m_data;
-    Locality *m_locality;
+    QWeakPointer<Locality> m_locality;
 };
 
 #endif // DELIVERER_H
