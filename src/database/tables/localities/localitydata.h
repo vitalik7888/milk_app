@@ -11,6 +11,8 @@ class LocalityData {
 public:
     LocalityData();
     LocalityData(const milk_id id, const QString &name, const QString &description);
+    LocalityData(const LocalityData &data);
+    ~LocalityData();
 
     milk_id id() const;
     void setId(const milk_id &id);

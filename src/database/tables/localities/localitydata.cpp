@@ -17,6 +17,19 @@ LocalityData::LocalityData(const milk_id id, const QString &name, const QString 
 
 }
 
+LocalityData::LocalityData(const LocalityData &data):
+    m_id(data.id()),
+    m_name(data.name()),
+    m_description(data.description())
+{
+
+}
+
+LocalityData::~LocalityData()
+{
+
+}
+
 milk_id LocalityData::id() const
 {
     return m_id;
