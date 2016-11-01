@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../res.qrc">
+    <normaloff>:/img/app.ico</normaloff>:/img/app.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -23,7 +27,7 @@
          <x>0</x>
          <y>0</y>
          <width>979</width>
-         <height>425</height>
+         <height>417</height>
         </rect>
        </property>
        <attribute name="label">
@@ -47,8 +51,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>979</width>
+         <height>417</height>
         </rect>
        </property>
        <attribute name="label">
@@ -72,8 +76,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>979</width>
+         <height>417</height>
         </rect>
        </property>
        <attribute name="label">
@@ -103,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>997</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDb">
