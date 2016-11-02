@@ -28,7 +28,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
     MilkReceptionData getMilkReception(const milk_id milkPointId) const;
-    QList<MilkReceptionData> getMilkReceptions(const QString &where) const;
+    QList<MilkReceptionData> getMilkReceptions(const QString &where = QString()) const;
     void insert(const MilkReceptionData &milkReception) const;
     void update(const MilkReceptionData &milkReception) const;
     bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
