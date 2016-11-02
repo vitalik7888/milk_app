@@ -11,7 +11,7 @@ public:
     MilkReceptionDao(const QSqlDatabase &db);
 
     MilkReceptionData get(const milk_id id) const;
-    QList<MilkReceptionData> get(const QString &where) const;
+    QList<MilkReceptionData> get(const QString &where = QString()) const;
     void insert(const MilkReceptionData &data) const;
     void update(const MilkReceptionData &data) const;
 };
