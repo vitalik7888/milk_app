@@ -6,7 +6,9 @@
 #include <QWeakPointer>
 
 class Locality;
+class MilkReception;
 
+using DelivererMilkReceptions = QList< QWeakPointer<MilkReception> >;
 
 class Deliverer {
 public:
@@ -34,6 +36,10 @@ public:
     QString phoneNumber() const;
     void setPhoneNumber(const QString &phoneNumber);
 
+    bool isHasMilkReceptions() const;
+    DelivererMilkReceptions milkReceptions() const;
+    void addMilkReception(const QWeakPointer<MilkReception> &milkReception);
+
     bool isValid() const;
     // bool save(DeliverersTable *deliverers);
 
@@ -41,7 +47,10 @@ public:
 
 private:
     DB_NAMESPACE::DelivererData m_data;
+
     QWeakPointer<Locality> m_locality;
+
+    DelivererMilkReceptions m_milkReceptions;
 };
 
 #endif // DELIVERER_H

@@ -85,6 +85,27 @@ void Deliverer::setPhoneNumber(const QString &phoneNumber)
     m_data.setPhoneNumber(phoneNumber);
 }
 
+bool Deliverer::isHasMilkReceptions() const
+{
+    return !m_milkReceptions.empty();
+}
+
+DelivererMilkReceptions Deliverer::milkReceptions() const
+{
+    return m_milkReceptions;
+}
+
+void Deliverer::addMilkReception(const QWeakPointer<MilkReception> &milkReception)
+{
+    m_milkReceptions.append(milkReception);
+}
+
+void Deliverer::setLocality(const QWeakPointer<Locality> &locality)
+{
+    m_locality = locality;
+    m_data.setId(locality.isNull() ? -1 : locality.data()->id());
+}
+
 bool Deliverer::isValid() const
 {
     return m_data.isValid();
@@ -93,10 +114,4 @@ bool Deliverer::isValid() const
 DB_NAMESPACE::DelivererData Deliverer::data() const
 {
     return m_data;
-}
-
-void Deliverer::setLocality(const QWeakPointer<Locality> &locality)
-{
-    m_locality = locality;
-    m_data.setId(locality.isNull() ? -1 : locality.data()->id());
 }
