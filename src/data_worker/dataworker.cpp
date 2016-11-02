@@ -39,19 +39,17 @@ void DataWorker::reload()
         getMilkReception(id);
 }
 
-QList<SharMilkRecep> DataWorker::getMilkReceptions(const QString &where)
+void DataWorker::loadMilkReceptions(const QString &where)
 {
-    QList<SharMilkRecep> result;
     try {
         const auto milkReceptions = m_db->milkReception()->getMilkReceptions(where);
         for (const auto &data: milkReceptions) {
-            result.append(getMilkReception(data));
+            getMilkReception(data);
         }
     } catch (const QString &err) {
-        qDebug() << "Data worker get milk receptions error:" << err;
+        qDebug() << "Data worker load milk receptions error:" << err;
+        throw;
     }
-
-    return result;
 }
 
 bool DataWorker::isLocalityExists(const milk_id id) const
@@ -72,6 +70,26 @@ bool DataWorker::isDelivererExists(const milk_id id) const
 bool DataWorker::isMilkRecepExists(const milk_id id) const
 {
     return m_milkReceptions.contains(id);
+}
+
+QMap<milk_id, SharLocality> DataWorker::getLocalities() const
+{
+    return m_localities;
+}
+
+QMap<milk_id, SharMilkPoint> DataWorker::getMilkPoints() const
+{
+    return m_milkPoints;
+}
+
+QMap<milk_id, SharDeliverer> DataWorker::getDeliverers() const
+{
+    return m_deliverers;
+}
+
+QMap<milk_id, SharMilkRecep> DataWorker::getMilkReceptions() const
+{
+    return m_milkReceptions;
 }
 
 SharLocality DataWorker::getLocality(const LocalityData &data)
@@ -210,12 +228,13 @@ SharDeliverer DataWorker::insert(const DelivererData &data)
 
 SharMilkRecep DataWorker::insert(const MilkReceptionData &data)
 {
-    const auto deliverer = getDeliverer(data.delivererId());
+    auto deliverer = getDeliverer(data.delivererId());
     const auto milkPoint = getMilkPoint(data.milkPointId());
     const auto milkRecep = new MilkReception(data.id(), data.deliveryDate(), data.priceLiter(),
                                              data.liters(), data.fat(), deliverer.toWeakRef(),
                                              milkPoint.toWeakRef());
     const auto shared = SharMilkRecep(milkRecep);
+    deliverer->addMilkReception(shared.toWeakRef());
     m_milkReceptions.insert(data.id(), shared);
 
     return shared;

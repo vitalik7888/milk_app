@@ -26,21 +26,17 @@ public:
     void clear();
     void reload();
 
-    QList<SharMilkRecep> getMilkReceptions(const QString &where); // TODO filter
+    void loadMilkReceptions(const QString &where); // TODO filter
 
     bool isLocalityExists(const milk_id id) const;
     bool isMilkPointExists(const milk_id id) const;
     bool isDelivererExists(const milk_id id) const;
     bool isMilkRecepExists(const milk_id id) const;
 
-    SharLocality getLocality(const DB_NAMESPACE::LocalityData &data);
-    SharMilkPoint getMilkPoint(const DB_NAMESPACE::MilkPointData &data);
-    SharDeliverer getDeliverer(const DB_NAMESPACE::DelivererData &data);
-    SharMilkRecep getMilkReception(const DB_NAMESPACE::MilkReceptionData &data);
-    SharLocality getLocality(const milk_id id);
-    SharMilkPoint getMilkPoint(const milk_id id);
-    SharDeliverer getDeliverer(const milk_id id);
-    SharMilkRecep getMilkReception(const milk_id id);
+    QMap<milk_id, SharLocality> getLocalities() const;
+    QMap<milk_id, SharMilkPoint> getMilkPoints() const;
+    QMap<milk_id, SharDeliverer> getDeliverers() const;
+    QMap<milk_id, SharMilkRecep> getMilkReceptions() const;
 
 private:
     DB_NAMESPACE::Database *m_db;
@@ -50,6 +46,14 @@ private:
     QMap< milk_id, SharDeliverer > m_deliverers;
     QMap< milk_id, SharMilkRecep > m_milkReceptions;
 
+    SharLocality getLocality(const DB_NAMESPACE::LocalityData &data);
+    SharMilkPoint getMilkPoint(const DB_NAMESPACE::MilkPointData &data);
+    SharDeliverer getDeliverer(const DB_NAMESPACE::DelivererData &data);
+    SharMilkRecep getMilkReception(const DB_NAMESPACE::MilkReceptionData &data);
+    SharLocality getLocality(const milk_id id);
+    SharMilkPoint getMilkPoint(const milk_id id);
+    SharDeliverer getDeliverer(const milk_id id);
+    SharMilkRecep getMilkReception(const milk_id id);
     SharLocality insert(const DB_NAMESPACE::LocalityData &data);
     SharMilkPoint insert(const DB_NAMESPACE::MilkPointData &data);
     SharDeliverer insert(const DB_NAMESPACE::DelivererData &data);
