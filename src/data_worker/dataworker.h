@@ -26,6 +26,8 @@ public:
     void clear();
     void reload();
 
+    QList<SharMilkRecep> getMilkReceptions(const QString &where); // TODO filter
+
     bool isLocalityExists(const milk_id id) const;
     bool isMilkPointExists(const milk_id id) const;
     bool isDelivererExists(const milk_id id) const;

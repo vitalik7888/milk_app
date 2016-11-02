@@ -39,6 +39,21 @@ void DataWorker::reload()
         getMilkReception(id);
 }
 
+QList<SharMilkRecep> DataWorker::getMilkReceptions(const QString &where)
+{
+    QList<SharMilkRecep> result;
+    try {
+        const auto milkReceptions = m_db->milkReception()->getMilkReceptions(where);
+        for (const auto &data: milkReceptions) {
+            result.append(getMilkReception(data));
+        }
+    } catch (const QString &err) {
+        qDebug() << "Data worker get milk receptions error:" << err;
+    }
+
+    return result;
+}
+
 bool DataWorker::isLocalityExists(const milk_id id) const
 {
     return m_localities.contains(id);
