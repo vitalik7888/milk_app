@@ -2,6 +2,7 @@
 
 #include "locality.h"
 #include "milkreception.h"
+#include "Utils.h"
 
 
 Deliverer::Deliverer():
@@ -98,6 +99,18 @@ DelivererMilkReceptions Deliverer::milkReceptions() const
 void Deliverer::addMilkReception(const WpMilkRecep &milkReception)
 {
     m_milkReceptions.append(milkReception);
+}
+
+CalculatedItem::Data Deliverer::getCalculations() const
+{
+    CalculatedItem::Data data;
+
+    for (const auto &mr: m_milkReceptions) {
+        const auto right = mr.data()->getCalculations().data();
+        data += right;
+    }
+
+    return data;
 }
 
 void Deliverer::setLocality(const WpLocality &locality)

@@ -2,6 +2,7 @@
 #define DELIVERER_H
 
 #include <tables/deliverers/delivererdata.h>
+#include "calculateditem.h"
 // Qt
 #include <QWeakPointer>
 
@@ -43,6 +44,7 @@ public:
     DelivererMilkReceptions milkReceptions() const;
     void addMilkReception(const WpMilkRecep &milkReception);
 
+    CalculatedItem::Data getCalculations() const;
 
     bool isValid() const;
     // bool save(DeliverersTable *deliverers);
