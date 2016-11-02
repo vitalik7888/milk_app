@@ -1,17 +1,17 @@
 #include "deliverer.h"
 
 #include "locality.h"
-
+#include "milkreception.h"
 
 
 Deliverer::Deliverer():
-    Deliverer(-1, QString(), -1, QString(), QString(), QWeakPointer<Locality>())
+    Deliverer(-1, QString(), -1, QString(), QString(), WpLocality())
 {
 
 }
 
 Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
-                     const QString &phoneNumber, const QWeakPointer<Locality> &locality):
+                     const QString &phoneNumber, const WpLocality &locality):
     m_data(id, name, locality.isNull() ? -1 : locality.data()->id(), inn, address, phoneNumber),
     m_locality(locality)
 {
@@ -40,7 +40,7 @@ void Deliverer::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-QWeakPointer<Locality> Deliverer::locality() const
+WpLocality Deliverer::locality() const
 {
     return m_locality;
 }
@@ -95,12 +95,12 @@ DelivererMilkReceptions Deliverer::milkReceptions() const
     return m_milkReceptions;
 }
 
-void Deliverer::addMilkReception(const QWeakPointer<MilkReception> &milkReception)
+void Deliverer::addMilkReception(const WpMilkRecep &milkReception)
 {
     m_milkReceptions.append(milkReception);
 }
 
-void Deliverer::setLocality(const QWeakPointer<Locality> &locality)
+void Deliverer::setLocality(const WpLocality &locality)
 {
     m_locality = locality;
     m_data.setId(locality.isNull() ? -1 : locality.data()->id());
