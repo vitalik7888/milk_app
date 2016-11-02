@@ -39,24 +39,72 @@ void DataWorker::reload()
         getMilkReception(id);
 }
 
+bool DataWorker::isLocalityExists(const milk_id id) const
+{
+    return m_localities.contains(id);
+}
+
+bool DataWorker::isMilkPointExists(const milk_id id) const
+{
+    return m_milkPoints.contains(id);
+}
+
+bool DataWorker::isDelivererExists(const milk_id id) const
+{
+    return m_deliverers.contains(id);
+}
+
+bool DataWorker::isMilkRecepExists(const milk_id id) const
+{
+    return m_milkReceptions.contains(id);
+}
+
+SharLocality DataWorker::getLocality(const LocalityData &data)
+{
+    if (!isLocalityExists(data.id())) {
+        return insert(data);
+    }
+
+    return m_localities[data.id()];
+}
+
+SharMilkPoint DataWorker::getMilkPoint(const MilkPointData &data)
+{
+    if (!isMilkPointExists(data.id())) {
+        return insert(data);
+    }
+    return m_milkPoints[data.id()];
+}
+
+SharDeliverer DataWorker::getDeliverer(const DelivererData &data)
+{
+    if (isDelivererExists(data.id())) {
+        return insert(data);
+    }
+    return m_deliverers[data.id()];
+}
+
+SharMilkRecep DataWorker::getMilkReception(const MilkReceptionData &data)
+{
+    if (isMilkRecepExists(data.id())) {
+        return insert(data);
+    }
+    return m_milkReceptions[data.id()];
+}
+
 SharLocality DataWorker::getLocality(const milk_id id)
 {
     SharLocality shpLocality;
 
-    if (!m_localities.contains(id)) {
-        LocalityData ld;
+    if (!isLocalityExists(id)) {
         try {
-            ld = m_db->localities()->getLocality(id);
+            const auto data = m_db->localities()->getLocality(id);
+            shpLocality = insert(data);
         } catch (const QString &err) {
             qDebug() << "Data worker get locality error:" << err;
         }
-        if (ld.isValid()) {
-
-            m_localities.insert(id, fromData(ld));
-        }
-    } else {
+    } else
         shpLocality = m_localities[id];
-    }
 
     return shpLocality;
 }
@@ -65,15 +113,13 @@ SharMilkPoint DataWorker::getMilkPoint(const milk_id id)
 {
     SharMilkPoint shpMilkPoint;
 
-    if (!m_milkPoints.contains(id)) {
-        MilkPointData data;
+    if (!isMilkPointExists(id)) {
         try {
-            data = m_db->milkPoints()->getMilkPoint(id);
+            const auto data = m_db->milkPoints()->getMilkPoint(id);
+            shpMilkPoint = insert(data);
         } catch (const QString &err) {
             qDebug() << "Data worker get milk point error:" << err;
         }
-        if (data.isValid())
-            m_milkPoints.insert(id, fromData(data));
     } else {
         shpMilkPoint = m_milkPoints[id];
     }
@@ -85,15 +131,13 @@ SharDeliverer DataWorker::getDeliverer(const milk_id id)
 {
     SharDeliverer shpDeliverer;
 
-    if (!m_deliverers.contains(id)) {
-        DelivererData data;
+    if (!isDelivererExists(id)) {
         try {
-            data = m_db->deliverers()->getDeliverer(id);
+            const auto data = m_db->deliverers()->getDeliverer(id);
+            shpDeliverer = insert(data);
         } catch (const QString &err) {
             qDebug() << "Data worker get deliverer error:" << err;
         }
-        if (data.isValid())
-            m_deliverers.insert(id, fromData(data));
     } else {
         shpDeliverer = m_deliverers[id];
     }
@@ -105,15 +149,13 @@ SharMilkRecep DataWorker::getMilkReception(const milk_id id)
 {
     SharMilkRecep shpMilkRecep;
 
-    if (!m_milkReceptions.contains(id)) {
-        MilkReceptionData data;
+    if (!isMilkRecepExists(id)) {
         try {
-            data = m_db->milkReception()->getMilkReception(id);
+            const auto data = m_db->milkReception()->getMilkReception(id);
+            shpMilkRecep = insert(data);
         } catch (const QString &err) {
             qDebug() << "Data worker get milk reception error:" << err;
         }
-        if (data.isValid())
-            m_milkReceptions.insert(id, fromData(data));
     } else {
         shpMilkRecep = m_milkReceptions[id];
     }
@@ -121,33 +163,45 @@ SharMilkRecep DataWorker::getMilkReception(const milk_id id)
     return shpMilkRecep;
 }
 
-SharDeliverer DataWorker::fromData(const DelivererData &data)
+SharLocality DataWorker::insert(const LocalityData &data)
+{
+    const auto locality = new Locality(data.id(), data.name(), data.description());
+    const auto shLocality = SharLocality(locality);
+    m_localities.insert(data.id(), shLocality);
+
+    return shLocality;
+}
+
+SharMilkPoint DataWorker::insert(const MilkPointData &data)
+{
+    const auto locality = getLocality(data.localityId());
+    const auto milkPoint = new MilkPoint(data.id(), data.name(), data.description(), locality.toWeakRef());
+    const auto shared = SharMilkPoint(milkPoint);
+    m_milkPoints.insert(data.id(), shared);
+
+    return shared;
+}
+
+SharDeliverer DataWorker::insert(const DelivererData &data)
 {
     const auto locality = getLocality(data.localityId());
     const auto deliverer = new Deliverer(data.id(), data.name(), data.inn(), data.address(),
                                          data.phoneNumber(), locality.toWeakRef());
-    return SharDeliverer(deliverer);
+    const auto shared = SharDeliverer(deliverer);
+    m_deliverers.insert(data.id(), shared);
+
+    return shared;
 }
 
-SharMilkRecep DataWorker::fromData(const MilkReceptionData &data)
+SharMilkRecep DataWorker::insert(const MilkReceptionData &data)
 {
     const auto deliverer = getDeliverer(data.delivererId());
     const auto milkPoint = getMilkPoint(data.milkPointId());
     const auto milkRecep = new MilkReception(data.id(), data.deliveryDate(), data.priceLiter(),
                                              data.liters(), data.fat(), deliverer.toWeakRef(),
                                              milkPoint.toWeakRef());
-    return SharMilkRecep(milkRecep);
-}
+    const auto shared = SharMilkRecep(milkRecep);
+    m_milkReceptions.insert(data.id(), shared);
 
-SharLocality DataWorker::fromData(const LocalityData &data)
-{
-    const auto locality = new Locality(data.id(), data.name(), data.description());
-    return SharLocality(locality);
-}
-
-SharMilkPoint DataWorker::fromData(const db::MilkPointData &data)
-{
-    const auto locality = getLocality(data.localityId());
-    const auto milkPoint = new MilkPoint(data.id(), data.name(), data.description(), locality.toWeakRef());
-    return SharMilkPoint(milkPoint);
+    return shared;
 }
