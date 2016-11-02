@@ -1,8 +1,10 @@
 #ifndef DATAWORKER_H
 #define DATAWORKER_H
 
-#include "milkreception.h"
 #include "locality.h"
+#include "milkpoint.h"
+#include "deliverer.h"
+#include "milkreception.h"
 // Qt
 #include <QMap>
 #include <QSharedPointer>

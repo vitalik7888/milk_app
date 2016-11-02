@@ -1,8 +1,6 @@
 #include "dataworker.h"
 
 #include <base/Database.h>
-#include "milkpoint.h"
-#include "deliverer.h"
 // Qt
 #include <QDebug>
 
@@ -111,7 +109,7 @@ SharMilkPoint DataWorker::getMilkPoint(const MilkPointData &data)
 
 SharDeliverer DataWorker::getDeliverer(const DelivererData &data)
 {
-    if (isDelivererExists(data.id())) {
+    if (!isDelivererExists(data.id())) {
         return insert(data);
     }
     return m_deliverers[data.id()];
@@ -119,7 +117,7 @@ SharDeliverer DataWorker::getDeliverer(const DelivererData &data)
 
 SharMilkRecep DataWorker::getMilkReception(const MilkReceptionData &data)
 {
-    if (isMilkRecepExists(data.id())) {
+    if (!isMilkRecepExists(data.id())) {
         return insert(data);
     }
     return m_milkReceptions[data.id()];
