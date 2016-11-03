@@ -161,8 +161,10 @@ void CalcFrame::calc()
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(milkPoint)->get());
         if (dateCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(delivDate)->get());
-        if (priceCol.isShow)
-            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.price, f, priceCol.prec)->get());
+        if (priceCol.isShow) {
+            const QString priceValue = calcItem.price <= .0 ? "-" : QString::number(calcItem.price, f, priceCol.prec);
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(priceValue)->get());
+        }
         if (litersCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.liters, f, litersCol.prec)->get());
         if (fatCol.isShow)
