@@ -24,22 +24,22 @@ class CalcFrame : public QFrame
     public:
         Item();
         Item(const QString &_delivererName, const QString &_milkPointName = QString(), const QDate &_deliveryDate = QDate(),
-             const float _priceLiter = .0f, const float _liters = .0f, const float _fat = .0f,
-             const float _protein = .0f, const float _fatUnits = .0f, const float _rankWeight = .0f, const float _paymentWithOutPremium = .0f,
-             const float _premiumForFat = .0f, const float _sum = .0f);
+             const double _priceLiter = .0, const double _liters = .0, const double _fat = .0,
+             const double _protein = .0, const double _fatUnits = .0, const double _rankWeight = .0, const double _paymentWithOutPremium = .0,
+             const double _premiumForFat = .0, const double _sum = .0);
 
         QString delivererName;
         QString milkPointName;
         QDate deliveryDate;
-        float priceLiter;
-        float liters;
-        float fat;
-        float protein;
-        float fatUnits;
-        float rankWeight;
-        float paymentWithOutPremium;
-        float premiumForFat;
-        float sum;
+        double priceLiter;
+        double liters;
+        double fat;
+        double protein;
+        double fatUnits;
+        double rankWeight;
+        double paymentWithOutPremium;
+        double premiumForFat;
+        double sum;
     };
 
     typedef QMultiHash<qlonglong, Item> CalcItems;

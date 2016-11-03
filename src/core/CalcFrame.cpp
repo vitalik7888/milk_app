@@ -341,9 +341,9 @@ CalcFrame::CalcItems CalcFrame::getItemsData()
         item.delivererName = query.value(RMT_DELIVERER_NAME).toString();
         item.milkPointName = query.value(RMT_MILK_POINT_NAME).toString();
         item.deliveryDate = query.value(RMT_DELIVERY_DATE).toDate();
-        item.priceLiter = query.value(RMT_PRICE_LITER).toFloat();
-        item.liters = query.value(RMT_LITERS).toFloat();
-        item.fat = query.value(RMT_FAT).toFloat();
+        item.priceLiter = query.value(RMT_PRICE_LITER).toDouble();
+        item.liters = query.value(RMT_LITERS).toDouble();
+        item.fat = query.value(RMT_FAT).toDouble();
 
         setAllCalc(item);
         items.insert(query.value(RMT_ID_DELIVERER).toLongLong(), item);
@@ -590,23 +590,23 @@ CalcFrame::Item::Item():
     delivererName(QString()),
     milkPointName(QString()),
     deliveryDate(QDate()),
-    priceLiter(.0f),
-    liters(.0f),
-    fat(.0f),
-    protein(.0f),
-    fatUnits(.0f),
-    rankWeight(.0f),
-    paymentWithOutPremium(.0f),
-    premiumForFat(.0f),
-    sum(.0f)
+    priceLiter(.0),
+    liters(.0),
+    fat(.0),
+    protein(.0),
+    fatUnits(.0),
+    rankWeight(.0),
+    paymentWithOutPremium(.0),
+    premiumForFat(.0),
+    sum(.0)
 {
 
 }
 
 CalcFrame::Item::Item(const QString &_delivererName, const QString &_milkPointName,
-                      const QDate &_deliveryDate, const float _liters, const float _fat,
-                      const float _priceLiter, const float _protein, const float _fatUnits, const float _rankWeight,
-                      const float _paymentWithOutPremium, const float _premiumForFat, const float _sum):
+                      const QDate &_deliveryDate, const double _liters, const double _fat,
+                      const double _priceLiter, const double _protein, const double _fatUnits, const double _rankWeight,
+                      const double _paymentWithOutPremium, const double _premiumForFat, const double _sum):
     delivererName(_delivererName),
     milkPointName(_milkPointName),
     deliveryDate(_deliveryDate),

@@ -4,21 +4,21 @@
 
 //--------------------------------------------------------------------------------------------------
 CalculatedItem::Data::Data():
-    liters(.0f),
-    fat(.0f),
-    price(.0f),
-    protein(.0f),
-    fatUnits(.0f),
-    rankWeight(.0f),
-    paymentWithOutPremium(.0f),
-    premiumForFat(.0f),
-    sum(.0f)
+    liters(.0),
+    fat(.0),
+    price(.0),
+    protein(.0),
+    fatUnits(.0),
+    rankWeight(.0),
+    paymentWithOutPremium(.0),
+    premiumForFat(.0),
+    sum(.0)
 {
 
 }
 
 //--------------------------------------------------------------------------------------------------
-CalculatedItem::CalculatedItem(const float liters, const float fat, const float priceForLiter):
+CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter):
     m_data()
 {
     m_data.liters = liters;
@@ -32,47 +32,47 @@ CalculatedItem::CalculatedItem(const float liters, const float fat, const float 
     m_data.sum = Utils::Calc::sum(m_data.rankWeight, m_data.price);
 }
 
-float CalculatedItem::liters() const
+double CalculatedItem::liters() const
 {
     return m_data.liters;
 }
 
-float CalculatedItem::fat() const
+double CalculatedItem::fat() const
 {
     return m_data.fat;
 }
 
-float CalculatedItem::price() const
+double CalculatedItem::price() const
 {
     return m_data.price;
 }
 
-float CalculatedItem::protein() const
+double CalculatedItem::protein() const
 {
     return m_data.protein;
 }
 
-float CalculatedItem::fatUnits() const
+double CalculatedItem::fatUnits() const
 {
     return m_data.fatUnits;
 }
 
-float CalculatedItem::rankWeight() const
+double CalculatedItem::rankWeight() const
 {
     return m_data.rankWeight;
 }
 
-float CalculatedItem::paymentWithOutPremium() const
+double CalculatedItem::paymentWithOutPremium() const
 {
     return m_data.paymentWithOutPremium;
 }
 
-float CalculatedItem::premiumForFat() const
+double CalculatedItem::premiumForFat() const
 {
     return m_data.premiumForFat;
 }
 
-float CalculatedItem::sum() const
+double CalculatedItem::sum() const
 {
     return m_data.sum;
 }

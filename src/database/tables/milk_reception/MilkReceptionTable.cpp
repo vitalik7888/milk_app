@@ -43,9 +43,9 @@ MilkReceptionData MilkReceptionDao::get(const milk_id id) const
         data.setDelivererId(query.value(0).toLongLong());
         data.setMilkPointId(query.value(1).toLongLong());
         data.setDeliveryDate(query.value(2).toDate());
-        data.setPriceLiter(query.value(3).toFloat());
-        data.setLiters(query.value(4).toFloat());
-        data.setFat(query.value(5).toFloat());
+        data.setPriceLiter(query.value(3).toDouble());
+        data.setLiters(query.value(4).toDouble());
+        data.setFat(query.value(5).toDouble());
     } else {
         const auto err = QString("Отсутствует сдача молока с id = %1").arg(id);
         qDebug() << err;
@@ -72,9 +72,9 @@ QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
             data.setDelivererId(query.value(1).toLongLong());
             data.setMilkPointId(query.value(2).toLongLong());
             data.setDeliveryDate(query.value(3).toDate());
-            data.setPriceLiter(query.value(4).toFloat());
-            data.setLiters(query.value(5).toFloat());
-            data.setFat(query.value(6).toFloat());
+            data.setPriceLiter(query.value(4).toDouble());
+            data.setLiters(query.value(5).toDouble());
+            data.setFat(query.value(6).toDouble());
 
             mrd.append(data);
         }
@@ -184,17 +184,17 @@ void MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QD
     m_dao->updateValue(FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
 }
 
-void MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const
+void MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const
 {
     m_dao->updateValue(FN_PRICE_LITER, milkReceptionId, priceLiter);
 }
 
-void MilkReceptionTable::setLiters(const milk_id milkReceptionId, const float liters) const
+void MilkReceptionTable::setLiters(const milk_id milkReceptionId, const double liters) const
 {
     m_dao->updateValue(FN_LITERS, milkReceptionId, liters);
 }
 
-void MilkReceptionTable::setFat(const milk_id milkReceptionId, const float fat) const
+void MilkReceptionTable::setFat(const milk_id milkReceptionId, const double fat) const
 {
     m_dao->updateValue(FN_FAT, milkReceptionId, fat);
 }
@@ -267,12 +267,12 @@ MilkPointsTable *MilkReceptionTable::getMilkPoints() const
     return m_milkPoints;
 }
 
-QList<float> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max) const
+QList<double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max) const
 {
     if (!max.isValid())
         max = min;
 
-    QList<float> minMax;
+    QList<double> minMax;
 
     QSqlQuery query(m_db);
     query.prepare(QString("SELECT MIN(%1), MAX(%1) FROM %2 WHERE %3 BETWEEN '%4' AND '%5'")
@@ -283,8 +283,8 @@ QList<float> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max
                   .arg(max.toString(Constants::defaultDateFormat())));
 
     if (query.exec() && query.first()) {
-        minMax.append(query.value(0).toFloat());
-        minMax.append(query.value(1).toFloat());
+        minMax.append(query.value(0).toDouble());
+        minMax.append(query.value(1).toDouble());
     }
 
     return minMax;

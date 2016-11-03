@@ -17,8 +17,8 @@ using WpMilkPoint = QWeakPointer<MilkPoint>;
 class MilkReception {
 public:
     MilkReception();
-    MilkReception(const milk_id id, const QDate deliveryDate, const float priceLiter,
-                  const float liters, const float fat,
+    MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+                  const double liters, const double fat,
                   const WpDeliverer &deliverer = WpDeliverer(),
                   const WpMilkPoint &milkPoint = WpMilkPoint());
     MilkReception(const MilkReception &milkReception);
@@ -30,14 +30,14 @@ public:
     QDate deliveryDate() const;
     void setDeliveryDate(const QDate &deliveryDate);
 
-    float priceLiter() const;
-    void setPriceLiter(float priceLiter);
+    double priceLiter() const;
+    void setPriceLiter(double priceLiter);
 
-    float liters() const;
-    void setLiters(float liters);
+    double liters() const;
+    void setLiters(double liters);
 
-    float fat() const;
-    void setFat(float fat);
+    double fat() const;
+    void setFat(double fat);
 
     WpDeliverer deliverer() const;
     void setDeliverer(const WpDeliverer deliverer);

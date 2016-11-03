@@ -13,8 +13,8 @@ class MilkReceptionData
 public:
     MilkReceptionData();
     MilkReceptionData(const milk_id id, const milk_id delivererId, const milk_id milkPointId,
-                      const QDate &deliveryDate, const float priceLiter,
-                      const float liters, const float fat);
+                      const QDate &deliveryDate, const double priceLiter,
+                      const double liters, const double fat);
     MilkReceptionData(const MilkReceptionData &data);
     ~MilkReceptionData();
 
@@ -30,14 +30,14 @@ public:
     QDate deliveryDate() const;
     void setDeliveryDate(const QDate &deliveryDate);
 
-    float priceLiter() const;
-    void setPriceLiter(float priceLiter);
+    double priceLiter() const;
+    void setPriceLiter(double priceLiter);
 
-    float liters() const;
-    void setLiters(float liters);
+    double liters() const;
+    void setLiters(double liters);
 
-    float fat() const;
-    void setFat(float fat);
+    double fat() const;
+    void setFat(double fat);
 
     bool isValid() const;
 
@@ -46,9 +46,9 @@ private:
     milk_id m_delivererId;
     milk_id m_milkPointId;
     QDate   m_deliveryDate;
-    float   m_priceLiter;
-    float   m_liters;
-    float   m_fat;
+    double   m_priceLiter;
+    double   m_liters;
+    double   m_fat;
 };
 
 DB_END_NAMESPACE

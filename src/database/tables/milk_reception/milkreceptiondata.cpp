@@ -4,14 +4,14 @@ USE_DB_NAMESPACE
 
 
 MilkReceptionData::MilkReceptionData():
-    MilkReceptionData(-1, -1, -1, QDate(), .0f, .0f, .0f)
+    MilkReceptionData(-1, -1, -1, QDate(), .0, .0, .0)
 {
 
 }
 
 MilkReceptionData::MilkReceptionData(const milk_id id, const milk_id delivererId,
                                      const milk_id milkPointId, const QDate &deliveryDate,
-                                     const float priceLiter, const float liters, const float fat):
+                                     const double priceLiter, const double liters, const double fat):
     m_id(id),
     m_delivererId(delivererId),
     m_milkPointId(milkPointId),
@@ -80,32 +80,32 @@ void MilkReceptionData::setDeliveryDate(const QDate &deliveryDate)
     m_deliveryDate = deliveryDate;
 }
 
-float MilkReceptionData::priceLiter() const
+double MilkReceptionData::priceLiter() const
 {
     return m_priceLiter;
 }
 
-void MilkReceptionData::setPriceLiter(float priceLiter)
+void MilkReceptionData::setPriceLiter(double priceLiter)
 {
     m_priceLiter = priceLiter;
 }
 
-float MilkReceptionData::liters() const
+double MilkReceptionData::liters() const
 {
     return m_liters;
 }
 
-void MilkReceptionData::setLiters(float liters)
+void MilkReceptionData::setLiters(double liters)
 {
     m_liters = liters;
 }
 
-float MilkReceptionData::fat() const
+double MilkReceptionData::fat() const
 {
     return m_fat;
 }
 
-void MilkReceptionData::setFat(float fat)
+void MilkReceptionData::setFat(double fat)
 {
     m_fat = fat;
 }

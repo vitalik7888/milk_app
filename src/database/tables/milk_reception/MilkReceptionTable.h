@@ -35,14 +35,14 @@ public:
     void setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
     void setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
     void setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
-    void setPriceLiter(const milk_id milkReceptionId, const float priceLiter) const;
-    void setLiters(const milk_id milkReceptionId, const float liters) const;
-    void setFat(const milk_id milkReceptionId, const float fate) const;
+    void setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const;
+    void setLiters(const milk_id milkReceptionId, const double liters) const;
+    void setFat(const milk_id milkReceptionId, const double fate) const;
 
     DeliverersTable *getDeliverers() const;
     MilkPointsTable *getMilkPoints() const;
 
-    QList<float> getMinMaxPriceLiter(const QDate &min, QDate max = QDate()) const;
+    QList<double> getMinMaxPriceLiter(const QDate &min, QDate max = QDate()) const;
     QDate getMinDeliveryDate() const;
     QDate getMaxDeliveryDate() const;
 

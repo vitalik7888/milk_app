@@ -5,13 +5,13 @@
 
 
 MilkReception::MilkReception():
-    MilkReception(-1, QDate(), .0f, .0f, .0f, WpDeliverer(), WpMilkPoint())
+    MilkReception(-1, QDate(), .0, .0, .0, WpDeliverer(), WpMilkPoint())
 {
 
 }
 
-MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const float priceLiter,
-                             const float liters, const float fat,
+MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+                             const double liters, const double fat,
                              const WpDeliverer &deliverer,
                              const WpMilkPoint &milkPoint):
     m_data(id, deliverer.isNull() ? -1 : deliverer.data()->id(),
@@ -87,32 +87,32 @@ void MilkReception::setDeliveryDate(const QDate &deliveryDate)
     m_data.setDeliveryDate(deliveryDate);
 }
 
-float MilkReception::priceLiter() const
+double MilkReception::priceLiter() const
 {
     return m_data.priceLiter();
 }
 
-void MilkReception::setPriceLiter(float priceLiter)
+void MilkReception::setPriceLiter(double priceLiter)
 {
     m_data.setPriceLiter(priceLiter);
 }
 
-float MilkReception::liters() const
+double MilkReception::liters() const
 {
     return m_data.liters();
 }
 
-void MilkReception::setLiters(float liters)
+void MilkReception::setLiters(double liters)
 {
     m_data.setLiters(liters);
 }
 
-float MilkReception::fat() const
+double MilkReception::fat() const
 {
     return m_data.fat();
 }
 
-void MilkReception::setFat(float fat)
+void MilkReception::setFat(double fat)
 {
     m_data.setFat(fat);
 }

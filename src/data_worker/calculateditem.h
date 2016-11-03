@@ -10,28 +10,28 @@ public:
         Data();
 
 
-        float liters;
-        float fat;
-        float price;
-        float protein;
-        float fatUnits;
-        float rankWeight;
-        float paymentWithOutPremium;
-        float premiumForFat;
-        float sum;
+        double liters;
+        double fat;
+        double price;
+        double protein;
+        double fatUnits;
+        double rankWeight;
+        double paymentWithOutPremium;
+        double premiumForFat;
+        double sum;
     };
 
-    CalculatedItem(const float liters, const float fat, const float priceForLiter);
+    CalculatedItem(const double liters, const double fat, const double priceForLiter);
 
-    float liters() const;
-    float fat() const;
-    float price() const;
-    float protein() const;
-    float fatUnits() const;
-    float rankWeight() const;
-    float paymentWithOutPremium() const;
-    float premiumForFat() const;
-    float sum() const;
+    double liters() const;
+    double fat() const;
+    double price() const;
+    double protein() const;
+    double fatUnits() const;
+    double rankWeight() const;
+    double paymentWithOutPremium() const;
+    double premiumForFat() const;
+    double sum() const;
 
     CalculatedItem::Data data() const;
 

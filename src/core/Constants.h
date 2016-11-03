@@ -3,8 +3,8 @@
 
 #include <QString>
 
-#define BASE_PROTEIN 3.0f
-#define BASE_FAT 3.4f
+#define BASE_PROTEIN 3.0
+#define BASE_FAT 3.4
 
 class Constants
 {

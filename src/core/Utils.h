@@ -39,68 +39,68 @@ public:
 namespace Calc {
 
 struct CalcResult {
-    CalcResult(): protein(.0f), fatUnits(.0f), rankWeight(.0f),
-        paymentWithOutPremium(.0f), premiumForFat(.0f), sum(.0f) {}
+    CalcResult(): protein(.0), fatUnits(.0), rankWeight(.0),
+        paymentWithOutPremium(.0), premiumForFat(.0), sum(.0) {}
 
-    float protein;
-    float fatUnits;
-    float rankWeight;
-    float paymentWithOutPremium;
-    float premiumForFat;
-    float sum;
+    double protein;
+    double fatUnits;
+    double rankWeight;
+    double paymentWithOutPremium;
+    double premiumForFat;
+    double sum;
 };
 
-static inline float protein(const float fat)
+static inline double protein(const double fat)
 {
     if(fat <= 0)
-        return 0.0f;
+        return 0.0;
 
     return fat * BASE_PROTEIN / BASE_FAT;
 }
 
-static inline float fat(const float fatUnits, const float liters) {
-    if (fatUnits <= .0f || liters <= .0f)
-        return .0f;
+static inline double fat(const double fatUnits, const double liters) {
+    if (fatUnits <= .0 || liters <= .0)
+        return .0;
     return fatUnits / liters;
 }
 
-static inline float liters(const float fatUnits, const float fat) {
-    if (fatUnits <= .0f || fat <= .0f)
-        return .0f;
+static inline double liters(const double fatUnits, const double fat) {
+    if (fatUnits <= .0 || fat <= .0)
+        return .0;
     return fatUnits / fat;
 }
 
-static inline float fatUnits(const float liters, const float fat)
+static inline double fatUnits(const double liters, const double fat)
 {
     return liters * fat;
 }
 
-static inline float rankWeight(const float fatUnits)
+static inline double rankWeight(const double fatUnits)
 {
     if(fatUnits <= 0)
-        return 0.0f;
+        return 0.0;
 
     return fatUnits / BASE_FAT; //qRound(fatUnits / BASE_FAT);
 }
 
-static inline float premiumForFat(const float fat, const float paymentWithOutPremium)
+static inline double premiumForFat(const double fat, const double paymentWithOutPremium)
 {
     if(fat <= 0)
-        return 0.0f;
+        return 0.0;
 
     return (fat / BASE_FAT - 1) * paymentWithOutPremium;
 }
 
-static inline float paymentWithOutPremium(const float liters, const float price)
+static inline double paymentWithOutPremium(const double liters, const double price)
 {
     return liters * price;
 }
 
-static inline float sum(const float rankWeight, const float price)
+static inline double sum(const double rankWeight, const double price)
 {
     return rankWeight * price;
 }
-static inline CalcResult getCalculations(const float liters, const float fat, const float price) {
+static inline CalcResult getCalculations(const double liters, const double fat, const double price) {
     CalcResult calc;
 
     calc.protein = Utils::Calc::protein(fat);
