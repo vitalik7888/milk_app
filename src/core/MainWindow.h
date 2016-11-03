@@ -25,7 +25,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    DB_NAMESPACE::Database *getDatabase() const;
+    DB_NAMESPACE::Database *database() const;
 
     DialogSettings *getDialogSettings();
 

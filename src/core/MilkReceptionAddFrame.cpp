@@ -61,10 +61,10 @@ float MilkReceptionAddFrame::price() const
 
 void MilkReceptionAddFrame::setup()
 {
-    localities = m_mainWindow->getDatabase()->localities();
-    deliverers = m_mainWindow->getDatabase()->deliverers();
-    milkPoints = m_mainWindow->getDatabase()->milkPoints();
-    milkReception = m_mainWindow->getDatabase()->milkReception();
+    localities = m_mainWindow->database()->localities();
+    deliverers = m_mainWindow->database()->deliverers();
+    milkPoints = m_mainWindow->database()->milkPoints();
+    milkReception = m_mainWindow->database()->milkReception();
 
     ui->listViewDeliverers->setModel(deliverers);
     ui->listViewDeliverers->setModelColumn(DT_NAME);
@@ -128,8 +128,8 @@ void MilkReceptionAddFrame::insertReceptionMilk()
         return;
     }
 
-    auto deliverers = m_mainWindow->getDatabase()->deliverers();
-    auto milkPoints = m_mainWindow->getDatabase()->milkPoints();
+    auto deliverers = m_mainWindow->database()->deliverers();
+    auto milkPoints = m_mainWindow->database()->milkPoints();
 
     const auto isNoDeliverers = deliverers->isEmpty(),
             isNoMilkPoints = milkPoints->isEmpty();
@@ -168,7 +168,7 @@ void MilkReceptionAddFrame::insertReceptionMilk()
 
     auto allErrors = QString(), allWarnings = QString();
 
-    auto milkReception = m_mainWindow->getDatabase()->milkReception();
+    auto milkReception = m_mainWindow->database()->milkReception();
 
     const auto headerTextDate = ui->tableWidgetAddMilkReception->horizontalHeaderItem((int)Columns::Date)->text(),
             headerTextLiters = ui->tableWidgetAddMilkReception->horizontalHeaderItem((int)Columns::Liters)->text(),

@@ -50,7 +50,7 @@ CalcFrame::~CalcFrame()
 
 void CalcFrame::calc()
 {
-    auto milkReception = m_mainWindow->getDatabase()->milkReception();
+    auto milkReception = m_mainWindow->database()->milkReception();
     if (!milkReception) {
         Utils::Main::showMsgIfDbNotChoosed(this);
         return;
@@ -61,12 +61,12 @@ void CalcFrame::calc()
 
 void CalcFrame::setup()
 {
-    const auto deliverers = m_mainWindow->getDatabase()->deliverers();
-    const auto milkPoints = m_mainWindow->getDatabase()->milkPoints();
+    const auto deliverers = m_mainWindow->database()->deliverers();
+    const auto milkPoints = m_mainWindow->database()->milkPoints();
 
-    ui->comboBoxFilterDeliverers->setModel(m_mainWindow->getDatabase()->deliverers());
+    ui->comboBoxFilterDeliverers->setModel(m_mainWindow->database()->deliverers());
     ui->comboBoxFilterDeliverers->setModelColumn(DT_NAME);
-    ui->comboBoxFilterMilkPoints->setModel(m_mainWindow->getDatabase()->milkPoints());
+    ui->comboBoxFilterMilkPoints->setModel(m_mainWindow->database()->milkPoints());
     ui->comboBoxFilterMilkPoints->setModelColumn(MPT_NAME);
 
     if (deliverers->rowCount() > 0) {
@@ -105,7 +105,7 @@ void CalcFrame::chooseDate()
 
 void CalcFrame::printCalc()
 {
-    const auto milkReception = m_mainWindow->getDatabase()->milkReception();
+    const auto milkReception = m_mainWindow->database()->milkReception();
 
     if (!milkReception) {
         Utils::Main::showMsgIfDbNotChoosed(this);
@@ -356,7 +356,7 @@ CalcFrame::CalcItems CalcFrame::getItemsData()
 
 QString CalcFrame::getPrepQueryStr() const
 {
-    auto milkReception = m_mainWindow->getDatabase()->milkReception();
+    auto milkReception = m_mainWindow->database()->milkReception();
     const auto localityId = m_mainWindow->getCurrentLocalityId();
     auto select = milkReception->selectAll();
 

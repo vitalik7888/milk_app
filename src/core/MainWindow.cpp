@@ -530,7 +530,7 @@ DialogSettings *MainWindow::getDialogSettings()
     return m_dialogSettings;
 }
 
-Database *MainWindow::getDatabase() const
+Database *MainWindow::database() const
 {
     return m_database;
 }

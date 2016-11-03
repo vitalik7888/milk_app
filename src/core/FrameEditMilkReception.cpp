@@ -53,12 +53,12 @@ void FrameEditMilkReception::setMainWindow(MainWindow *mainWindow)
 
 void FrameEditMilkReception::setup()
 {
-    localities = m_mainWindow->getDatabase()->localities();
-    deliverers = m_mainWindow->getDatabase()->deliverers();
-    milkPoints = m_mainWindow->getDatabase()->milkPoints();
-    milkReception = m_mainWindow->getDatabase()->milkReception();
+    localities = m_mainWindow->database()->localities();
+    deliverers = m_mainWindow->database()->deliverers();
+    milkPoints = m_mainWindow->database()->milkPoints();
+    milkReception = m_mainWindow->database()->milkReception();
 
-    m_proxy->setSourceModel(m_mainWindow->getDatabase()->milkReception());
+    m_proxy->setSourceModel(m_mainWindow->database()->milkReception());
     ui->tableViewEditMilkReceptions->setModel(m_proxy);
 
     ui->comboBoxFilterDeliverers->setModel(deliverers);
