@@ -88,7 +88,7 @@ CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedIt
     result.liters = l.liters + r.liters;
     result.fatUnits = l.fatUnits + r.fatUnits;
     result.paymentWithOutPremium = l.paymentWithOutPremium + r.paymentWithOutPremium;
-    result.premiumForFat = l.premiumForFat + l.premiumForFat;
+    result.premiumForFat = l.premiumForFat + r.premiumForFat;
     result.sum = l.sum + r.sum;
     result.fat = Utils::Calc::fat(result.fatUnits, result.liters),
     result.protein = Utils::Calc::protein(result.fat),
@@ -102,7 +102,7 @@ CalculatedItem::Data &operator+=(CalculatedItem::Data &l, const CalculatedItem::
     l.liters += r.liters;
     l.fatUnits += r.fatUnits;
     l.paymentWithOutPremium += r.paymentWithOutPremium;
-    l.premiumForFat += l.premiumForFat;
+    l.premiumForFat += r.premiumForFat;
     l.sum += r.sum;
     l.fat = Utils::Calc::fat(l.fatUnits, l.liters),
     l.protein = Utils::Calc::protein(l.fat),
