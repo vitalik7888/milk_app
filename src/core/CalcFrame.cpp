@@ -8,17 +8,56 @@
 #include "DialogSettings.h"
 #include "Constants.h"
 #include "Utils.h"
-// qt
+#include <dataworker.h>
+// Qt
 #include <QMap>
-#include <QSqlError>
-#include <QSqlQuery>
 #include <QMessageBox>
 #include <QDir>
 #include <QTextTable>
 #include <QTextDocument>
 #include <QDebug>
+//--------------------------------------------------------------------------------------------------
+TableWidgetItemBuilder::TableWidgetItemBuilder() {}
 
+TableWidgetItemBuilder *TableWidgetItemBuilder::setNum(const double value, const char f, const int prec) {
+    m_text = QString::number(value, f, prec);
+    return this;
+}
 
+TableWidgetItemBuilder *TableWidgetItemBuilder::setFont(const QFont &font)
+{
+    m_font = font;
+    return this;
+}
+
+TableWidgetItemBuilder *TableWidgetItemBuilder::setBackColor(const QColor &backColor)
+{
+    m_backColor = backColor;
+    return this;
+}
+
+TableWidgetItemBuilder *TableWidgetItemBuilder::setText(const QString &text)
+{
+    m_text = text;
+    return this;
+}
+
+TableWidgetItemBuilder *TableWidgetItemBuilder::reset() {
+    m_text = QString();
+    m_backColor = Qt::white;
+    m_font = QFont();
+
+    return this;
+}
+
+QTableWidgetItem *TableWidgetItemBuilder::get() {
+    auto item = new QTableWidgetItem(m_text);
+    item->setBackgroundColor(m_backColor);
+    item->setFont(m_font);
+    return item;
+}
+
+//--------------------------------------------------------------------------------------------------
 CalcFrame::CalcFrame(QWidget *parent) :
     QFrame(parent),
     ui(new Ui::CalcFrame),
@@ -48,17 +87,6 @@ CalcFrame::~CalcFrame()
     delete ui;
 }
 
-void CalcFrame::calc()
-{
-    auto milkReception = m_mainWindow->database()->milkReception();
-    if (!milkReception) {
-        Utils::Main::showMsgIfDbNotChoosed(this);
-        return;
-    }
-
-    fillTableWidget(getItemsData());
-}
-
 void CalcFrame::setup()
 {
     const auto deliverers = m_mainWindow->database()->deliverers();
@@ -75,6 +103,110 @@ void CalcFrame::setup()
     if (milkPoints->rowCount() > 0) {
         ui->comboBoxFilterMilkPoints->setCurrentIndex(0);
     }
+
+    refreshTableWidgetCalc();
+}
+
+void CalcFrame::calc()
+{
+    auto milkReception = m_mainWindow->database()->milkReception();
+    if (!milkReception) {
+        Utils::Main::showMsgIfDbNotChoosed(this);
+        return;
+    }
+
+    refreshTableWidgetCalc();
+
+    DataWorker dw(m_mainWindow->database());
+    try {
+        dw.loadMilkReceptions(getWhereQuery());
+    } catch (const QString &err) {
+        QMessageBox::critical(this, tr("Расчеты"), tr("Произошла ошибка во время подгрузки данных: ") + err);
+    }
+    const auto settings = m_mainWindow->getSettings();
+    const auto deliverers = dw.getDeliverers().values();
+    const auto itemsCount = dw.getMilkReceptions().size() + deliverers.size() + 1; // FIXME
+    ui->tableWidgetCalc->setRowCount(itemsCount);
+    int row = 0;
+
+    TableWidgetItemBuilder itemBuilder;
+    CalculatedItem::Data allResult;
+    const Settings::Calc settingsCalc = settings->getCalc();
+    const char f = 'f';
+    const Settings::Column nameCol = settingsCalc.columns[toInt(Columns::Name)],
+            mpNameCol = settingsCalc.columns[toInt(Columns::MilkPointName)],
+            dateCol = settingsCalc.columns[toInt(Columns::Date)],
+            priceCol = settingsCalc.columns[toInt(Columns::PriceLiter)],
+            litersCol = settingsCalc.columns[toInt(Columns::Liters)],
+            fatCol = settingsCalc.columns[toInt(Columns::Fat)],
+            proteinCol = settingsCalc.columns[toInt(Columns::Protein)],
+            fatUnitsCol = settingsCalc.columns[toInt(Columns::FatUnits)],
+            rankWeightCol = settingsCalc.columns[toInt(Columns::RankWeight)],
+            payCol = settingsCalc.columns[toInt(Columns::PayWithOutPrem)],
+            premiumCol = settingsCalc.columns[toInt(Columns::Premium)],
+            sumCol = settingsCalc.columns[toInt(Columns::Sum)];
+    const auto dateFromat = settingsCalc.dateFormat;
+
+    auto addCalcItems = [&](const QString &name, const QString &milkPoint,
+            const QString &delivDate, const CalculatedItem::Data &calcItem)
+    {
+        int c = 0;
+        if (nameCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(name)->get());
+        if (mpNameCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(milkPoint)->get());
+        if (dateCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(delivDate)->get());
+        if (priceCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.price, f, priceCol.prec)->get());
+        if (priceCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.price, f, priceCol.prec)->get());
+        if (litersCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.liters, f, litersCol.prec)->get());
+        if (fatCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.fat, f, fatCol.prec)->get());
+        if (proteinCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.protein, f, proteinCol.prec)->get());
+        if (fatUnitsCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.fatUnits, f, fatUnitsCol.prec)->get());
+        if (rankWeightCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.rankWeight, f, rankWeightCol.prec)->get());
+        if (payCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.paymentWithOutPremium, f, payCol.prec)->get());
+        if (premiumCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.premiumForFat, f, premiumCol.prec)->get());
+        if (sumCol.isShow)
+            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.sum, f, sumCol.prec)->get());
+    };
+
+    for (const auto &deliverer: deliverers) {
+        CalculatedItem::Data delivererResult;
+        itemBuilder.setBackColor(settingsCalc.textBackColor);
+        itemBuilder.setFont(settingsCalc.textFont);
+
+        for (const auto &milkReception: deliverer->milkReceptions()) {
+            const auto mr = milkReception.data();
+            const CalculatedItem::Data calcItem = mr->getCalculations().data();
+
+            addCalcItems(deliverer->name(), mr->milkPoint().data()->name(),
+                         mr->deliveryDate().toString(dateFromat), calcItem);
+
+            delivererResult += calcItem;
+            ++row;
+        }
+
+        itemBuilder.setBackColor(settingsCalc.delivResultColor);
+        itemBuilder.setFont(settingsCalc.delivResultFont);
+
+        addCalcItems(deliverer->name(), "-", "-", delivererResult);
+
+        allResult += delivererResult;
+        ++row;
+    }
+
+    itemBuilder.setBackColor(settingsCalc.allResultColor);
+    itemBuilder.setFont(settingsCalc.allResultFont);
+    addCalcItems("Итого", "-", "-", allResult);
 }
 
 void CalcFrame::setMainWindow(MainWindow *mainWindow)
@@ -105,260 +237,224 @@ void CalcFrame::chooseDate()
 
 void CalcFrame::printCalc()
 {
-    const auto milkReception = m_mainWindow->database()->milkReception();
+    /*const auto milkReception = m_mainWindow->database()->milkReception();
 
-    if (!milkReception) {
-        Utils::Main::showMsgIfDbNotChoosed(this);
-        return;
-    }
-    const auto items = getItemsData();
-    if (items.isEmpty())
-    {
-        QMessageBox::information(this, tr("Печать"), tr("Отсутствуют данные для печати"));
-        return;
-    }
+        if (!milkReception) {
+            Utils::Main::showMsgIfDbNotChoosed(this);
+            return;
+        }
+        const auto items = getItemsData();
+        if (items.isEmpty())
+        {
+            QMessageBox::information(this, tr("Печать"), tr("Отсутствуют данные для печати"));
+            return;
+        }
 
-    const auto &printColumns = m_mainWindow->getSettings()->getPrint().columns;
+        const auto &printColumns = m_mainWindow->getSettings()->getPrint().columns;
 
-    auto itemToPrintRow = [=](const Item &item, const int rowPos = -1)->QStringList
-    {
-        QStringList row;
-        const auto &snCol = printColumns[Constants::PrintColumns::SerialNumber],
-                &delivNameCol = printColumns[Constants::PrintColumns::DeliverersName],
-                &litersCol = printColumns[Constants::PrintColumns::Liters],
-                &fatCol = printColumns[Constants::PrintColumns::Fat],
-                &proteinCol = printColumns[Constants::PrintColumns::Protein],
-                &fatUnitsCol = printColumns[Constants::PrintColumns::FatUnits],
-                &rankWeightCol = printColumns[Constants::PrintColumns::RankWeight],
-                &payCol = printColumns[Constants::PrintColumns::PayWithOutPrem],
-                &permiumCol = printColumns[Constants::PrintColumns::Premium],
-                &sumCol = printColumns[Constants::PrintColumns::Sum];
+        auto itemToPrintRow = [=](const Item &item, const int rowPos = -1)->QStringList
+        {
+            QStringList row;
+            const auto &snCol = printColumns[Constants::PrintColumns::SerialNumber],
+                    &delivNameCol = printColumns[Constants::PrintColumns::DeliverersName],
+                    &litersCol = printColumns[Constants::PrintColumns::Liters],
+                    &fatCol = printColumns[Constants::PrintColumns::Fat],
+                    &proteinCol = printColumns[Constants::PrintColumns::Protein],
+                    &fatUnitsCol = printColumns[Constants::PrintColumns::FatUnits],
+                    &rankWeightCol = printColumns[Constants::PrintColumns::RankWeight],
+                    &payCol = printColumns[Constants::PrintColumns::PayWithOutPrem],
+                    &permiumCol = printColumns[Constants::PrintColumns::Premium],
+                    &sumCol = printColumns[Constants::PrintColumns::Sum];
 
-        if (snCol.isShow)
-            row.append(rowPos >= 0 ? QString::number(rowPos) : QString());
-        if (delivNameCol.isShow)
-            row.append(item.delivererName);
-        if (litersCol.isShow)
-            row.append(QString::number(item.liters, 'f', litersCol.prec));
-        if (fatCol.isShow)
-            row.append(QString::number(item.fat, 'f', fatCol.prec));
-        if (proteinCol.isShow)
-            row.append(QString::number(item.protein, 'f', proteinCol.prec));
-        if (fatUnitsCol.isShow)
-            row.append(QString::number(item.fatUnits, 'f', fatCol.prec));
-        if (rankWeightCol.isShow)
-            row.append(QString::number(item.rankWeight, 'f', rankWeightCol.prec));
-        if (payCol.isShow)
-            row.append(QString::number(item.paymentWithOutPremium, 'f', payCol.prec));
-        if (permiumCol.isShow)
-            row.append(QString::number(item.premiumForFat, 'f', permiumCol.prec));
-        if (sumCol.isShow)
-            row.append(QString::number(floor(item.sum), 'f', sumCol.prec));
-        if (printColumns[Constants::PrintColumns::Sign].isShow)
-            row.append(QString());
+            if (snCol.isShow)
+                row.append(rowPos >= 0 ? QString::number(rowPos) : QString());
+            if (delivNameCol.isShow)
+                row.append(item.delivererName);
+            if (litersCol.isShow)
+                row.append(QString::number(item.liters, 'f', litersCol.prec));
+            if (fatCol.isShow)
+                row.append(QString::number(item.fat, 'f', fatCol.prec));
+            if (proteinCol.isShow)
+                row.append(QString::number(item.protein, 'f', proteinCol.prec));
+            if (fatUnitsCol.isShow)
+                row.append(QString::number(item.fatUnits, 'f', fatCol.prec));
+            if (rankWeightCol.isShow)
+                row.append(QString::number(item.rankWeight, 'f', rankWeightCol.prec));
+            if (payCol.isShow)
+                row.append(QString::number(item.paymentWithOutPremium, 'f', payCol.prec));
+            if (permiumCol.isShow)
+                row.append(QString::number(item.premiumForFat, 'f', permiumCol.prec));
+            if (sumCol.isShow)
+                row.append(QString::number(floor(item.sum), 'f', sumCol.prec));
+            if (printColumns[Constants::PrintColumns::Sign].isShow)
+                row.append(QString());
 
-        return row;
-    };
+            return row;
+        };
 
-    QStringList columns;
-    for (int i = 0; i < printColumns.size(); ++i) {
-        const auto &col = printColumns[i];
-        if (col.isShow)
-            columns.append(printColumns[i].display);
-    }
+        QStringList columns;
+        for (int i = 0; i < printColumns.size(); ++i) {
+            const auto &col = printColumns[i];
+            if (col.isShow)
+                columns.append(printColumns[i].display);
+        }
 
-    const int columnsCount = columns.size();
+        const int columnsCount = columns.size();
 
-    if (columnsCount <= 0) {
-        QMessageBox::information(this, tr("Печать сдачи молока"), tr("Не выбрана ни одна колонка для печати"));
-        return;
-    }
+        if (columnsCount <= 0) {
+            QMessageBox::information(this, tr("Печать сдачи молока"), tr("Не выбрана ни одна колонка для печати"));
+            return;
+        }
 
-    const auto settings = m_mainWindow->getSettings();
-    const auto &printSettings = settings->getPrint();
+        const auto settings = m_mainWindow->getSettings();
+        const auto &printSettings = settings->getPrint();
 
-    QTextTableFormat tableFormat;
-    tableFormat.setBorder(printSettings.tableBorderWidth);
-    tableFormat.setBorderStyle((QTextFrameFormat::BorderStyle)printSettings.tableBorderStyle);
-    tableFormat.setColumns(columnsCount);
-    tableFormat.setAlignment(Qt::AlignHCenter);
-    tableFormat.setWidth(QTextLength(QTextLength::VariableLength, 100));
-    tableFormat.setBorderBrush(QBrush(printSettings.tableBorderColor));
-    tableFormat.setCellSpacing(printSettings.cellSpacing);
-    tableFormat.setCellPadding(printSettings.cellPadding);
+        QTextTableFormat tableFormat;
+        tableFormat.setBorder(printSettings.tableBorderWidth);
+        tableFormat.setBorderStyle((QTextFrameFormat::BorderStyle)printSettings.tableBorderStyle);
+        tableFormat.setColumns(columnsCount);
+        tableFormat.setAlignment(Qt::AlignHCenter);
+        tableFormat.setWidth(QTextLength(QTextLength::VariableLength, 100));
+        tableFormat.setBorderBrush(QBrush(printSettings.tableBorderColor));
+        tableFormat.setCellSpacing(printSettings.cellSpacing);
+        tableFormat.setCellPadding(printSettings.cellPadding);
 
-    PrintTable print(columnsCount, tableFormat);
-    {
-        auto &textFormat = print.getTableBodyTextFormat();
-        textFormat.setFont(printSettings.tableTextFont);
-        textFormat.setForeground(QBrush(printSettings.tableTextColor));
-    }
-    {
-        auto &textFormat = print.getTableHeadersFormat();
-        textFormat.setFont(printSettings.tableHeaderFont);
-        textFormat.setForeground(QBrush(printSettings.tableHeaderColor));
-    }
+        PrintTable print(columnsCount, tableFormat);
+        {
+            auto &textFormat = print.getTableBodyTextFormat();
+            textFormat.setFont(printSettings.tableTextFont);
+            textFormat.setForeground(QBrush(printSettings.tableTextColor));
+        }
+        {
+            auto &textFormat = print.getTableHeadersFormat();
+            textFormat.setFont(printSettings.tableHeaderFont);
+            textFormat.setForeground(QBrush(printSettings.tableHeaderColor));
+        }
 
-    print.setHeaders(columns);
+        print.setHeaders(columns);
 
-    const auto uniqueKeys = items.uniqueKeys();
+        const auto uniqueKeys = items.uniqueKeys();
 
-    Item itemResults(tr("Итого"), QString());
+        Item itemResults(tr("Итого"), QString());
 
-    int row = 0;
+        int row = 0;
 
-    for (const auto delivererId: uniqueKeys)
-    {
-        row++;
+        for (const auto delivererId: uniqueKeys)
+        {
+            row++;
 
-        const auto milkRecepItemsByDeliv = items.values(delivererId);
+            const auto milkRecepItemsByDeliv = items.values(delivererId);
 
-        Item itemResultByDeliv(milkRecepItemsByDeliv.first().delivererName);
-        for(const auto &milkRecepItem: milkRecepItemsByDeliv)
-            sumItems(itemResultByDeliv, milkRecepItem);
+            Item itemResultByDeliv(milkRecepItemsByDeliv.first().delivererName);
+            for(const auto &milkRecepItem: milkRecepItemsByDeliv)
+                sumItems(itemResultByDeliv, milkRecepItem);
 
 
-        setSomeCalc(itemResultByDeliv);
+            setSomeCalc(itemResultByDeliv);
 
-        print.addRow(itemToPrintRow(itemResultByDeliv, row));
+            print.addRow(itemToPrintRow(itemResultByDeliv, row));
 
-        sumItems(itemResults, itemResultByDeliv);
-    }
+            sumItems(itemResults, itemResultByDeliv);
+        }
 
-    setSomeCalc(itemResults);
+        setSomeCalc(itemResults);
 
-    int mergeCount = 0;
-    auto itemRow = itemToPrintRow(itemResults);
-    for (int i = 0; i < Constants::PrintColumns::Liters; i++) {
-        const auto &col = printColumns[i];
-        if (col.isShow)
-            mergeCount++;
-    }
-    QTextCharFormat resultFormat;
-    resultFormat.setFont(printSettings.tableResultFont);
-    resultFormat.setForeground(QBrush(printSettings.tableResultColor));
+        int mergeCount = 0;
+        auto itemRow = itemToPrintRow(itemResults);
+        for (int i = 0; i < Constants::PrintColumns::Liters; i++) {
+            const auto &col = printColumns[i];
+            if (col.isShow)
+                mergeCount++;
+        }
+        QTextCharFormat resultFormat;
+        resultFormat.setFont(printSettings.tableResultFont);
+        resultFormat.setForeground(QBrush(printSettings.tableResultColor));
 
-    print.addRow(itemRow, resultFormat, mergeCount);
+        print.addRow(itemRow, resultFormat, mergeCount);
 
-    auto &cursor = print.cursor();
+        auto &cursor = print.cursor();
 
-    cursor.setPosition(0);
+        cursor.setPosition(0);
 
-    QTextFrameFormat topFrameFormat;
-    topFrameFormat.setPadding(4);
-    cursor.insertFrame(topFrameFormat);
+        QTextFrameFormat topFrameFormat;
+        topFrameFormat.setPadding(4);
+        cursor.insertFrame(topFrameFormat);
 
-    QTextBlockFormat textBlockFormat;
-    textBlockFormat.setBottomMargin(4);
-    textBlockFormat.setAlignment(Qt::AlignLeft);
+        QTextBlockFormat textBlockFormat;
+        textBlockFormat.setBottomMargin(4);
+        textBlockFormat.setAlignment(Qt::AlignLeft);
 
-    QTextBlockFormat captionBlockFormat;
-    captionBlockFormat.setAlignment(Qt::AlignCenter);
-    cursor.setBlockFormat(textBlockFormat);
+        QTextBlockFormat captionBlockFormat;
+        captionBlockFormat.setAlignment(Qt::AlignCenter);
+        cursor.setBlockFormat(textBlockFormat);
 
-    QTextCharFormat textCharFormat;
-    textCharFormat.setFont(printSettings.textFont);
-    QTextCharFormat captionCharFormat;
-    captionCharFormat.setFont(printSettings.captionTextFont);
-    captionCharFormat.setForeground(QBrush(printSettings.captionColor));
+        QTextCharFormat textCharFormat;
+        textCharFormat.setFont(printSettings.textFont);
+        QTextCharFormat captionCharFormat;
+        captionCharFormat.setFont(printSettings.captionTextFont);
+        captionCharFormat.setForeground(QBrush(printSettings.captionColor));
 
-    cursor.insertText(settings->getFirmName(), textCharFormat);
-    cursor.insertBlock();
-
-    cursor.setBlockFormat(captionBlockFormat);
-
-    auto dateMin = QDate(), dateMax = QDate();
-
-    if (isCalcByDate()) {
-        dateMin = ui->dateEditFilterStart->date();
-        dateMax = ui->dateEditFilterEnd->date();
-    } else {
-        dateMin = milkReception->getMinDeliveryDate();
-        dateMax = milkReception->getMaxDeliveryDate();
-    }
-
-    const auto s = dateMax == dateMin ? tr("%1 число").arg(dateMin.toString(Constants::defaultDateFormat())) :
-                                        tr("период с %1 по %2")
-                                        .arg(dateMin.toString(Constants::defaultDateFormat()))
-                                        .arg(dateMax.toString(Constants::defaultDateFormat()));
-
-    cursor.insertText(QString(tr("Платежная ведомость №\n"
-                                 "за сданное молоко\n"
-                                 "за ") + s), captionCharFormat);
-    cursor.insertBlock();
-    cursor.setBlockFormat(textBlockFormat);
-
-    cursor.insertText(tr("Населенный пункт: ") + m_mainWindow->getCurrentLocalityName(), textCharFormat);
-    cursor.insertBlock();
-    cursor.insertText(tr("Приемщик молока: ") + settings->getMilkInspector(), textCharFormat);
-    cursor.insertBlock();
-
-    cursor.movePosition(QTextCursor::End);
-
-    QTextFrameFormat bottomFrameFormat;
-    bottomFrameFormat.setPadding(4);
-    cursor.insertFrame(bottomFrameFormat);
-
-    cursor.setBlockFormat(textBlockFormat);
-
-    const auto minMaxPrice = milkReception->getMinMaxPriceLiter(dateMin, dateMax);
-    if (!minMaxPrice.isEmpty()) {
-        cursor.insertText(tr("Цена: %1").arg(minMaxPrice.first() == minMaxPrice.last() ?
-                                                 QString::number(minMaxPrice.first()) :
-                                                 QString::number(minMaxPrice.first(), 'f', 2) + " - " +
-                                                 QString::number(minMaxPrice.last(), 'f', 2)));
+        cursor.insertText(settings->getFirmName(), textCharFormat);
         cursor.insertBlock();
-    }
-    cursor.insertText(tr("Деньги в сумме: "), textCharFormat);
-    cursor.insertBlock();
-    cursor.insertText(tr("Получил и выдал согласно ведомости приемщик молока______") + settings->getMilkInspector_2(),
-                      textCharFormat);
-    cursor.insertBlock();
-    cursor.insertText(tr("Директор ") + settings->getFirmName(), textCharFormat);
 
-    print.showDialog();
+        cursor.setBlockFormat(captionBlockFormat);
+
+        auto dateMin = QDate(), dateMax = QDate();
+
+        if (isCalcByDate()) {
+            dateMin = ui->dateEditFilterStart->date();
+            dateMax = ui->dateEditFilterEnd->date();
+        } else {
+            dateMin = milkReception->getMinDeliveryDate();
+            dateMax = milkReception->getMaxDeliveryDate();
+        }
+
+        const auto s = dateMax == dateMin ? tr("%1 число").arg(dateMin.toString(Constants::defaultDateFormat())) :
+                                            tr("период с %1 по %2")
+                                            .arg(dateMin.toString(Constants::defaultDateFormat()))
+                                            .arg(dateMax.toString(Constants::defaultDateFormat()));
+
+        cursor.insertText(QString(tr("Платежная ведомость №\n"
+                                     "за сданное молоко\n"
+                                     "за ") + s), captionCharFormat);
+        cursor.insertBlock();
+        cursor.setBlockFormat(textBlockFormat);
+
+        cursor.insertText(tr("Населенный пункт: ") + m_mainWindow->getCurrentLocalityName(), textCharFormat);
+        cursor.insertBlock();
+        cursor.insertText(tr("Приемщик молока: ") + settings->getMilkInspector(), textCharFormat);
+        cursor.insertBlock();
+
+        cursor.movePosition(QTextCursor::End);
+
+        QTextFrameFormat bottomFrameFormat;
+        bottomFrameFormat.setPadding(4);
+        cursor.insertFrame(bottomFrameFormat);
+
+        cursor.setBlockFormat(textBlockFormat);
+
+        const auto minMaxPrice = milkReception->getMinMaxPriceLiter(dateMin, dateMax);
+        if (!minMaxPrice.isEmpty()) {
+            cursor.insertText(tr("Цена: %1").arg(minMaxPrice.first() == minMaxPrice.last() ?
+                                                     QString::number(minMaxPrice.first()) :
+                                                     QString::number(minMaxPrice.first(), 'f', 2) + " - " +
+                                                     QString::number(minMaxPrice.last(), 'f', 2)));
+            cursor.insertBlock();
+        }
+        cursor.insertText(tr("Деньги в сумме: "), textCharFormat);
+        cursor.insertBlock();
+        cursor.insertText(tr("Получил и выдал согласно ведомости приемщик молока______") + settings->getMilkInspector_2(),
+                          textCharFormat);
+        cursor.insertBlock();
+        cursor.insertText(tr("Директор ") + settings->getFirmName(), textCharFormat);
+
+    print.showDialog();*/
 }
 
-CalcFrame::CalcItems CalcFrame::getItemsData()
-{
-    CalcItems items;
-
-    QSqlQuery query;
-    query.prepare(getPrepQueryStr());
-    if (!addBindValueToQuery(query))
-        return items;
-
-    if (!query.exec()) {
-        QMessageBox::critical(this, Constants::appName(), tr("Не удалось выполнить запрос данных для расчетов "
-                                                             "по причине: \n\t\"") + query.lastError().text() + "\"");
-        return items;
-    }
-
-    int row = 0;
-    while (query.next())
-    {
-        Item item;
-        item.delivererName = query.value(RMT_DELIVERER_NAME).toString();
-        item.milkPointName = query.value(RMT_MILK_POINT_NAME).toString();
-        item.deliveryDate = query.value(RMT_DELIVERY_DATE).toDate();
-        item.priceLiter = query.value(RMT_PRICE_LITER).toDouble();
-        item.liters = query.value(RMT_LITERS).toDouble();
-        item.fat = query.value(RMT_FAT).toDouble();
-
-        setAllCalc(item);
-        items.insert(query.value(RMT_ID_DELIVERER).toLongLong(), item);
-
-        row++;
-    }
-
-    return items;
-}
-
-QString CalcFrame::getPrepQueryStr() const
+QString CalcFrame::getWhereQuery()
 {
     auto milkReception = m_mainWindow->database()->milkReception();
     const auto localityId = m_mainWindow->getCurrentLocalityId();
-    auto select = milkReception->selectAll();
 
     QStringList whereList;
     if (Utils::Main::isAutoIncrIdIsValid(localityId)) {
@@ -366,18 +462,50 @@ QString CalcFrame::getPrepQueryStr() const
                          arg(localityId));
     }
     if (isCalcByDeliverer() || isCalcByDate() || isCalcByMilkPoint()) {
-        if (isCalcByDeliverer())
-            whereList.append(milkReception->getColName(RMT_ID_DELIVERER, true) + " = ?");
+        if (isCalcByDeliverer()) {
+            const auto id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterDeliverers, DT_ID).toLongLong();
+            if (Utils::Main::isAutoIncrIdIsValid(id)) {
+                whereList.append(QString("%1 = %2")
+                                 .arg(milkReception->getColName(RMT_ID_DELIVERER, true))
+                                 .arg(id));
+            } else {
+                const auto err = tr("id сдатчика не валиден");
+                qDebug() << err;
+                throw err;
+            }
+        }
 
-        if (isCalcByDate())
-            whereList.append(milkReception->getColName(RMT_DELIVERY_DATE, true) + " BETWEEN ? and ?");
+        if (isCalcByDate()) {
+            const auto dateMin = ui->dateEditFilterStart->date(),
+                    dateMax = ui->dateEditFilterEnd->date();
+
+            if (dateMin.isValid() && dateMax.isValid()) {
+                whereList.append(QString("%1 BETWEEN %2 and %3")
+                                 .arg(milkReception->getColName(RMT_DELIVERY_DATE, true))
+                                 .arg(dateMin.toString(Constants::defaultDateFormat()))
+                                 .arg(dateMax.toString(Constants::defaultDateFormat())));
+            } else {
+                const auto err = tr("Даты не валидны");
+                qDebug() << err;
+                throw err;
+            }
+        }
 
         if (isCalcByMilkPoint()) {
-            whereList.append(milkReception->getColName(RMT_MILK_POINT_ID, true) + " = ?");
+            const auto id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterMilkPoints, MPT_ID).toLongLong();
+            if (Utils::Main::isAutoIncrIdIsValid(id)) {
+                whereList.append(QString("%1 = %2")
+                                 .arg(milkReception->getColName(RMT_MILK_POINT_ID, true))
+                                 .arg(id));
+            } else {
+                const auto err =  tr("id молокопункта не валиден");
+                qDebug() << err;
+                throw err;
+            }
         }
     }
 
-    QString where = whereList.isEmpty() ? "" : " WHERE ";
+    QString where;
     const auto itEnd = whereList.constEnd();
     for (auto it = whereList.constBegin(); it != itEnd;) {
         where.append(*it);
@@ -387,57 +515,18 @@ QString CalcFrame::getPrepQueryStr() const
         }
     }
 
-    return select + where;
+    return where;
 }
 
-bool CalcFrame::addBindValueToQuery(QSqlQuery &query)
+void CalcFrame::refreshTableWidgetCalc()
 {
-    auto isOk = true;
-
-    if (isCalcByDeliverer()) {
-        const auto _id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterDeliverers, DT_ID).toLongLong();
-        if (Utils::Main::isAutoIncrIdIsValid(_id))
-            query.addBindValue(_id);
-        else {
-            QMessageBox::critical(this, Constants::appName(), tr("Ошибка взятия id сдатчика"));
-            isOk = false;
-        }
-    }
-    if (isCalcByDate()) {
-        const auto dateMin = ui->dateEditFilterStart->date(),
-                dateMax = ui->dateEditFilterEnd->date();
-
-        if (dateMin.isValid() && dateMax.isValid()) {
-            query.addBindValue(dateMin.toString(Constants::defaultDateFormat()));
-            query.addBindValue(dateMax.toString(Constants::defaultDateFormat()));
-        } else {
-            QMessageBox::critical(this, Constants::appName(), tr("Ошибка взятия даты"));
-            isOk = false;
-        }
-    }
-    if (isCalcByMilkPoint()) {
-        const auto _id = Utils::Main::getCurValueFromComboBoxModel(ui->comboBoxFilterMilkPoints, MPT_ID).toLongLong();
-        if (Utils::Main::isAutoIncrIdIsValid(_id))
-            query.addBindValue(_id);
-        else {
-            QMessageBox::critical(this, Constants::appName(), tr("Ошибка взятия id молокопункта"));
-            isOk = false;
-        }
-    }
-
-    return isOk;
-}
-
-void CalcFrame::fillTableWidget(const CalcItems &items)
-{
-    const auto &calcSettings = m_mainWindow->getSettings()->getCalc();
-
     ui->tableWidgetCalc->setColumnCount(0);
     ui->tableWidgetCalc->setRowCount(0);
     ui->tableWidgetCalc->clear();
 
+    const auto calcColumns = m_mainWindow->getSettings()->getCalc().columns;
+
     int colCountToShow = 0;
-    const auto &calcColumns = calcSettings.columns;
     for (int i = 0; i < calcColumns.size(); ++i) {
         const auto &calcColumn = calcColumns[i];
 
@@ -450,175 +539,9 @@ void CalcFrame::fillTableWidget(const CalcItems &items)
             colCountToShow++;
         }
     }
-
-    const auto uniqueKeys = items.uniqueKeys();
-
-    const auto itemsCount = items.size();
-    ui->tableWidgetCalc->setRowCount(itemsCount);
-
-    Item itemResults(tr("Итого"), "-");
-
-    int row = 0;
-    for (const auto delivererId: uniqueKeys)
-    {
-        const auto milkRecepItemsByDeliv = items.values(delivererId);
-        const auto firstMr = milkRecepItemsByDeliv.first();
-        Item itemResultByDeliv(QString("->%1<-").arg(firstMr.delivererName), firstMr.milkPointName);
-
-        const auto oldRow = row;
-        for(const auto &milkRecepItem: milkRecepItemsByDeliv)
-        {
-            sumItems(itemResultByDeliv, milkRecepItem);
-
-            setTableWidgetItem(row, milkRecepItem, calcSettings.textBackColor,
-                               calcSettings.textFont);
-            row++;
-        }
-
-        setSomeCalc(itemResultByDeliv);
-
-        if (row - oldRow > 1) {
-            ui->tableWidgetCalc->insertRow(row);
-            setTableWidgetItem(row, itemResultByDeliv, calcSettings.delivResultColor,
-                               calcSettings.delivResultFont);
-            row++;
-        }
-        sumItems(itemResults, itemResultByDeliv);
-    }
-
-    setSomeCalc(itemResults);
-
-    if (itemsCount > 1) {
-        ui->tableWidgetCalc->insertRow(row);
-        setTableWidgetItem(row, itemResults, calcSettings.allResultColor,
-                           calcSettings.allResultFont);
-    }
 }
 
-void CalcFrame::setTableWidgetItem(const int row, const Item &item, const QColor &color, const QFont &font)
+int CalcFrame::toInt(const CalcFrame::Columns column)
 {
-    const auto &calcColumns = m_mainWindow->getSettings()->getCalc().columns;
-
-    int colCountToShow = 0;
-    for (int i = 0; i < calcColumns.size(); ++i) {
-        const auto &col = calcColumns[i];
-
-        if (col.isShow) {
-            auto _item = new QTableWidgetItem(getValueFromItem(item, (Columns)i));
-            _item->setBackgroundColor(color);
-            _item->setFont(font);
-            ui->tableWidgetCalc->setItem(row, colCountToShow, _item);
-
-            colCountToShow++;
-        }
-    }
-}
-
-QString CalcFrame::getValueFromItem(const CalcFrame::Item &item, const Columns column) const
-{
-    auto value = .0f;
-
-    switch (column)
-    {
-    case Columns::Name:
-        return item.delivererName;
-    case Columns::MilkPointName:
-        return item.milkPointName;
-    case Columns::Date:
-        return item.deliveryDate.toString(m_mainWindow->getSettings()->getCalc().dateFormat);
-    case Columns::PriceLiter:
-        value = item.priceLiter;
-        break;
-    case Columns::Liters:
-        value = item.liters;
-        break;
-    case Columns::Fat:
-        value = item.fat;
-        break;
-    case Columns::Protein:
-        value = item.protein;
-        break;
-    case Columns::FatUnits:
-        value = item.fatUnits;
-        break;
-    case Columns::RankWeight:
-        value = item.rankWeight;
-        break;
-    case Columns::PayWithOutPrem:
-        value = item.paymentWithOutPremium;
-        break;
-    case Columns::Premium:
-        value = item.premiumForFat;
-        break;
-    case Columns::Sum:
-        value = item.sum;
-        break;
-    }
-
-    const auto &calcColumn = m_mainWindow->getSettings()->getCalc().columns[(int)column];
-    return QString::number(value, 'f', calcColumn.prec);
-}
-
-void CalcFrame::setAllCalc(CalcFrame::Item &item)
-{
-    const auto _calc = Utils::Calc::getCalculations(item.liters, item.fat, item.priceLiter);
-    item.protein = _calc.protein;
-    item.fatUnits = _calc.fatUnits;
-    item.rankWeight = _calc.rankWeight;
-    item.paymentWithOutPremium = _calc.paymentWithOutPremium;
-    item.premiumForFat = _calc.premiumForFat;
-    item.sum = _calc.sum;
-}
-
-void CalcFrame::setSomeCalc(CalcFrame::Item &item)
-{
-    item.fat = Utils::Calc::fat(item.fatUnits, item.liters);
-    item.protein = Utils::Calc::protein(item.fat);
-    item.rankWeight = Utils::Calc::rankWeight(item.fatUnits);
-}
-
-void CalcFrame::sumItems(CalcFrame::Item &left, const CalcFrame::Item &right)
-{
-    left.liters += right.liters;
-    left.fatUnits += right.fatUnits;
-    left.paymentWithOutPremium += right.paymentWithOutPremium;
-    left.premiumForFat += right.premiumForFat;
-    left.sum += right.sum;
-}
-
-CalcFrame::Item::Item():
-    delivererName(QString()),
-    milkPointName(QString()),
-    deliveryDate(QDate()),
-    priceLiter(.0),
-    liters(.0),
-    fat(.0),
-    protein(.0),
-    fatUnits(.0),
-    rankWeight(.0),
-    paymentWithOutPremium(.0),
-    premiumForFat(.0),
-    sum(.0)
-{
-
-}
-
-CalcFrame::Item::Item(const QString &_delivererName, const QString &_milkPointName,
-                      const QDate &_deliveryDate, const double _liters, const double _fat,
-                      const double _priceLiter, const double _protein, const double _fatUnits, const double _rankWeight,
-                      const double _paymentWithOutPremium, const double _premiumForFat, const double _sum):
-    delivererName(_delivererName),
-    milkPointName(_milkPointName),
-    deliveryDate(_deliveryDate),
-    priceLiter(_priceLiter),
-    liters(_liters),
-    fat(_fat),
-    protein(_protein),
-    fatUnits(_fatUnits),
-    rankWeight(_rankWeight),
-    paymentWithOutPremium(_paymentWithOutPremium),
-    premiumForFat(_premiumForFat),
-    sum(_sum)
-{
-
+    return static_cast<int>(column);
 }

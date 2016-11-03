@@ -1,10 +1,10 @@
 #ifndef CALCFRAME_H
 #define CALCFRAME_H
 
+// Qt
 #include <QFrame>
 #include <QVector>
 #include <QDate>
-
 #include <QTextTableFormat>
 
 namespace Ui {
@@ -14,37 +14,48 @@ class MainWindow;
 class QSqlQuery;
 class QTextDocument;
 class QTextTable;
+class QTableWidgetItem;
 
+
+class TableWidgetItemBuilder {
+public:
+    TableWidgetItemBuilder();
+
+    TableWidgetItemBuilder *setNum(const double value, const char f = 'f', const int prec = 2);
+    TableWidgetItemBuilder *setFont(const QFont &font);
+    TableWidgetItemBuilder *setBackColor(const QColor &backColor);
+    TableWidgetItemBuilder *setText(const QString &text);
+
+    TableWidgetItemBuilder *reset();
+    QTableWidgetItem *get();
+
+private:
+    QString m_text;
+    QColor  m_backColor;
+    QFont   m_font;
+};
 
 class CalcFrame : public QFrame
 {
     Q_OBJECT
 
-    class Item {
-    public:
-        Item();
-        Item(const QString &_delivererName, const QString &_milkPointName = QString(), const QDate &_deliveryDate = QDate(),
-             const double _priceLiter = .0, const double _liters = .0, const double _fat = .0,
-             const double _protein = .0, const double _fatUnits = .0, const double _rankWeight = .0, const double _paymentWithOutPremium = .0,
-             const double _premiumForFat = .0, const double _sum = .0);
-
-        QString delivererName;
-        QString milkPointName;
-        QDate deliveryDate;
-        double priceLiter;
-        double liters;
-        double fat;
-        double protein;
-        double fatUnits;
-        double rankWeight;
-        double paymentWithOutPremium;
-        double premiumForFat;
-        double sum;
-    };
-
-    typedef QMultiHash<qlonglong, Item> CalcItems;
-
 public:
+    explicit CalcFrame(QWidget *parent = 0);
+    ~CalcFrame();
+
+    void setup();
+    void setMainWindow(MainWindow *mainWindow);
+
+    bool isCalcByDeliverer() const;
+    bool isCalcByDate() const;
+    bool isCalcByMilkPoint() const;
+
+public slots:
+    void chooseDate();
+    void calc();
+    void printCalc();
+
+private:
     enum class Columns: int {
         Name = 0,
         MilkPointName,
@@ -60,35 +71,13 @@ public:
         Sum
     };
 
-    explicit CalcFrame(QWidget *parent = 0);
-    ~CalcFrame();
-
-    void calc();
-    void setup();
-    void setMainWindow(MainWindow *mainWindow);
-
-    bool isCalcByDeliverer() const;
-    bool isCalcByDate() const;
-    bool isCalcByMilkPoint() const;
-
-public slots:
-    void chooseDate();
-    void printCalc();
-
-private:
     Ui::CalcFrame *ui;
     MainWindow *m_mainWindow;
 
-    QString getPrepQueryStr() const;
-    bool addBindValueToQuery(QSqlQuery &query);
-    CalcItems getItemsData();
-    void fillTableWidget(const CalcItems &items);
-    void setTableWidgetItem(const int row, const Item &item, const QColor &color, const QFont &font);
+    QString getWhereQuery();
+    void refreshTableWidgetCalc();
 
-    QString getValueFromItem(const Item &item, const Columns column) const;
-    void setAllCalc(Item &item);
-    void setSomeCalc(Item &item);
-    void sumItems(Item &left, const Item &right);
+    static int toInt(const Columns column);
 };
 
 #endif // CALCFRAME_H
