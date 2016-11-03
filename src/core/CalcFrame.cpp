@@ -123,6 +123,10 @@ void CalcFrame::calc()
     } catch (const QString &err) {
         QMessageBox::critical(this, tr("Расчеты"), tr("Произошла ошибка во время подгрузки данных: ") + err);
     }
+    if (dw.getMilkReceptions().empty()) {
+            QMessageBox::information(this, tr("Расчеты"), tr("Отсутствуют данные для расчетов"));
+            return;
+    }
     const auto settings = m_mainWindow->getSettings();
     const auto deliverers = dw.getDeliverers().values();
     const auto itemsCount = dw.getMilkReceptions().size() + deliverers.size() + 1; // FIXME
@@ -159,8 +163,6 @@ void CalcFrame::calc()
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(delivDate)->get());
         if (priceCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.price, f, priceCol.prec)->get());
-        if (priceCol.isShow)
-            ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.price, f, priceCol.prec)->get());
         if (litersCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.liters, f, litersCol.prec)->get());
         if (fatCol.isShow)
@@ -175,8 +177,9 @@ void CalcFrame::calc()
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.paymentWithOutPremium, f, payCol.prec)->get());
         if (premiumCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.premiumForFat, f, premiumCol.prec)->get());
-        if (sumCol.isShow)
+        if (sumCol.isShow) {
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setNum(calcItem.sum, f, sumCol.prec)->get());
+        }
     };
 
     for (const auto &deliverer: deliverers) {
@@ -237,60 +240,30 @@ void CalcFrame::chooseDate()
 
 void CalcFrame::printCalc()
 {
-    /*const auto milkReception = m_mainWindow->database()->milkReception();
+    const auto milkReception = m_mainWindow->database()->milkReception();
 
         if (!milkReception) {
             Utils::Main::showMsgIfDbNotChoosed(this);
             return;
         }
-        const auto items = getItemsData();
-        if (items.isEmpty())
+        DataWorker dw(m_mainWindow->database());
+        try {
+            dw.loadMilkReceptions(getWhereQuery());
+        } catch (const QString &err) {
+            QMessageBox::critical(this, tr("Расчеты"), tr("Произошла ошибка во время подгрузки данных: ") + err);
+        }
+        const auto deliverers = dw.getDeliverers().values();
+
+        if (deliverers.isEmpty())
         {
             QMessageBox::information(this, tr("Печать"), tr("Отсутствуют данные для печати"));
             return;
         }
 
-        const auto &printColumns = m_mainWindow->getSettings()->getPrint().columns;
-
-        auto itemToPrintRow = [=](const Item &item, const int rowPos = -1)->QStringList
-        {
-            QStringList row;
-            const auto &snCol = printColumns[Constants::PrintColumns::SerialNumber],
-                    &delivNameCol = printColumns[Constants::PrintColumns::DeliverersName],
-                    &litersCol = printColumns[Constants::PrintColumns::Liters],
-                    &fatCol = printColumns[Constants::PrintColumns::Fat],
-                    &proteinCol = printColumns[Constants::PrintColumns::Protein],
-                    &fatUnitsCol = printColumns[Constants::PrintColumns::FatUnits],
-                    &rankWeightCol = printColumns[Constants::PrintColumns::RankWeight],
-                    &payCol = printColumns[Constants::PrintColumns::PayWithOutPrem],
-                    &permiumCol = printColumns[Constants::PrintColumns::Premium],
-                    &sumCol = printColumns[Constants::PrintColumns::Sum];
-
-            if (snCol.isShow)
-                row.append(rowPos >= 0 ? QString::number(rowPos) : QString());
-            if (delivNameCol.isShow)
-                row.append(item.delivererName);
-            if (litersCol.isShow)
-                row.append(QString::number(item.liters, 'f', litersCol.prec));
-            if (fatCol.isShow)
-                row.append(QString::number(item.fat, 'f', fatCol.prec));
-            if (proteinCol.isShow)
-                row.append(QString::number(item.protein, 'f', proteinCol.prec));
-            if (fatUnitsCol.isShow)
-                row.append(QString::number(item.fatUnits, 'f', fatCol.prec));
-            if (rankWeightCol.isShow)
-                row.append(QString::number(item.rankWeight, 'f', rankWeightCol.prec));
-            if (payCol.isShow)
-                row.append(QString::number(item.paymentWithOutPremium, 'f', payCol.prec));
-            if (permiumCol.isShow)
-                row.append(QString::number(item.premiumForFat, 'f', permiumCol.prec));
-            if (sumCol.isShow)
-                row.append(QString::number(floor(item.sum), 'f', sumCol.prec));
-            if (printColumns[Constants::PrintColumns::Sign].isShow)
-                row.append(QString());
-
-            return row;
-        };
+        const char f = 'f';
+        int row = 0;
+        const auto settings = m_mainWindow->getSettings();
+        const auto printColumns = m_mainWindow->getSettings()->getPrint().columns;
 
         QStringList columns;
         for (int i = 0; i < printColumns.size(); ++i) {
@@ -300,18 +273,59 @@ void CalcFrame::printCalc()
         }
 
         const int columnsCount = columns.size();
-
         if (columnsCount <= 0) {
             QMessageBox::information(this, tr("Печать сдачи молока"), tr("Не выбрана ни одна колонка для печати"));
             return;
         }
 
-        const auto settings = m_mainWindow->getSettings();
+        const Settings::Column snCol = printColumns[Constants::PrintColumns::SerialNumber],
+                delivNameCol = printColumns[Constants::PrintColumns::DeliverersName],
+                litersCol = printColumns[Constants::PrintColumns::Liters],
+                fatCol = printColumns[Constants::PrintColumns::Fat],
+                proteinCol = printColumns[Constants::PrintColumns::Protein],
+                fatUnitsCol = printColumns[Constants::PrintColumns::FatUnits],
+                rankWeightCol = printColumns[Constants::PrintColumns::RankWeight],
+                payCol = printColumns[Constants::PrintColumns::PayWithOutPrem],
+                permiumCol = printColumns[Constants::PrintColumns::Premium],
+                sumCol = printColumns[Constants::PrintColumns::Sum],
+                signCol = printColumns[Constants::PrintColumns::Sign];
+
+        auto itemToPrintRow = [&](const QString &delivName, const CalculatedItem::Data &item,
+                const int rowPos = -1) -> QStringList
+        {
+            QStringList row;
+
+            if (snCol.isShow)
+                row.append(rowPos >= 0 ? QString::number(rowPos) : QString());
+            if (delivNameCol.isShow)
+                row.append(delivName);
+            if (litersCol.isShow)
+                row.append(QString::number(item.liters, f, litersCol.prec));
+            if (fatCol.isShow)
+                row.append(QString::number(item.fat, f, fatCol.prec));
+            if (proteinCol.isShow)
+                row.append(QString::number(item.protein, f, proteinCol.prec));
+            if (fatUnitsCol.isShow)
+                row.append(QString::number(item.fatUnits, f, fatCol.prec));
+            if (rankWeightCol.isShow)
+                row.append(QString::number(item.rankWeight, f, rankWeightCol.prec));
+            if (payCol.isShow)
+                row.append(QString::number(item.paymentWithOutPremium, f, payCol.prec));
+            if (permiumCol.isShow)
+                row.append(QString::number(item.premiumForFat, f, permiumCol.prec));
+            if (sumCol.isShow)
+                row.append(QString::number(floor(item.sum), f, sumCol.prec));
+            if (signCol.isShow)
+                row.append(QString());
+
+            return row;
+        };
+
         const auto &printSettings = settings->getPrint();
 
         QTextTableFormat tableFormat;
         tableFormat.setBorder(printSettings.tableBorderWidth);
-        tableFormat.setBorderStyle((QTextFrameFormat::BorderStyle)printSettings.tableBorderStyle);
+        tableFormat.setBorderStyle(static_cast<QTextFrameFormat::BorderStyle>(printSettings.tableBorderStyle));
         tableFormat.setColumns(columnsCount);
         tableFormat.setAlignment(Qt::AlignHCenter);
         tableFormat.setWidth(QTextLength(QTextLength::VariableLength, 100));
@@ -330,37 +344,21 @@ void CalcFrame::printCalc()
             textFormat.setFont(printSettings.tableHeaderFont);
             textFormat.setForeground(QBrush(printSettings.tableHeaderColor));
         }
-
         print.setHeaders(columns);
 
-        const auto uniqueKeys = items.uniqueKeys();
-
-        Item itemResults(tr("Итого"), QString());
-
-        int row = 0;
-
-        for (const auto delivererId: uniqueKeys)
+        CalculatedItem::Data allResult;
+        for (const auto &deliverer: deliverers)
         {
             row++;
 
-            const auto milkRecepItemsByDeliv = items.values(delivererId);
+            const CalculatedItem::Data calcItem = deliverer->getCalculations();
+            print.addRow(itemToPrintRow(deliverer->name(), calcItem, row));
 
-            Item itemResultByDeliv(milkRecepItemsByDeliv.first().delivererName);
-            for(const auto &milkRecepItem: milkRecepItemsByDeliv)
-                sumItems(itemResultByDeliv, milkRecepItem);
-
-
-            setSomeCalc(itemResultByDeliv);
-
-            print.addRow(itemToPrintRow(itemResultByDeliv, row));
-
-            sumItems(itemResults, itemResultByDeliv);
+            allResult += calcItem;
         }
 
-        setSomeCalc(itemResults);
-
         int mergeCount = 0;
-        auto itemRow = itemToPrintRow(itemResults);
+        auto itemRow = itemToPrintRow("Итого", allResult, row);
         for (int i = 0; i < Constants::PrintColumns::Liters; i++) {
             const auto &col = printColumns[i];
             if (col.isShow)
@@ -434,11 +432,12 @@ void CalcFrame::printCalc()
         cursor.setBlockFormat(textBlockFormat);
 
         const auto minMaxPrice = milkReception->getMinMaxPriceLiter(dateMin, dateMax);
-        if (!minMaxPrice.isEmpty()) {
-            cursor.insertText(tr("Цена: %1").arg(minMaxPrice.first() == minMaxPrice.last() ?
-                                                     QString::number(minMaxPrice.first()) :
-                                                     QString::number(minMaxPrice.first(), 'f', 2) + " - " +
-                                                     QString::number(minMaxPrice.last(), 'f', 2)));
+        if (minMaxPrice.first > .0 && minMaxPrice.second > .0) {
+            const QString minPrice = QString::number(minMaxPrice.first, f, 2),
+                maxPrice = QString::number(minMaxPrice.second, f, 2);
+
+            cursor.insertText(tr("Цена: %1").arg(minPrice == maxPrice ? minPrice : QString("%1 - %2")
+                                                                        .arg(minPrice).arg(maxPrice)));
             cursor.insertBlock();
         }
         cursor.insertText(tr("Деньги в сумме: "), textCharFormat);
@@ -448,7 +447,7 @@ void CalcFrame::printCalc()
         cursor.insertBlock();
         cursor.insertText(tr("Директор ") + settings->getFirmName(), textCharFormat);
 
-    print.showDialog();*/
+    print.showDialog();
 }
 
 QString CalcFrame::getWhereQuery()
