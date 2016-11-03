@@ -42,7 +42,7 @@ public:
     DeliverersTable *getDeliverers() const;
     MilkPointsTable *getMilkPoints() const;
 
-    QList<double> getMinMaxPriceLiter(const QDate &min, QDate max = QDate()) const;
+    QPair<double, double> getMinMaxPriceLiter(const QDate &min, QDate max = QDate()) const;
     QDate getMinDeliveryDate() const;
     QDate getMaxDeliveryDate() const;
 

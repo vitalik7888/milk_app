@@ -267,12 +267,10 @@ MilkPointsTable *MilkReceptionTable::getMilkPoints() const
     return m_milkPoints;
 }
 
-QList<double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max) const
+QPair<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max) const
 {
     if (!max.isValid())
         max = min;
-
-    QList<double> minMax;
 
     QSqlQuery query(m_db);
     query.prepare(QString("SELECT MIN(%1), MAX(%1) FROM %2 WHERE %3 BETWEEN '%4' AND '%5'")
@@ -283,11 +281,10 @@ QList<double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate ma
                   .arg(max.toString(Constants::defaultDateFormat())));
 
     if (query.exec() && query.first()) {
-        minMax.append(query.value(0).toDouble());
-        minMax.append(query.value(1).toDouble());
+        QPair<double, double>(query.value(0).toDouble(), query.value(1).toDouble());
     }
 
-    return minMax;
+    return QPair<double, double>(.0, .0);
 }
 
 QDate MilkReceptionTable::getMinDeliveryDate() const
