@@ -1,12 +1,14 @@
-#include "Settings.h"
-#include "MainWindow.h"
+#include "src/core/MilkCore.h"
+#include "src/view/MainWindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    MainWindow w;
+    MilkCore core;
+
+    MainWindow w(&core);
     w.show();
 
     return a.exec();

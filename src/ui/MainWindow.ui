@@ -27,7 +27,7 @@
          <x>0</x>
          <y>0</y>
          <width>979</width>
-         <height>417</height>
+         <height>405</height>
         </rect>
        </property>
        <attribute name="label">
@@ -52,7 +52,7 @@
          <x>0</x>
          <y>0</y>
          <width>979</width>
-         <height>417</height>
+         <height>405</height>
         </rect>
        </property>
        <attribute name="label">
@@ -77,7 +77,7 @@
          <x>0</x>
          <y>0</y>
          <width>979</width>
-         <height>417</height>
+         <height>405</height>
         </rect>
        </property>
        <attribute name="label">
@@ -107,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>997</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDb">
@@ -457,19 +457,19 @@
   <customwidget>
    <class>MilkReceptionAddFrame</class>
    <extends>QFrame</extends>
-   <header location="global">MilkReceptionAddFrame.h</header>
+   <header location="global">src/view/MilkReceptionAddFrame.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>CalcFrame</class>
    <extends>QFrame</extends>
-   <header location="global">CalcFrame.h</header>
+   <header location="global">src/view/CalcFrame.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>FrameEditMilkReception</class>
    <extends>QFrame</extends>
-   <header location="global">FrameEditMilkReception.h</header>
+   <header location="global">src/view/FrameEditMilkReception.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

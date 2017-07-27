@@ -1,53 +1,29 @@
 #ifndef UTILS
 #define UTILS
 
-#include <QtAlgorithms>
-#include <QVariant>
 #include "Constants.h"
 #include "dbconstants.h"
-
-DB_BEGIN_NAMESPACE
-    class Table;
-DB_END_NAMESPACE
-class QToolButton;
-class QWidget;
-class QAbstractItemView;
-class QComboBox;
 
 
 namespace Utils {
 class Main {
 public:
     static bool isAutoIncrIdIsValid(const milk_id id);
-    static bool yesNoWarnMsgBox(QWidget *parent, const QString &question);
-    static bool showWarnMsgIfNoRows(QWidget *parent, const QString &title, DB_NAMESPACE::Table *table);
-    static bool isNeesAddItem(QWidget *parent, DB_NAMESPACE::Table *table);
-    static milk_id getIdFromDialog(DB_NAMESPACE::Table *table, const QString &title = QString(),
-                                     QWidget *parent = nullptr);
-    static QModelIndex getIndexFromModelById(DB_NAMESPACE::Table *table, const int column, const milk_id id);
-    static QVariant getCurValueFromComboBoxModel(const QComboBox *combobox, const int column);
-    static QVariant getCurValueFromItemViewModel(const QAbstractItemView *itemView, const int column);
 
     static QString getSelectStr(const QString &tableName, const QStringList &columns);
     static QString getPrepUpdateStr(const QString &tableName, const QStringList &columns);
     static QString getPrepInsertStr(const QString &tableName, const QStringList &columns);
-
-    static void showMsgIfDbNotChoosed(QWidget *parent);
-    //    QString selectColumns(const int count, ...) const;
 };
 
 namespace Calc {
 
 struct CalcResult {
-    CalcResult(): protein(.0), fatUnits(.0), rankWeight(.0),
-        paymentWithOutPremium(.0), premiumForFat(.0), sum(.0) {}
-
-    double protein;
-    double fatUnits;
-    double rankWeight;
-    double paymentWithOutPremium;
-    double premiumForFat;
-    double sum;
+    double protein = .0;
+    double fatUnits = .0;
+    double rankWeight = .0;
+    double paymentWithOutPremium = .0;
+    double premiumForFat = .0;
+    double sum = .0;
 };
 
 static inline double protein(const double fat)

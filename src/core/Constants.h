@@ -9,12 +9,12 @@
 class Constants
 {
 public:
-    static QString appName();
-    static QString organization();
+    static inline QString appName() { return "MilkApp"; }
+    static inline QString organization() { return "VitaliyDev"; }
 
-    static QString defaultMilkDbSuffix();
+    static inline QString defaultMilkDbSuffix() { return "mdb"; }
 
-    static QString defaultDateFormat();
+    static inline QString defaultDateFormat() { return "yyyy-MM-dd"; }
 
     enum class ColumnType: int {
         SerialNumber = 1,
@@ -38,21 +38,17 @@ public:
     };
 
     struct Version {
-        Version(): vMajor(0), vMinor(0), vBuild(0) {}
-        Version(const int _major, const int _minor, const int _build):
-            vMajor(_major), vMinor(_minor), vBuild(_build) {}
-
-        QString toString() {
+        QString toString() const {
             return QString("%1.%2.%3").arg(vMajor).arg(vMinor).arg(vBuild);
         }
 
-        int vMajor;
-        int vMinor;
-        int vBuild;
+        int vMajor = 0;
+        int vMinor = 0;
+        int vBuild = 0;
     };
 
-    static inline Version getCurrentVersion() {
-        return Version(0, 2, 0);
+    static const inline Version getCurrentVersion() {
+        return { 0, 2, 1 };
     }
 };
 

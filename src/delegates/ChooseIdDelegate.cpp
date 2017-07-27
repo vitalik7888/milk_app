@@ -3,11 +3,11 @@
 #include "tables/milk_reception/MilkReceptionTable.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
-#include "DialogGetItem.h"
+#include "src/view/DialogGetItem.h"
 #include "Utils.h"
 // Qt
 #include <QLabel>
-#include  <QMessageBox>
+#include <QMessageBox>
 
 USE_DB_NAMESPACE
 
