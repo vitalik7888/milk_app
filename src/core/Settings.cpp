@@ -2,11 +2,12 @@
 
 #include "Constants.h"
 
-// qt
+// Qt
 #include <QSettings>
 #include <QDebug>
 
-
+namespace
+{
 static const char *GROUP_MAIN = "main";
 static const char *FETCH_MORE = "fetchMore";
 static const char *PRICE = "price";
@@ -47,30 +48,39 @@ static const char *C_DELIV_RES_COLOR = "delivResColor";
 static const char *C_ALL_RES_FONT = "allResFont";
 static const char *C_ALL_RES_COLOR = "allResColor";
 
+using COLTYPE = Constants::ColumnType;
+
+static inline QString qtr(const char *value)
+{
+    return QObject::tr(value);
+}
+
+static inline int toInt(const COLTYPE column)
+{
+    return static_cast<int>(column);
+}
+}
 
 
 Settings::Settings():
-    m_settings(new QSettings(Constants::organization(), Constants::appName())),
-    m_priceLiter(.0f),
-    isFetchTablesOnRefresh(false)
+    m_settings(new QSettings(Constants::organization(), Constants::appName()))
 {
 }
 
 Settings::~Settings()
 {
-    delete m_settings;
 }
 
 void Settings::writeMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    m_settings->setValue(LAST_CHOOSEN_DB, m_lastChoosenDb);
-    m_settings->setValue(PRICE, m_priceLiter);
-    m_settings->setValue(FIRM_NAME, firmName);
-    m_settings->setValue(MILK_INSPECTOR, milkInspector);
-    m_settings->setValue(MILK_INSPECTOR_2, milkInspector_2);
-    m_settings->setValue(FETCH_MORE, isFetchTablesOnRefresh);
+    m_settings->setValue(LAST_CHOOSEN_DB, m_main.lastChoosenDb);
+    m_settings->setValue(PRICE, m_main.priceLiter);
+    m_settings->setValue(FIRM_NAME, m_main.firmName);
+    m_settings->setValue(MILK_INSPECTOR, m_main.milkInspector);
+    m_settings->setValue(MILK_INSPECTOR_2, m_main.milkInspector_2);
+    m_settings->setValue(FETCH_MORE, m_main.isFetchTablesOnRefresh);
 
     m_settings->endGroup();
 }
@@ -138,12 +148,13 @@ void Settings::readMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    m_priceLiter = m_settings->value(PRICE, .0f).toFloat();
-    m_lastChoosenDb = m_settings->value(LAST_CHOOSEN_DB, QString()).toString();
-    firmName = m_settings->value(FIRM_NAME, QString()).toString();
-    milkInspector = m_settings->value(MILK_INSPECTOR, QString()).toString();
-    milkInspector_2 = m_settings->value(MILK_INSPECTOR_2, QString()).toString();
-    isFetchTablesOnRefresh = m_settings->value(FETCH_MORE, false).toBool();
+    m_main = {
+        m_settings->value(LAST_CHOOSEN_DB, QString()).toString(),
+        m_settings->value(PRICE, .0f).toFloat(),
+        m_settings->value(FIRM_NAME, QString()).toString(),
+        m_settings->value(MILK_INSPECTOR, QString()).toString(),
+        m_settings->value(MILK_INSPECTOR_2, QString()).toString(),
+        m_settings->value(FETCH_MORE, false).toBool() };
 
     m_settings->endGroup();
 }
@@ -223,92 +234,7 @@ void Settings::readSettings()
 
 void Settings::setDefaultMainSettings()
 {
-    m_lastChoosenDb = QString();
-    m_priceLiter = .0f;
-    firmName = QString();
-    milkInspector = QString();
-    milkInspector_2 = QString();
-    isFetchTablesOnRefresh = false;
-}
-
-float Settings::priceLiter() const
-{
-    return m_priceLiter;
-}
-
-void Settings::setPriceLiter(const float priceLiter)
-{
-    m_priceLiter = priceLiter;
-}
-
-QString Settings::lastChoosenDb() const
-{
-    return m_lastChoosenDb;
-}
-
-void Settings::setLastChoosenDb(const QString &lastChoosenDb)
-{
-    m_lastChoosenDb = lastChoosenDb;
-}
-
-Settings::Print Settings::getPrint() const
-{
-    return m_print;
-}
-
-Settings::Print &Settings::setPrint()
-{
-    return m_print;
-}
-
-Settings::Calc Settings::getCalc() const
-{
-    return m_calc;
-}
-
-Settings::Calc &Settings::setCalc()
-{
-    return m_calc;
-}
-
-QString Settings::getFirmName() const
-{
-    return firmName;
-}
-
-void Settings::setFirmName(const QString &value)
-{
-    firmName = value;
-}
-
-QString Settings::getMilkInspector() const
-{
-    return milkInspector;
-}
-
-void Settings::setMilkInspector(const QString &value)
-{
-    milkInspector = value;
-}
-
-QString Settings::getMilkInspector_2() const
-{
-    return milkInspector_2;
-}
-
-void Settings::setMilkInspector_2(const QString &value)
-{
-    milkInspector_2 = value;
-}
-
-bool Settings::getIsFetchTablesOnRefresh() const
-{
-    return isFetchTablesOnRefresh;
-}
-
-void Settings::setIsFetchTablesOnRefresh(bool value)
-{
-    isFetchTablesOnRefresh = value;
+    m_main = {};
 }
 
 void Settings::setDefaultPrintSettings()
@@ -351,63 +277,58 @@ void Settings::setDefaultSettings()
 
 void Settings::setDefaultCalcSettings()
 {
-    const auto font = QFont();
-
-    m_calc.dateFormat = Constants::defaultDateFormat();
-    m_calc.textFont = font;
-    m_calc.textBackColor = QColor(Qt::GlobalColor::white);
-    m_calc.delivResultFont = font;
-    m_calc.delivResultColor = QColor(Qt::GlobalColor::lightGray);
-    m_calc.allResultFont = font;
-    m_calc.allResultColor = QColor(Qt::GlobalColor::darkGray);
+    m_calc = { Constants::defaultDateFormat(),
+               QFont(), QColor(Qt::GlobalColor::white),
+               QFont(), QColor(Qt::GlobalColor::lightGray),
+               QFont(), QColor(Qt::GlobalColor::darkGray)
+             };
 
     setDefaultCalcColumns();
 }
 
 void Settings::setDefaultCalcColumns()
 {
-    m_calc.columns.clear();
-
-    m_calc.columns.append(Column(QObject::tr("Ф. И. О."), (int)Constants::ColumnType::String));
-    m_calc.columns.append(Column(QObject::tr("Молокопункты"), (int)Constants::ColumnType::String));
-    m_calc.columns.append(Column(QObject::tr("Дата сдачи"), (int)Constants::ColumnType::Date));
-    m_calc.columns.append(Column(QObject::tr("Цена за литр"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Литры"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Жиры"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Белок"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Жироед."), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Зачет. вес"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Оплата(без премии)"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Премия"), (int)Constants::ColumnType::Double));
-    m_calc.columns.append(Column(QObject::tr("Сумма"), (int)Constants::ColumnType::Double));
+    m_calc.columns = {
+        {qtr("Ф. И. О."), toInt(COLTYPE::String)},
+        {qtr("Молокопункты"), toInt(COLTYPE::String)},
+        {qtr("Дата сдачи"), toInt(COLTYPE::Date)},
+        {qtr("Цена за литр"), toInt(COLTYPE::Double)},
+        {qtr("Литры"), toInt(COLTYPE::Double)},
+        {qtr("Жиры"), toInt(COLTYPE::Double)},
+        {qtr("Белок"), toInt(COLTYPE::Double)},
+        {qtr("Жироед."), toInt(COLTYPE::Double)},
+        {qtr("Зачет. вес"), toInt(COLTYPE::Double)},
+        {qtr("Оплата(без премии)"), toInt(COLTYPE::Double)},
+        {qtr("Премия"), toInt(COLTYPE::Double)},
+        {qtr("Сумма"), toInt(COLTYPE::Double)}
+    };
 }
 
 void Settings::setDefaultPrintColumns()
 {
-    m_print.columns.clear();
-
-    m_print.columns.append(Column(QObject::tr("№ п/п"), (int)Constants::ColumnType::SerialNumber));
-    m_print.columns.append(Column(QObject::tr("Ф. И. О."), (int)Constants::ColumnType::String));
-    m_print.columns.append(Column(QObject::tr("Физ. вес"), (int)Constants::ColumnType::Double));
-    m_print.columns.append(Column(QObject::tr("% жир"), (int)Constants::ColumnType::Double));
-    m_print.columns.append(Column(QObject::tr("Белок"), (int)Constants::ColumnType::Double));
-    m_print.columns.append(Column(QObject::tr("Жироед."), (int)Constants::ColumnType::Double, false));
-    m_print.columns.append(Column(QObject::tr("Зачет. вес"), (int)Constants::ColumnType::Double));
-    m_print.columns.append(Column(QObject::tr("Оплата(без премии)"), (int)Constants::ColumnType::Double, false));
-    m_print.columns.append(Column(QObject::tr("Премия"), (int)Constants::ColumnType::Double, false));
-    m_print.columns.append(Column(QObject::tr("Сумма"), (int)Constants::ColumnType::Double));
-    m_print.columns.append(Column(QObject::tr("Подпись"), (int)Constants::ColumnType::String));
+    m_print.columns = {
+        {qtr("№ п/п"), toInt(COLTYPE::SerialNumber)},
+        {qtr("Ф. И. О."), toInt(COLTYPE::String)},
+        {qtr("Физ. вес"), toInt(COLTYPE::Double)},
+        {qtr("% жир"), toInt(COLTYPE::Double)},
+        {qtr("Белок"), toInt(COLTYPE::Double)},
+        {qtr("Жироед."), toInt(COLTYPE::Double), false},
+        {qtr("Зачет. вес"), toInt(COLTYPE::Double)},
+        {qtr("Оплата(без премии)"), toInt(COLTYPE::Double), false},
+        {qtr("Премия"), toInt(COLTYPE::Double), false},
+        {qtr("Сумма"), toInt(COLTYPE::Double)},
+        {qtr("Подпись"), toInt(COLTYPE::String)}
+    };
 }
 
 Settings::Column Settings::getColumnFromSettings() const
 {
-    Column column;
-    column.display = m_settings->value(COL_DISPLAY).toString();
-    column.prec = m_settings->value(COL_PREC).toInt();
-    column.isShow = m_settings->value(COL_IS_SHOW).toBool();
-    column.type = m_settings->value(COL_TYPE).toInt();
-
-    return column;
+    return {
+        m_settings->value(COL_DISPLAY).toString(),
+                m_settings->value(COL_PREC).toInt(),
+                m_settings->value(COL_IS_SHOW).toBool(),
+                m_settings->value(COL_TYPE).toInt()
+    };
 }
 
 void Settings::writeColumnToSettings(const Settings::Column &column)

@@ -394,7 +394,7 @@ void CalcFrame::printCalc()
         captionCharFormat.setFont(printSettings.captionTextFont);
         captionCharFormat.setForeground(QBrush(printSettings.captionColor));
 
-        cursor.insertText(settings->getFirmName(), textCharFormat);
+        cursor.insertText(settings->getMain().firmName, textCharFormat);
         cursor.insertBlock();
 
         cursor.setBlockFormat(captionBlockFormat);
@@ -422,7 +422,7 @@ void CalcFrame::printCalc()
 
         cursor.insertText(tr("Населенный пункт: ") + m_mainWindow->getCurrentLocalityName(), textCharFormat);
         cursor.insertBlock();
-        cursor.insertText(tr("Приемщик молока: ") + settings->getMilkInspector(), textCharFormat);
+        cursor.insertText(tr("Приемщик молока: ") + settings->getMain().milkInspector, textCharFormat);
         cursor.insertBlock();
 
         cursor.movePosition(QTextCursor::End);
@@ -444,10 +444,10 @@ void CalcFrame::printCalc()
         }
         cursor.insertText(tr("Деньги в сумме: "), textCharFormat);
         cursor.insertBlock();
-        cursor.insertText(tr("Получил и выдал согласно ведомости приемщик молока______") + settings->getMilkInspector_2(),
+        cursor.insertText(tr("Получил и выдал согласно ведомости приемщик молока______") + settings->getMain().milkInspector_2,
                           textCharFormat);
         cursor.insertBlock();
-        cursor.insertText(tr("Директор ") + settings->getFirmName(), textCharFormat);
+        cursor.insertText(tr("Директор ") + settings->getMain().firmName, textCharFormat);
 
     print.showDialog();
 }

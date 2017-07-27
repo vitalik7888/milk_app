@@ -12,50 +12,43 @@ class Settings
 {
 public:
     struct Column {
-        Column(): display(""), type(-1), isShow(true), prec(2) {}
-        Column(const QString &_display, const int _type, const bool _isShow = true,
-               const int _prec = 2):
-            display(_display), type(_type), isShow(_isShow), prec(_prec) {}
-
-        QString display;
-        int type;
-        bool isShow;
-        int prec;
+        QString display = "";
+        int type = -1;
+        bool isShow = true;
+        int prec = 2;
     };
 
     struct Print {
-        Print(): textFont(QFont()), captionTextFont(QFont()), captionColor(QColor(Qt::black)),
-            tableWidth(2), tableBorderWidth(2), tableBorderStyle(3), cellSpacing(0), cellPadding(0),
-            tableBorderColor(QColor(Qt::black)), tableHeaderFont(QFont()), tableHeaderColor(QColor(Qt::black)),
-        tableTextFont(QFont()), tableTextColor(QColor(Qt::black)),
-        tableResultFont(QFont()), tableResultColor(QColor(Qt::black)) {}
-
         QFont textFont;
         QFont captionTextFont;
-        QColor captionColor;
-        int tableWidth;
-        int tableBorderWidth;
-        int tableBorderStyle;
-        int cellSpacing;
-        int cellPadding;
-        QColor tableBorderColor;
+        QColor captionColor = QColor(Qt::black);
+        int tableWidth = 2;
+        int tableBorderWidth = 2;
+        int tableBorderStyle = 3;
+        int cellSpacing = 0;
+        int cellPadding = 0;
+        QColor tableBorderColor = QColor(Qt::black);
         QFont tableHeaderFont;
-        QColor tableHeaderColor;
+        QColor tableHeaderColor = QColor(Qt::black);
         QFont tableTextFont;
-        QColor tableTextColor;
+        QColor tableTextColor = QColor(Qt::black);
         QFont tableResultFont;
-        QColor tableResultColor;
+        QColor tableResultColor = QColor(Qt::black);
 
-        QVector<Column> columns;
+        QVector<Column> columns = {};
+    };
+
+    struct Main {
+        QString lastChoosenDb;
+        float priceLiter = .0f;
+        QString firmName;
+        QString milkInspector;
+        QString milkInspector_2;
+        bool isFetchTablesOnRefresh = false;
     };
 
     struct Calc {
-        Calc(): dateFormat("MM-dd-yyyy"),
-            textFont(QFont()), textBackColor(QColor()),
-            delivResultFont(QFont()), delivResultColor(QColor()),
-            allResultFont(QFont()), allResultColor(QColor()) {}
-
-        QString dateFormat;
+        QString dateFormat = "MM-dd-yyyy";
         QFont textFont;
         QColor textBackColor;
         QFont delivResultFont;
@@ -63,7 +56,7 @@ public:
         QFont allResultFont;
         QColor allResultColor;
 
-        QVector<Column> columns;
+        QVector<Column> columns = {};
     };
 
     Settings();
@@ -84,40 +77,17 @@ public:
     void setDefaultPrintSettings();
     void setDefaultSettings();
 
-    float priceLiter() const;
-    void setPriceLiter(const float priceLiter);
-
-    QString lastChoosenDb() const;
-    void setLastChoosenDb(const QString &lastChoosenDb);
-
-    Print getPrint() const;
-    Print &setPrint();
-
-    Calc getCalc() const;
-    Calc &setCalc();
-
-    QString getFirmName() const;
-    void setFirmName(const QString &value);
-
-    QString getMilkInspector() const;
-    void setMilkInspector(const QString &value);
-
-    QString getMilkInspector_2() const;
-    void setMilkInspector_2(const QString &value);
-
-    bool getIsFetchTablesOnRefresh() const;
-    void setIsFetchTablesOnRefresh(bool value);
+    Main getMain() const { return m_main; }
+    Main &setMain() { return m_main; }
+    Print getPrint() const { return m_print; }
+    Print &setPrint() { return m_print; }
+    Calc getCalc() const { return m_calc; }
+    Calc &setCalc() { return m_calc; }
 
 private:
-    QSettings *m_settings;
+    QScopedPointer<QSettings> m_settings;
 
-    QString m_lastChoosenDb;
-    float m_priceLiter;
-    QString firmName;
-    QString milkInspector;
-    QString milkInspector_2;
-    bool isFetchTablesOnRefresh;
-
+    Main m_main;
     Print m_print;
     Calc m_calc;
 

@@ -12,7 +12,7 @@ TARGET = milk
 TEMPLATE = app
 #RC_ICONS = cow.ico
 
-CONFIG += c++11
+CONFIG += c++14
 
 include(src/database/db.pri)
 include(src/core/core.pri)

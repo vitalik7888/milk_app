@@ -164,8 +164,8 @@ void MainWindow::_readSettings()
 {
     m_settings->readSettings();
 
-    ui->frameMilkReceptionAdd->setPrice(m_settings->priceLiter());
-    const auto lastDb = m_settings->lastChoosenDb();
+    ui->frameMilkReceptionAdd->setPrice(m_settings->getMain().priceLiter);
+    const auto lastDb = m_settings->getMain().lastChoosenDb;
 
     if (lastDb.isEmpty() || !QFile(lastDb).exists())
     {
@@ -304,7 +304,7 @@ void MainWindow::openDb(const QString &dbName)
                 QMessageBox::critical(this, table->tableName(), error);
             });
             // set fetch on refresh
-            table->setIsFetchOnRefresh(m_settings->getIsFetchTablesOnRefresh());
+            table->setIsFetchOnRefresh(m_settings->getMain().isFetchTablesOnRefresh);
         }
         connect(m_database->localities(), &Table::refreshed, this, [=]() {
             m_comboBoxChooseMainLocality->setCurrentIndex(0);
@@ -433,7 +433,7 @@ void MainWindow::showSettings()
     if (getDialogSettings()->exec() == QDialog::Accepted)
     {
         for (auto table: m_database->tables()) {
-            const auto isFetchOnRefresh = m_settings->getIsFetchTablesOnRefresh();
+            const auto isFetchOnRefresh = m_settings->getMain().isFetchTablesOnRefresh;
             // set fetch on refresh
             table->setIsFetchOnRefresh(isFetchOnRefresh);
             if (isFetchOnRefresh)
@@ -516,8 +516,8 @@ qlonglong MainWindow::getCurrentLocalityId() const
 
 void MainWindow::_writeSettings()
 {
-    m_settings->setPriceLiter(ui->frameMilkReceptionAdd->price());
-    m_settings->setLastChoosenDb(m_database->choosenDatabase());
+    m_settings->setMain().priceLiter = ui->frameMilkReceptionAdd->price();
+    m_settings->getMain().lastChoosenDb = m_database->choosenDatabase();
 
     m_settings->writeMainSettings();
 }
