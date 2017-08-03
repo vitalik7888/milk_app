@@ -3,27 +3,9 @@
 #include "Utils.h"
 
 //--------------------------------------------------------------------------------------------------
-CalculatedItem::Data::Data():
-    liters(.0),
-    fat(.0),
-    priceForLiter(.0),
-    protein(.0),
-    fatUnits(.0),
-    rankWeight(.0),
-    paymentWithOutPremium(.0),
-    premiumForFat(.0),
-    sum(.0)
-{
-
-}
-
-//--------------------------------------------------------------------------------------------------
 CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter):
-    m_data()
+    m_data({liters, fat, priceForLiter})
 {
-    m_data.liters = liters;
-    m_data.fat = fat;
-    m_data.priceForLiter = priceForLiter;
     m_data.protein = Utils::Calc::protein(fat);
     m_data.fatUnits = Utils::Calc::fatUnits(liters, fat);
     m_data.rankWeight = Utils::Calc::rankWeight(m_data.fatUnits);
@@ -104,8 +86,8 @@ CalculatedItem::Data &operator+=(CalculatedItem::Data &l, const CalculatedItem::
     l.paymentWithOutPremium += r.paymentWithOutPremium;
     l.premiumForFat += r.premiumForFat;
     l.sum += r.sum;
-    l.fat = Utils::Calc::fat(l.fatUnits, l.liters),
-    l.protein = Utils::Calc::protein(l.fat),
+    l.fat = Utils::Calc::fat(l.fatUnits, l.liters);
+    l.protein = Utils::Calc::protein(l.fat);
     l.rankWeight = Utils::Calc::rankWeight(l.fatUnits);
 
     return l;

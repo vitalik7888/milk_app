@@ -6,19 +6,16 @@
 class CalculatedItem
 {
 public:
-    class Data {
-    public:
-        Data();
-
-        double liters;
-        double fat;
-        price priceForLiter;
-        double protein;
-        double fatUnits;
-        double rankWeight;
-        double paymentWithOutPremium;
-        double premiumForFat;
-        double sum;
+    struct Data {
+        double liters = .0;
+        double fat = .0;
+        price priceForLiter = .0;
+        double protein = .0;
+        double fatUnits = .0;
+        double rankWeight = .0;
+        double paymentWithOutPremium = .0;
+        double premiumForFat = .0;
+        double sum = .0;
     };
 
     CalculatedItem(const double liters, const double fat, const price priceForLiter);
