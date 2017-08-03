@@ -2,6 +2,7 @@
 #define MILKRECEPTIONDATA_H
 
 #include "dbconstants.h"
+#include <src/core/Constants.h>
 // Qt
 #include <QDate>
 
@@ -13,7 +14,7 @@ class MilkReceptionData
 public:
     MilkReceptionData();
     MilkReceptionData(const milk_id id, const milk_id delivererId, const milk_id milkPointId,
-                      const QDate &deliveryDate, const double priceLiter,
+                      const QDate &deliveryDate, const price priceLiter,
                       const double liters, const double fat);
     MilkReceptionData(const MilkReceptionData &data);
     ~MilkReceptionData();
@@ -30,8 +31,8 @@ public:
     QDate deliveryDate() const;
     void setDeliveryDate(const QDate &deliveryDate);
 
-    double priceLiter() const;
-    void setPriceLiter(double priceLiter);
+    price priceLiter() const;
+    void setPriceLiter(price priceLiter);
 
     double liters() const;
     void setLiters(double liters);

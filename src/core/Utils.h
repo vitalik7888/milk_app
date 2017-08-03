@@ -67,16 +67,16 @@ static inline double premiumForFat(const double fat, const double paymentWithOut
     return (fat / BASE_FAT - 1) * paymentWithOutPremium;
 }
 
-static inline double paymentWithOutPremium(const double liters, const double price)
+static inline double paymentWithOutPremium(const double liters, const price price)
 {
     return liters * price;
 }
 
-static inline double sum(const double rankWeight, const double price)
+static inline double sum(const double rankWeight, const price price)
 {
     return rankWeight * price;
 }
-static inline CalcResult getCalculations(const double liters, const double fat, const double price) {
+static inline CalcResult getCalculations(const double liters, const double fat, const price price) {
     CalcResult calc;
 
     calc.protein = Utils::Calc::protein(fat);

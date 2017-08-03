@@ -10,7 +10,7 @@ MilkReception::MilkReception():
 
 }
 
-MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
                              const double liters, const double fat,
                              const WpDeliverer &deliverer,
                              const WpMilkPoint &milkPoint):
@@ -92,7 +92,7 @@ double MilkReception::priceLiter() const
     return m_data.priceLiter();
 }
 
-void MilkReception::setPriceLiter(double priceLiter)
+void MilkReception::setPriceLiter(price priceLiter)
 {
     m_data.setPriceLiter(priceLiter);
 }

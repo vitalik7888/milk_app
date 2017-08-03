@@ -3,6 +3,7 @@
 
 #include "calculateditem.h"
 #include <tables/milk_reception/milkreceptiondata.h>
+#include <src/core/Constants.h>
 // Qt
 #include <QDate>
 #include <QWeakPointer>
@@ -17,7 +18,7 @@ using WpMilkPoint = QWeakPointer<MilkPoint>;
 class MilkReception {
 public:
     MilkReception();
-    MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+    MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
                   const double liters, const double fat,
                   const WpDeliverer &deliverer = WpDeliverer(),
                   const WpMilkPoint &milkPoint = WpMilkPoint());
@@ -30,8 +31,8 @@ public:
     QDate deliveryDate() const;
     void setDeliveryDate(const QDate &deliveryDate);
 
-    double priceLiter() const;
-    void setPriceLiter(double priceLiter);
+    price priceLiter() const;
+    void setPriceLiter(price priceLiter);
 
     double liters() const;
     void setLiters(double liters);

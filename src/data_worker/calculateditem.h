@@ -1,6 +1,7 @@
 #ifndef CALCULATEDITEM_H
 #define CALCULATEDITEM_H
 
+#include <src/core/Constants.h>
 
 class CalculatedItem
 {
@@ -9,10 +10,9 @@ public:
     public:
         Data();
 
-
         double liters;
         double fat;
-        double price;
+        price priceForLiter;
         double protein;
         double fatUnits;
         double rankWeight;
@@ -21,11 +21,11 @@ public:
         double sum;
     };
 
-    CalculatedItem(const double liters, const double fat, const double priceForLiter);
+    CalculatedItem(const double liters, const double fat, const price priceForLiter);
 
     double liters() const;
     double fat() const;
-    double price() const;
+    price priceForLiter() const;
     double protein() const;
     double fatUnits() const;
     double rankWeight() const;

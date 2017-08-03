@@ -6,6 +6,8 @@
 #define BASE_PROTEIN 3.0
 #define BASE_FAT 3.4
 
+using price = double;
+
 class Constants
 {
 public:

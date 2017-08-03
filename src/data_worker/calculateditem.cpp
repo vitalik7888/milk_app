@@ -6,7 +6,7 @@
 CalculatedItem::Data::Data():
     liters(.0),
     fat(.0),
-    price(.0),
+    priceForLiter(.0),
     protein(.0),
     fatUnits(.0),
     rankWeight(.0),
@@ -18,18 +18,18 @@ CalculatedItem::Data::Data():
 }
 
 //--------------------------------------------------------------------------------------------------
-CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter):
+CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter):
     m_data()
 {
     m_data.liters = liters;
     m_data.fat = fat;
-    m_data.price = priceForLiter;
+    m_data.priceForLiter = priceForLiter;
     m_data.protein = Utils::Calc::protein(fat);
     m_data.fatUnits = Utils::Calc::fatUnits(liters, fat);
     m_data.rankWeight = Utils::Calc::rankWeight(m_data.fatUnits);
-    m_data.paymentWithOutPremium = Utils::Calc::paymentWithOutPremium(m_data.liters, m_data.price);
+    m_data.paymentWithOutPremium = Utils::Calc::paymentWithOutPremium(m_data.liters, m_data.priceForLiter);
     m_data.premiumForFat = Utils::Calc::premiumForFat(fat, m_data.paymentWithOutPremium);
-    m_data.sum = Utils::Calc::sum(m_data.rankWeight, m_data.price);
+    m_data.sum = Utils::Calc::sum(m_data.rankWeight, m_data.priceForLiter);
 }
 
 double CalculatedItem::liters() const
@@ -42,9 +42,9 @@ double CalculatedItem::fat() const
     return m_data.fat;
 }
 
-double CalculatedItem::price() const
+double CalculatedItem::priceForLiter() const
 {
-    return m_data.price;
+    return m_data.priceForLiter;
 }
 
 double CalculatedItem::protein() const
@@ -90,8 +90,8 @@ CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedIt
     result.paymentWithOutPremium = l.paymentWithOutPremium + r.paymentWithOutPremium;
     result.premiumForFat = l.premiumForFat + r.premiumForFat;
     result.sum = l.sum + r.sum;
-    result.fat = Utils::Calc::fat(result.fatUnits, result.liters),
-    result.protein = Utils::Calc::protein(result.fat),
+    result.fat = Utils::Calc::fat(result.fatUnits, result.liters);
+    result.protein = Utils::Calc::protein(result.fat);
     result.rankWeight = Utils::Calc::rankWeight(result.fatUnits);
 
     return result;

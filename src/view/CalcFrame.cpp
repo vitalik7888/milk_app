@@ -11,6 +11,7 @@
 #include "src/core/Utils.h"
 #include <dataworker.h>
 // Qt
+#include <QtMath>
 #include <QMap>
 #include <QMessageBox>
 #include <QDir>
@@ -163,7 +164,7 @@ void CalcFrame::calc()
         if (dateCol.isShow)
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(delivDate)->get());
         if (priceCol.isShow) {
-            const QString priceValue = calcItem.price <= .0 ? "-" : QString::number(calcItem.price, f, priceCol.prec);
+            const QString priceValue = calcItem.priceForLiter <= .0 ? "-" : QString::number(calcItem.priceForLiter, f, priceCol.prec);
             ui->tableWidgetCalc->setItem(row, c++, itemBuilder.setText(priceValue)->get());
         }
         if (litersCol.isShow)
