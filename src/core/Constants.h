@@ -3,14 +3,15 @@
 
 #include <QString>
 
-#define BASE_PROTEIN 3.0
-#define BASE_FAT 3.4
-
 using price = double;
+
 
 class Constants
 {
 public:
+    constexpr static double BASE_PROTEIN = 3.0;
+    constexpr static double BASE_FAT = 3.4;
+
     static inline QString appName() { return "MilkApp"; }
     static inline QString organization() { return "VitaliyDev"; }
 
