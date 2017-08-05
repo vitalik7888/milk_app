@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-//#include <QString>
+#include <QSettings>
 #include <QColor>
 #include <QFont>
 #include <QVector>
@@ -14,26 +14,26 @@ public:
     struct Column {
         QString display = "";
         int type = -1;
-        bool isShow = true;
         int prec = 2;
+        bool isShow = true;
     };
 
     struct Print {
         QFont textFont;
         QFont captionTextFont;
-        QColor captionColor = QColor(Qt::black);
+        QColor captionColor = {Qt::black};
         int tableWidth = 2;
         int tableBorderWidth = 2;
         int tableBorderStyle = 3;
         int cellSpacing = 0;
         int cellPadding = 0;
-        QColor tableBorderColor = QColor(Qt::black);
+        QColor tableBorderColor = {Qt::black};
         QFont tableHeaderFont;
-        QColor tableHeaderColor = QColor(Qt::black);
+        QColor tableHeaderColor = {Qt::black};
         QFont tableTextFont;
-        QColor tableTextColor = QColor(Qt::black);
+        QColor tableTextColor = {Qt::black};
         QFont tableResultFont;
-        QColor tableResultColor = QColor(Qt::black);
+        QColor tableResultColor = {Qt::black};
 
         QVector<Column> columns = {};
     };
@@ -96,6 +96,9 @@ private:
 
     Settings::Column getColumnFromSettings() const;
     void writeColumnToSettings(const Settings::Column &column);
+
+    void setValue(const QString &key, const QVariant &value);
+    QVariant value(const QString &key, const QVariant &defaultValue = {}) const;
 };
 
 #endif // SETTINGS_H
