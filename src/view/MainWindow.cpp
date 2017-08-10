@@ -512,8 +512,9 @@ qlonglong MainWindow::getCurrentLocalityId() const
 
 void MainWindow::_writeSettings()
 {
-    settings()->setMain().priceLiter = ui->frameMilkReceptionAdd->price();
-    settings()->getMain().lastChoosenDb = database()->choosenDatabase();
+    auto &mainSettings = settings()->setMain();
+    mainSettings.priceLiter = ui->frameMilkReceptionAdd->price();
+    mainSettings.lastChoosenDb = database()->choosenDatabase();
 
     settings()->writeMainSettings();
 }
