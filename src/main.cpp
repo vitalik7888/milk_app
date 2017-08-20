@@ -1,15 +1,25 @@
 #include "src/core/MilkCore.h"
-#include "src/view/MainWindow.h"
-#include <QApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QGuiApplication app(argc, argv);
+
+    qmlRegisterType<MilkCore>("MilkCore", 1, 0, "MilkCore");
+    qmlRegisterType<Settings>("Settings", 1, 0, "Settings");
+    qmlRegisterType<MainSettings>("MainSettings", 1, 0, "MainSettings");
 
     MilkCore core;
 
-    MainWindow w(&core);
-    w.show();
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
 
-    return a.exec();
+    QQmlContext *context = engine.rootContext();
+    context->setContextProperty("core", &core);
+
+    return app.exec();
 }

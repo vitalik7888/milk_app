@@ -65,11 +65,213 @@ static inline int toInt(const COLTYPE column)
     return static_cast<int>(column);
 }
 }
-
-
-Settings::Settings():
-    m_settings(new QSettings(Constants::organization(), Constants::appName()))
+//--------------------------------
+MainSettings::MainSettings(const QString &lastChoosenDb, const float priceLiter, const QString &firmName,
+                           const QString &milkInspector, const QString &milkInspector_2,
+                           const bool isFetchTablesOnRefresh, QObject *parent) :
+    QObject(parent),
+    m_data({lastChoosenDb, priceLiter, firmName, milkInspector, milkInspector_2,
+    isFetchTablesOnRefresh})
 {
+
+}
+
+MainSettings::MainSettings(QObject *parent):
+    MainSettings(QString(), .0f, QString(), QString(), QString(), false, parent)
+{
+
+}
+
+MainSettings::~MainSettings()
+{
+}
+
+void MainSettings::setLastChoosenDb(const QString &lastChoosenDb)
+{
+    m_data.lastChoosenDb = lastChoosenDb;
+}
+
+void MainSettings::setPriceLiter(float priceLiter)
+{
+    m_data.priceLiter = priceLiter;
+}
+
+void MainSettings::setFirmName(const QString &firmName)
+{
+    m_data.firmName = firmName;
+}
+
+void MainSettings::setMilkInspector(const QString &milkInspector)
+{
+    m_data.milkInspector = milkInspector;
+}
+
+void MainSettings::setMilkInspector_2(const QString &milkInspector_2)
+{
+    m_data.milkInspector_2 = milkInspector_2;
+}
+
+void MainSettings::setIsFetchTablesOnRefresh(const bool isFetchTablesOnRefresh)
+{
+    m_data.isFetchTablesOnRefresh = isFetchTablesOnRefresh;
+}
+
+void MainSettings::reset()
+{
+    setLastChoosenDb(QString());
+    setPriceLiter(.0f);
+    setFirmName(QString());
+    setMilkInspector(QString());
+    setMilkInspector_2(QString());
+    setIsFetchTablesOnRefresh(false);
+}
+//-------------------------------
+void SettingsColumn::setDisplay(const QString &display)
+{
+    m_data.display = display;
+}
+
+void SettingsColumn::setType(const int type)
+{
+    m_data.type = type;
+}
+
+void SettingsColumn::setPrec(const int prec)
+{
+    m_data.prec = prec;
+}
+
+void SettingsColumn::setIsShow(const bool isShow)
+{
+    m_data.isShow = isShow;
+}
+//-------------------------------
+
+void PrintSettings::setTextFont(const QFont &textFont)
+{
+    m_data.textFont = textFont;
+}
+
+void PrintSettings::setCaptionTextFont(const QFont &captionTextFont)
+{
+    m_data.captionTextFont = captionTextFont;
+}
+
+void PrintSettings::setCaptionColor(const QColor &captionColor)
+{
+    m_data.captionColor = captionColor;
+}
+
+void PrintSettings::setTableWidth(const int tableWidth)
+{
+    m_data.tableWidth = tableWidth;
+}
+
+void PrintSettings::setTableBorderWidth(const int tableBorderWidth)
+{
+    m_data.tableBorderWidth = tableBorderWidth;
+}
+
+void PrintSettings::setTableBorderStyle(const int tableBorderStyle)
+{
+    m_data.tableBorderStyle = tableBorderStyle;
+}
+
+void PrintSettings::setCellSpacing(const int cellSpacing)
+{
+    m_data.cellSpacing = cellSpacing;
+}
+
+void PrintSettings::setCellPadding(const int cellPadding)
+{
+    m_data.cellPadding = cellPadding;
+}
+
+void PrintSettings::setTableBorderColor(const QColor &tableBorderColor)
+{
+    m_data.tableBorderColor = tableBorderColor;
+}
+
+void PrintSettings::setTableHeaderFont(const QFont &tableHeaderFont)
+{
+    m_data.tableHeaderFont = tableHeaderFont;
+}
+
+void PrintSettings::setTableHeaderColor(const QColor &tableHeaderColor)
+{
+    m_data.tableHeaderColor = tableHeaderColor;
+}
+
+void PrintSettings::setTableTextFont(const QFont &tableTextFont)
+{
+    m_data.tableTextFont = tableTextFont;
+}
+
+void PrintSettings::setTableTextColor(const QColor &tableTextColor)
+{
+    m_data.tableTextColor = tableTextColor;
+}
+
+void PrintSettings::setTableResultFont(const QFont &tableResultFont)
+{
+    m_data.tableResultFont = tableResultFont;
+}
+
+void PrintSettings::setTableResultColor(const QColor &tableResultColor)
+{
+    m_data.tableResultColor = tableResultColor;
+}
+
+void PrintSettings::setColumns(const QVector<SettingsColumnData> &columns)
+{
+    m_data.columns = columns;
+}
+//-------------------------------
+void CalcSettings::setTextFont(const QFont &textFont)
+{
+    m_data.textFont = textFont;
+}
+
+void CalcSettings::setDelivResultFont(const QFont &delivResultFont)
+{
+    m_data.delivResultFont = delivResultFont;
+}
+
+void CalcSettings::setDelivResultColor(const QColor &delivResultColor)
+{
+    m_data.delivResultColor = delivResultColor;
+}
+
+void CalcSettings::setAllResultFont(const QFont &allResultFont)
+{
+    m_data.allResultFont = allResultFont;
+}
+
+void CalcSettings::setAllResultColor(const QColor &allResultColor)
+{
+    m_data.allResultColor = allResultColor;
+}
+
+void CalcSettings::setDateFormat(const QString &dateFormat)
+{
+    m_data.dateFormat = dateFormat;
+}
+
+void CalcSettings::setColumns(const QVector<SettingsColumnData> &columns)
+{
+    m_data.columns = columns;
+}
+
+void CalcSettings::setTextBackColor(const QColor &textBackColor)
+{
+    m_data.textBackColor = textBackColor;
+}
+//------------------------------------
+Settings::Settings(QObject *parent):
+    QObject(parent)
+{
+    m_settings = new QSettings(Constants::organization(), Constants::appName(), this);
+    m_main = new MainSettings(this);
 }
 
 Settings::~Settings()
@@ -80,12 +282,12 @@ void Settings::writeMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    setValue(LAST_CHOOSEN_DB, m_main.lastChoosenDb);
-    setValue(PRICE, m_main.priceLiter);
-    setValue(FIRM_NAME, m_main.firmName);
-    setValue(MILK_INSPECTOR, m_main.milkInspector);
-    setValue(MILK_INSPECTOR_2, m_main.milkInspector_2);
-    setValue(FETCH_MORE, m_main.isFetchTablesOnRefresh);
+    setValue(LAST_CHOOSEN_DB, main()->lastChoosenDb());
+    setValue(PRICE, main()->priceLiter());
+    setValue(FIRM_NAME, main()->firmName());
+    setValue(MILK_INSPECTOR, main()->milkInspector());
+    setValue(MILK_INSPECTOR_2, main()->milkInspector_2());
+    setValue(FETCH_MORE, main()->isFetchTablesOnRefresh());
 
     m_settings->endGroup();
 }
@@ -94,18 +296,18 @@ void Settings::writeCalcSettings()
 {
     m_settings->beginGroup(GROUP_CALC);
 
-    setValue(C_DATE_FORMAT, m_calc.dateFormat);
-    setValue(C_TEXT_FONT, m_calc.textFont.toString());
-    setValue(C_TEXT_COLOR, m_calc.textBackColor.name());
-    setValue(C_DELIV_RES_FONT, m_calc.delivResultFont.toString());
-    setValue(C_DELIV_RES_COLOR, m_calc.delivResultColor.name());
-    setValue(C_ALL_RES_FONT, m_calc.allResultFont.toString());
-    setValue(C_ALL_RES_COLOR, m_calc.allResultColor.name());
+    setValue(C_DATE_FORMAT, calc()->dateFormat());
+    setValue(C_TEXT_FONT, calc()->textFont().toString());
+    setValue(C_TEXT_COLOR, calc()->textBackColor().name());
+    setValue(C_DELIV_RES_FONT, calc()->delivResultFont().toString());
+    setValue(C_DELIV_RES_COLOR, calc()->delivResultColor().name());
+    setValue(C_ALL_RES_FONT, calc()->allResultFont().toString());
+    setValue(C_ALL_RES_COLOR, calc()->allResultColor().name());
 
     m_settings->beginWriteArray(COL_ARRAY);
-    for (int i = 0; i < m_calc.columns.size(); ++i) {
+    for (int i = 0; i < calc()->columns().size(); ++i) {
         m_settings->setArrayIndex(i);
-        writeColumnToSettings(m_calc.columns[i]);
+        writeColumnToSettings(calc()->columns()[i]);
     }
     m_settings->endArray();
 
@@ -116,26 +318,26 @@ void Settings::writePrintSettings()
 {
     m_settings->beginGroup(GROUP_PRINT);
 
-    setValue(P_TEXT_FONT, m_print.textFont.toString());
-    setValue(P_CAPTION_FONT, m_print.captionTextFont.toString());
-    setValue(P_CAPTION_COLOR, m_print.captionColor.name());
-    setValue(PT_WIDTH, m_print.tableWidth);
-    setValue(PT_BORDER_WIDTH, m_print.tableBorderWidth);
-    setValue(PT_BORDER_STYLE, m_print.tableBorderStyle);
-    setValue(PT_CELL_SPACING, m_print.cellSpacing);
-    setValue(PT_CELL_PADDING, m_print.cellPadding);
-    setValue(PT_BORDER_COLOR, m_print.tableBorderColor.name());
-    setValue(PT_HEADER_FONT, m_print.tableHeaderFont.toString());
-    setValue(PT_HEADER_COLOR, m_print.tableHeaderColor.name());
-    setValue(PT_TEXT_FONT, m_print.tableTextFont.toString());
-    setValue(PT_TEXT_COLOR, m_print.tableTextColor.name());
-    setValue(PT_RESULT_FONT, m_print.tableResultFont.toString());
-    setValue(PT_RESULT_COLOR, m_print.tableResultColor.name());
+    setValue(P_TEXT_FONT, print()->textFont().toString());
+    setValue(P_CAPTION_FONT, print()->captionTextFont().toString());
+    setValue(P_CAPTION_COLOR, print()->captionColor().name());
+    setValue(PT_WIDTH, print()->tableWidth());
+    setValue(PT_BORDER_WIDTH, print()->tableBorderWidth());
+    setValue(PT_BORDER_STYLE, print()->tableBorderStyle());
+    setValue(PT_CELL_SPACING, print()->cellSpacing());
+    setValue(PT_CELL_PADDING, print()->cellPadding());
+    setValue(PT_BORDER_COLOR, print()->tableBorderColor().name());
+    setValue(PT_HEADER_FONT, print()->tableHeaderFont().toString());
+    setValue(PT_HEADER_COLOR, print()->tableHeaderColor().name());
+    setValue(PT_TEXT_FONT, print()->tableTextFont().toString());
+    setValue(PT_TEXT_COLOR, print()->tableTextColor().name());
+    setValue(PT_RESULT_FONT, print()->tableResultFont().toString());
+    setValue(PT_RESULT_COLOR, print()->tableResultColor().name());
 
     m_settings->beginWriteArray(COL_ARRAY);
-    for (int i = 0; i < m_print.columns.size(); ++i) {
+    for (int i = 0; i < print()->columns().size(); ++i) {
         m_settings->setArrayIndex(i);
-        writeColumnToSettings(m_print.columns[i]);
+        writeColumnToSettings(print()->columns()[i]);
     }
     m_settings->endArray();
 
@@ -153,13 +355,12 @@ void Settings::readMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    m_main = {
-        value(LAST_CHOOSEN_DB, QString()).toString(),
-        value(PRICE, .0f).toFloat(),
-        value(FIRM_NAME, QString()).toString(),
-        value(MILK_INSPECTOR, QString()).toString(),
-        value(MILK_INSPECTOR_2, QString()).toString(),
-        value(FETCH_MORE, false).toBool() };
+    main()->setLastChoosenDb(value(LAST_CHOOSEN_DB, QString()).toString());
+    main()->setPriceLiter(value(PRICE, .0f).toFloat());
+    main()->setFirmName(value(FIRM_NAME, QString()).toString());
+    main()->setMilkInspector(value(MILK_INSPECTOR, QString()).toString());
+    main()->setMilkInspector_2(value(MILK_INSPECTOR_2, QString()).toString());
+    main()->setIsFetchTablesOnRefresh(value(FETCH_MORE, false).toBool());
 
     m_settings->endGroup();
 }
@@ -168,23 +369,26 @@ void Settings::readCalcSettings()
 {
     m_settings->beginGroup(GROUP_CALC);
 
-    m_calc.dateFormat = value(C_DATE_FORMAT, Constants::defaultDateFormat()).toString();
-    m_calc.textFont.fromString(value(C_TEXT_FONT, QFont().toString()).toString());
-    m_calc.textBackColor.setNamedColor(value(C_TEXT_COLOR, QColor(Qt::white).name()).toString());
-    m_calc.delivResultFont.fromString(value(C_DELIV_RES_FONT, QFont().toString()).toString());
-    m_calc.delivResultColor.setNamedColor(value(C_DELIV_RES_COLOR, QColor(Qt::lightGray).name()).toString());
-    m_calc.allResultFont.fromString(value(C_ALL_RES_FONT, QFont().toString()).toString());
-    m_calc.allResultColor.setNamedColor(value(C_ALL_RES_COLOR, QColor(Qt::GlobalColor::darkGray).name()).toString());
+    calc()->setDateFormat(value(C_DATE_FORMAT, Constants::defaultDateFormat()).toString());
+    calc()->setTextFont(value(C_TEXT_FONT, QFont().toString()).toString());
+    calc()->setTextBackColor(value(C_TEXT_COLOR, QColor(Qt::white).name()).toString());
+    calc()->setDelivResultFont(value(C_DELIV_RES_FONT, QFont().toString()).toString());
+    calc()->setDelivResultColor(value(C_DELIV_RES_COLOR, QColor(Qt::lightGray).name()).toString());
+    calc()->setAllResultFont(value(C_ALL_RES_FONT, QFont().toString()).toString());
+    calc()->setAllResultColor(value(C_ALL_RES_COLOR, QColor(Qt::GlobalColor::darkGray).name()).toString());
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
     if (size == 0)
         setDefaultCalcColumns();
     else {
-        m_calc.columns.clear();
+        calc()->clearColumns();
 
         for (int i = 0; i < size; ++i) {
             m_settings->setArrayIndex(i);
-            m_calc.columns.append(getColumnFromSettings());
+            calc()->addColumn({value(COL_DISPLAY).toString(),
+                               value(COL_TYPE).toInt(),
+                               value(COL_PREC).toInt(),
+                               value(COL_IS_SHOW).toBool()});
         }
     }
     m_settings->endArray();
@@ -198,31 +402,34 @@ void Settings::readPrintSettings()
 
     const auto blackColorName = QColor(Qt::black).name();
 
-    m_print.textFont.fromString(value(P_TEXT_FONT, TEXT_FONT_VALUE).toString());
-    m_print.captionTextFont.fromString(value(P_CAPTION_FONT, CAPTION_FONT_VALUE).toString());
-    m_print.captionColor.setNamedColor(value(P_CAPTION_COLOR, blackColorName).toString());
-    m_print.tableWidth = value(PT_WIDTH, 100).toInt();
-    m_print.tableBorderWidth = value(PT_BORDER_WIDTH, 2).toInt();
-    m_print.tableBorderStyle = value(PT_BORDER_STYLE, 3).toInt();
-    m_print.cellSpacing = value(PT_CELL_SPACING, 0).toInt();
-    m_print.cellPadding = value(PT_CELL_PADDING, 2).toInt();
-    m_print.tableBorderColor.setNamedColor(value(PT_BORDER_COLOR, blackColorName).toString());
-    m_print.tableHeaderFont.fromString(value(PT_HEADER_FONT, HEAD_FONT_VALUE).toString());
-    m_print.tableHeaderColor.setNamedColor(value(PT_HEADER_COLOR, blackColorName).toString());
-    m_print.tableTextFont.fromString(value(PT_TEXT_FONT, TAB_FONT_VALUE).toString());
-    m_print.tableTextColor.setNamedColor(value(PT_TEXT_COLOR, blackColorName).toString());
-    m_print.tableResultFont.fromString(value(PT_RESULT_FONT, TAB_RES_FONT_VALUE).toString());
-    m_print.tableResultColor.setNamedColor(value(PT_RESULT_COLOR, blackColorName).toString());
+    print()->setTextFont(value(P_TEXT_FONT, TEXT_FONT_VALUE).toString());
+    print()->setCaptionTextFont(value(P_CAPTION_FONT, CAPTION_FONT_VALUE).toString());
+    print()->setCaptionColor(value(P_CAPTION_COLOR, blackColorName).toString());
+    print()->setTableWidth(value(PT_WIDTH, 100).toInt());
+    print()->setTableBorderWidth(value(PT_BORDER_WIDTH, 2).toInt());
+    print()->setTableBorderStyle(value(PT_BORDER_STYLE, 3).toInt());
+    print()->setCellSpacing(value(PT_CELL_SPACING, 0).toInt());
+    print()->setCellPadding(value(PT_CELL_PADDING, 2).toInt());
+    print()->setTableBorderColor(value(PT_BORDER_COLOR, blackColorName).toString());
+    print()->setTableHeaderFont(value(PT_HEADER_FONT, HEAD_FONT_VALUE).toString());
+    print()->setTableHeaderColor(value(PT_HEADER_COLOR, blackColorName).toString());
+    print()->setTableTextFont(value(PT_TEXT_FONT, TAB_FONT_VALUE).toString());
+    print()->setTableTextColor(value(PT_TEXT_COLOR, blackColorName).toString());
+    print()->setTableResultFont(value(PT_RESULT_FONT, TAB_RES_FONT_VALUE).toString());
+    print()->setTableResultColor(value(PT_RESULT_COLOR, blackColorName).toString());
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
     if (size == 0)
         setDefaultPrintColumns();
     else {
-        m_print.columns.clear();
+        print()->clearColumns();
 
         for (int i = 0; i < size; ++i) {
             m_settings->setArrayIndex(i);
-            m_print.columns.append(getColumnFromSettings());
+            print()->addColumn({value(COL_DISPLAY).toString(),
+                                value(COL_TYPE).toInt(),
+                                value(COL_PREC).toInt(),
+                                value(COL_IS_SHOW).toBool()});
         }
     }
     m_settings->endArray();
@@ -239,21 +446,26 @@ void Settings::readSettings()
 
 void Settings::setDefaultMainSettings()
 {
-    m_main = {};
+    main()->reset();
 }
 
 void Settings::setDefaultPrintSettings()
 {
-    QFont textFont, tabCaptionFont, tabHeadFont, tabResFont, tabTextFont;
-
-    textFont.fromString(TEXT_FONT_VALUE);
-    tabCaptionFont.fromString(CAPTION_FONT_VALUE);
-    tabHeadFont.fromString(HEAD_FONT_VALUE);
-    tabResFont.fromString(TAB_RES_FONT_VALUE);
-    tabTextFont.fromString(TAB_FONT_VALUE);
-
-    m_print = { textFont, tabCaptionFont, {Qt::black}, 100, 2, 3, 0, 2, {Qt::black},
-                tabHeadFont, {Qt::black}, tabTextFont, {Qt::black}, tabResFont, {Qt::black}};
+    print()->setTextFont({TEXT_FONT_VALUE});
+    print()->setCaptionTextFont({CAPTION_FONT_VALUE});
+    print()->setCaptionColor({Qt::black});
+    print()->setTableWidth(100);
+    print()->setTableBorderWidth(2);
+    print()->setTableBorderStyle(3);
+    print()->setCellSpacing(0);
+    print()->setCellPadding(2);
+    print()->setTableBorderColor({Qt::black});
+    print()->setTableHeaderFont({HEAD_FONT_VALUE});
+    print()->setTableHeaderColor({Qt::black});
+    print()->setTableTextFont({TEXT_FONT_VALUE});
+    print()->setTableTextColor({Qt::black});
+    print()->setTableResultFont({TAB_RES_FONT_VALUE});
+    print()->setTableResultColor({Qt::black});
 
     setDefaultPrintColumns();
 }
@@ -267,61 +479,51 @@ void Settings::setDefaultSettings()
 
 void Settings::setDefaultCalcSettings()
 {
-    m_calc = { Constants::defaultDateFormat(),
-               QFont(), QColor(Qt::GlobalColor::white),
-               QFont(), QColor(Qt::GlobalColor::lightGray),
-               QFont(), QColor(Qt::GlobalColor::darkGray)
-             };
+    calc()->setDateFormat({Constants::defaultDateFormat()});
+    calc()->setTextFont(QFont());
+    calc()->setDelivResultFont(QFont());
+    calc()->setAllResultFont(QFont());
+    calc()->setTextBackColor(QColor(Qt::GlobalColor::white));
+    calc()->setDelivResultColor(QColor(Qt::GlobalColor::darkGray));
+    calc()->setAllResultColor(QColor(Qt::GlobalColor::lightGray));
 
     setDefaultCalcColumns();
 }
 
 void Settings::setDefaultCalcColumns()
 {
-    m_calc.columns = {
-        {qtr("Ф. И. О."), toInt(COLTYPE::String)},
-        {qtr("Молокопункты"), toInt(COLTYPE::String)},
-        {qtr("Дата сдачи"), toInt(COLTYPE::Date)},
-        {qtr("Цена за литр"), toInt(COLTYPE::Double)},
-        {qtr("Литры"), toInt(COLTYPE::Double)},
-        {qtr("Жиры"), toInt(COLTYPE::Double)},
-        {qtr("Белок"), toInt(COLTYPE::Double)},
-        {qtr("Жироед."), toInt(COLTYPE::Double)},
-        {qtr("Зачет. вес"), toInt(COLTYPE::Double)},
-        {qtr("Оплата(без премии)"), toInt(COLTYPE::Double)},
-        {qtr("Премия"), toInt(COLTYPE::Double)},
-        {qtr("Сумма"), toInt(COLTYPE::Double)}
-    };
+    calc()->clearColumns();
+    calc()->addColumn({qtr("Ф. И. О."), toInt(COLTYPE::String)});
+    calc()->addColumn({qtr("Молокопункты"), toInt(COLTYPE::String)});
+    calc()->addColumn({qtr("Дата сдачи"), toInt(COLTYPE::Date)});
+    calc()->addColumn({qtr("Цена за литр"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Литры"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Жиры"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Белок"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Жироед."), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Зачет. вес"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Оплата(без премии)"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Премия"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Сумма"), toInt(COLTYPE::Double)});
 }
 
 void Settings::setDefaultPrintColumns()
 {
-    m_print.columns = {
-        {qtr("№ п/п"), toInt(COLTYPE::SerialNumber)},
-        {qtr("Ф. И. О."), toInt(COLTYPE::String)},
-        {qtr("Физ. вес"), toInt(COLTYPE::Double)},
-        {qtr("% жир"), toInt(COLTYPE::Double)},
-        {qtr("Белок"), toInt(COLTYPE::Double)},
-        {qtr("Жироед."), toInt(COLTYPE::Double), false},
-        {qtr("Зачет. вес"), toInt(COLTYPE::Double)},
-        {qtr("Оплата(без премии)"), toInt(COLTYPE::Double), false},
-        {qtr("Премия"), toInt(COLTYPE::Double), false},
-        {qtr("Сумма"), toInt(COLTYPE::Double)},
-        {qtr("Подпись"), toInt(COLTYPE::String)}
-    };
+    calc()->clearColumns();
+    calc()->addColumn({qtr("№ п/п"), toInt(COLTYPE::SerialNumber)});
+    calc()->addColumn({qtr("Ф. И. О."), toInt(COLTYPE::String)});
+    calc()->addColumn({qtr("Физ. вес"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("% жир"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Белок"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Жироед."), toInt(COLTYPE::Double), false});
+    calc()->addColumn({qtr("Зачет. вес"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Оплата(без премии)"), toInt(COLTYPE::Double), false});
+    calc()->addColumn({qtr("Премия"), toInt(COLTYPE::Double), false});
+    calc()->addColumn({qtr("Сумма"), toInt(COLTYPE::Double)});
+    calc()->addColumn({qtr("Подпись"), toInt(COLTYPE::String)});
 }
 
-Settings::Column Settings::getColumnFromSettings() const
-{
-    return {
-        value(COL_DISPLAY).toString(),
-                value(COL_TYPE).toInt(),
-                value(COL_PREC).toInt(),
-                value(COL_IS_SHOW).toBool()
-    };
-}
-
-void Settings::writeColumnToSettings(const Settings::Column &column)
+void Settings::writeColumnToSettings(const SettingsColumnData &column)
 {
     setValue(COL_DISPLAY, column.display);
     setValue(COL_PREC, column.prec);

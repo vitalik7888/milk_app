@@ -7,16 +7,20 @@
 #include <QScopedPointer>
 
 
-class MilkCore
+class MilkCore : public QObject
 {
-public:
-    MilkCore();
+    Q_OBJECT
+    Q_PROPERTY(Settings *settings READ settings)
 
-    Settings *settings() const { return m_settings.data(); }
+public:
+    MilkCore(QObject *parent = Q_NULLPTR);
+    virtual ~MilkCore() {}
+
+    Settings *settings() { return m_settings; }
     DB_NAMESPACE::Database *database() const { return m_database.data(); }
 
 private:
-    QScopedPointer<Settings> m_settings;
+    Settings *m_settings;
     QScopedPointer<DB_NAMESPACE::Database> m_database;
 };
 

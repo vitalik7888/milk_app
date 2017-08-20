@@ -3,8 +3,9 @@
 USE_DB_NAMESPACE
 
 
-MilkCore::MilkCore() :
-    m_settings(new Settings()),
+MilkCore::MilkCore(QObject *parent) :
+    QObject(parent),
     m_database(new Database())
 {
+    m_settings = new Settings(this);
 }
