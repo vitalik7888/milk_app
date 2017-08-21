@@ -9,6 +9,8 @@
 // Qt
 #include <QObject>
 #include <QtSql/QSqlDatabase>
+#include <QSqlError>
+#include <QQmlListProperty>
 
 DB_BEGIN_NAMESPACE
 
@@ -16,6 +18,11 @@ DB_BEGIN_NAMESPACE
 class Database : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(LocalitiesTable *localities READ localities)
+    Q_PROPERTY(DeliverersTable *deliverers READ deliverers)
+    Q_PROPERTY(MilkPointsTable *milkPoints READ milkPoints)
+    Q_PROPERTY(MilkReceptionTable *milkReception READ milkReception)
+    Q_PROPERTY(QQmlListProperty<Table> tables READ tables)
 
     enum class Tables: int {
         localities = 0,
@@ -25,23 +32,26 @@ class Database : public QObject
     };
 public:
     explicit Database(QObject *parent = nullptr);
-    ~Database();
+    virtual ~Database();
 
-    bool openDb(const QString &dbPath);
-    QSqlError lastError() const;
-    QString choosenDatabase() const;
+    Q_INVOKABLE bool openDb(const QString &dbPath);
+    Q_INVOKABLE QSqlError lastError() const;
+    Q_INVOKABLE QString choosenDatabase() const;
 
-    QVector<Table *> tables() const;
+    QQmlListProperty<Table> tables();
     LocalitiesTable *localities() const;
     DeliverersTable *deliverers() const;
     MilkPointsTable *milkPoints() const;
     MilkReceptionTable *milkReception() const;
 
-    bool isTablesCreated() const;
+    Q_INVOKABLE bool isTablesCreated() const;
+
+signals:
+   void dbOpened();
 
 private:
     QSqlDatabase m_db;
-    QVector<Table *> m_tables;
+    QList<Table *> m_tables;
 
     void removeTables();
     void createTables();

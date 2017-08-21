@@ -3,7 +3,6 @@
 // Qt
 #include <QFile>
 #include <QSqlQuery>
-#include <QSqlError>
 #include <QDebug>
 
 USE_DB_NAMESPACE
@@ -41,6 +40,8 @@ bool Database::openDb(const QString &dbPath)
         removeTables();
         createTables();
 
+        emit dbOpened();
+
         return true;
     }
 
@@ -59,27 +60,27 @@ QString Database::choosenDatabase() const
 
 LocalitiesTable *Database::localities() const
 {
-    return qobject_cast<LocalitiesTable *>(m_tables[(int)Tables::localities]);
+    return qobject_cast<LocalitiesTable *>(m_tables[static_cast<int>(Tables::localities)]);
 }
 
 DeliverersTable *Database::deliverers() const
 {
-    return qobject_cast<DeliverersTable *>(m_tables[(int)Tables::deliverers]);
+    return qobject_cast<DeliverersTable *>(m_tables[static_cast<int>(Tables::deliverers)]);
 }
 
 MilkPointsTable *Database::milkPoints() const
 {
-    return qobject_cast<MilkPointsTable *>(m_tables[(int)Tables::milk_points]);
+    return qobject_cast<MilkPointsTable *>(m_tables[static_cast<int>(Tables::milk_points)]);
 }
 
 MilkReceptionTable *Database::milkReception() const
 {
-    return qobject_cast<MilkReceptionTable *>(m_tables[(int)Tables::milk_reception]);
+    return qobject_cast<MilkReceptionTable *>(m_tables[static_cast<int>(Tables::milk_reception)]);
 }
 
-QVector<Table *> Database::tables() const
+QQmlListProperty<Table> Database::tables()
 {
-    return m_tables;
+    return QQmlListProperty<Table>(this, m_tables);
 }
 
 bool Database::isTablesCreated() const

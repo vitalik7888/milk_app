@@ -15,6 +15,8 @@ DB_BEGIN_NAMESPACE
 class Table : public QSqlQueryModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString tableName READ tableName)
+
 public:
     Table(Dao *dao, QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
     virtual ~Table();
@@ -27,7 +29,7 @@ public:
     virtual QString primaryField() const = 0;
 
     virtual QString selectAll() const;
-    bool isEmpty() const;
+    Q_INVOKABLE bool isEmpty() const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;

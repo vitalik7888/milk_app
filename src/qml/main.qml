@@ -1,18 +1,25 @@
 import QtQuick 2.6
+import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
-import MainSettings 1.0
-import Settings 1.0
+import QtQuick.Layouts 1.3
+import MilkCore 1.0
+import Database 1.0
 
-Window {
+ApplicationWindow {
+    id: window
+    width: 480
+    height: 600
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Hello World")
 
-    MainForm {
-        anchors.fill: parent
-        mouseArea.onClicked: {
-            console.log(core.settings.main.lastChoosenDb)
+    Component.onCompleted: {
+        if (!core.settings.main.lastChoosenDb.isEmpty)
+            core.database.openDb(core.settings.main.lastChoosenDb)
+    }
+
+    Connections {
+        target: core.database
+        onDbOpened: {
+            console.log("Database is opened")
         }
     }
 }
