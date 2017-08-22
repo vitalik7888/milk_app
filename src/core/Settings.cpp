@@ -271,7 +271,10 @@ Settings::Settings(QObject *parent):
     QObject(parent)
 {
     m_settings = new QSettings(Constants::organization(), Constants::appName(), this);
+
     m_main = new MainSettings(this);
+    m_print = new PrintSettings(this);
+    m_calc = new CalcSettings(this);
 }
 
 Settings::~Settings()

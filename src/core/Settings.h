@@ -133,21 +133,10 @@ public:
         QVector<SettingsColumnData> columns = {};
     };
 
-    explicit PrintSettings(
-            const QFont &textFont, const QFont &captionTextFont,
-            const QColor &captionColor = QColor(Qt::black), const int tableWidth = 2,
-            const int tableBorderWidth = 2, const int tableBorderStyle = 3,
-            const int cellSpacing = 0, const int cellPadding = 0,
-            const QColor &tableBorderColor = QColor(Qt::black), const QFont &tableHeaderFont = QFont(),
-            const QColor &tableHeaderColor = QColor(Qt::black), const QFont &tableTextFont = QFont(),
-            const QColor &tableTextColor = QColor(Qt::black), const QFont &tableResultFont = QFont(),
-            const QColor &tableResultColor = QColor(Qt::black), const QVector<SettingsColumnData> &columns = {},
-            QObject *parent = Q_NULLPTR) :
-        QObject(parent),
-        m_data({textFont, captionTextFont, captionColor, tableWidth, tableBorderWidth,
-               tableBorderStyle, cellSpacing, cellPadding, tableBorderColor, tableHeaderFont,
-               tableHeaderColor, tableTextFont, tableTextColor, tableResultFont, tableResultColor, columns})
-    {}
+    explicit PrintSettings(QObject *parent = Q_NULLPTR) : PrintSettings({}, parent) {}
+
+    explicit PrintSettings(const PrintSettings::Data &data, QObject *parent = Q_NULLPTR) :
+        QObject(parent), m_data(data) {}
 
     virtual ~PrintSettings() {}
 
@@ -217,7 +206,7 @@ class CalcSettings : public QObject {
 
 public:
     struct Data {
-        QString dateFormat = "MM-dd-yyyy";
+        QString dateFormat; // "MM-dd-yyyy"
         QFont textFont;
         QColor textBackColor;
         QFont delivResultFont;
@@ -225,19 +214,13 @@ public:
         QFont allResultFont;
         QColor allResultColor;
 
-        QVector<SettingsColumnData> columns = {};
+        QVector<SettingsColumnData> columns;
     };
 
-    explicit CalcSettings(
-            const QFont &textFont, const QColor &textBackColor,
-            const QFont &delivResultFont, const QColor &delivResultColor,
-            const QFont &allResultFont, const QColor &allResultColor,
-            const QString &dateFormat = "MM-dd-yyyy",
-            const QVector<SettingsColumnData> &columns = {},
-            QObject *parent = Q_NULLPTR) :
-        QObject(parent),
-        m_data({dateFormat, textFont, textBackColor, delivResultFont, delivResultColor, allResultFont,
-               allResultColor, columns}) {}
+    explicit CalcSettings(QObject *parent = Q_NULLPTR) : CalcSettings({}, parent) {}
+
+    explicit CalcSettings(const CalcSettings::Data &data = {}, QObject *parent = Q_NULLPTR) :
+        QObject(parent), m_data(data) {}
     virtual ~CalcSettings() {}
 
     QFont textFont() const { return m_data.textFont; }
@@ -282,6 +265,11 @@ public:
     Settings(QObject *parent = Q_NULLPTR);
     virtual ~Settings();
 
+    MainSettings *main() { return m_main; }
+    PrintSettings *print() const { return m_print; }
+    CalcSettings *calc() const { return m_calc; }
+
+public slots:
     void writeMainSettings();
     void writeCalcSettings();
     void writePrintSettings();
@@ -296,10 +284,6 @@ public:
     void setDefaultCalcSettings();
     void setDefaultPrintSettings();
     void setDefaultSettings();
-
-    MainSettings *main() { return m_main; }
-    PrintSettings *print() const { return m_print; }
-    CalcSettings *calc() const { return m_calc; }
 
 private:
     QSettings *m_settings;
