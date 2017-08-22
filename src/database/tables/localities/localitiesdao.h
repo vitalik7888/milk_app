@@ -8,7 +8,7 @@ DB_BEGIN_NAMESPACE
 
 class LocalitiesDao: public Dao {
 public:
-    LocalitiesDao(const QSqlDatabase &db);
+    LocalitiesDao(const QSqlDatabase &db = QSqlDatabase());
 
     LocalityData get(const milk_id id) const;
     void insert(const LocalityData &data);

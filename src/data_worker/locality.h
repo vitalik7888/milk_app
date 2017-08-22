@@ -2,14 +2,21 @@
 #define LOCALITY_H
 
 #include <tables/localities/localitydata.h>
+// Qt
+#include <QObject>
 
-class Locality
+class Locality : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(int localityId READ id WRITE setId)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString description READ description WRITE setDescription)
+
 public:
-    Locality();
-    Locality(const milk_id id, const QString &name, const QString &description);
-    Locality(const Locality &locality);
-    ~Locality();
+    Locality(QObject *parent = Q_NULLPTR);
+    Locality(const milk_id id, const QString &name,
+             const QString &description, QObject *parent = Q_NULLPTR);
+    virtual ~Locality();
 
     milk_id id() const;
     void setId(const milk_id &id);

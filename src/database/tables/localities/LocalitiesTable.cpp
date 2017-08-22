@@ -70,7 +70,10 @@ void LocalitiesDao::update(const LocalityData &data) {
 }
 
 //--------------------------------------------------------------------------------------------------
-LocalitiesTable::LocalitiesTable(QObject *parent, QSqlDatabase db):
+
+LocalitiesTable::LocalitiesTable(QObject *parent) : LocalitiesTable(QSqlDatabase(), parent) {}
+
+LocalitiesTable::LocalitiesTable(QSqlDatabase db, QObject *parent):
     Table(new LocalitiesDao(db), parent, db)
 {
     setObjectName("LocalitiesTable");
@@ -94,14 +97,25 @@ LocalityData LocalitiesTable::getLocality(const milk_id localityId) const
     return dao()->get(localityId);
 }
 
-void LocalitiesTable::insert(const LocalityData &locality)
+void LocalitiesTable::insert(int index, Locality *locality)
 {
-    dao()->insert(locality);
+    if(index < 0 || index > rowCount()) {
+        return;
+    }
+
+    emit beginInsertRows(QModelIndex(), index, index);
+    dao()->insert(locality->data());
+    emit endInsertRows();
 }
 
-void LocalitiesTable::update(const LocalityData &locality) const
+void LocalitiesTable::append(Locality *locality)
 {
-    dao()->update(locality);
+    insert(rowCount(), locality);
+}
+
+void LocalitiesTable::update(Locality *locality) const
+{
+    dao()->update(locality->data());
 }
 
 void LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
@@ -155,3 +169,5 @@ int db::LocalitiesTable::getColPosition(const QString &columnName) const
         return LocalityTableColumns::LT_DESCRIPTION;
     return -1;
 }
+
+

@@ -3,20 +3,16 @@
 USE_DB_NAMESPACE;
 
 
-Locality::Locality():
-    Locality(-1, QString(), QString())
+Locality::Locality(QObject *parent):
+    Locality(-1, QString(), QString(), parent)
 {
 
 }
 
-Locality::Locality(const milk_id id, const QString &name, const QString &description):
+Locality::Locality(const milk_id id, const QString &name,
+                   const QString &description, QObject *parent):
+    QObject(parent),
     m_data(id, name, description)
-{
-
-}
-
-Locality::Locality(const Locality &locality):
-    m_data(locality.data())
 {
 
 }

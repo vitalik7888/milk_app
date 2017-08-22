@@ -3,7 +3,7 @@
 
 #include "dbconstants.h"
 #include "base/Table.h"
-#include "localitydata.h"
+#include "locality.h"
 
 DB_BEGIN_NAMESPACE
     class LocalitiesDao;
@@ -11,19 +11,21 @@ DB_BEGIN_NAMESPACE
 class LocalitiesTable : public Table
 {
     Q_OBJECT
+
 public:
-    LocalitiesTable(QObject *parent, QSqlDatabase db);
-    ~LocalitiesTable();
+    LocalitiesTable(QObject *parent = Q_NULLPTR);
+    LocalitiesTable(QSqlDatabase db, QObject *parent = Q_NULLPTR);
+    virtual ~LocalitiesTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QString primaryField() const Q_DECL_OVERRIDE;
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-
     LocalityData getLocality(const milk_id localityId) const;
-    void insert(const LocalityData &locality);
-    void update(const LocalityData &locality) const;
+    Q_INVOKABLE void insert(int index, Locality *locality);
+    Q_INVOKABLE void append(Locality *locality);
+    Q_INVOKABLE void update(Locality *locality) const;
     void setName(const milk_id localityId, const QString &localityName) const;
     void setDescription(const milk_id localityId, const QString &description) const;
 

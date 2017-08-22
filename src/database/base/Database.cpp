@@ -31,12 +31,6 @@ bool Database::openDb(const QString &dbPath)
         if (!query.exec())
             qDebug() << "Не удалось включить поддержку внешнего ключа";
 
-        /*if (isTablesCreated()) {
-            clearTables();
-            refreshTables();
-        } else {
-            createTables();
-        }*/
         removeTables();
         createTables();
 
@@ -100,7 +94,7 @@ void Database::createTables()
     if (!m_tables.isEmpty())
         return;
 
-    auto localities = new LocalitiesTable(this, m_db);
+    auto localities = new LocalitiesTable(m_db, this);
     auto deliverers = new DeliverersTable(localities, m_db);
     auto milkPoints = new MilkPointsTable(localities, m_db);
     auto milkReception = new MilkReceptionTable(deliverers, milkPoints, m_db);

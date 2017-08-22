@@ -105,11 +105,38 @@ bool Table::setData(const QModelIndex &_index, const QVariant &value, int role)
         m_dao->updateValue(getColName(_index.column()), id, value);
         refresh();
         emit dataChanged(_index, _index);
-    } catch (const QString &err) {
+    } catch (const QString &) {
         return false;
     }
 
     return true;
+}
+
+QHash<int, QByteArray> Table::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+
+    for (int i = 0; i < this->record().count(); i ++) {
+        roles.insert(Qt::UserRole + i + 1, "f_" + record().fieldName(i).toUtf8());
+    }
+
+    return roles;
+}
+
+QVariant Table::data(const QModelIndex &_index, int role) const
+{
+    QVariant value;
+
+    if (_index.isValid()) {
+        if (role < Qt::UserRole) {
+            value = QSqlQueryModel::data(_index, role);
+        } else {
+            const int columnIdx = role - Qt::UserRole - 1;
+            QModelIndex modelIndex = this->index(_index.row(), columnIdx);
+            value = QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
+        }
+    }
+    return value;
 }
 
 Qt::ItemFlags Table::flags(const QModelIndex &index) const
