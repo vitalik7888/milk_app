@@ -22,7 +22,8 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    LocalityData getLocality(const milk_id localityId) const;
+    LocalityData getLocalityData(const milk_id localityId) const;
+    Q_INVOKABLE Locality *getLocality(const qlonglong localityId);
     Q_INVOKABLE void insert(int index, Locality *locality);
     Q_INVOKABLE void append(Locality *locality);
     Q_INVOKABLE void update(Locality *locality) const;

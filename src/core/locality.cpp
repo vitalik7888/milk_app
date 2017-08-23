@@ -4,15 +4,14 @@ USE_DB_NAMESPACE;
 
 
 Locality::Locality(QObject *parent):
-    Locality(-1, QString(), QString(), parent)
+    Locality({}, parent)
 {
 
 }
 
-Locality::Locality(const milk_id id, const QString &name,
-                   const QString &description, QObject *parent):
+Locality::Locality(const LocalityData &data, QObject *parent):
     QObject(parent),
-    m_data(id, name, description)
+    m_data(data)
 {
 
 }

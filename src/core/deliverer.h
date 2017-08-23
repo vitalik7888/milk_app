@@ -1,7 +1,7 @@
 #ifndef DELIVERER_H
 #define DELIVERER_H
 
-#include <tables/deliverers/delivererdata.h>
+#include "delivererdata.h"
 #include "calculateditem.h"
 // Qt
 #include <QWeakPointer>

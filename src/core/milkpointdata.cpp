@@ -19,15 +19,6 @@ MilkPointData::MilkPointData(const milk_id id, const milk_id localityId, const Q
 
 }
 
-MilkPointData::MilkPointData(const MilkPointData &data):
-    m_id(data.id()),
-    m_localityId(data.localityId()),
-    m_name(data.name()),
-    m_description(data.description())
-{
-
-}
-
 milk_id MilkPointData::id() const
 {
     return m_id;

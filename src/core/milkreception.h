@@ -2,8 +2,8 @@
 #define MILKRECEPTION_H
 
 #include "calculateditem.h"
-#include <tables/milk_reception/milkreceptiondata.h>
-#include <src/core/Constants.h>
+#include "milkreceptiondata.h"
+#include "src/core/Constants.h"
 // Qt
 #include <QDate>
 #include <QWeakPointer>

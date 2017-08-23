@@ -13,7 +13,6 @@ class MilkPointData
 public:
     MilkPointData();
     MilkPointData(const milk_id id, const milk_id localityId, const QString &name, const QString &description);
-    MilkPointData(const MilkPointData &data);
 
     milk_id id() const;
     void setId(const milk_id &id);

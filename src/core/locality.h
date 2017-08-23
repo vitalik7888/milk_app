@@ -1,21 +1,20 @@
 #ifndef LOCALITY_H
 #define LOCALITY_H
 
-#include <tables/localities/localitydata.h>
+#include "localitydata.h"
 // Qt
 #include <QObject>
 
 class Locality : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int f_Id READ id WRITE setId)
+    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
     Q_PROPERTY(QString f_name READ name WRITE setName)
     Q_PROPERTY(QString f_description READ description WRITE setDescription)
 
 public:
+    Locality(const DB_NAMESPACE::LocalityData &data, QObject *parent = Q_NULLPTR);
     Locality(QObject *parent = Q_NULLPTR);
-    Locality(const milk_id id, const QString &name,
-             const QString &description, QObject *parent = Q_NULLPTR);
     virtual ~Locality();
 
     milk_id id() const;

@@ -92,9 +92,14 @@ QString LocalitiesTable::tableName() const
     return TABLE_NAME;
 }
 
-LocalityData LocalitiesTable::getLocality(const milk_id localityId) const
+LocalityData LocalitiesTable::getLocalityData(const milk_id localityId) const
 {
     return dao()->get(localityId);
+}
+
+Locality *LocalitiesTable::getLocality(const qlonglong localityId)
+{
+    return new Locality(dao()->get(localityId), this);
 }
 
 void LocalitiesTable::insert(int index, Locality *locality)

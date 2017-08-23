@@ -2,7 +2,7 @@
 #define MILKPOINTDAO_H
 
 #include <base/dao.h>
-#include "milkpointdata.h"
+#include "src/core/milkpointdata.h"
 
 DB_BEGIN_NAMESPACE
 

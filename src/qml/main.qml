@@ -17,32 +17,78 @@ ApplicationWindow {
             database.openDb(settings.main.lastChoosenDb)
     }
 
+    Column {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
 
-    ListView {
-        id: listViewLocalities
-        anchors.fill: parent
+        spacing: 5
 
-        highlight: Rectangle {
-            color: 'grey'
-            radius: 5
-        }
-        focus: true
-        flickableDirection: Flickable.AutoFlickDirection
+        Rectangle {
+            color: "lightblue"
+            radius: 10.0
+            width: 300
+            height: listViewLocalities.height
 
-        delegate: Component {
-            Rectangle {
-                id: wrapper
-                width: localityInfo.width
-                height: localityInfo.height
-                color: ListView.isCurrentItem ? "black" : "white"
-                Text {
-                    id: localityInfo
-                    text: f_name + "(id: " + f_id + ", description: " + f_description + ")"
-                    color: wrapper.ListView.isCurrentItem ? "white" : "black"
+            ListView {
+                id: listViewLocalities
+                width: 100
+                height: 200
+
+                highlight: Rectangle {
+                    color: 'grey'
+                    radius: 5
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: listViewLocalities.currentIndex = index
+                focus: true
+                flickableDirection: Flickable.AutoFlickDirection
+
+                delegate: Component {
+                    Rectangle {
+                        id: wrapperLocalities
+                        width: localityInfo.width
+                        height: localityInfo.height
+                        color: ListView.isCurrentItem ? "black" : "white"
+                        Text {
+                            id: localityInfo
+                            text: f_name + "(id: " + f_id + ", description: " + f_description + ")"
+                            color: wrapperLocalities.ListView.isCurrentItem ? "white" : "black"
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: listViewLocalities.currentIndex = index
+                        }
+                    }
+                }
+            }}
+        Rectangle { color: "gold"; radius: 10.0
+            width: 300; height: listViewMilkPoints.height
+            ListView {
+                id: listViewMilkPoints
+                width: 100
+                height: 200
+
+                highlight: Rectangle {
+                    color: 'grey'
+                    radius: 5
+                }
+                focus: true
+                flickableDirection: Flickable.AutoFlickDirection
+
+                delegate: Component {
+                    Rectangle {
+                        id: wrapperMilkPoints
+                        width: milkPointInfo.width
+                        height: milkPointInfo.height
+                        color: ListView.isCurrentItem ? "black" : "white"
+                        Text {
+                            id: milkPointInfo
+                            text: f_name
+                            color: wrapperMilkPoints.ListView.isCurrentItem ? "white" : "black"
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: listViewMilkPoints.currentIndex = index
+                        }
+                    }
                 }
             }
         }
@@ -52,6 +98,7 @@ ApplicationWindow {
         target: database
         onDbOpened: {
             listViewLocalities.model = database.localities
+            listViewMilkPoints.model = database.milkPoints
         }
     }
 }

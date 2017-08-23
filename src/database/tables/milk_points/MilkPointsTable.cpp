@@ -82,9 +82,15 @@ void MilkPointDao::update(const MilkPointData &data) const
 }
 
 //--------------------------------------------------------------------------------------------------
-MilkPointsTable::MilkPointsTable(LocalitiesTable *parent, QSqlDatabase db):
+MilkPointsTable::MilkPointsTable(QObject *parent):
+    MilkPointsTable(Q_NULLPTR, QSqlDatabase(), parent)
+{
+
+}
+
+MilkPointsTable::MilkPointsTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent):
     Table(new MilkPointDao(db), parent, db),
-    m_localities(parent)
+    m_localities(localities)
 {
     setObjectName("MilkPointsTable");
     qDebug() << "init " + objectName();
@@ -102,19 +108,35 @@ QString MilkPointsTable::tableName() const
     return TABLE_NAME;
 }
 
-MilkPointData MilkPointsTable::getMilkPoint(const milk_id milkPointId) const
+MilkPointData MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
 {
     return dao()->get(milkPointId);
 }
 
-void MilkPointsTable::insert(const MilkPointData &milkPoint)
+MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
 {
-    dao()->insert(milkPoint);
+    return new MilkPoint(dao()->get(milkPointId), this);
 }
 
-void MilkPointsTable::update(const MilkPointData &milkPoint) const
+void MilkPointsTable::insert(int index, MilkPoint *milkPoint)
 {
-    dao()->update(milkPoint);
+    if(index < 0 || index > rowCount()) {
+        return;
+    }
+
+    emit beginInsertRows(QModelIndex(), index, index);
+    dao()->insert(milkPoint->data());
+    emit endInsertRows();
+}
+
+void MilkPointsTable::append(MilkPoint *milkPoint)
+{
+    insert(rowCount(), milkPoint);
+}
+
+void MilkPointsTable::update(MilkPoint *milkPoint) const
+{
+    dao()->update(milkPoint->data());
 }
 
 void MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
@@ -127,7 +149,7 @@ void MilkPointsTable::setDescription(const milk_id milkPointId, const QString &d
     m_dao->updateValue(FN_DESCRIPTION, milkPointId, description);
 }
 
-LocalitiesTable *MilkPointsTable::getLocalities() const
+LocalitiesTable *MilkPointsTable::localities() const
 {
     return m_localities;
 }

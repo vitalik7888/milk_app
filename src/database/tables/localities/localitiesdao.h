@@ -2,7 +2,7 @@
 #define LOCALITIESDAO_H
 
 #include <base/dao.h>
-#include "localitydata.h"
+#include "src/core/localitydata.h"
 
 DB_BEGIN_NAMESPACE
 
