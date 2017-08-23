@@ -24,17 +24,6 @@ DelivererData::DelivererData(const milk_id id, const QString &name, const milk_i
 
 }
 
-DelivererData::DelivererData(const DelivererData &data):
-    m_inn(data.inn()),
-    m_id(data.id()),
-    m_localityId(data.localityId()),
-    m_name(data.name()),
-    m_address(data.address()),
-    m_phoneNumber(data.phoneNumber())
-{
-
-}
-
 DelivererData::~DelivererData()
 {
 

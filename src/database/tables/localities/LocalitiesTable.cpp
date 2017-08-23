@@ -74,7 +74,7 @@ void LocalitiesDao::update(const LocalityData &data) {
 LocalitiesTable::LocalitiesTable(QObject *parent) : LocalitiesTable(QSqlDatabase(), parent) {}
 
 LocalitiesTable::LocalitiesTable(QSqlDatabase db, QObject *parent):
-    Table(new LocalitiesDao(db), parent, db)
+    Table(new LocalitiesDao(db), db, parent)
 {
     setObjectName("LocalitiesTable");
     qDebug() << "init " + objectName();

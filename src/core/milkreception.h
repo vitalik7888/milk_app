@@ -11,19 +11,23 @@
 class MilkPoint;
 class Deliverer;
 
-using WpDeliverer = QWeakPointer<Deliverer>;
-using WpMilkPoint = QWeakPointer<MilkPoint>;
+class MilkReception : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
+    Q_PROPERTY(QDate deliveryDate READ deliveryDate WRITE setDeliveryDate)
+    Q_PROPERTY(double priceLiter READ priceLiter WRITE setPriceLiter)
+    Q_PROPERTY(double liters READ liters WRITE setLiters)
+    Q_PROPERTY(double fat READ fat WRITE setFat)
+    Q_PROPERTY(Deliverer *deliverer READ deliverer WRITE setDeliverer)
+    Q_PROPERTY(MilkPoint *milkPoint READ milkPoint WRITE setMilkPoint)
 
-
-class MilkReception {
 public:
-    MilkReception();
     MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
-                  const double liters, const double fat,
-                  const WpDeliverer &deliverer = WpDeliverer(),
-                  const WpMilkPoint &milkPoint = WpMilkPoint());
-    MilkReception(const MilkReception &milkReception);
-    ~MilkReception();
+                  const double liters, const double fat, Deliverer *deliverer = Q_NULLPTR,
+                  MilkPoint *milkPoint = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    MilkReception(QObject *parent = Q_NULLPTR);
+    virtual ~MilkReception();
 
     milk_id id() const;
     void setId(const milk_id &id);
@@ -40,22 +44,23 @@ public:
     double fat() const;
     void setFat(double fat);
 
-    WpDeliverer deliverer() const;
-    void setDeliverer(const WpDeliverer deliverer);
+    Deliverer *deliverer() const;
+    void setDeliverer(Deliverer *deliverer);
 
-    WpMilkPoint milkPoint() const;
-    void setMilkPoint(const WpMilkPoint milkPoint);
+    MilkPoint *milkPoint() const;
+    void setMilkPoint(MilkPoint *milkPoint);
 
     DB_NAMESPACE::MilkReceptionData data() const;
 
-    CalculatedItem getCalculations() const;
+    CalculatedItem::Data getCalculationsData() const;
+    Q_INVOKABLE CalculatedItem *getCalculations();
 
-    bool isValid() const;
+    Q_INVOKABLE bool isValid() const;
 
 private:
     DB_NAMESPACE::MilkReceptionData m_data;
-    WpDeliverer m_deliverer;
-    WpMilkPoint m_milkPoint;
+    Deliverer *m_deliverer;
+    MilkPoint *m_milkPoint;
 };
 
 #endif // MILKRECEPTION_H

@@ -5,23 +5,18 @@
 #include "Utils.h"
 
 
-Deliverer::Deliverer():
-    Deliverer(-1, QString(), -1, QString(), QString(), WpLocality())
+Deliverer::Deliverer(QObject *parent):
+    Deliverer(-1, QString(), -1, QString(), QString(), Q_NULLPTR, parent)
 {
 
 }
 
-Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
-                     const QString &phoneNumber, const WpLocality &locality):
-    m_data(id, name, locality.isNull() ? -1 : locality.data()->id(), inn, address, phoneNumber),
+Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn,
+                     const QString &address, const QString &phoneNumber,
+                     Locality *locality, QObject *parent):
+    QObject(parent),
+    m_data(id, name, locality == Q_NULLPTR ? -1 : locality->id(), inn, address, phoneNumber),
     m_locality(locality)
-{
-
-}
-
-Deliverer::Deliverer(const Deliverer &deliverer):
-    m_data(deliverer.data()),
-    m_locality(deliverer.locality())
 {
 
 }
@@ -41,7 +36,7 @@ void Deliverer::setId(const milk_id &id)
     m_data.setId(id);
 }
 
-WpLocality Deliverer::locality() const
+Locality *Deliverer::locality() const
 {
     return m_locality;
 }
@@ -91,12 +86,12 @@ bool Deliverer::isHasMilkReceptions() const
     return !m_milkReceptions.empty();
 }
 
-DelivererMilkReceptions Deliverer::milkReceptions() const
+QQmlListProperty<MilkReception> Deliverer::milkReceptions()
 {
-    return m_milkReceptions;
+    return QQmlListProperty<MilkReception>(this, m_milkReceptions);
 }
 
-void Deliverer::addMilkReception(const WpMilkRecep &milkReception)
+void Deliverer::addMilkReception(MilkReception *milkReception)
 {
     m_milkReceptions.append(milkReception);
 }
@@ -105,18 +100,18 @@ CalculatedItem::Data Deliverer::getCalculations() const
 {
     CalculatedItem::Data data;
 
-    for (const auto &mr: m_milkReceptions) {
-        const auto right = mr.data()->getCalculations().data();
+    for (const auto mr: m_milkReceptions) {
+        const auto right = mr->getCalculations()->data();
         data += right;
     }
 
     return data;
 }
 
-void Deliverer::setLocality(const WpLocality &locality)
+void Deliverer::setLocality(Locality *locality)
 {
     m_locality = locality;
-    m_data.setId(locality.isNull() ? -1 : locality.data()->id());
+    m_data.setId(locality == Q_NULLPTR ? -1 : locality->id());
 }
 
 bool Deliverer::isValid() const

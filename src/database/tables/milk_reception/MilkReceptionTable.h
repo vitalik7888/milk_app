@@ -2,7 +2,7 @@
 #define MILKRECEPTION_TABLE_H
 
 #include "base/Table.h"
-#include "milkreceptiondata.h"
+#include "milkreception.h"
 #include <src/core/Constants.h>
 // Qt
 #include <QDate>
@@ -17,8 +17,10 @@ class MilkReceptionTable : public Table
 {
     Q_OBJECT
 public:
-    MilkReceptionTable(DeliverersTable *deliverers, MilkPointsTable *milkPoints, QSqlDatabase db);
-    ~MilkReceptionTable();
+    MilkReceptionTable(QObject *parent = Q_NULLPTR);
+    MilkReceptionTable(DeliverersTable *deliverers, MilkPointsTable *milkPoints,
+                       QSqlDatabase db, QObject *parent = Q_NULLPTR);
+    virtual ~MilkReceptionTable();
 
     QString tableName() const Q_DECL_OVERRIDE;
     QString primaryField() const Q_DECL_OVERRIDE;
@@ -28,10 +30,12 @@ public:
     QString selectAll() const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
-    MilkReceptionData getMilkReception(const milk_id milkPointId) const;
+    MilkReceptionData getMilkReceptionData(const milk_id milkReceptionId) const;
+    MilkReception *getMilkReception(const qlonglong milkReceptionId);
     QList<MilkReceptionData> getMilkReceptions(const QString &where = QString()) const;
-    void insert(const MilkReceptionData &milkReception) const;
-    void update(const MilkReceptionData &milkReception) const;
+    Q_INVOKABLE void insert(int index, MilkReception *milkReception);
+    Q_INVOKABLE void append(MilkReception *milkReception);
+    Q_INVOKABLE void update(MilkReception *milkReception) const;
     bool updatePriceLiters(const price price, const QDate &dateFrom, const QDate &dateTo) const;
     void setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
     void setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;

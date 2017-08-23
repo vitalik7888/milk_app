@@ -127,9 +127,15 @@ void MilkReceptionDao::update(const MilkReceptionData &data) const
 }
 
 //--------------------------------------------------------------------------------------------------
+MilkReceptionTable::MilkReceptionTable(QObject *parent):
+    MilkReceptionTable(Q_NULLPTR, Q_NULLPTR, QSqlDatabase(), parent)
+{
+
+}
+
 MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsTable *milkPoints,
-                                       QSqlDatabase db):
-    Table(new MilkReceptionDao(db), _deliverers, db),
+                                       QSqlDatabase db, QObject *parent):
+    Table(new MilkReceptionDao(db), db, parent),
     m_deliverers(_deliverers),
     m_milkPoints(milkPoints)
 {
@@ -149,9 +155,23 @@ QString MilkReceptionTable::tableName() const
     return TABLE_NAME;
 }
 
-MilkReceptionData MilkReceptionTable::getMilkReception(const milk_id milkReceptionId) const
+MilkReceptionData MilkReceptionTable::getMilkReceptionData(const milk_id milkReceptionId) const
 {
     return dao()->get(milkReceptionId);
+}
+
+MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId)
+{
+    const auto mrData = getMilkReceptionData(milkReceptionId);
+    const auto deliverer = getDeliverers()->getDeliverer(mrData.delivererId());
+    const auto milkPoint = getMilkPoints()->getMilkPoint(mrData.milkPointId());
+
+    auto milkReception = new MilkReception(mrData.id(), mrData.deliveryDate(), mrData.priceLiter(),
+                                           mrData.liters(), mrData.fat(), deliverer, milkPoint, this);
+    deliverer->setParent(milkReception);
+    milkPoint->setParent(milkReception);
+
+    return milkReception;
 }
 
 QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &where) const
@@ -159,14 +179,25 @@ QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &wh
     return dao()->get(where);
 }
 
-void MilkReceptionTable::insert(const MilkReceptionData &milkReception) const
+void MilkReceptionTable::insert(int index, MilkReception *milkReception)
 {
-    dao()->insert(milkReception);
+    if(index < 0 || index > rowCount()) {
+        return;
+    }
+
+    emit beginInsertRows(QModelIndex(), index, index);
+    dao()->insert(milkReception->data());
+    emit endInsertRows();
 }
 
-void MilkReceptionTable::update(const MilkReceptionData &milkReception) const
+void MilkReceptionTable::append(MilkReception *milkReception)
 {
-    dao()->update(milkReception);
+    insert(rowCount(), milkReception);
+}
+
+void MilkReceptionTable::update(MilkReception *milkReception) const
+{
+    dao()->update(milkReception->data());
 }
 
 void MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const

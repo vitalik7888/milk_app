@@ -13,8 +13,7 @@ public:
     DelivererData();
     DelivererData(const milk_id id, const QString &name, const milk_id localityId, const milk_inn inn,
               const QString &address, const QString &phoneNumber);
-    DelivererData(const DelivererData &data);
-    ~DelivererData();
+    virtual ~DelivererData();
 
     bool isValid() const;
 

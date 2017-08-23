@@ -4,29 +4,38 @@
 #include "delivererdata.h"
 #include "calculateditem.h"
 // Qt
+#include <QQmlListProperty>
 #include <QWeakPointer>
 
 class Locality;
 class MilkReception;
 
-using WpLocality = QWeakPointer<Locality>;
-using WpMilkRecep = QWeakPointer<MilkReception>;
-using DelivererMilkReceptions = QList< WpMilkRecep >;
+using DelivererMilkReceptions = QList<MilkReception *>;
 
 
-class Deliverer {
+class Deliverer : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
+    Q_PROPERTY(Locality *f_locality READ locality WRITE setLocality)
+    Q_PROPERTY(QString f_name READ name WRITE setName)
+    Q_PROPERTY(qlonglong inn READ inn WRITE setInn)
+    Q_PROPERTY(QString address READ address WRITE setAddress)
+    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber)
+    Q_PROPERTY(QQmlListProperty<MilkReception> milkReceptions READ milkReceptions)
+
 public:
-    Deliverer();
-    Deliverer(const milk_id id, const QString &name, const milk_inn inn, const QString &address,
-              const QString &phoneNumber, const WpLocality &locality = WpLocality());
-    Deliverer(const Deliverer &deliverer);
-    ~Deliverer();
+    Deliverer(QObject *parent = Q_NULLPTR);
+    Deliverer(const milk_id id, const QString &name, const milk_inn inn,
+              const QString &address, const QString &phoneNumber,
+              Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    virtual ~Deliverer();
 
     milk_id id() const;
     void setId(const milk_id &id);
 
-    WpLocality locality() const;
-    void setLocality(const WpLocality &locality);
+    Locality *locality() const;
+    void setLocality(Locality *locality);
 
     QString name() const;
     void setName(const QString &name);
@@ -40,13 +49,13 @@ public:
     QString phoneNumber() const;
     void setPhoneNumber(const QString &phoneNumber);
 
-    bool isHasMilkReceptions() const;
-    DelivererMilkReceptions milkReceptions() const;
-    void addMilkReception(const WpMilkRecep &milkReception);
+    Q_INVOKABLE bool isHasMilkReceptions() const;
+    QQmlListProperty<MilkReception> milkReceptions();
+    Q_INVOKABLE void addMilkReception(MilkReception *milkReception);
 
     CalculatedItem::Data getCalculations() const;
 
-    bool isValid() const;
+    Q_INVOKABLE bool isValid() const;
     // bool save(DeliverersTable *deliverers);
 
     DB_NAMESPACE::DelivererData data() const;
@@ -54,7 +63,7 @@ public:
 private:
     DB_NAMESPACE::DelivererData m_data;
 
-    WpLocality m_locality;
+    Locality *m_locality;
 
     DelivererMilkReceptions m_milkReceptions;
 };

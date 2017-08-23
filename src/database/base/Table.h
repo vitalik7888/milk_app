@@ -20,7 +20,7 @@ class Table : public QSqlQueryModel
     Q_PROPERTY(bool getIsFetchOnRefresh READ getIsFetchOnRefresh WRITE setIsFetchOnRefresh)
 
 public:
-    Table(Dao *dao, QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
+    Table(Dao *dao, QSqlDatabase db = QSqlDatabase(), QObject *parent = Q_NULLPTR);
     virtual ~Table();
 
     QSqlDatabase database() const;

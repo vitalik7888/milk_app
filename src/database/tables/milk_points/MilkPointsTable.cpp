@@ -89,7 +89,7 @@ MilkPointsTable::MilkPointsTable(QObject *parent):
 }
 
 MilkPointsTable::MilkPointsTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent):
-    Table(new MilkPointDao(db), parent, db),
+    Table(new MilkPointDao(db), db, parent),
     m_localities(localities)
 {
     setObjectName("MilkPointsTable");
@@ -115,7 +115,13 @@ MilkPointData MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
 
 MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
 {
-    return new MilkPoint(dao()->get(milkPointId), this);
+    const auto data = dao()->get(milkPointId);
+    auto locality = localities()->getLocality(data.localityId());
+
+    auto milkPoint = new MilkPoint(data, locality, this);
+    locality->setParent(milkPoint);
+
+    return milkPoint;
 }
 
 void MilkPointsTable::insert(int index, MilkPoint *milkPoint)

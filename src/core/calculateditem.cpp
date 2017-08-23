@@ -3,7 +3,14 @@
 #include "Utils.h"
 
 //--------------------------------------------------------------------------------------------------
-CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter):
+CalculatedItem::CalculatedItem(QObject *parent):
+    CalculatedItem(.0, .0, .0, parent)
+{
+
+}
+
+CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter, QObject *parent):
+    QObject(parent),
     m_data({liters, fat, priceForLiter})
 {
     m_data.protein = Utils::Calc::protein(fat);

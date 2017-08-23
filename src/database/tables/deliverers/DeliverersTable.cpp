@@ -92,9 +92,15 @@ void DeliverersDao::update(const DelivererData &deliverer) const
 }
 
 //--------------------------------------------------------------------------------------------------
-DeliverersTable::DeliverersTable(LocalitiesTable *parent, QSqlDatabase db) :
-    Table(new DeliverersDao(db), parent, db),
-    m_localities(parent)
+DeliverersTable::DeliverersTable(QObject *parent):
+    DeliverersTable(Q_NULLPTR, QSqlDatabase(), parent)
+{
+
+}
+
+DeliverersTable::DeliverersTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent) :
+    Table(new DeliverersDao(db), db, parent),
+    m_localities(localities)
 {
     setObjectName("DeliverersTable");
     qDebug() << "init " + objectName();
@@ -107,7 +113,7 @@ DeliverersTable::~DeliverersTable()
 
 }
 
-DelivererData DeliverersTable::getDeliverer(const milk_id delivererId) const
+DelivererData DeliverersTable::getDelivererData(const milk_id delivererId) const
 {
     DelivererData data;
     try {
@@ -118,22 +124,38 @@ DelivererData DeliverersTable::getDeliverer(const milk_id delivererId) const
     return data;
 }
 
-bool DeliverersTable::insert(const DelivererData &deliverer)
+Deliverer *DeliverersTable::getDeliverer(const milk_id delivererId)
 {
-    try {
-        dao()->insert(deliverer);
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    const auto data = getDelivererData(delivererId);
+    auto locality = getLocalities()->getLocality(data.localityId());
 
-    return true;
+    auto deliverer = new Deliverer(data.id(), data.name(), data.inn(), data.address(),
+                                   data.phoneNumber(), locality, this);
+    locality->setParent(deliverer);
+
+    return deliverer;
 }
 
-bool DeliverersTable::update(const DelivererData &deliverer)
+void DeliverersTable::insert(int index, Deliverer *deliverer)
+{
+    if(index < 0 || index > rowCount()) {
+        return;
+    }
+
+    emit beginInsertRows(QModelIndex(), index, index);
+    dao()->insert(deliverer->data());
+    emit endInsertRows();
+}
+
+void DeliverersTable::append(Deliverer *deliverer)
+{
+    insert(rowCount(), deliverer);
+}
+
+bool DeliverersTable::update(Deliverer *deliverer) const
 {
     try {
-        dao()->update(deliverer);
+        dao()->update(deliverer->data());
     } catch (const QString &err) {
         emit error(err);
         return false;

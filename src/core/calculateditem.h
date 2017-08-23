@@ -2,9 +2,23 @@
 #define CALCULATEDITEM_H
 
 #include <src/core/Constants.h>
+// Qt
+#include <QObject>
 
-class CalculatedItem
+
+class CalculatedItem : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(double liters READ liters)
+    Q_PROPERTY(double fat READ fat)
+    Q_PROPERTY(double priceForLiter READ priceForLiter)
+    Q_PROPERTY(double protein READ protein)
+    Q_PROPERTY(double fatUnits READ fatUnits)
+    Q_PROPERTY(double rankWeight READ rankWeight)
+    Q_PROPERTY(double paymentWithOutPremium READ paymentWithOutPremium)
+    Q_PROPERTY(double premiumForFat READ premiumForFat)
+    Q_PROPERTY(double sum READ sum)
+
 public:
     struct Data {
         double liters = .0;
@@ -18,7 +32,8 @@ public:
         double sum = .0;
     };
 
-    CalculatedItem(const double liters, const double fat, const price priceForLiter);
+    CalculatedItem(QObject *parent = Q_NULLPTR);
+    CalculatedItem(const double liters, const double fat, const price priceForLiter, QObject *parent = Q_NULLPTR);
 
     double liters() const;
     double fat() const;

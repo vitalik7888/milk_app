@@ -3,18 +3,18 @@
 #include "locality.h"
 
 
-MilkPoint::MilkPoint(const db::MilkPointData &data, QObject *parent):
+MilkPoint::MilkPoint(const db::MilkPointData &data, Locality *locality, QObject *parent):
     QObject(parent),
-    m_data(data)
+    m_data(data),
+    m_locality(locality)
 {
 
 }
 
 MilkPoint::MilkPoint(const milk_id id, const QString &name, const QString &description,
                      Locality *locality, QObject *parent):
-    MilkPoint({id, locality == Q_NULLPTR ? -1 : locality->id(), name, description}, parent)
+    MilkPoint({id, locality == Q_NULLPTR ? -1 : locality->id(), name, description}, locality, parent)
 {
-    m_locality = locality;
 }
 
 MilkPoint::MilkPoint(QObject *parent):

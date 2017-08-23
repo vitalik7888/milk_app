@@ -12,8 +12,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<DB_NAMESPACE::Database>("Milk.Database", 1, 0, "Database");
     qmlRegisterType<DB_NAMESPACE::LocalitiesTable>("Milk.Database", 1, 0, "LocalitiesTable");
     qmlRegisterType<DB_NAMESPACE::MilkPointsTable>("Milk.Database", 1, 0, "MilkPointsTable");
-    qmlRegisterType<Locality>("Milk.Database", 1, 0, "Locality");
-    qmlRegisterType<MilkPoint>("Milk.Database", 1, 0, "MilkPoint");
+    qmlRegisterType<DB_NAMESPACE::DeliverersTable>("Milk.Database", 1, 0, "DeliverersTable");
+    qmlRegisterType<DB_NAMESPACE::MilkReceptionTable>("Milk.Database", 1, 0, "MilkReceptionTable");
+    qmlRegisterType<Locality>("Milk.Core", 1, 0, "Locality");
+    qmlRegisterType<MilkPoint>("Milk.Core", 1, 0, "MilkPoint");
+    qmlRegisterType<Deliverer>("Milk.Core", 1, 0, "Deliverer");
+    qmlRegisterType<MilkReception>("Milk.Core", 1, 0, "MilkReception");
 
     MilkCore core;
 

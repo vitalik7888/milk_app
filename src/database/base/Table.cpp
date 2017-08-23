@@ -10,7 +10,7 @@
 USE_DB_NAMESPACE
 
 
-Table::Table(Dao *dao, QObject *parent, QSqlDatabase db) :
+Table::Table(Dao *dao, QSqlDatabase db, QObject *parent) :
     QSqlQueryModel(parent),
     m_db(db),
     m_dao(dao),

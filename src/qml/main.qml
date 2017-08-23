@@ -2,6 +2,7 @@ import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.3
+import Milk.Core 1.0
 import Milk.Settings 1.0
 import Milk.Database 1.0
 

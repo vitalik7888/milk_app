@@ -2,7 +2,7 @@
 #define DELIVERERS_TABLE_H
 
 #include <base/Table.h>
-#include "delivererdata.h"
+#include "deliverer.h"
 
 DB_BEGIN_NAMESPACE
 
@@ -13,8 +13,9 @@ class DeliverersTable : public Table
 {
     Q_OBJECT
 public:
-    DeliverersTable(LocalitiesTable *parent, QSqlDatabase db);
-    ~DeliverersTable();
+    DeliverersTable(QObject *parent = Q_NULLPTR);
+    DeliverersTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent = Q_NULLPTR);
+    virtual ~DeliverersTable();
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
@@ -25,9 +26,11 @@ public:
 
     LocalitiesTable *getLocalities() const;
 
-    DelivererData getDeliverer(const milk_id delivererId) const;
-    bool insert(const DelivererData &deliverer);
-    bool update(const DelivererData &deliverer);
+    DelivererData getDelivererData(const milk_id delivererId) const;
+    Q_INVOKABLE Deliverer *getDeliverer(const milk_id delivererId);
+    Q_INVOKABLE void insert(int index, Deliverer *deliverer);
+    Q_INVOKABLE void append(Deliverer *deliverer);
+    Q_INVOKABLE bool update(Deliverer *deliverer) const;
     bool setName(const milk_id delivererId, const QString &tableName) const;
     bool setLocalityId(const milk_id delivererId, const milk_id localityId) const;
     bool setInn(const milk_id delivererId, const milk_inn inn) const;
