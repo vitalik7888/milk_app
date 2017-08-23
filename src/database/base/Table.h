@@ -16,6 +16,8 @@ class Table : public QSqlQueryModel
 {
     Q_OBJECT
     Q_PROPERTY(QString tableName READ tableName)
+    Q_PROPERTY(QString primaryField READ primaryField)
+    Q_PROPERTY(bool getIsFetchOnRefresh READ getIsFetchOnRefresh WRITE setIsFetchOnRefresh)
 
 public:
     Table(Dao *dao, QObject *parent = Q_NULLPTR, QSqlDatabase db = QSqlDatabase());
@@ -24,11 +26,11 @@ public:
     QSqlDatabase database() const;
 
     virtual QString tableName() const = 0;
-    virtual QString getColName(const int position, const bool withTableName = false) const = 0;
-    virtual int getColPosition(const QString &columnName) const = 0;
+    Q_INVOKABLE virtual QString getColName(const int position, const bool withTableName = false) const = 0;
+    Q_INVOKABLE virtual int getColPosition(const QString &columnName) const = 0;
     virtual QString primaryField() const = 0;
 
-    virtual QString selectAll() const;
+    Q_INVOKABLE virtual QString selectAll() const;
     Q_INVOKABLE bool isEmpty() const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -36,10 +38,10 @@ public:
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    bool remove(const milk_id id) const;
-    bool removeAll() const;
+    Q_INVOKABLE bool remove(const milk_id id) const;
+    Q_INVOKABLE bool removeAll() const;
 
-    virtual void refresh();
+    Q_INVOKABLE virtual void refresh();
 
     bool getIsFetchOnRefresh() const;
     void setIsFetchOnRefresh(const bool isFetchOnRefresh);
