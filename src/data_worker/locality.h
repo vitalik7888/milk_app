@@ -8,9 +8,9 @@
 class Locality : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int localityId READ id WRITE setId)
-    Q_PROPERTY(QString name READ name WRITE setName)
-    Q_PROPERTY(QString description READ description WRITE setDescription)
+    Q_PROPERTY(int f_Id READ id WRITE setId)
+    Q_PROPERTY(QString f_name READ name WRITE setName)
+    Q_PROPERTY(QString f_description READ description WRITE setDescription)
 
 public:
     Locality(QObject *parent = Q_NULLPTR);
