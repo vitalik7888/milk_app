@@ -1,3 +1,4 @@
+import QtQuick 2.0
 import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Window 2.2
@@ -8,89 +9,71 @@ import Milk.Database 1.0
 
 ApplicationWindow {
     id: window
-    width: 480
-    height: 600
     visible: true
+    property int margin: 11
+    width: mainLayout.implicitWidth + 2 * margin
+    height: mainLayout.implicitHeight + 2 * margin
+    minimumWidth: mainLayout.Layout.minimumWidth + 2 * margin
+    minimumHeight: mainLayout.Layout.minimumHeight + 2 * margin
 
-    Component.onCompleted: {
-        settings.readSettings()
-        if (!settings.main.lastChoosenDb.isEmpty)
-            database.openDb(settings.main.lastChoosenDb)
-    }
+    ColumnLayout {
+        id: mainLayout
+        anchors.margins: margin
 
-    Column {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        GroupBox {
+            Layout.fillWidth: true
 
-        spacing: 5
+            Column {
+                spacing: 2
 
-        Rectangle {
-            color: "lightblue"
-            radius: 10.0
-            width: 300
-            height: listViewLocalities.height
+                GroupBox {
+                    id: groupBoxFilterDate
+                    title: qsTr("Дата")
+                    checkable: true
+                    checked: false
 
-            ListView {
-                id: listViewLocalities
-                width: 100
-                height: 200
+                    Column {
+                        DateEdit {
+                            id: dateEditFilterFrom
 
-                highlight: Rectangle {
-                    color: 'grey'
-                    radius: 5
-                }
-                focus: true
-                flickableDirection: Flickable.AutoFlickDirection
-
-                delegate: Component {
-                    Rectangle {
-                        id: wrapperLocalities
-                        width: localityInfo.width
-                        height: localityInfo.height
-                        color: ListView.isCurrentItem ? "black" : "white"
-                        Text {
-                            id: localityInfo
-                            text: f_name + "(id: " + f_id + ", description: " + f_description + ")"
-                            color: wrapperLocalities.ListView.isCurrentItem ? "white" : "black"
+                            onCalendarOpened: dateEditFilterTo.closeCalendar()
                         }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: listViewLocalities.currentIndex = index
+                        DateEdit {
+                            id: dateEditFilterTo
+
+                            onCalendarOpened: dateEditFilterFrom.closeCalendar()
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        onCheckedChanged: {
+                            dateEditFilterFrom.closeCalendar()
+                            dateEditFilterTo.closeCalendar()
                         }
                     }
                 }
-            }}
-        Rectangle { color: "gold"; radius: 10.0
-            width: 300; height: listViewMilkPoints.height
-            ListView {
-                id: listViewMilkPoints
-                width: 100
-                height: 200
 
-                highlight: Rectangle {
-                    color: 'grey'
-                    radius: 5
-                }
-                focus: true
-                flickableDirection: Flickable.AutoFlickDirection
+                GroupBox {
+                    title: qsTr("Выбрать сдатчика")
+                    checkable: true
+                    checked: false
 
-                delegate: Component {
-                    Rectangle {
-                        id: wrapperMilkPoints
-                        width: milkPointInfo.width
-                        height: milkPointInfo.height
-                        color: ListView.isCurrentItem ? "black" : "white"
-                        Text {
-                            id: milkPointInfo
-                            text: f_name
-                            color: wrapperMilkPoints.ListView.isCurrentItem ? "white" : "black"
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: listViewMilkPoints.currentIndex = index
-                        }
+                    ComboBox {
                     }
                 }
+
+                GroupBox {
+                    title: qsTr("Выбрать молокопункт")
+                    checkable: true
+                    checked: false
+
+                    ComboBox {
+                    }
+                }
+            }
+
+            ListView {
+                id: listViewCalc
             }
         }
     }
@@ -98,8 +81,13 @@ ApplicationWindow {
     Connections {
         target: database
         onDbOpened: {
-            listViewLocalities.model = database.localities
-            listViewMilkPoints.model = database.milkPoints
+
         }
+    }
+
+    Component.onCompleted: {
+        settings.readSettings()
+        if (!settings.main.lastChoosenDb.isEmpty)
+            database.openDb(settings.main.lastChoosenDb)
     }
 }
