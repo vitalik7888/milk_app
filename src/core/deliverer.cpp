@@ -88,10 +88,29 @@ bool Deliverer::isHasMilkReceptions() const
 
 QQmlListProperty<MilkReception> Deliverer::milkReceptions()
 {
-    return QQmlListProperty<MilkReception>(this, m_milkReceptions);
+    return QQmlListProperty<MilkReception>(this, this,
+                                           &Deliverer::appendMilkReception,
+                                           &Deliverer::milkReceprionsCount,
+                                           &Deliverer::milkReception,
+                                           &Deliverer::clearMilkReceptions);
 }
 
-void Deliverer::addMilkReception(MilkReception *milkReception)
+int Deliverer::milkReceprionsCount() const
+{
+    return m_milkReceptions.count();
+}
+
+MilkReception *Deliverer::milkReception(int pos) const
+{
+    return m_milkReceptions.at(pos);
+}
+
+void Deliverer::clearMilkReceptions()
+{
+    m_milkReceptions.clear();
+}
+
+void Deliverer::appendMilkReception(MilkReception *milkReception)
 {
     m_milkReceptions.append(milkReception);
 }
@@ -122,4 +141,24 @@ bool Deliverer::isValid() const
 DB_NAMESPACE::DelivererData Deliverer::data() const
 {
     return m_data;
+}
+
+void Deliverer::appendMilkReception(QQmlListProperty<MilkReception> *list, MilkReception *mr)
+{
+    reinterpret_cast< Deliverer* >(list->data)->appendMilkReception(mr);
+}
+
+int Deliverer::milkReceprionsCount(QQmlListProperty<MilkReception> *list)
+{
+    return reinterpret_cast< Deliverer* >(list->data)->milkReceprionsCount();
+}
+
+MilkReception *Deliverer::milkReception(QQmlListProperty<MilkReception> *list, int pos)
+{
+    return reinterpret_cast< Deliverer* >(list->data)->milkReception(pos);
+}
+
+void Deliverer::clearMilkReceptions(QQmlListProperty<MilkReception> *list)
+{
+    reinterpret_cast< Deliverer* >(list->data)->clearMilkReceptions();
 }

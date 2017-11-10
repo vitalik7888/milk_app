@@ -51,7 +51,11 @@ public:
 
     Q_INVOKABLE bool isHasMilkReceptions() const;
     QQmlListProperty<MilkReception> milkReceptions();
-    Q_INVOKABLE void addMilkReception(MilkReception *milkReception);
+
+    void appendMilkReception(MilkReception *milkReception);
+    int milkReceprionsCount() const;
+    MilkReception *milkReception(int pos) const;
+    void clearMilkReceptions();
 
     CalculatedItem::Data getCalculations() const;
 
@@ -62,6 +66,10 @@ public:
 
 private:
     DB_NAMESPACE::DelivererData m_data;
+    static void appendMilkReception(QQmlListProperty<MilkReception> *, MilkReception *);
+    static int milkReceprionsCount(QQmlListProperty<MilkReception> *);
+    static MilkReception *milkReception(QQmlListProperty<MilkReception> *, int);
+    static void clearMilkReceptions(QQmlListProperty<MilkReception> *);
 
     Locality *m_locality;
 
