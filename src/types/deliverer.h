@@ -5,7 +5,6 @@
 #include "calculateditem.h"
 // Qt
 #include <QQmlListProperty>
-#include <QWeakPointer>
 
 class Locality;
 class MilkReception;
@@ -49,7 +48,7 @@ public:
     Q_INVOKABLE bool isValid() const;
     // bool save(DeliverersTable *deliverers);
 
-    DB_NAMESPACE::DelivererData data() const;
+    DelivererData data() const;
 
 public slots:
     void setId(const milk_id &id);
@@ -68,7 +67,7 @@ signals:
     void phoneNumberChanged(QString phoneNumber);
 
 private:
-    DB_NAMESPACE::DelivererData m_data;
+    DelivererData m_data;
     Locality *m_locality;
     DelivererMilkReceptions m_milkReceptions;
 

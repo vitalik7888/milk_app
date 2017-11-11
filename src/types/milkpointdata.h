@@ -2,10 +2,8 @@
 #define MILKPOINTDATA_H
 
 #include "dbconstants.h"
-
+// Qt
 #include <QString>
-
-DB_BEGIN_NAMESPACE
 
 
 class MilkPointData
@@ -34,7 +32,5 @@ private:
     QString m_name;
     QString m_description;
 };
-
-DB_END_NAMESPACE
 
 #endif // MILKPOINTDATA_H

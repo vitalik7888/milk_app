@@ -6,9 +6,6 @@
 // Qt
 #include <QDate>
 
-DB_BEGIN_NAMESPACE
-
-
 class MilkReceptionData
 {
 public:
@@ -51,7 +48,5 @@ private:
     double   m_liters;
     double   m_fat;
 };
-
-DB_END_NAMESPACE
 
 #endif // MILKRECEPTIONDATA_H

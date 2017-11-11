@@ -17,7 +17,7 @@ class MilkPoint : public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
-    MilkPoint(const DB_NAMESPACE::MilkPointData &data, Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    MilkPoint(const MilkPointData &data, Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(const milk_id id, const QString &name, const QString &description,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(QObject *parent = Q_NULLPTR);
@@ -30,7 +30,7 @@ public:
 
     Q_INVOKABLE bool isValid() const;
 
-    DB_NAMESPACE::MilkPointData data() const;
+    MilkPointData data() const;
 
 public slots:
     void setId(const milk_id &id);
@@ -45,7 +45,7 @@ signals:
     void descriptionChanged(QString description);
 
 private:
-    DB_NAMESPACE::MilkPointData m_data;
+    MilkPointData m_data;
     Locality *m_locality;
 };
 

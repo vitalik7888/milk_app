@@ -13,14 +13,14 @@ class Locality : public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
-    Locality(const DB_NAMESPACE::LocalityData &data, QObject *parent = Q_NULLPTR);
+    Locality(const LocalityData &data, QObject *parent = Q_NULLPTR);
     Locality(QObject *parent = Q_NULLPTR);
     virtual ~Locality();
 
     milk_id id() const;
     QString name() const;
     QString description() const;
-    DB_NAMESPACE::LocalityData data() const;
+    LocalityData data() const;
 
 public slots:
     void setId(const milk_id &id);
@@ -33,7 +33,7 @@ signals:
     void descriptionChanged(QString description);
 
 private:
-    DB_NAMESPACE::LocalityData m_data;
+    LocalityData m_data;
 };
 
 #endif // LOCALITY_H

@@ -5,8 +5,6 @@
 // Qt
 #include <QString>
 
-DB_BEGIN_NAMESPACE
-
 class LocalityData {
 public:
     LocalityData();
@@ -30,7 +28,5 @@ private:
     QString m_name;
     QString m_description;
 };
-
-DB_END_NAMESPACE
 
 #endif // LOCALITYDATA_H

@@ -1,7 +1,5 @@
 #include "localitydata.h"
 
-USE_DB_NAMESPACE
-
 
 LocalityData::LocalityData():
     LocalityData(-1, "", "")

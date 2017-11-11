@@ -3,7 +3,7 @@
 #include "locality.h"
 
 
-MilkPoint::MilkPoint(const db::MilkPointData &data, Locality *locality, QObject *parent):
+MilkPoint::MilkPoint(const MilkPointData &data, Locality *locality, QObject *parent):
     QObject(parent),
     m_data(data),
     m_locality(locality)
@@ -46,7 +46,7 @@ QString MilkPoint::description() const
     return m_data.description();
 }
 
-DB_NAMESPACE::MilkPointData MilkPoint::data() const
+MilkPointData MilkPoint::data() const
 {
     return m_data;
 }

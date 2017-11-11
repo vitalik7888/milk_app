@@ -1,7 +1,5 @@
 #include "milkreceptiondata.h"
 
-USE_DB_NAMESPACE
-
 
 MilkReceptionData::MilkReceptionData():
     MilkReceptionData(-1, -1, -1, QDate(), .0, .0, .0)

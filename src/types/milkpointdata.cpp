@@ -1,7 +1,5 @@
 #include "milkpointdata.h"
 
-USE_DB_NAMESPACE
-
 
 MilkPointData::MilkPointData():
     MilkPointData(-1, -1, "", "")

@@ -133,7 +133,7 @@ bool Deliverer::isValid() const
     return m_data.isValid();
 }
 
-DB_NAMESPACE::DelivererData Deliverer::data() const
+DelivererData Deliverer::data() const
 {
     return m_data;
 }

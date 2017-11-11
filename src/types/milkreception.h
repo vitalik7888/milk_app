@@ -6,7 +6,6 @@
 #include "src/core/Constants.h"
 // Qt
 #include <QDate>
-#include <QWeakPointer>
 
 class MilkPoint;
 class Deliverer;
@@ -36,7 +35,7 @@ public:
     double fat() const;
     Deliverer *deliverer() const;
     MilkPoint *milkPoint() const;
-    DB_NAMESPACE::MilkReceptionData data() const;
+    MilkReceptionData data() const;
 
     CalculatedItem::Data getCalculationsData() const;
     Q_INVOKABLE CalculatedItem *getCalculations();
@@ -62,7 +61,7 @@ signals:
     void milkPointChanged(MilkPoint * milkPoint);
 
 private:
-    DB_NAMESPACE::MilkReceptionData m_data;
+    MilkReceptionData m_data;
     Deliverer *m_deliverer;
     MilkPoint *m_milkPoint;
 };

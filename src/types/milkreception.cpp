@@ -63,7 +63,7 @@ MilkPoint *MilkReception::milkPoint() const
     return m_milkPoint;
 }
 
-DB_NAMESPACE::MilkReceptionData MilkReception::data() const
+MilkReceptionData MilkReception::data() const
 {
     return m_data;
 }

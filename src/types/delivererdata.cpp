@@ -3,8 +3,6 @@
 // Qt
 #include <QtDebug>
 
-USE_DB_NAMESPACE
-
 
 DelivererData::DelivererData():
     DelivererData(-1, "", -1, 0, "", "")

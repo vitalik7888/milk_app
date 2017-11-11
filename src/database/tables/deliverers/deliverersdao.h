@@ -2,7 +2,7 @@
 #define DELIVERERSDAO_H
 
 #include <base/dao.h>
-#include "src/core/delivererdata.h"
+#include "delivererdata.h"
 
 DB_BEGIN_NAMESPACE
 

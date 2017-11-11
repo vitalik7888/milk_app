@@ -16,6 +16,7 @@ TEMPLATE = app
 CONFIG += c++14
 
 include(src/database/db.pri)
+include(src/types/types.pri)
 include(src/core/core.pri)
 
 SOURCES += src/main.cpp

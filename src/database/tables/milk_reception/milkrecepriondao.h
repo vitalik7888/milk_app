@@ -2,7 +2,7 @@
 #define MILKRECEPRIONDAO_H
 
 #include <base/dao.h>
-#include "src/core/milkreceptiondata.h"
+#include "milkreceptiondata.h"
 
 DB_BEGIN_NAMESPACE
 

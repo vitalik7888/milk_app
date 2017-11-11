@@ -1,8 +1,5 @@
 #include "locality.h"
 
-USE_DB_NAMESPACE
-
-
 Locality::Locality(QObject *parent):
     Locality({}, parent)
 {

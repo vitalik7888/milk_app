@@ -2,10 +2,8 @@
 #define DELIVERERDATA_H
 
 #include "dbconstants.h"
-
+// Qt
 #include <QString>
-
-DB_BEGIN_NAMESPACE
 
 class DelivererData
 {
@@ -44,8 +42,6 @@ private:
     QString m_phoneNumber; // +9(999)999-99-99
 };
 
-DB_END_NAMESPACE
-
-QDebug operator<<(QDebug dbg, const DB_NAMESPACE::DelivererData &data);
+QDebug operator<<(QDebug dbg, const DelivererData &data);
 
 #endif // DELIVERERDATA_H
