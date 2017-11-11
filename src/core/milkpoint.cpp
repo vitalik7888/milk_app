@@ -89,7 +89,7 @@ void MilkPoint::setLocality(Locality *locality)
         return;
 
     m_locality = locality;
-    m_data.setLocalityId(locality->id());
+    m_data.setLocalityId(locality == Q_NULLPTR ? -1 : locality->id());
     emit localityChanged(m_locality);
 }
 
