@@ -8,9 +8,9 @@
 class Locality : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
-    Q_PROPERTY(QString f_name READ name WRITE setName)
-    Q_PROPERTY(QString f_description READ description WRITE setDescription)
+    Q_PROPERTY(qlonglong localityId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
     Locality(const DB_NAMESPACE::LocalityData &data, QObject *parent = Q_NULLPTR);
@@ -18,15 +18,19 @@ public:
     virtual ~Locality();
 
     milk_id id() const;
-    void setId(const milk_id &id);
-
     QString name() const;
-    void setName(const QString &name);
-
     QString description() const;
+    DB_NAMESPACE::LocalityData data() const;
+
+public slots:
+    void setId(const milk_id &id);
+    void setName(const QString &name);
     void setDescription(const QString &description);
 
-    DB_NAMESPACE::LocalityData data() const;
+signals:
+    void idChanged(qlonglong localityId);
+    void nameChanged(QString name);
+    void descriptionChanged(QString description);
 
 private:
     DB_NAMESPACE::LocalityData m_data;
