@@ -33,9 +33,24 @@ milk_id MilkReception::id() const
     return m_data.id();
 }
 
-void MilkReception::setId(const milk_id &id)
+QDate MilkReception::deliveryDate() const
 {
-    m_data.setId(id);
+    return m_data.deliveryDate();
+}
+
+double MilkReception::priceLiter() const
+{
+    return m_data.priceLiter();
+}
+
+double MilkReception::liters() const
+{
+    return m_data.liters();
+}
+
+double MilkReception::fat() const
+{
+    return m_data.fat();
 }
 
 Deliverer *MilkReception::deliverer() const
@@ -46,18 +61,6 @@ Deliverer *MilkReception::deliverer() const
 MilkPoint *MilkReception::milkPoint() const
 {
     return m_milkPoint;
-}
-
-void MilkReception::setDeliverer(Deliverer *deliverer)
-{
-    m_deliverer = deliverer;
-    m_data.setDelivererId(deliverer == Q_NULLPTR ? -1 : deliverer->id());
-}
-
-void MilkReception::setMilkPoint(MilkPoint *milkPoint)
-{
-    m_milkPoint = milkPoint;
-    m_data.setMilkPointId(milkPoint == Q_NULLPTR ? -1 : milkPoint->id());
 }
 
 DB_NAMESPACE::MilkReceptionData MilkReception::data() const
@@ -75,47 +78,72 @@ CalculatedItem *MilkReception::getCalculations()
     return new CalculatedItem(liters(), fat(), priceLiter(), this);
 }
 
-QDate MilkReception::deliveryDate() const
+bool MilkReception::isValid() const
 {
-    return m_data.deliveryDate();
+    return m_data.isValid();
+}
+
+void MilkReception::setId(const milk_id &id)
+{
+    if (id == m_data.id())
+        return;
+
+    m_data.setId(id);
+    emit idChanged(id);
+}
+
+void MilkReception::setDeliverer(Deliverer *deliverer)
+{
+    if (m_deliverer == deliverer)
+        return;
+
+    m_deliverer = deliverer;
+    m_data.setDelivererId(deliverer == Q_NULLPTR ? -1 : deliverer->id());
+    emit delivererChanged(deliverer);
+}
+
+void MilkReception::setMilkPoint(MilkPoint *milkPoint)
+{
+    if (m_milkPoint == milkPoint)
+        return;
+
+    m_milkPoint = milkPoint;
+    m_data.setMilkPointId(milkPoint == Q_NULLPTR ? -1 : milkPoint->id());
+    emit milkPointChanged(milkPoint);
 }
 
 void MilkReception::setDeliveryDate(const QDate &deliveryDate)
 {
-    m_data.setDeliveryDate(deliveryDate);
-}
+    if (m_data.deliveryDate() == deliveryDate)
+        return;
 
-double MilkReception::priceLiter() const
-{
-    return m_data.priceLiter();
+    m_data.setDeliveryDate(deliveryDate);
+    emit deliveryDateChanged(deliveryDate);
 }
 
 void MilkReception::setPriceLiter(price priceLiter)
 {
-    m_data.setPriceLiter(priceLiter);
-}
+    if (m_data.priceLiter() == priceLiter)
+        return;
 
-double MilkReception::liters() const
-{
-    return m_data.liters();
+    m_data.setPriceLiter(priceLiter);
+    emit priceLiterChanged(priceLiter);
 }
 
 void MilkReception::setLiters(double liters)
 {
-    m_data.setLiters(liters);
-}
+    if (m_data.liters() == liters)
+        return;
 
-double MilkReception::fat() const
-{
-    return m_data.fat();
+    m_data.setLiters(liters);
+    emit litersChanged(liters);
 }
 
 void MilkReception::setFat(double fat)
 {
-    m_data.setFat(fat);
-}
+    if (m_data.fat() == fat)
+        return;
 
-bool MilkReception::isValid() const
-{
-    return m_data.isValid();
+    m_data.setFat(fat);
+    emit fatChanged(fat);
 }

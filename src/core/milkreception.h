@@ -14,13 +14,13 @@ class Deliverer;
 class MilkReception : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
-    Q_PROPERTY(QDate deliveryDate READ deliveryDate WRITE setDeliveryDate)
-    Q_PROPERTY(double priceLiter READ priceLiter WRITE setPriceLiter)
-    Q_PROPERTY(double liters READ liters WRITE setLiters)
-    Q_PROPERTY(double fat READ fat WRITE setFat)
-    Q_PROPERTY(Deliverer *deliverer READ deliverer WRITE setDeliverer)
-    Q_PROPERTY(MilkPoint *milkPoint READ milkPoint WRITE setMilkPoint)
+    Q_PROPERTY(qlonglong milkReceptionId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QDate deliveryDate READ deliveryDate WRITE setDeliveryDate NOTIFY deliveryDateChanged)
+    Q_PROPERTY(double priceLiter READ priceLiter WRITE setPriceLiter NOTIFY priceLiterChanged)
+    Q_PROPERTY(double liters READ liters WRITE setLiters NOTIFY litersChanged)
+    Q_PROPERTY(double fat READ fat WRITE setFat NOTIFY fatChanged)
+    Q_PROPERTY(Deliverer *deliverer READ deliverer WRITE setDeliverer NOTIFY delivererChanged)
+    Q_PROPERTY(MilkPoint *milkPoint READ milkPoint WRITE setMilkPoint NOTIFY milkPointChanged)
 
 public:
     MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
@@ -30,32 +30,36 @@ public:
     virtual ~MilkReception();
 
     milk_id id() const;
-    void setId(const milk_id &id);
-
     QDate deliveryDate() const;
-    void setDeliveryDate(const QDate &deliveryDate);
-
     price priceLiter() const;
-    void setPriceLiter(price priceLiter);
-
     double liters() const;
-    void setLiters(double liters);
-
     double fat() const;
-    void setFat(double fat);
-
     Deliverer *deliverer() const;
-    void setDeliverer(Deliverer *deliverer);
-
     MilkPoint *milkPoint() const;
-    void setMilkPoint(MilkPoint *milkPoint);
-
     DB_NAMESPACE::MilkReceptionData data() const;
 
     CalculatedItem::Data getCalculationsData() const;
     Q_INVOKABLE CalculatedItem *getCalculations();
 
     Q_INVOKABLE bool isValid() const;
+
+public slots:
+    void setId(const milk_id &id);
+    void setDeliveryDate(const QDate &deliveryDate);
+    void setPriceLiter(price priceLiter);
+    void setLiters(double liters);
+    void setFat(double fat);
+    void setDeliverer(Deliverer *deliverer);
+    void setMilkPoint(MilkPoint *milkPoint);
+
+signals:
+    void idChanged(qlonglong milkReceptionId);
+    void deliveryDateChanged(QDate deliveryDate);
+    void priceLiterChanged(double priceLiter);
+    void litersChanged(double liters);
+    void fatChanged(double fat);
+    void delivererChanged(Deliverer * deliverer);
+    void milkPointChanged(MilkPoint * milkPoint);
 
 private:
     DB_NAMESPACE::MilkReceptionData m_data;
