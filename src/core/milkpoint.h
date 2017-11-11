@@ -11,10 +11,10 @@ class Locality;
 class MilkPoint : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
-    Q_PROPERTY(Locality *f_locality READ locality WRITE setLocality)
-    Q_PROPERTY(QString f_name READ name WRITE setName)
-    Q_PROPERTY(QString f_description READ description WRITE setDescription)
+    Q_PROPERTY(qlonglong milkPointId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
     MilkPoint(const DB_NAMESPACE::MilkPointData &data, Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
@@ -24,20 +24,25 @@ public:
     virtual ~MilkPoint();
 
     milk_id id() const;
-    void setId(const milk_id &id);
-
     Locality *locality() const;
-    void setLocality(Locality *locality);
-
     QString name() const;
-    void setName(const QString &name);
-
     QString description() const;
-    void setDescription(const QString &description);
 
     Q_INVOKABLE bool isValid() const;
 
     DB_NAMESPACE::MilkPointData data() const;
+
+public slots:
+    void setId(const milk_id &id);
+    void setLocality(Locality * locality);
+    void setName(const QString &name);
+    void setDescription(const QString &description);
+
+signals:
+    void idChanged(qlonglong milkPointId);
+    void localityChanged(Locality * locality);
+    void nameChanged(QString name);
+    void descriptionChanged(QString description);
 
 private:
     DB_NAMESPACE::MilkPointData m_data;
