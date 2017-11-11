@@ -31,11 +31,6 @@ milk_id Deliverer::id() const
     return m_data.id();
 }
 
-void Deliverer::setId(const milk_id &id)
-{
-    m_data.setId(id);
-}
-
 Locality *Deliverer::locality() const
 {
     return m_locality;
@@ -46,19 +41,9 @@ QString Deliverer::name() const
     return m_data.name();
 }
 
-void Deliverer::setName(const QString &name)
-{
-    m_data.setName(name);
-}
-
 milk_inn Deliverer::inn() const
 {
     return m_data.inn();
-}
-
-void Deliverer::setInn(const milk_inn &inn)
-{
-    m_data.setInn(inn);
 }
 
 QString Deliverer::address() const
@@ -66,24 +51,91 @@ QString Deliverer::address() const
     return m_data.address();
 }
 
-void Deliverer::setAddress(const QString &address)
-{
-    m_data.setAddress(address);
-}
-
 QString Deliverer::phoneNumber() const
 {
     return m_data.phoneNumber();
 }
 
+void Deliverer::setId(const milk_id &id)
+{
+    if (id == m_data.id())
+        return;
+
+    m_data.setId(id);
+    emit idChanged(id);
+}
+
+void Deliverer::setName(const QString &name)
+{
+    if (m_data.name() == name)
+        return;
+
+    m_data.setName(name);
+    emit nameChanged(name);
+}
+
+void Deliverer::setInn(const milk_inn &inn)
+{
+    if (m_data.inn() == inn)
+        return;
+
+    m_data.setInn(inn);
+    emit innChanged(inn);
+}
+
+void Deliverer::setAddress(const QString &address)
+{
+    if (m_data.address() == address)
+        return;
+
+    m_data.setAddress(address);
+    emit addressChanged(address);
+}
+
+void Deliverer::setLocality(Locality *locality)
+{
+    if (m_locality == locality)
+        return;
+
+    m_locality = locality;
+    m_data.setId(locality == Q_NULLPTR ? -1 : locality->id());
+    emit localityChanged(locality);
+}
+
 void Deliverer::setPhoneNumber(const QString &phoneNumber)
 {
+    if (m_data.phoneNumber() == phoneNumber)
+        return;
+
     m_data.setPhoneNumber(phoneNumber);
+    emit phoneNumberChanged(phoneNumber);
 }
 
 bool Deliverer::isHasMilkReceptions() const
 {
     return !m_milkReceptions.empty();
+}
+
+CalculatedItem::Data Deliverer::getCalculations() const
+{
+    CalculatedItem::Data data;
+
+    for (const auto mr: m_milkReceptions) {
+        const auto right = mr->getCalculations()->data();
+        data += right;
+    }
+
+    return data;
+}
+
+bool Deliverer::isValid() const
+{
+    return m_data.isValid();
+}
+
+DB_NAMESPACE::DelivererData Deliverer::data() const
+{
+    return m_data;
 }
 
 QQmlListProperty<MilkReception> Deliverer::milkReceptions()
@@ -113,34 +165,6 @@ void Deliverer::clearMilkReceptions()
 void Deliverer::appendMilkReception(MilkReception *milkReception)
 {
     m_milkReceptions.append(milkReception);
-}
-
-CalculatedItem::Data Deliverer::getCalculations() const
-{
-    CalculatedItem::Data data;
-
-    for (const auto mr: m_milkReceptions) {
-        const auto right = mr->getCalculations()->data();
-        data += right;
-    }
-
-    return data;
-}
-
-void Deliverer::setLocality(Locality *locality)
-{
-    m_locality = locality;
-    m_data.setId(locality == Q_NULLPTR ? -1 : locality->id());
-}
-
-bool Deliverer::isValid() const
-{
-    return m_data.isValid();
-}
-
-DB_NAMESPACE::DelivererData Deliverer::data() const
-{
-    return m_data;
 }
 
 void Deliverer::appendMilkReception(QQmlListProperty<MilkReception> *list, MilkReception *mr)

@@ -16,12 +16,12 @@ using DelivererMilkReceptions = QList<MilkReception *>;
 class Deliverer : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong f_id READ id WRITE setId)
-    Q_PROPERTY(Locality *f_locality READ locality WRITE setLocality)
-    Q_PROPERTY(QString f_name READ name WRITE setName)
-    Q_PROPERTY(qlonglong inn READ inn WRITE setInn)
-    Q_PROPERTY(QString address READ address WRITE setAddress)
-    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber)
+    Q_PROPERTY(qlonglong delivererId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(qlonglong inn READ inn WRITE setInn NOTIFY innChanged)
+    Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
+    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
     Q_PROPERTY(QQmlListProperty<MilkReception> milkReceptions READ milkReceptions)
 
 public:
@@ -32,30 +32,17 @@ public:
     virtual ~Deliverer();
 
     milk_id id() const;
-    void setId(const milk_id &id);
-
     Locality *locality() const;
-    void setLocality(Locality *locality);
-
     QString name() const;
-    void setName(const QString &name);
-
     milk_inn inn() const;
-    void setInn(const milk_inn &inn);
-
     QString address() const;
-    void setAddress(const QString &address);
-
     QString phoneNumber() const;
-    void setPhoneNumber(const QString &phoneNumber);
 
-    Q_INVOKABLE bool isHasMilkReceptions() const;
     QQmlListProperty<MilkReception> milkReceptions();
-
-    void appendMilkReception(MilkReception *milkReception);
-    int milkReceprionsCount() const;
     MilkReception *milkReception(int pos) const;
+    int milkReceprionsCount() const;
     void clearMilkReceptions();
+    Q_INVOKABLE bool isHasMilkReceptions() const;
 
     CalculatedItem::Data getCalculations() const;
 
@@ -64,16 +51,32 @@ public:
 
     DB_NAMESPACE::DelivererData data() const;
 
+public slots:
+    void setId(const milk_id &id);
+    void setLocality(Locality *locality);
+    void setName(const QString &name);
+    void setInn(const milk_inn &inn);
+    void setAddress(const QString &address);
+    void setPhoneNumber(const QString &phoneNumber);
+
+signals:
+    void idChanged(qlonglong delivererId);
+    void localityChanged(Locality * locality);
+    void nameChanged(QString name);
+    void innChanged(qlonglong inn);
+    void addressChanged(QString address);
+    void phoneNumberChanged(QString phoneNumber);
+
 private:
     DB_NAMESPACE::DelivererData m_data;
+    Locality *m_locality;
+    DelivererMilkReceptions m_milkReceptions;
+
+    void appendMilkReception(MilkReception *milkReception);
     static void appendMilkReception(QQmlListProperty<MilkReception> *, MilkReception *);
     static int milkReceprionsCount(QQmlListProperty<MilkReception> *);
     static MilkReception *milkReception(QQmlListProperty<MilkReception> *, int);
     static void clearMilkReceptions(QQmlListProperty<MilkReception> *);
-
-    Locality *m_locality;
-
-    DelivererMilkReceptions m_milkReceptions;
 };
 
 #endif // DELIVERER_H
