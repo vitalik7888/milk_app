@@ -3,21 +3,41 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+void qmlRegisterSettings()
+{
+    const char *uri = "Milk.Settings";
+    qmlRegisterType<Settings>(uri, 1, 0, "Settings");
+    qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
+    qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
+    qmlRegisterType<PrintSettings>(uri, 1, 0, "PrintSettings");
+}
+
+void qmlRegisterDb()
+{
+    const char *uri = "Milk.Database";
+    qmlRegisterType<DB_NAMESPACE::Database>(uri, 1, 0, "Database");
+    qmlRegisterType<DB_NAMESPACE::LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
+    qmlRegisterType<DB_NAMESPACE::MilkPointsTable>(uri, 1, 0, "MilkPointsTable");
+    qmlRegisterType<DB_NAMESPACE::DeliverersTable>(uri, 1, 0, "DeliverersTable");
+    qmlRegisterType<DB_NAMESPACE::MilkReceptionTable>(uri, 1, 0, "MilkReceptionTable");
+}
+
+void qmlRegisterMilkTypes()
+{
+    const char *uri = "Milk.Core";
+    qmlRegisterType<Locality>(uri, 1, 0, "Locality");
+    qmlRegisterType<MilkPoint>(uri, 1, 0, "MilkPoint");
+    qmlRegisterType<Deliverer>(uri, 1, 0, "Deliverer");
+    qmlRegisterType<MilkReception>(uri, 1, 0, "MilkReception");
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<Settings>("Milk.Settings", 1, 0, "Settings");
-    qmlRegisterType<MainSettings>("Milk.Settings", 1, 0, "MainSettings");
-    qmlRegisterType<DB_NAMESPACE::Database>("Milk.Database", 1, 0, "Database");
-    qmlRegisterType<DB_NAMESPACE::LocalitiesTable>("Milk.Database", 1, 0, "LocalitiesTable");
-    qmlRegisterType<DB_NAMESPACE::MilkPointsTable>("Milk.Database", 1, 0, "MilkPointsTable");
-    qmlRegisterType<DB_NAMESPACE::DeliverersTable>("Milk.Database", 1, 0, "DeliverersTable");
-    qmlRegisterType<DB_NAMESPACE::MilkReceptionTable>("Milk.Database", 1, 0, "MilkReceptionTable");
-    qmlRegisterType<Locality>("Milk.Core", 1, 0, "Locality");
-    qmlRegisterType<MilkPoint>("Milk.Core", 1, 0, "MilkPoint");
-    qmlRegisterType<Deliverer>("Milk.Core", 1, 0, "Deliverer");
-    qmlRegisterType<MilkReception>("Milk.Core", 1, 0, "MilkReception");
+    qmlRegisterSettings();
+    qmlRegisterDb();
+    qmlRegisterMilkTypes();
 
     MilkCore core;
 
