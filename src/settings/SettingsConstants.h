@@ -8,9 +8,6 @@
 class SettingsConstants
 {
 public:
-    constexpr static double BASE_PROTEIN = 3.0;
-    constexpr static double BASE_FAT = 3.4;
-
     static inline QString defaultDateFormat() { return "yyyy-MM-dd"; }
 
     enum SettingsColumnType {

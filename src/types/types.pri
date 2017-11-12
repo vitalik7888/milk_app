@@ -19,4 +19,3 @@ HEADERS  += \
     $$PWD/localitydata.h \
     $$PWD/milkpointdata.h \
     $$PWD/milkreceptiondata.h
-

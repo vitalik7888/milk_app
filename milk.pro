@@ -17,6 +17,7 @@ CONFIG += c++14
 
 include(src/database/db.pri)
 include(src/types/types.pri)
+include(src/calc/calc.pri)
 include(src/settings/settings.pri)
 include(src/core/core.pri)
 

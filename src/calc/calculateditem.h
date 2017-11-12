@@ -1,7 +1,6 @@
 #ifndef CALCULATEDITEM_H
 #define CALCULATEDITEM_H
 
-#include <src/core/Constants.h>
 // Qt
 #include <QObject>
 
@@ -23,7 +22,7 @@ public:
     struct Data {
         double liters = .0;
         double fat = .0;
-        price priceForLiter = .0;
+        double priceForLiter = .0;
         double protein = .0;
         double fatUnits = .0;
         double rankWeight = .0;
@@ -33,11 +32,11 @@ public:
     };
 
     CalculatedItem(QObject *parent = Q_NULLPTR);
-    CalculatedItem(const double liters, const double fat, const price priceForLiter, QObject *parent = Q_NULLPTR);
+    CalculatedItem(const double liters, const double fat, const double priceForLiter, QObject *parent = Q_NULLPTR);
 
     double liters() const;
     double fat() const;
-    price priceForLiter() const;
+    double priceForLiter() const;
     double protein() const;
     double fatUnits() const;
     double rankWeight() const;
@@ -47,13 +46,13 @@ public:
 
     CalculatedItem::Data data() const;
 
-//    CalculatedItem *operator+(CalculatedItem *r) delete;
+//    CalculatedItem *operator+(CalculatedItem *r) = delete;
     CalculatedItem *operator+=(CalculatedItem *r);
 
 private:
     CalculatedItem::Data m_data;
 
-    static CalculatedItem::Data calculate(const double liters, const double fat, const price priceForLiter);
+    static CalculatedItem::Data calculate(const double liters, const double fat, const double priceForLiter);
 };
 
 CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedItem::Data &r);

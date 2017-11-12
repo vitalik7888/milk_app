@@ -1,15 +1,15 @@
 #include "calculateditem.h"
 
-#include "Utils.h"
+#include "CalcUtils.h"
 
-//--------------------------------------------------------------------------------------------------
+
 CalculatedItem::CalculatedItem(QObject *parent):
     CalculatedItem(.0, .0, .0, parent)
 {
 
 }
 
-CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter, QObject *parent):
+CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter, QObject *parent):
     QObject(parent),
     m_data(calculate(liters, fat, priceForLiter))
 {
@@ -60,18 +60,18 @@ double CalculatedItem::sum() const
     return m_data.sum;
 }
 
-CalculatedItem::Data CalculatedItem::calculate(const double liters, const double fat, const price priceForLiter)
+CalculatedItem::Data CalculatedItem::calculate(const double liters, const double fat, const double priceForLiter)
 {
     CalculatedItem::Data data;
     data.liters = liters;
     data.fat = fat;
     data.priceForLiter = priceForLiter;
-    data.protein = Utils::Calc::protein(fat);
-    data.fatUnits = Utils::Calc::fatUnits(liters, fat);
-    data.rankWeight = Utils::Calc::rankWeight(data.fatUnits);
-    data.paymentWithOutPremium = Utils::Calc::paymentWithOutPremium(data.liters, data.priceForLiter);
-    data.premiumForFat = Utils::Calc::premiumForFat(fat, data.paymentWithOutPremium);
-    data.sum = Utils::Calc::sum(data.rankWeight, data.priceForLiter);
+    data.protein = CalcUtils::protein(fat);
+    data.fatUnits = CalcUtils::fatUnits(liters, fat);
+    data.rankWeight = CalcUtils::rankWeight(data.fatUnits);
+    data.paymentWithOutPremium = CalcUtils::paymentWithOutPremium(data.liters, data.priceForLiter);
+    data.premiumForFat = CalcUtils::premiumForFat(fat, data.paymentWithOutPremium);
+    data.sum = CalcUtils::sum(data.rankWeight, data.priceForLiter);
 
     return data;
 }
@@ -102,9 +102,9 @@ CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedIt
     result.paymentWithOutPremium = l.paymentWithOutPremium + r.paymentWithOutPremium;
     result.premiumForFat = l.premiumForFat + r.premiumForFat;
     result.sum = l.sum + r.sum;
-    result.fat = Utils::Calc::fat(result.fatUnits, result.liters);
-    result.protein = Utils::Calc::protein(result.fat);
-    result.rankWeight = Utils::Calc::rankWeight(result.fatUnits);
+    result.fat = CalcUtils::fat(result.fatUnits, result.liters);
+    result.protein = CalcUtils::protein(result.fat);
+    result.rankWeight = CalcUtils::rankWeight(result.fatUnits);
 
     return result;
 }
@@ -116,9 +116,9 @@ CalculatedItem::Data &operator+=(CalculatedItem::Data &l, const CalculatedItem::
     l.paymentWithOutPremium += r.paymentWithOutPremium;
     l.premiumForFat += r.premiumForFat;
     l.sum += r.sum;
-    l.fat = Utils::Calc::fat(l.fatUnits, l.liters);
-    l.protein = Utils::Calc::protein(l.fat);
-    l.rankWeight = Utils::Calc::rankWeight(l.fatUnits);
+    l.fat = CalcUtils::fat(l.fatUnits, l.liters);
+    l.protein = CalcUtils::protein(l.fat);
+    l.rankWeight = CalcUtils::rankWeight(l.fatUnits);
 
     return l;
 }
