@@ -4,7 +4,7 @@
         <file alias="setup.png">res/img/setup.png</file>
         <file alias="info.png">res/img/info.png</file>
         <file alias="search.png">res/img/search.png</file>
-	<file alias="app.ico">res/img/cow.ico</file>
+        <file alias="app.ico">res/img/cow.png</file>
     </qresource>
     <qresource prefix="/img/db">
         <file alias="db_open.png">res/img/db/db_open.png</file>
