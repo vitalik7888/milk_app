@@ -9,22 +9,10 @@ using price = double;
 class Constants
 {
 public:
-    constexpr static double BASE_PROTEIN = 3.0;
-    constexpr static double BASE_FAT = 3.4;
-
     static inline QString appName() { return "MilkApp"; }
     static inline QString organization() { return "VitaliyDev"; }
 
     static inline QString defaultMilkDbSuffix() { return "mdb"; }
-
-    static inline QString defaultDateFormat() { return "yyyy-MM-dd"; }
-
-    enum class ColumnType: int {
-        SerialNumber = 1,
-        String,
-        Double,
-        Date
-    };
 
     enum PrintColumns {
         SerialNumber = 0,

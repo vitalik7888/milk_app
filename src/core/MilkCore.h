@@ -10,10 +10,10 @@ class MilkCore
 {
 public:
     explicit MilkCore();
-    ~MilkCore() {}
+    virtual ~MilkCore();
 
-    Settings *settings() { return m_settings.data(); }
-    DB_NAMESPACE::Database *database() const { return m_database.data(); }
+    Settings *settings() const;
+    DB_NAMESPACE::Database *database() const;
 
 private:
     QScopedPointer<Settings> m_settings;

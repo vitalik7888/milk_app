@@ -38,7 +38,7 @@ QDate MilkReception::deliveryDate() const
     return m_data.deliveryDate();
 }
 
-double MilkReception::priceLiter() const
+price MilkReception::priceLiter() const
 {
     return m_data.priceLiter();
 }
@@ -123,7 +123,8 @@ void MilkReception::setDeliveryDate(const QDate &deliveryDate)
 
 void MilkReception::setPriceLiter(price priceLiter)
 {
-    if (m_data.priceLiter() == priceLiter)
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_data.priceLiter(), priceLiter))
         return;
 
     m_data.setPriceLiter(priceLiter);
@@ -132,7 +133,8 @@ void MilkReception::setPriceLiter(price priceLiter)
 
 void MilkReception::setLiters(double liters)
 {
-    if (m_data.liters() == liters)
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_data.liters(), liters))
         return;
 
     m_data.setLiters(liters);
@@ -141,7 +143,8 @@ void MilkReception::setLiters(double liters)
 
 void MilkReception::setFat(double fat)
 {
-    if (m_data.fat() == fat)
+    qWarning("Floating point comparison needs context sanity check");
+    if (qFuzzyCompare(m_data.fat(), fat))
         return;
 
     m_data.setFat(fat);

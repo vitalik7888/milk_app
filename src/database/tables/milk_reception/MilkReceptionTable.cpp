@@ -3,13 +3,15 @@
 #include "milkrecepriondao.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
-#include "Constants.h"
+#include "SettingsConstants.h"
 #include "Utils.h"
 // Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
+using SC = SettingsConstants;
 
 USE_DB_NAMESPACE
 
@@ -94,7 +96,7 @@ void MilkReceptionDao::insert(const MilkReceptionData &data) const
     { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }));
     query.addBindValue(data.delivererId());
     query.addBindValue(data.milkPointId());
-    query.addBindValue(data.deliveryDate().toString(Constants::defaultDateFormat()));
+    query.addBindValue(data.deliveryDate().toString(SC::defaultDateFormat()));
     query.addBindValue(data.priceLiter());
     query.addBindValue(data.liters());
     query.addBindValue(data.fat());
@@ -238,8 +240,8 @@ bool MilkReceptionTable::updatePriceLiters(const price price, const QDate &dateF
                   .arg(FN_PRICE_LITER)
                   .arg(FN_DELIVERY_DATE));
     query.addBindValue(price);
-    query.addBindValue(dateFrom.toString(Constants::defaultDateFormat()));
-    query.addBindValue(dateTo.toString(Constants::defaultDateFormat()));
+    query.addBindValue(dateFrom.toString(SC::defaultDateFormat()));
+    query.addBindValue(dateTo.toString(SC::defaultDateFormat()));
 
     if (!query.exec()) {
         emit error(query.lastError().text());
@@ -308,8 +310,8 @@ QPair<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, 
                   .arg(FN_PRICE_LITER)
                   .arg(TABLE_NAME)
                   .arg(FN_DELIVERY_DATE)
-                  .arg(min.toString(Constants::defaultDateFormat()))
-                  .arg(max.toString(Constants::defaultDateFormat())));
+                  .arg(min.toString(SC::defaultDateFormat()))
+                  .arg(max.toString(SC::defaultDateFormat())));
 
     if (query.exec() && query.first()) {
         QPair<double, double>(query.value(0).toDouble(), query.value(1).toDouble());

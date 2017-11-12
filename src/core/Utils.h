@@ -2,6 +2,7 @@
 #define UTILS
 
 #include "Constants.h"
+#include "SettingsConstants.h"
 #include "dbconstants.h"
 
 
@@ -31,7 +32,7 @@ static inline double protein(const double fat)
     if(fat <= 0)
         return 0.0;
 
-    return fat * Constants::BASE_PROTEIN / Constants::BASE_FAT;
+    return fat * SettingsConstants::BASE_PROTEIN / SettingsConstants::BASE_FAT;
 }
 
 static inline double fat(const double fatUnits, const double liters) {
@@ -56,7 +57,7 @@ static inline double rankWeight(const double fatUnits)
     if(fatUnits <= 0)
         return 0.0;
 
-    return fatUnits / Constants::BASE_FAT; //qRound(fatUnits / BASE_FAT);
+    return fatUnits / SettingsConstants::BASE_FAT; //qRound(fatUnits / BASE_FAT);
 }
 
 static inline double premiumForFat(const double fat, const double paymentWithOutPremium)
@@ -64,7 +65,7 @@ static inline double premiumForFat(const double fat, const double paymentWithOut
     if(fat <= 0)
         return 0.0;
 
-    return (fat / Constants::BASE_FAT - 1) * paymentWithOutPremium;
+    return (fat / SettingsConstants::BASE_FAT - 1) * paymentWithOutPremium;
 }
 
 static inline double paymentWithOutPremium(const double liters, const price price)
