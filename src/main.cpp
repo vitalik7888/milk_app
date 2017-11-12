@@ -34,6 +34,9 @@ void qmlRegisterMilkTypes()
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    QCoreApplication::setApplicationName(Constants::appName());
+    QCoreApplication::setOrganizationName(Constants::organization());
+    QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
     qmlRegisterSettings();
     qmlRegisterDb();
