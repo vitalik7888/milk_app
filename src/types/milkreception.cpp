@@ -10,7 +10,7 @@ MilkReception::MilkReception(QObject *parent):
 
 }
 
-MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
+MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
                              const double liters, const double fat,
                              Deliverer *deliverer, MilkPoint *milkPoint, QObject *parent):
     QObject(parent),
@@ -38,7 +38,7 @@ QDate MilkReception::deliveryDate() const
     return m_data.deliveryDate();
 }
 
-price MilkReception::priceLiter() const
+double MilkReception::priceLiter() const
 {
     return m_data.priceLiter();
 }
@@ -121,7 +121,7 @@ void MilkReception::setDeliveryDate(const QDate &deliveryDate)
     emit deliveryDateChanged(deliveryDate);
 }
 
-void MilkReception::setPriceLiter(price priceLiter)
+void MilkReception::setPriceLiter(double priceLiter)
 {
     qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_data.priceLiter(), priceLiter))

@@ -3,7 +3,6 @@
 
 #include "calculateditem.h"
 #include "milkreceptiondata.h"
-#include "src/core/Constants.h"
 // Qt
 #include <QDate>
 
@@ -22,7 +21,7 @@ class MilkReception : public QObject
     Q_PROPERTY(MilkPoint *milkPoint READ milkPoint WRITE setMilkPoint NOTIFY milkPointChanged)
 
 public:
-    MilkReception(const milk_id id, const QDate deliveryDate, const price priceLiter,
+    MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
                   const double liters, const double fat, Deliverer *deliverer = Q_NULLPTR,
                   MilkPoint *milkPoint = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkReception(QObject *parent = Q_NULLPTR);
@@ -30,7 +29,7 @@ public:
 
     milk_id id() const;
     QDate deliveryDate() const;
-    price priceLiter() const;
+    double priceLiter() const;
     double liters() const;
     double fat() const;
     Deliverer *deliverer() const;
@@ -45,7 +44,7 @@ public:
 public slots:
     void setId(const milk_id &id);
     void setDeliveryDate(const QDate &deliveryDate);
-    void setPriceLiter(price priceLiter);
+    void setPriceLiter(double priceLiter);
     void setLiters(double liters);
     void setFat(double fat);
     void setDeliverer(Deliverer *deliverer);

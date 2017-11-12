@@ -36,11 +36,11 @@ public:
     Q_INVOKABLE void insert(int index, MilkReception *milkReception);
     Q_INVOKABLE void append(MilkReception *milkReception);
     Q_INVOKABLE void update(MilkReception *milkReception) const;
-    bool updatePriceLiters(const price price, const QDate &dateFrom, const QDate &dateTo) const;
+    bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
     void setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const;
     void setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const;
     void setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const;
-    void setPriceLiter(const milk_id milkReceptionId, const price priceLiter) const;
+    void setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const;
     void setLiters(const milk_id milkReceptionId, const double liters) const;
     void setFat(const milk_id milkReceptionId, const double fate) const;
 

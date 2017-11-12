@@ -9,7 +9,7 @@ MilkReceptionData::MilkReceptionData():
 
 MilkReceptionData::MilkReceptionData(const milk_id id, const milk_id delivererId,
                                      const milk_id milkPointId, const QDate &deliveryDate,
-                                     const price priceLiter, const double liters, const double fat):
+                                     const double priceLiter, const double liters, const double fat):
     m_id(id),
     m_delivererId(delivererId),
     m_milkPointId(milkPointId),
@@ -83,7 +83,7 @@ double MilkReceptionData::priceLiter() const
     return m_priceLiter;
 }
 
-void MilkReceptionData::setPriceLiter(price priceLiter)
+void MilkReceptionData::setPriceLiter(double priceLiter)
 {
     m_priceLiter = priceLiter;
 }

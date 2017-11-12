@@ -1,9 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// Qt
 #include <QString>
-
-using price = double;
 
 
 class Constants

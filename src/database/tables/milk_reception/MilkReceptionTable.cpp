@@ -217,7 +217,7 @@ void MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QD
     m_dao->updateValue(FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
 }
 
-void MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const price priceLiter) const
+void MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const
 {
     m_dao->updateValue(FN_PRICE_LITER, milkReceptionId, priceLiter);
 }
@@ -232,7 +232,7 @@ void MilkReceptionTable::setFat(const milk_id milkReceptionId, const double fat)
     m_dao->updateValue(FN_FAT, milkReceptionId, fat);
 }
 
-bool MilkReceptionTable::updatePriceLiters(const price price, const QDate &dateFrom, const QDate &dateTo) const
+bool MilkReceptionTable::updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const
 {
     QSqlQuery query(m_db);
     query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 BETWEEN ? AND ?")
