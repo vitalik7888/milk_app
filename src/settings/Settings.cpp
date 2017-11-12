@@ -1,6 +1,7 @@
 #include "Settings.h"
 
 #include "SettingsConstants.h"
+#include <Constants.h>
 // Qt
 #include <QSettings>
 #include <QDebug>
@@ -57,12 +58,11 @@ static inline QString qtr(const char *value)
 }
 }
 
-//------------------------------------
+
 Settings::Settings(QObject *parent):
     QObject(parent)
 {
-    // FIXME
-    m_settings = new QSettings();//Constants::organization(), Constants::appName(), this);
+    m_settings = new QSettings(Constants::organization(), Constants::appName(), this);
 
     m_main = new MainSettings(this);
 
