@@ -11,14 +11,8 @@ CalculatedItem::CalculatedItem(QObject *parent):
 
 CalculatedItem::CalculatedItem(const double liters, const double fat, const price priceForLiter, QObject *parent):
     QObject(parent),
-    m_data({liters, fat, priceForLiter})
+    m_data(calculate(liters, fat, priceForLiter))
 {
-    m_data.protein = Utils::Calc::protein(fat);
-    m_data.fatUnits = Utils::Calc::fatUnits(liters, fat);
-    m_data.rankWeight = Utils::Calc::rankWeight(m_data.fatUnits);
-    m_data.paymentWithOutPremium = Utils::Calc::paymentWithOutPremium(m_data.liters, m_data.priceForLiter);
-    m_data.premiumForFat = Utils::Calc::premiumForFat(fat, m_data.paymentWithOutPremium);
-    m_data.sum = Utils::Calc::sum(m_data.rankWeight, m_data.priceForLiter);
 }
 
 double CalculatedItem::liters() const
@@ -66,9 +60,38 @@ double CalculatedItem::sum() const
     return m_data.sum;
 }
 
+CalculatedItem::Data CalculatedItem::calculate(const double liters, const double fat, const price priceForLiter)
+{
+    CalculatedItem::Data data;
+    data.liters = liters;
+    data.fat = fat;
+    data.priceForLiter = priceForLiter;
+    data.protein = Utils::Calc::protein(fat);
+    data.fatUnits = Utils::Calc::fatUnits(liters, fat);
+    data.rankWeight = Utils::Calc::rankWeight(data.fatUnits);
+    data.paymentWithOutPremium = Utils::Calc::paymentWithOutPremium(data.liters, data.priceForLiter);
+    data.premiumForFat = Utils::Calc::premiumForFat(fat, data.paymentWithOutPremium);
+    data.sum = Utils::Calc::sum(data.rankWeight, data.priceForLiter);
+
+    return data;
+}
+
 CalculatedItem::Data CalculatedItem::data() const
 {
     return m_data;
+}
+
+//CalculatedItem *CalculatedItem::operator+(CalculatedItem *r)
+//{
+//    auto ci = new CalculatedItem(); // FIXME parent
+//    ci->m_data = ci->m_data + r->data();
+//    return ci;
+//}
+
+CalculatedItem *CalculatedItem::operator+=(CalculatedItem *r)
+{
+    m_data += r->data();
+    return this;
 }
 
 CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedItem::Data &r)

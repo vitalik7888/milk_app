@@ -9,15 +9,15 @@
 class CalculatedItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(double liters READ liters)
-    Q_PROPERTY(double fat READ fat)
-    Q_PROPERTY(double priceForLiter READ priceForLiter)
-    Q_PROPERTY(double protein READ protein)
-    Q_PROPERTY(double fatUnits READ fatUnits)
-    Q_PROPERTY(double rankWeight READ rankWeight)
-    Q_PROPERTY(double paymentWithOutPremium READ paymentWithOutPremium)
-    Q_PROPERTY(double premiumForFat READ premiumForFat)
-    Q_PROPERTY(double sum READ sum)
+    Q_PROPERTY(double liters READ liters CONSTANT)
+    Q_PROPERTY(double fat READ fat CONSTANT)
+    Q_PROPERTY(double priceForLiter READ priceForLiter CONSTANT)
+    Q_PROPERTY(double protein READ protein CONSTANT)
+    Q_PROPERTY(double fatUnits READ fatUnits CONSTANT)
+    Q_PROPERTY(double rankWeight READ rankWeight CONSTANT)
+    Q_PROPERTY(double paymentWithOutPremium READ paymentWithOutPremium CONSTANT)
+    Q_PROPERTY(double premiumForFat READ premiumForFat CONSTANT)
+    Q_PROPERTY(double sum READ sum CONSTANT)
 
 public:
     struct Data {
@@ -47,8 +47,13 @@ public:
 
     CalculatedItem::Data data() const;
 
+//    CalculatedItem *operator+(CalculatedItem *r) delete;
+    CalculatedItem *operator+=(CalculatedItem *r);
+
 private:
     CalculatedItem::Data m_data;
+
+    static CalculatedItem::Data calculate(const double liters, const double fat, const price priceForLiter);
 };
 
 CalculatedItem::Data operator+(const CalculatedItem::Data &l, const CalculatedItem::Data &r);
