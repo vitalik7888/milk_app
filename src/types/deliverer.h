@@ -40,7 +40,6 @@ public:
     QQmlListProperty<MilkReception> milkReceptions();
     MilkReception *milkReception(int pos) const;
     int milkReceprionsCount() const;
-    void clearMilkReceptions();
     Q_INVOKABLE bool isHasMilkReceptions() const;
 
     CalculatedItem::Data getCalculations() const;
@@ -72,6 +71,7 @@ private:
     DelivererMilkReceptions m_milkReceptions;
 
     void appendMilkReception(MilkReception *milkReception);
+    void clearMilkReceptions();
     static void appendMilkReception(QQmlListProperty<MilkReception> *, MilkReception *);
     static int milkReceprionsCount(QQmlListProperty<MilkReception> *);
     static MilkReception *milkReception(QQmlListProperty<MilkReception> *, int);
