@@ -124,7 +124,7 @@ DelivererData DeliverersTable::getDelivererData(const milk_id delivererId) const
     return data;
 }
 
-Deliverer *DeliverersTable::getDeliverer(const milk_id delivererId)
+Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
 {
     const auto data = getDelivererData(delivererId);
     auto locality = getLocalities()->getLocality(data.localityId());
