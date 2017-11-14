@@ -1,8 +1,10 @@
 #ifndef MILKPOINTS_TABLE_H
 #define MILKPOINTS_TABLE_H
-#include "dbconstants.h"
+
 #include "base/Table.h"
 #include "milkpoint.h"
+
+#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
     class MilkPointDao;
@@ -22,7 +24,7 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    MilkPointData getMilkPointData(const milk_id milkPointId) const;
+    std::experimental::optional<MilkPointData> getMilkPointData(const milk_id milkPointId) const;
     Q_INVOKABLE MilkPoint *getMilkPoint(const qlonglong milkPointId);
     Q_INVOKABLE void insert(int index, MilkPoint *milkPoint);
     Q_INVOKABLE void append(MilkPoint *milkPoint);

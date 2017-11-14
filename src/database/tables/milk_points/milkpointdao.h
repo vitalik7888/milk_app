@@ -3,6 +3,7 @@
 
 #include <base/dao.h>
 #include "milkpointdata.h"
+#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -10,7 +11,7 @@ class MilkPointDao: public Dao {
 public:
     MilkPointDao(const QSqlDatabase &db);
 
-    MilkPointData get(const milk_id id) const;
+    std::experimental::optional<MilkPointData> get(const milk_id id) const;
     void insert(const MilkPointData &data) const;
     void update(const MilkPointData &data) const;
 };

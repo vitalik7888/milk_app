@@ -21,29 +21,27 @@ static const char *FN_DESCRIPTION = "description";
 MilkPointDao::MilkPointDao(const QSqlDatabase &db):
     Dao(TABLE_NAME, FN_ID, db) {}
 
-MilkPointData MilkPointDao::get(const milk_id id) const
+std::experimental::optional<MilkPointData> MilkPointDao::get(const milk_id id) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
-                    .arg(Utils::Main::getSelectStr(
-                             TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
-                    .arg(FN_ID));
+                  .arg(Utils::Main::getSelectStr(
+                           TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
+                  .arg(FN_ID));
     query.addBindValue(id);
 
-    MilkPointData data;
     if (query.exec() && query.first())
     {
-        data.setLocalityId(query.value(0).toLongLong());
-        data.setName(query.value(1).toString());
-        data.setDescription(query.value(2).toString());
-        data.setId(id);
-    } else {
-        const auto err = QString("Отсутствует молокопункт с id = %1").arg(id);
-        qDebug() << err;
-        throw err;
-    }
+        return MilkPointData(
+                    id,
+                    query.value(FN_LOCALITY_ID).toLongLong(),
+                    query.value(FN_NAME).toString(),
+                    query.value(FN_DESCRIPTION).toString()
+                    );
+    } else
+        qDebug() << QString("Отсутствует молокопункт с id = %1").arg(id);
 
-    return data;
+    return {};
 }
 
 void MilkPointDao::insert(const MilkPointData &data) const
@@ -108,16 +106,23 @@ QString MilkPointsTable::tableName() const
     return TABLE_NAME;
 }
 
-MilkPointData MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
+std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
 {
-    return dao()->get(milkPointId);
+    const auto data = dao()->get(milkPointId);
+    if (!data)
+        emit error(QString("Отсутствует молокопункт с id = %1").arg(milkPointId));
+
+    return data;
 }
 
 MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
 {
-    const auto data = dao()->get(milkPointId);
-    auto locality = localities()->getLocality(data.localityId());
+    const auto mpData = getMilkPointData(milkPointId);
+    if (!mpData)
+        return Q_NULLPTR;
 
+    const auto data = mpData.value();
+    auto locality = localities()->getLocality(data.localityId());
     auto milkPoint = new MilkPoint(data, locality, this);
     locality->setParent(milkPoint);
 
