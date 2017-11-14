@@ -3,6 +3,7 @@
 
 #include <base/Table.h>
 #include "deliverer.h"
+#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -26,7 +27,7 @@ public:
 
     LocalitiesTable *getLocalities() const;
 
-    DelivererData getDelivererData(const milk_id delivererId) const;
+    std::experimental::optional<DelivererData> getDelivererData(const milk_id delivererId) const;
     Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
     Q_INVOKABLE void insert(int index, Deliverer *deliverer);
     Q_INVOKABLE void append(Deliverer *deliverer);

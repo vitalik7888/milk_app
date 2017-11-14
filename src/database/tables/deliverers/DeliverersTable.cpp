@@ -10,8 +10,6 @@
 
 USE_DB_NAMESPACE
 
-//#include <cstdarg>
-
 static const char *TABLE_NAME = "deliverers";
 static const char *FN_ID = "id";
 static const char *FN_NAME = "name";
@@ -25,7 +23,7 @@ DeliverersDao::DeliverersDao(const QSqlDatabase &db):
     Dao(TABLE_NAME, FN_ID, db)
 {  }
 
-DelivererData DeliverersDao::getDeliverer(const milk_id delivererId) const
+std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const milk_id delivererId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -33,23 +31,20 @@ DelivererData DeliverersDao::getDeliverer(const milk_id delivererId) const
     { FN_NAME, FN_LOCALITY_ID, FN_INN, FN_ADDRESS, FN_PHONE_NUMBER })).arg(FN_ID));
     query.addBindValue(delivererId);
 
-    DelivererData deliverer;
     if (query.exec() && query.first())
     {
-        deliverer.setName(query.value(0).toString());
-        deliverer.setLocalityId(query.value(1).toLongLong());
-        deliverer.setInn(query.value(2).toInt());
-        deliverer.setAddress(query.value(3).toString());
-        deliverer.setPhoneNumber(query.value(4).toString());
-        deliverer.setId(delivererId);
-    } else {
-        const auto errorDesc = QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId));
-        qDebug() << errorDesc;
-        throw errorDesc;
-    }
+        return DelivererData(
+                    delivererId,
+                    query.value(FN_NAME).toString(),
+                    query.value(FN_LOCALITY_ID).toLongLong(),
+                    query.value(FN_INN).toInt(),
+                    query.value(FN_ADDRESS).toString(),
+                    query.value(FN_PHONE_NUMBER).toString()
+                    );
+    } else
+        qDebug() << QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId));
 
-    return deliverer;
-
+    return {};
 }
 
 void DeliverersDao::insert(const DelivererData &deliverer) const
@@ -113,22 +108,23 @@ DeliverersTable::~DeliverersTable()
 
 }
 
-DelivererData DeliverersTable::getDelivererData(const milk_id delivererId) const
+std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const milk_id delivererId) const
 {
-    DelivererData data;
-    try {
-        data = dao()->getDeliverer(delivererId);
-    } catch (const QString &err) {
-        emit error(err);
-    }
-    return data;
+    const auto deliverer = dao()->getDeliverer(delivererId);
+    if (!deliverer)
+        emit error(QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId)));
+
+    return deliverer;
 }
 
 Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
 {
-    const auto data = getDelivererData(delivererId);
-    auto locality = getLocalities()->getLocality(data.localityId());
+    const auto delivererData = getDelivererData(delivererId);
+    if (!delivererData)
+        return Q_NULLPTR;
 
+    const auto data = delivererData.value();
+    auto locality = getLocalities()->getLocality(data.localityId());
     auto deliverer = new Deliverer(data.id(), data.name(), data.inn(), data.address(),
                                    data.phoneNumber(), locality, this);
     locality->setParent(deliverer);
