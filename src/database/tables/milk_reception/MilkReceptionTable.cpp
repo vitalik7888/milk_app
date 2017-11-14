@@ -29,7 +29,7 @@ static const char *FN_FAT = "fat";
 //--------------------------------------------------------------------------------------------------
 MilkReceptionDao::MilkReceptionDao(const QSqlDatabase &db) : Dao(TABLE_NAME, FN_ID, db) { }
 
-MilkReceptionData MilkReceptionDao::get(const milk_id id) const
+std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const milk_id id) const
 {
     QSqlQuery query(m_db);
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -38,23 +38,21 @@ MilkReceptionData MilkReceptionDao::get(const milk_id id) const
                   .arg(FN_ID));
     query.addBindValue(id);
 
-    MilkReceptionData data;
     if (query.exec() && query.first())
     {
-        data.setId(id);
-        data.setDelivererId(query.value(0).toLongLong());
-        data.setMilkPointId(query.value(1).toLongLong());
-        data.setDeliveryDate(query.value(2).toDate());
-        data.setPriceLiter(query.value(3).toDouble());
-        data.setLiters(query.value(4).toDouble());
-        data.setFat(query.value(5).toDouble());
-    } else {
-        const auto err = QString("Отсутствует сдача молока с id = %1").arg(id);
-        qDebug() << err;
-        throw err;
-    }
+        return MilkReceptionData(
+                    id,
+                    query.value(FN_ID_DELIVERER).toLongLong(),
+                    query.value(FN_MILK_POINT_ID).toLongLong(),
+                    query.value(FN_DELIVERY_DATE).toDate(),
+                    query.value(FN_PRICE_LITER).toDouble(),
+                    query.value(FN_LITERS).toDouble(),
+                    query.value(FN_FAT).toDouble()
+                    );
+    } else
+        qDebug() << QString("Отсутствует сдача молока с id = %1").arg(id);
 
-    return data;
+    return {};
 }
 
 QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
@@ -157,14 +155,22 @@ QString MilkReceptionTable::tableName() const
     return TABLE_NAME;
 }
 
-MilkReceptionData MilkReceptionTable::getMilkReceptionData(const milk_id milkReceptionId) const
+std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const milk_id milkReceptionId) const
 {
-    return dao()->get(milkReceptionId);
+    const auto data = dao()->get(milkReceptionId);
+    if (!data)
+        emit error(QString("Отсутствует сдача молока с id = %1").arg(milkReceptionId));
+
+    return data;
 }
 
 MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId)
 {
-    const auto mrData = getMilkReceptionData(milkReceptionId);
+    const auto data = getMilkReceptionData(milkReceptionId);
+    if (!data)
+        return Q_NULLPTR;
+
+    const auto mrData = data.value();
     const auto deliverer = getDeliverers()->getDeliverer(mrData.delivererId());
     const auto milkPoint = getMilkPoints()->getMilkPoint(mrData.milkPointId());
 

@@ -7,6 +7,8 @@
 // Qt
 #include <QDate>
 
+#include <experimental/optional>
+
 DB_BEGIN_NAMESPACE
     class MilkReceptionDao;
     class DeliverersTable;
@@ -30,7 +32,7 @@ public:
     QString selectAll() const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
-    MilkReceptionData getMilkReceptionData(const milk_id milkReceptionId) const;
+    std::experimental::optional<MilkReceptionData> getMilkReceptionData(const milk_id milkReceptionId) const;
     MilkReception *getMilkReception(const qlonglong milkReceptionId);
     QList<MilkReceptionData> getMilkReceptions(const QString &where = QString()) const;
     Q_INVOKABLE void insert(int index, MilkReception *milkReception);
