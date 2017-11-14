@@ -6,7 +6,8 @@ SOURCES += \
     $$PWD/tables/localities/LocalitiesTable.cpp \
     $$PWD/tables/milk_points/MilkPointsTable.cpp \
     $$PWD/tables/milk_reception/MilkReceptionTable.cpp \
-    $$PWD/base/dao.cpp
+    $$PWD/base/dao.cpp \
+    $$PWD/tables/deliverers/DeliverersSortFilterProxyModel.cpp
 
 HEADERS  += \
     $$PWD/dbconstants.h \
@@ -20,4 +21,5 @@ HEADERS  += \
     $$PWD/base/dao.h \
     $$PWD/tables/localities/localitiesdao.h \
     $$PWD/tables/milk_points/milkpointdao.h \
-    $$PWD/tables/milk_reception/milkrecepriondao.h
+    $$PWD/tables/milk_reception/milkrecepriondao.h \
+    $$PWD/tables/deliverers/DeliverersSortFilterProxyModel.h
