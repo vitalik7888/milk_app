@@ -5,6 +5,8 @@
 #include "base/Table.h"
 #include "locality.h"
 
+#include <experimental/optional>
+
 DB_BEGIN_NAMESPACE
     class LocalitiesDao;
 
@@ -22,9 +24,9 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    LocalityData getLocalityData(const milk_id localityId) const;
+    std::experimental::optional<LocalityData> getLocalityData(const milk_id localityId) const;
     Q_INVOKABLE Locality *getLocality(const qlonglong localityId);
-    Q_INVOKABLE void insert(int index, Locality *locality);
+    Q_INVOKABLE void insert(int position, Locality *locality);
     Q_INVOKABLE void append(Locality *locality);
     Q_INVOKABLE void update(Locality *locality) const;
     void setName(const milk_id localityId, const QString &localityName) const;

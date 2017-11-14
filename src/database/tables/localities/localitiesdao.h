@@ -3,6 +3,7 @@
 
 #include <base/dao.h>
 #include "localitydata.h"
+#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -10,7 +11,7 @@ class LocalitiesDao: public Dao {
 public:
     LocalitiesDao(const QSqlDatabase &db = QSqlDatabase());
 
-    LocalityData get(const milk_id id) const;
+    std::experimental::optional<LocalityData> get(const milk_id id) const;
     void insert(const LocalityData &data);
     void update(const LocalityData &data);
 };

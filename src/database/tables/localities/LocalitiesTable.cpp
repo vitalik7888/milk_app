@@ -19,25 +19,22 @@ static const char *FN_DESCRIPTION = "description";
 LocalitiesDao::LocalitiesDao(const QSqlDatabase &db):
     Dao(TABLE_NAME, FN_ID, db) {}
 
-LocalityData LocalitiesDao::get(const milk_id id) const {
+std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) const {
     QSqlQuery query(m_db);
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION })).arg(FN_ID));
     query.addBindValue(id);
 
-    LocalityData data;
     if (query.exec() && query.first())
     {
-        data.setId(id);
-        data.setName(query.value(0).toString());
-        data.setDescription(query.value(1).toString());
-    } else {
-        const auto err = QString("Отсутствует населенный пункт с id = %1").arg(id);
-        qDebug() << err;
-        throw err;
-    }
+        return LocalityData(id,
+                            query.value(FN_NAME).toString(),
+                            query.value(FN_DESCRIPTION).toString()
+                            );
+    } else
+        qDebug() << QString("Отсутствует населенный пункт с id = %1").arg(id);
 
-    return data;
+    return {};
 }
 
 void LocalitiesDao::insert(const LocalityData &data) {
@@ -70,7 +67,6 @@ void LocalitiesDao::update(const LocalityData &data) {
 }
 
 //--------------------------------------------------------------------------------------------------
-
 LocalitiesTable::LocalitiesTable(QObject *parent) : LocalitiesTable(QSqlDatabase(), parent) {}
 
 LocalitiesTable::LocalitiesTable(QSqlDatabase db, QObject *parent):
@@ -92,23 +88,31 @@ QString LocalitiesTable::tableName() const
     return TABLE_NAME;
 }
 
-LocalityData LocalitiesTable::getLocalityData(const milk_id localityId) const
+std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const milk_id localityId) const
 {
-    return dao()->get(localityId);
+    const auto data = dao()->get(localityId);
+    if (!data)
+        emit error(QString("Отсутствует населенный пункт с id = %1").arg(localityId));
+
+    return data;
 }
 
 Locality *LocalitiesTable::getLocality(const qlonglong localityId)
 {
-    return new Locality(dao()->get(localityId), this);
+    const auto data = dao()->get(localityId);
+    if (!data)
+        return Q_NULLPTR;
+
+    return new Locality(data.value(), this);
 }
 
-void LocalitiesTable::insert(int index, Locality *locality)
+void LocalitiesTable::insert(int position, Locality *locality)
 {
-    if(index < 0 || index > rowCount()) {
+    if(position < 0 || position > rowCount()) {
         return;
     }
 
-    emit beginInsertRows(QModelIndex(), index, index);
+    emit beginInsertRows(QModelIndex(), position, position);
     dao()->insert(locality->data());
     emit endInsertRows();
 }
@@ -174,5 +178,3 @@ int db::LocalitiesTable::getColPosition(const QString &columnName) const
         return LocalityTableColumns::LT_DESCRIPTION;
     return -1;
 }
-
-
