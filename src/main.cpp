@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("database", core.database());
+    context->setContextProperty("db", core.database());
     context->setContextProperty("settings", core.settings());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
