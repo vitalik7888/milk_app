@@ -1,5 +1,9 @@
 #include "MilkPointsSortFilterProxyModel.h"
 
+#include "locality.h"
+// Qt
+#include <QDebug>
+
 USE_DB_NAMESPACE
 
 using COLUMNS = MilkPointsTableColumns;
@@ -9,6 +13,7 @@ MilkPointsSortFilterProxyModel::MilkPointsSortFilterProxyModel(QObject *parent) 
     QSortFilterProxyModel(parent)
 {
     m_milkPoint = new MilkPoint(this);
+    m_milkPoint->setLocality(new Locality(m_milkPoint));
 }
 
 void MilkPointsSortFilterProxyModel::invalidateTheFilter()
@@ -25,7 +30,10 @@ void MilkPointsSortFilterProxyModel::enableMilkPointDynamicFilter(bool isEnable)
 void MilkPointsSortFilterProxyModel::resetMilkPoint()
 {
     if (m_isMilkPointDynamicFilterEnabled) milkPointConnect();
+    auto locality = m_milkPoint->locality();
+    locality->reset();
     m_milkPoint->reset();
+    m_milkPoint->setLocality(locality);
     if (m_isMilkPointDynamicFilterEnabled) milkPointDisconnect();
 
     invalidateTheFilter();
@@ -36,6 +44,7 @@ void MilkPointsSortFilterProxyModel::milkPointConnect()
     connect(m_milkPoint, &MilkPoint::idChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
     connect(m_milkPoint, &MilkPoint::nameChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
     connect(m_milkPoint, &MilkPoint::descriptionChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
+    connect(m_milkPoint->locality(), &Locality::idChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
 }
 
 void MilkPointsSortFilterProxyModel::milkPointDisconnect()
@@ -43,17 +52,19 @@ void MilkPointsSortFilterProxyModel::milkPointDisconnect()
     disconnect(m_milkPoint, &MilkPoint::idChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_milkPoint, &MilkPoint::nameChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_milkPoint, &MilkPoint::descriptionChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
+    disconnect(m_milkPoint->locality(), &Locality::idChanged, this, &MilkPointsSortFilterProxyModel::invalidateTheFilter);
 }
 
 MilkPointData MilkPointsSortFilterProxyModel::getMilkPointFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
 {
     const QModelIndex indexId = sourceModel()->index(sourceRow, COLUMNS::MPT_ID, sourceParent),
+            indexLocalityId = sourceModel()->index(sourceRow, COLUMNS::MPT_LOCALITY_ID, sourceParent),
             indexName = sourceModel()->index(sourceRow, COLUMNS::MPT_NAME, sourceParent),
             indexDescription = sourceModel()->index(sourceRow, COLUMNS::MPT_DESCRIPTION, sourceParent);
 
     return MilkPointData(
                 sourceModel()->data(indexId).toLongLong(),
-                -1,
+                sourceModel()->data(indexLocalityId).toLongLong(),
                 sourceModel()->data(indexName).toString(),
                 sourceModel()->data(indexDescription).toString()
                 );
@@ -62,6 +73,14 @@ MilkPointData MilkPointsSortFilterProxyModel::getMilkPointFromSourceModel(int so
 bool MilkPointsSortFilterProxyModel::isFilterAcceptRowById(const milk_id id) const
 {
     return m_milkPoint->id() <= 0 ? true : m_milkPoint->id() == id;
+}
+
+bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByLocalityId(const milk_id localityId) const
+{
+    if (!m_milkPoint->locality())
+        return true;
+
+    return m_milkPoint->locality()->id() <= 0 ? true : m_milkPoint->locality()->id() == localityId;
 }
 
 bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByName(const QString &name) const
@@ -76,8 +95,8 @@ bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByDescription(const QStrin
 
 bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByMilkPoint(const MilkPointData &data) const
 {
-    return isFilterAcceptRowById(data.id()) && isFilterAcceptRowByName(data.name())
-            && isFilterAcceptRowByDescription(data.description());
+    return isFilterAcceptRowById(data.id()) && isFilterAcceptRowByLocalityId(data.localityId()) &&
+            isFilterAcceptRowByName(data.name()) && isFilterAcceptRowByDescription(data.description());
 }
 
 bool MilkPointsSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const

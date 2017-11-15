@@ -10,7 +10,7 @@ DB_BEGIN_NAMESPACE
 class MilkPointsSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(MilkPoint* milkPoint READ milkPoint RESET resetMilkPoint)
+    Q_PROPERTY(MilkPoint* milkPoint READ milkPoint CONSTANT RESET resetMilkPoint)
 
 public:
     explicit MilkPointsSortFilterProxyModel(QObject *parent = nullptr);
