@@ -1,11 +1,46 @@
 #ifndef LOCALITIESSORTFILTERPROXYMODEL_H
 #define LOCALITIESSORTFILTERPROXYMODEL_H
 
+#include <locality.h>
+// Qt
+#include <QSortFilterProxyModel>
+
+DB_BEGIN_NAMESPACE
 
 class LocalitiesSortFilterProxyModel : public QSortFilterProxyModel
 {
+    Q_OBJECT
+    Q_PROPERTY(Locality* locality READ locality RESET resetLocality)
+
 public:
-    LocalitiesSortFilterProxyModel();
+    LocalitiesSortFilterProxyModel(QObject *parent = Q_NULLPTR);
+
+    Locality* locality() const { return m_locality; }
+
+public slots:
+    void invalidateTheFilter();
+    void enableDelivererDynamicFilter(bool isEnable);
+    void resetLocality();
+
+protected:
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    virtual bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const Q_DECL_OVERRIDE;
+
+private:
+    Locality* m_locality;
+    bool m_isLocalityDynamicFilterEnabled;
+
+    void localityConnect();
+    void localityDisconnect();
+
+    LocalityData getLocalityFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const;
+
+    bool isFilterAcceptRowById(const milk_id id) const;
+    bool isFilterAcceptRowByName(const QString &name) const;
+    bool isFilterAcceptRowByDescription(const QString &description) const;
+    bool isFilterAcceptRowByLocality(const LocalityData &data) const;
 };
+
+DB_END_NAMESPACE
 
 #endif // LOCALITIESSORTFILTERPROXYMODEL_H
