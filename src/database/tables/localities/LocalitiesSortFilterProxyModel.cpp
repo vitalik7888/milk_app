@@ -1,7 +1,5 @@
 #include "LocalitiesSortFilterProxyModel.h"
 
-#include "dbconstants.h"
-
 USE_DB_NAMESPACE
 
 using COLUMNS = LocalityTableColumns;
