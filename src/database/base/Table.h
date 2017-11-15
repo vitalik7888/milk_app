@@ -15,8 +15,8 @@ DB_BEGIN_NAMESPACE
 class Table : public QSqlQueryModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString tableName READ tableName)
-    Q_PROPERTY(QString primaryField READ primaryField)
+    Q_PROPERTY(QString tableName READ tableName CONSTANT)
+    Q_PROPERTY(QString primaryField READ primaryField CONSTANT)
     Q_PROPERTY(bool getIsFetchOnRefresh READ getIsFetchOnRefresh WRITE setIsFetchOnRefresh)
 
 public:

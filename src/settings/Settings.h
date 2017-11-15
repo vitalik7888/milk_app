@@ -12,9 +12,9 @@
 class Settings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(MainSettings *main READ main RESET resetMain)
-    Q_PROPERTY(PrintSettings *print READ print RESET resetPrint)
-    Q_PROPERTY(CalcSettings *calc READ calc RESET resetCalc)
+    Q_PROPERTY(MainSettings *main READ main CONSTANT RESET resetMain)
+    Q_PROPERTY(PrintSettings *print READ print CONSTANT RESET resetPrint)
+    Q_PROPERTY(CalcSettings *calc READ calc CONSTANT RESET resetCalc)
 
 public:
     Settings(QObject *parent = Q_NULLPTR);
