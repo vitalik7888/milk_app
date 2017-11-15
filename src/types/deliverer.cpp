@@ -62,7 +62,7 @@ void Deliverer::setId(const milk_id &id)
         return;
 
     m_data.setId(id);
-    emit idChanged(id);
+    emit idChanged(m_data.id());
 }
 
 void Deliverer::setName(const QString &name)
@@ -109,6 +109,13 @@ void Deliverer::setPhoneNumber(const QString &phoneNumber)
 
     m_data.setPhoneNumber(phoneNumber);
     emit phoneNumberChanged(phoneNumber);
+}
+
+void Deliverer::reset()
+{
+    m_data = {};
+    m_locality = Q_NULLPTR;
+    m_milkReceptions.clear();
 }
 
 bool Deliverer::isHasMilkReceptions() const

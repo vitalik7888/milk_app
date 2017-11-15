@@ -56,6 +56,7 @@ public slots:
     void setInn(const milk_inn &inn);
     void setAddress(const QString &address);
     void setPhoneNumber(const QString &phoneNumber);
+    void reset();
 
 signals:
     void idChanged(qlonglong delivererId);
