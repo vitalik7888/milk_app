@@ -13,6 +13,7 @@ DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
     QSortFilterProxyModel(parent)
 {
     m_deliverer = new Deliverer(this);
+    m_deliverer->setLocality(new Locality(m_deliverer));
 }
 
 void DeliverersSortFilterProxyModel::enableDelivererDynamicFilter(bool isEnable)
@@ -23,13 +24,12 @@ void DeliverersSortFilterProxyModel::enableDelivererDynamicFilter(bool isEnable)
 
 void DeliverersSortFilterProxyModel::resetFilter()
 {
-    if (m_isDelivererDynamicFilterEnabled)
-        delivererDisconnect();
-
+    if (m_isDelivererDynamicFilterEnabled) delivererDisconnect();
+    auto locality = m_deliverer->locality();
+    locality->reset();
     m_deliverer->reset();
-
-    if (m_isDelivererDynamicFilterEnabled)
-        delivererConnect();
+    m_deliverer->setLocality(locality);
+    if (m_isDelivererDynamicFilterEnabled) delivererConnect();
 
     invalidateTheFilter();
 }
@@ -81,7 +81,7 @@ void DeliverersSortFilterProxyModel::delivererConnect()
     connect(m_deliverer, &Deliverer::innChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     connect(m_deliverer, &Deliverer::addressChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     connect(m_deliverer, &Deliverer::phoneNumberChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
-    connect(m_deliverer, &Deliverer::localityChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    connect(m_deliverer->locality(), &Locality::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
 }
 
 void DeliverersSortFilterProxyModel::delivererDisconnect()
@@ -91,7 +91,7 @@ void DeliverersSortFilterProxyModel::delivererDisconnect()
     disconnect(m_deliverer, &Deliverer::innChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_deliverer, &Deliverer::addressChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_deliverer, &Deliverer::phoneNumberChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
-    disconnect(m_deliverer, &Deliverer::localityChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    disconnect(m_deliverer->locality(), &Locality::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
 }
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const milk_id id) const
@@ -121,7 +121,10 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByPhoneNumber(const QStrin
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const milk_id localityId) const
 {
-    return m_deliverer->locality() == Q_NULLPTR ? true : m_deliverer->locality()->id() == localityId;
+    if (!m_deliverer->locality())
+        return true;
+
+    return m_deliverer->locality()->id() <= 0 ? true : m_deliverer->locality()->id() == localityId;
 }
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowByDeliverer(const DelivererData &data) const
