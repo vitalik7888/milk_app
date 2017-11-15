@@ -26,6 +26,7 @@ public slots:
     void setId(const milk_id &id);
     void setName(const QString &name);
     void setDescription(const QString &description);
+    void reset();
 
 signals:
     void idChanged(qlonglong localityId);

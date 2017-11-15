@@ -64,3 +64,8 @@ void Locality::setDescription(const QString &description)
     m_data.setDescription(description);
     emit descriptionChanged(description);
 }
+
+void Locality::reset()
+{
+    m_data = {};
+}
