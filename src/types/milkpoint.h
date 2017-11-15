@@ -37,6 +37,7 @@ public slots:
     void setLocality(Locality * locality);
     void setName(const QString &name);
     void setDescription(const QString &description);
+    void reset();
 
 signals:
     void idChanged(qlonglong milkPointId);

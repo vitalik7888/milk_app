@@ -78,6 +78,12 @@ void MilkPoint::setDescription(const QString &description)
     emit descriptionChanged(description);
 }
 
+void MilkPoint::reset()
+{
+    m_data = {};
+    m_locality = Q_NULLPTR;
+}
+
 bool MilkPoint::isValid() const
 {
     return m_data.isValid();
