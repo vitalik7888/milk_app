@@ -18,11 +18,11 @@ DB_BEGIN_NAMESPACE
 class Database : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(LocalitiesTable *localities READ localities)
-    Q_PROPERTY(DeliverersTable *deliverers READ deliverers)
-    Q_PROPERTY(MilkPointsTable *milkPoints READ milkPoints)
-    Q_PROPERTY(MilkReceptionTable *milkReception READ milkReception)
-    Q_PROPERTY(QQmlListProperty<Table> tables READ tables)
+    Q_PROPERTY(LocalitiesTable *localities READ localities CONSTANT)
+    Q_PROPERTY(DeliverersTable *deliverers READ deliverers CONSTANT)
+    Q_PROPERTY(MilkPointsTable *milkPoints READ milkPoints CONSTANT)
+    Q_PROPERTY(MilkReceptionTable *milkReception READ milkReception CONSTANT)
+    Q_PROPERTY(QQmlListProperty<Table> tables READ tables CONSTANT)
 
     enum class Tables: int {
         localities = 0,
