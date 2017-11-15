@@ -26,12 +26,7 @@ void DeliverersSortFilterProxyModel::resetFilter()
     if (m_isDelivererDynamicFilterEnabled)
         delivererDisconnect();
 
-    m_deliverer->setId(-1);
-    m_deliverer->setName({});
-    m_deliverer->setInn(-1);
-    m_deliverer->setAddress({});
-    m_deliverer->setPhoneNumber({});
-    m_deliverer->setLocality(Q_NULLPTR);
+    m_deliverer->reset();
 
     if (m_isDelivererDynamicFilterEnabled)
         delivererConnect();
