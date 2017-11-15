@@ -10,7 +10,7 @@ DB_BEGIN_NAMESPACE
 class LocalitiesSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(Locality* locality READ locality RESET resetLocality)
+    Q_PROPERTY(Locality* locality READ locality CONSTANT RESET resetLocality)
 
 public:
     LocalitiesSortFilterProxyModel(QObject *parent = Q_NULLPTR);
