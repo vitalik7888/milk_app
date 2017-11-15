@@ -16,6 +16,8 @@ ListView {
         currentLocality = currentItem.locality
     }
 
+    highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+
     delegate: ItemDelegate {
         property Locality locality: Locality {
             localityId: f_id

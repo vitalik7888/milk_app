@@ -16,6 +16,8 @@ ListView {
         currentMilkPoint = currentItem.milkPoint
     }
 
+    highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+
     delegate: ItemDelegate {
         property MilkPoint milkPoint: MilkPoint {
             milkPointId: f_id

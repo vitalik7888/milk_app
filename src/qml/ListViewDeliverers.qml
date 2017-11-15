@@ -16,6 +16,8 @@ ListView {
         currentDeliverer = currentItem.deliverer
     }
 
+    highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+
     delegate: ItemDelegate {
         property Deliverer deliverer: Deliverer {
             delivererId: f_id
