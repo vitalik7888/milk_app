@@ -1,4 +1,7 @@
 #include "src/core/MilkCore.h"
+#include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
+#include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
+#include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -16,10 +19,14 @@ void qmlRegisterDb()
 {
     const char *uri = "Milk.Database";
     qmlRegisterType<DB_NAMESPACE::Database>(uri, 1, 0, "Database");
+    qmlRegisterType<DB_NAMESPACE::Table>();
     qmlRegisterType<DB_NAMESPACE::LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
     qmlRegisterType<DB_NAMESPACE::MilkPointsTable>(uri, 1, 0, "MilkPointsTable");
     qmlRegisterType<DB_NAMESPACE::DeliverersTable>(uri, 1, 0, "DeliverersTable");
     qmlRegisterType<DB_NAMESPACE::MilkReceptionTable>(uri, 1, 0, "MilkReceptionTable");
+    qmlRegisterType<DB_NAMESPACE::LocalitiesSortFilterProxyModel>(uri, 1, 0, "LocalitiesSortFilterProxyModel");
+    qmlRegisterType<DB_NAMESPACE::MilkPointsSortFilterProxyModel>(uri, 1, 0, "MilkPointsSortFilterProxyModel");
+    qmlRegisterType<DB_NAMESPACE::DeliverersSortFilterProxyModel>(uri, 1, 0, "DeliverersSortFilterProxyModel");
 }
 
 void qmlRegisterMilkTypes()

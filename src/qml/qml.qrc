@@ -2,5 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>DateEdit.qml</file>
+        <file>ListViewLocalities.qml</file>
+        <file>ListViewDeliverers.qml</file>
+        <file>CalcPage.qml</file>
+        <file>MilkReceptionsPage.qml</file>
+        <file>ListViewMilkPoints.qml</file>
     </qresource>
 </RCC>

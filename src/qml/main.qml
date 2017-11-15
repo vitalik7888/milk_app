@@ -1,93 +1,51 @@
-import QtQuick 2.0
-import QtQuick 2.6
-import QtQuick.Controls 1.4
-import QtQuick.Window 2.2
+import QtQuick 2.7
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import Milk.Core 1.0
 import Milk.Settings 1.0
 import Milk.Database 1.0
 
 ApplicationWindow {
-    id: window
     visible: true
-    property int margin: 11
-    width: mainLayout.implicitWidth + 2 * margin
-    height: mainLayout.implicitHeight + 2 * margin
-    minimumWidth: mainLayout.Layout.minimumWidth + 2 * margin
-    minimumHeight: mainLayout.Layout.minimumHeight + 2 * margin
+    width: 640
+    height: 480
+    title: qsTr("Milk app")
 
-    ColumnLayout {
-        id: mainLayout
-        anchors.margins: margin
+    SwipeView {
+        id: swipeView
+        anchors.fill: parent
+        currentIndex: tabBar.currentIndex
 
-        GroupBox {
-            Layout.fillWidth: true
+        CalcPage {
 
-            Column {
-                spacing: 2
+        }
 
-                GroupBox {
-                    id: groupBoxFilterDate
-                    title: qsTr("Дата")
-                    checkable: true
-                    checked: false
+        MilkReceptionsPage {
 
-                    Column {
-                        DateEdit {
-                            id: dateEditFilterFrom
+        }
+    }
 
-                            onCalendarOpened: dateEditFilterTo.closeCalendar()
-                        }
-                        DateEdit {
-                            id: dateEditFilterTo
+    footer: TabBar {
+        id: tabBar
+        currentIndex: swipeView.currentIndex
 
-                            onCalendarOpened: dateEditFilterFrom.closeCalendar()
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        onCheckedChanged: {
-                            dateEditFilterFrom.closeCalendar()
-                            dateEditFilterTo.closeCalendar()
-                        }
-                    }
-                }
-
-                GroupBox {
-                    title: qsTr("Выбрать сдатчика")
-                    checkable: true
-                    checked: false
-
-                    ComboBox {
-                    }
-                }
-
-                GroupBox {
-                    title: qsTr("Выбрать молокопункт")
-                    checkable: true
-                    checked: false
-
-                    ComboBox {
-                    }
-                }
-            }
-
-            ListView {
-                id: listViewCalc
-            }
+        TabButton {
+            text: qsTr("Расчёты")
+        }
+        TabButton {
+            text: qsTr("Сдача молока")
         }
     }
 
     Connections {
-        target: database
+        target: db
         onDbOpened: {
-
         }
     }
 
     Component.onCompleted: {
         settings.readSettings()
         if (!settings.main.lastChoosenDb.isEmpty)
-            database.openDb(settings.main.lastChoosenDb)
+            db.openDb(settings.main.lastChoosenDb)
     }
 }
