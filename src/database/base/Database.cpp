@@ -10,7 +10,11 @@ USE_DB_NAMESPACE
 
 Database::Database(QObject *parent) :
     QObject(parent),
-    m_db(QSqlDatabase::addDatabase("QSQLITE"))
+    m_db(QSqlDatabase::addDatabase("QSQLITE")),
+    m_localities(Q_NULLPTR),
+    m_deliverers(Q_NULLPTR),
+    m_milkPoints(Q_NULLPTR),
+    m_milkReception(Q_NULLPTR)
 {
     setObjectName("Database");
     qDebug() << "init " + this->objectName();
@@ -54,27 +58,32 @@ QString Database::choosenDatabase() const
 
 LocalitiesTable *Database::localities() const
 {
-    return qobject_cast<LocalitiesTable *>(m_tables[static_cast<int>(Tables::localities)]);
+    return m_localities;
 }
 
 DeliverersTable *Database::deliverers() const
 {
-    return qobject_cast<DeliverersTable *>(m_tables[static_cast<int>(Tables::deliverers)]);
+    return m_deliverers;
 }
 
 MilkPointsTable *Database::milkPoints() const
 {
-    return qobject_cast<MilkPointsTable *>(m_tables[static_cast<int>(Tables::milk_points)]);
+    return m_milkPoints;
 }
 
 MilkReceptionTable *Database::milkReception() const
 {
-    return qobject_cast<MilkReceptionTable *>(m_tables[static_cast<int>(Tables::milk_reception)]);
+    return m_milkReception;
+}
+
+int Database::tablesCount() const
+{
+    return m_tables.size();
 }
 
 QQmlListProperty<Table> Database::tables()
 {
-    return QQmlListProperty<Table>(this, m_tables);
+    return QQmlListProperty<Table>(this, this, &Database::_tablesCount, &Database::_getTable);
 }
 
 bool Database::isTablesCreated() const
@@ -94,15 +103,17 @@ void Database::createTables()
     if (!m_tables.isEmpty())
         return;
 
-    auto localities = new LocalitiesTable(m_db, this);
-    auto deliverers = new DeliverersTable(localities, m_db);
-    auto milkPoints = new MilkPointsTable(localities, m_db);
-    auto milkReception = new MilkReceptionTable(deliverers, milkPoints, m_db);
+    m_localities = new LocalitiesTable(m_db, this);
+    m_deliverers = new DeliverersTable(m_localities, m_db, this);
+    m_milkPoints = new MilkPointsTable(m_localities, m_db, this);
+    m_milkReception = new MilkReceptionTable(m_deliverers, m_milkPoints, m_db, this);
 
-    m_tables.append(localities);
-    m_tables.append(deliverers);
-    m_tables.append(milkPoints);
-    m_tables.append(milkReception);
+    m_tables.append({m_localities, m_deliverers, m_milkPoints, m_milkReception});
+
+    emit localitiesChanged(m_localities);
+    emit deliverersChanged(m_deliverers);
+    emit milkPointsChanged(m_milkPoints);
+    emit milkReceptionChanged(m_milkReception);
 }
 
 void Database::clearTables()
@@ -113,11 +124,41 @@ void Database::clearTables()
     }
 }
 
+Table *Database::getTable(const int position) const
+{
+    return m_tables[position];
+}
+
+void Database::_appendTable(QQmlListProperty<Table> *list, Table *table)
+{
+    reinterpret_cast< Database* >(list->data)->appendTable(table);
+}
+
+int Database::_tablesCount(QQmlListProperty<Table> *list)
+{
+    return reinterpret_cast< Database* >(list->data)->tablesCount();
+}
+
+Table *Database::_getTable(QQmlListProperty<Table> *list, int position)
+{
+    return reinterpret_cast< Database* >(list->data)->getTable(position);
+}
+
+void Database::_removeTables(QQmlListProperty<Table> *list)
+{
+    reinterpret_cast< Database* >(list->data)->removeTables();
+}
+
 void Database::refreshTables()
 {
     for (auto table: m_tables) {
         table->refresh();
         qDebug().nospace() << "refresh table " << table->tableName();
     }
+}
+
+void Database::appendTable(Table *table)
+{
+    m_tables.append(table);
 }
 
