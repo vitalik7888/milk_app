@@ -29,14 +29,14 @@ public:
 
     std::experimental::optional<DelivererData> getDelivererData(const milk_id delivererId) const;
     Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
-    Q_INVOKABLE void insert(int index, Deliverer *deliverer);
-    Q_INVOKABLE void append(Deliverer *deliverer);
+    Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
+    Q_INVOKABLE bool append(Deliverer *deliverer);
     Q_INVOKABLE bool update(Deliverer *deliverer) const;
-    bool setName(const milk_id delivererId, const QString &tableName) const;
-    bool setLocalityId(const milk_id delivererId, const milk_id localityId) const;
-    bool setInn(const milk_id delivererId, const milk_inn inn) const;
-    bool setAddress(const milk_id delivererId, const QString &address) const;
-    bool setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const;
+    Q_INVOKABLE bool setName(const milk_id delivererId, const QString &tableName) const;
+    Q_INVOKABLE bool setLocalityId(const milk_id delivererId, const milk_id localityId) const;
+    Q_INVOKABLE bool setInn(const milk_id delivererId, const milk_inn inn) const;
+    Q_INVOKABLE bool setAddress(const milk_id delivererId, const QString &address) const;
+    Q_INVOKABLE bool setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const;
 
 private:
     LocalitiesTable *m_localities;

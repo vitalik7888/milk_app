@@ -13,16 +13,21 @@ class DeliverersSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Deliverer* deliverer READ deliverer CONSTANT RESET resetFilter)
+    Q_PROPERTY(bool enableDelivererDynamicFilter READ isDelivererDynamicFilterEnabled WRITE setDelivererDynamicFilter NOTIFY delivererDynamicFilterChanged)
 
 public:
     DeliverersSortFilterProxyModel(QObject *parent = Q_NULLPTR);
 
     Deliverer* deliverer() const { return m_deliverer; }
+    bool isDelivererDynamicFilterEnabled() const { return m_isDelivererDynamicFilterEnabled; }
 
 public slots:
     void invalidateTheFilter();
-    void enableDelivererDynamicFilter(bool isEnable);
     void resetFilter();
+    void setDelivererDynamicFilter(bool isEnable);
+
+signals:
+    void delivererDynamicFilterChanged(bool enableDelivererDynamicFilter);
 
 protected:
     virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

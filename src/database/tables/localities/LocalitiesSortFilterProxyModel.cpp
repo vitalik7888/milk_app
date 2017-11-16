@@ -16,12 +16,6 @@ void LocalitiesSortFilterProxyModel::invalidateTheFilter()
     invalidateFilter();
 }
 
-void LocalitiesSortFilterProxyModel::enableDelivererDynamicFilter(bool isEnable)
-{
-    m_isLocalityDynamicFilterEnabled = isEnable;
-    m_isLocalityDynamicFilterEnabled ? localityConnect() : localityDisconnect();
-}
-
 void LocalitiesSortFilterProxyModel::resetLocality()
 {
     if (m_isLocalityDynamicFilterEnabled) localityDisconnect();
@@ -31,6 +25,16 @@ void LocalitiesSortFilterProxyModel::resetLocality()
     if (m_isLocalityDynamicFilterEnabled) localityConnect();
 
     invalidateTheFilter();
+}
+
+void LocalitiesSortFilterProxyModel::setLocalityDynamicFilter(bool isEnable)
+{
+    if (m_isLocalityDynamicFilterEnabled == isEnable)
+        return;
+
+    m_isLocalityDynamicFilterEnabled = isEnable;
+    m_isLocalityDynamicFilterEnabled ? localityConnect() : localityDisconnect();
+    emit localityDynamicFilterChanged(m_isLocalityDynamicFilterEnabled);
 }
 
 void LocalitiesSortFilterProxyModel::localityConnect()

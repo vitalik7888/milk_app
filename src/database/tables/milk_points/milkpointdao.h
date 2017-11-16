@@ -7,13 +7,16 @@
 
 DB_BEGIN_NAMESPACE
 
+class MilkPointsTable;
+
+
 class MilkPointDao: public Dao {
 public:
-    MilkPointDao(const QSqlDatabase &db);
+    MilkPointDao(MilkPointsTable *table);
 
     std::experimental::optional<MilkPointData> get(const milk_id id) const;
-    void insert(const MilkPointData &data) const;
-    void update(const MilkPointData &data) const;
+    bool insert(const MilkPointData &data) const;
+    bool update(const MilkPointData &data) const;
 };
 
 DB_END_NAMESPACE

@@ -21,12 +21,6 @@ void MilkPointsSortFilterProxyModel::invalidateTheFilter()
     invalidateFilter();
 }
 
-void MilkPointsSortFilterProxyModel::enableMilkPointDynamicFilter(bool isEnable)
-{
-    m_isMilkPointDynamicFilterEnabled = isEnable;
-    m_isMilkPointDynamicFilterEnabled ? milkPointConnect() : milkPointDisconnect();
-}
-
 void MilkPointsSortFilterProxyModel::resetMilkPoint()
 {
     if (m_isMilkPointDynamicFilterEnabled) milkPointConnect();
@@ -37,6 +31,16 @@ void MilkPointsSortFilterProxyModel::resetMilkPoint()
     if (m_isMilkPointDynamicFilterEnabled) milkPointDisconnect();
 
     invalidateTheFilter();
+}
+
+void MilkPointsSortFilterProxyModel::setMilkPointDynamicFilter(bool isEnable)
+{
+    if (m_isMilkPointDynamicFilterEnabled == isEnable)
+        return;
+
+    m_isMilkPointDynamicFilterEnabled = isEnable;
+    m_isMilkPointDynamicFilterEnabled ? milkPointConnect() : milkPointDisconnect();
+    emit MilkPointDynamicFilterChanged(m_isMilkPointDynamicFilterEnabled);
 }
 
 void MilkPointsSortFilterProxyModel::milkPointConnect()

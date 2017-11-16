@@ -19,9 +19,11 @@ static const char *FN_ADDRESS = "address";
 static const char *FN_PHONE_NUMBER = "phone_number";
 
 //--------------------------------------------------------------------------------------------------
-DeliverersDao::DeliverersDao(const QSqlDatabase &db):
-    Dao(TABLE_NAME, FN_ID, db)
-{  }
+DeliverersDao::DeliverersDao(DeliverersTable *table):
+    Dao(table)
+{
+
+}
 
 std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const milk_id delivererId) const
 {
@@ -42,12 +44,12 @@ std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const mil
                     query.value(FN_PHONE_NUMBER).toString()
                     );
     } else
-        qDebug() << QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId));
+        _error(QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId)));
 
     return {};
 }
 
-void DeliverersDao::insert(const DelivererData &deliverer) const
+bool DeliverersDao::insert(const DelivererData &deliverer) const
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME,
@@ -59,13 +61,14 @@ void DeliverersDao::insert(const DelivererData &deliverer) const
     query.addBindValue(deliverer.phoneNumber());
 
     if (!query.exec()) {
-        const QString errDesc = query.lastError().text();
-        qDebug() << errDesc;
-        throw errDesc;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
-void DeliverersDao::update(const DelivererData &deliverer) const
+bool DeliverersDao::update(const DelivererData &deliverer) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -80,10 +83,11 @@ void DeliverersDao::update(const DelivererData &deliverer) const
     query.addBindValue(deliverer.id());
 
     if (!query.exec()) {
-        const QString errDesc = query.lastError().text();
-        qDebug() << errDesc;
-        throw errDesc;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -94,7 +98,7 @@ DeliverersTable::DeliverersTable(QObject *parent):
 }
 
 DeliverersTable::DeliverersTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent) :
-    Table(new DeliverersDao(db), db, parent),
+    Table(new DeliverersDao(this), db, parent),
     m_localities(localities)
 {
     setObjectName("DeliverersTable");
@@ -110,11 +114,7 @@ DeliverersTable::~DeliverersTable()
 
 std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const milk_id delivererId) const
 {
-    const auto deliverer = dao()->getDeliverer(delivererId);
-    if (!deliverer)
-        emit error(QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId)));
-
-    return deliverer;
+    return dao()->getDeliverer(delivererId);
 }
 
 Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
@@ -132,87 +132,53 @@ Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
     return deliverer;
 }
 
-void DeliverersTable::insert(int index, Deliverer *deliverer)
+bool DeliverersTable::insert(int index, Deliverer *deliverer)
 {
     if(index < 0 || index > rowCount()) {
-        return;
+        emit error("Данная позиция не входит в диапазон");
+        return false;
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    dao()->insert(deliverer->data());
+    const bool isOk = dao()->insert(deliverer->data());
     emit endInsertRows();
+
+    return isOk;
 }
 
-void DeliverersTable::append(Deliverer *deliverer)
+bool DeliverersTable::append(Deliverer *deliverer)
 {
-    insert(rowCount(), deliverer);
+    return insert(rowCount(), deliverer);
 }
 
 bool DeliverersTable::update(Deliverer *deliverer) const
 {
-    try {
-        dao()->update(deliverer->data());
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
-
-    return true;
+    return dao()->update(deliverer->data());
 }
 
 bool DeliverersTable::setName(const milk_id delivererId, const QString &_name) const
 {
-    try {
-        m_dao->updateValue(FN_NAME, delivererId, _name);
-        return true;
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    return m_dao->updateValue(FN_NAME, delivererId, _name);
 }
 
 bool DeliverersTable::setLocalityId(const milk_id delivererId, const milk_id localityId) const
 {
-    try {
-        m_dao->updateValue(FN_LOCALITY_ID, delivererId, localityId);
-        return true;
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    return m_dao->updateValue(FN_LOCALITY_ID, delivererId, localityId);
 }
 
 bool DeliverersTable::setInn(const milk_id delivererId, const milk_inn inn) const
 {
-    try {
-        m_dao->updateValue(FN_INN, delivererId, inn);
-        return true;
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    return m_dao->updateValue(FN_INN, delivererId, inn);
 }
 
 bool DeliverersTable::setAddress(const milk_id delivererId, const QString &address) const
 {
-    try {
-        m_dao->updateValue(FN_ADDRESS, delivererId, address);
-        return true;
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    return m_dao->updateValue(FN_ADDRESS, delivererId, address);
 }
 
 bool DeliverersTable::setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const
 {
-    try {
-        m_dao->updateValue(FN_PHONE_NUMBER, delivererId, phoneNumber);
-        return true;
-    } catch (const QString &err) {
-        emit error(err);
-        return false;
-    }
+    return m_dao->updateValue(FN_PHONE_NUMBER, delivererId, phoneNumber);
 }
 
 LocalitiesTable *DeliverersTable::getLocalities() const

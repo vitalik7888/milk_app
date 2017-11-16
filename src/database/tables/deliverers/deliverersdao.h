@@ -7,13 +7,16 @@
 
 DB_BEGIN_NAMESPACE
 
+class DeliverersTable;
+
+
 class DeliverersDao: public Dao {
 public:
-    DeliverersDao(const QSqlDatabase &db);
+    explicit DeliverersDao(DeliverersTable *table);
 
     std::experimental::optional<DelivererData> getDeliverer(const milk_id delivererId) const;
-    void insert(const DelivererData &deliverer) const;
-    void update(const DelivererData &deliverer) const;
+    bool insert(const DelivererData &deliverer) const;
+    bool update(const DelivererData &deliverer) const;
 };
 
 DB_END_NAMESPACE

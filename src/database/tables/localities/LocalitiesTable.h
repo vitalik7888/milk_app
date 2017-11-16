@@ -26,11 +26,11 @@ public:
 
     std::experimental::optional<LocalityData> getLocalityData(const milk_id localityId) const;
     Q_INVOKABLE Locality *getLocality(const qlonglong localityId);
-    Q_INVOKABLE void insert(int position, Locality *locality);
-    Q_INVOKABLE void append(Locality *locality);
-    Q_INVOKABLE void update(Locality *locality) const;
-    void setName(const milk_id localityId, const QString &localityName) const;
-    void setDescription(const milk_id localityId, const QString &description) const;
+    Q_INVOKABLE bool insert(int position, Locality *locality);
+    Q_INVOKABLE bool append(Locality *locality);
+    Q_INVOKABLE bool update(Locality *locality) const;
+    Q_INVOKABLE bool setName(const milk_id localityId, const QString &localityName) const;
+    Q_INVOKABLE bool setDescription(const milk_id localityId, const QString &description) const;
 
 private:
     LocalitiesDao *dao() const;

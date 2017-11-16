@@ -16,11 +16,11 @@ static const char *FN_NAME = "name";
 static const char *FN_DESCRIPTION = "description";
 
 //--------------------------------------------------------------------------------------------------
-LocalitiesDao::LocalitiesDao(const QSqlDatabase &db):
-    Dao(TABLE_NAME, FN_ID, db) {}
+LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
+    Dao(table) {}
 
 std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) const {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION })).arg(FN_ID));
     query.addBindValue(id);
@@ -32,26 +32,27 @@ std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) c
                             query.value(FN_DESCRIPTION).toString()
                             );
     } else
-        qDebug() << QString("Отсутствует населенный пункт с id = %1").arg(id);
+        _error(QString("Отсутствует населенный пункт с id = %1").arg(id));
 
     return {};
 }
 
-void LocalitiesDao::insert(const LocalityData &data) {
-    QSqlQuery query(m_db);
+bool LocalitiesDao::insert(const LocalityData &data) const{
+    QSqlQuery query(m_table->database());
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }));
     query.addBindValue(data.name());
     query.addBindValue(data.description());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
-void LocalitiesDao::update(const LocalityData &data) {
-    QSqlQuery query;
+bool LocalitiesDao::update(const LocalityData &data) const{
+    QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getPrepUpdateStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }))
                   .arg(FN_ID));
@@ -60,17 +61,18 @@ void LocalitiesDao::update(const LocalityData &data) {
     query.addBindValue(data.id());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
 //--------------------------------------------------------------------------------------------------
 LocalitiesTable::LocalitiesTable(QObject *parent) : LocalitiesTable(QSqlDatabase(), parent) {}
 
 LocalitiesTable::LocalitiesTable(QSqlDatabase db, QObject *parent):
-    Table(new LocalitiesDao(db), db, parent)
+    Table(new LocalitiesDao(this), db, parent)
 {
     setObjectName("LocalitiesTable");
     qDebug() << "init " + objectName();
@@ -106,35 +108,37 @@ Locality *LocalitiesTable::getLocality(const qlonglong localityId)
     return new Locality(data.value(), this);
 }
 
-void LocalitiesTable::insert(int position, Locality *locality)
+bool LocalitiesTable::insert(int position, Locality *locality)
 {
     if(position < 0 || position > rowCount()) {
-        return;
+        return false;
     }
 
     emit beginInsertRows(QModelIndex(), position, position);
-    dao()->insert(locality->data());
+    const bool isOk = dao()->insert(locality->data());
     emit endInsertRows();
+
+    return isOk;
 }
 
-void LocalitiesTable::append(Locality *locality)
+bool LocalitiesTable::append(Locality *locality)
 {
-    insert(rowCount(), locality);
+    return insert(rowCount(), locality);
 }
 
-void LocalitiesTable::update(Locality *locality) const
+bool LocalitiesTable::update(Locality *locality) const
 {
-    dao()->update(locality->data());
+    return dao()->update(locality->data());
 }
 
-void LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
+bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
 {
-    m_dao->updateValue(FN_ID, localityId, localityName);
+    return m_dao->updateValue(FN_ID, localityId, localityName);
 }
 
-void LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
+bool LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
 {
-    m_dao->updateValue(FN_DESCRIPTION, localityId, description);
+    return m_dao->updateValue(FN_DESCRIPTION, localityId, description);
 }
 
 QString LocalitiesTable::primaryField() const

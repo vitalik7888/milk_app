@@ -11,16 +11,21 @@ class LocalitiesSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Locality* locality READ locality CONSTANT RESET resetLocality)
+    Q_PROPERTY(bool enableLocalityDynamicFilter READ isLocalityDynamicFilterEnabled WRITE setLocalityDynamicFilter NOTIFY localityDynamicFilterChanged)
 
 public:
     LocalitiesSortFilterProxyModel(QObject *parent = Q_NULLPTR);
 
     Locality* locality() const { return m_locality; }
+    bool isLocalityDynamicFilterEnabled() const { return m_isLocalityDynamicFilterEnabled; }
 
 public slots:
     void invalidateTheFilter();
-    void enableDelivererDynamicFilter(bool isEnable);
     void resetLocality();
+    void setLocalityDynamicFilter(bool isEnable);
+
+signals:
+    void localityDynamicFilterChanged(bool isEnabled);
 
 protected:
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;

@@ -7,13 +7,16 @@
 
 DB_BEGIN_NAMESPACE
 
+class LocalitiesTable;
+
+
 class LocalitiesDao: public Dao {
 public:
-    LocalitiesDao(const QSqlDatabase &db = QSqlDatabase());
+    LocalitiesDao(LocalitiesTable *table);
 
     std::experimental::optional<LocalityData> get(const milk_id id) const;
-    void insert(const LocalityData &data);
-    void update(const LocalityData &data);
+    bool insert(const LocalityData &data) const;
+    bool update(const LocalityData &data) const;
 };
 
 DB_END_NAMESPACE

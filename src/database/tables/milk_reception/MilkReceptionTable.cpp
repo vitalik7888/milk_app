@@ -27,11 +27,11 @@ static const char *FN_LITERS = "liters";
 static const char *FN_FAT = "fat";
 
 //--------------------------------------------------------------------------------------------------
-MilkReceptionDao::MilkReceptionDao(const QSqlDatabase &db) : Dao(TABLE_NAME, FN_ID, db) { }
+MilkReceptionDao::MilkReceptionDao(MilkReceptionTable *table) : Dao(table) { }
 
 std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const milk_id id) const
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME,
     { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
@@ -50,14 +50,14 @@ std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const milk_
                     query.value(FN_FAT).toDouble()
                     );
     } else
-        qDebug() << QString("Отсутствует сдача молока с id = %1").arg(id);
+        _error(QString("Отсутствует сдача молока с id = %1").arg(id));
 
     return {};
 }
 
 QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(QString("%1%2")
                   .arg(Utils::Main::getSelectStr(TABLE_NAME,
     { FN_ID, FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
@@ -67,29 +67,24 @@ QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
     if (query.exec())
     {
         while (query.next()) {
-            MilkReceptionData data;
-            data.setId(query.value(0).toLongLong());
-            data.setDelivererId(query.value(1).toLongLong());
-            data.setMilkPointId(query.value(2).toLongLong());
-            data.setDeliveryDate(query.value(3).toDate());
-            data.setPriceLiter(query.value(4).toDouble());
-            data.setLiters(query.value(5).toDouble());
-            data.setFat(query.value(6).toDouble());
-
-            mrd.append(data);
+            mrd.append({query.value(FN_ID).toLongLong(),
+                        query.value(FN_ID_DELIVERER).toLongLong(),
+                        query.value(FN_MILK_POINT_ID).toLongLong(),
+                        query.value(FN_DELIVERY_DATE).toDate(),
+                        query.value(FN_PRICE_LITER).toDouble(),
+                        query.value(FN_LITERS).toDouble(),
+                        query.value(FN_FAT).toDouble()
+                       });
         }
-    } else {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
-    }
+    } else
+        _error(query.lastError().text());
 
     return mrd;
 }
 
-void MilkReceptionDao::insert(const MilkReceptionData &data) const
+bool MilkReceptionDao::insert(const MilkReceptionData &data) const
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME,
     { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }));
     query.addBindValue(data.delivererId());
@@ -100,15 +95,16 @@ void MilkReceptionDao::insert(const MilkReceptionData &data) const
     query.addBindValue(data.fat());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
-void MilkReceptionDao::update(const MilkReceptionData &data) const
+bool MilkReceptionDao::update(const MilkReceptionData &data) const
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?").arg(Utils::Main::getPrepUpdateStr(TABLE_NAME,
     { FN_ID_DELIVERER, FN_MILK_POINT_ID, FN_DELIVERY_DATE, FN_PRICE_LITER, FN_LITERS, FN_FAT }))
                   .arg(FN_ID));
@@ -120,10 +116,119 @@ void MilkReceptionDao::update(const MilkReceptionData &data) const
     query.addBindValue(data.delivererId());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
+}
+
+bool MilkReceptionDao::updatePriceLiter(const double price, const QDate &dateFrom, const QDate &dateTo) const
+{
+    QSqlQuery query(m_table->database());
+    query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 BETWEEN ? AND ?")
+                  .arg(TABLE_NAME)
+                  .arg(FN_PRICE_LITER)
+                  .arg(FN_DELIVERY_DATE));
+    query.addBindValue(price);
+    query.addBindValue(dateFrom.toString(SC::defaultDateFormat()));
+    query.addBindValue(dateTo.toString(SC::defaultDateFormat()));
+
+    if (!query.exec()) {
+        _error(query.lastError().text());
+        return false;
+    }
+
+    return true;
+}
+
+double MilkReceptionDao::getMinPriceLiter(const QDate &from, const QDate &to) const
+{
+    auto query = getMinAndOrMaxPriceLiter(from, to, MinMax::Min);
+    if (query.first())
+        return query.value(0).toDouble();
+
+    return -1;
+}
+
+double MilkReceptionDao::getMaxPriceLiter(const QDate &from, const QDate &to) const
+{
+    auto query = getMinAndOrMaxPriceLiter(from, to, MinMax::Max);
+    if (query.first())
+        return query.value(0).toDouble();
+
+    return -1;
+}
+
+std::tuple<double, double> MilkReceptionDao::getMinMaxPriceLiter(const QDate &from, const QDate &to) const
+{
+    auto query = getMinAndOrMaxPriceLiter(from, to, MinMax::Both);
+    if (query.first())
+        return std::make_tuple(query.value(0).toDouble(), query.value(1).toDouble());
+
+    return std::make_tuple(-1.0, -1.0);
+}
+
+QSqlQuery MilkReceptionDao::getMinAndOrMaxPriceLiter(const QDate &from, const QDate &to, const MinMax minMax) const
+{
+    const auto fromDateStr = from.toString(SC::defaultDateFormat());
+    const auto toDateStr = to.toString(SC::defaultDateFormat());
+
+    QString minMaxStr;
+    switch (minMax) {
+    case MinMax::Min:
+        minMaxStr = "MIN(%2)";
+        break;
+    case MinMax::Max:
+        minMaxStr = "MAX(%2)";
+        break;
+    case MinMax::Both:
+        minMaxStr = "MIN(%2), MAX(%2)";
+        break;
+    default:
+        break;
+    }
+
+    QSqlQuery query(m_table->database());
+    query.prepare(QString("SELECT %1 FROM %3 WHERE %4 BETWEEN '%5' AND '%6'")
+                  .arg(minMaxStr)
+                  .arg(FN_PRICE_LITER)
+                  .arg(TABLE_NAME)
+                  .arg(FN_DELIVERY_DATE)
+                  .arg(fromDateStr)
+                  .arg(to.isValid() == false ? fromDateStr : toDateStr));
+
+    if (!query.exec())
+        _error(query.lastError().text());
+
+    return query;
+}
+
+QDate MilkReceptionDao::getMinDeliveryDate() const
+{
+    return getMinMaxDeliveryDate(true);
+}
+
+QDate MilkReceptionDao::getMaxDeliveryDate() const
+{
+    return getMinMaxDeliveryDate(false);
+}
+
+QDate MilkReceptionDao::getMinMaxDeliveryDate(bool isMin) const
+{
+    QSqlQuery query(m_table->database());
+    query.prepare(QString("SELECT %1(%2) FROM %3")
+                  .arg(isMin ? "MIN" : "MAX")
+                  .arg(FN_DELIVERY_DATE)
+                  .arg(TABLE_NAME));
+
+    if (query.exec()) {
+        if (query.first())
+            return query.value(0).toDate();
+    } else
+        _error(query.lastError().text());
+
+    return QDate();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -135,7 +240,7 @@ MilkReceptionTable::MilkReceptionTable(QObject *parent):
 
 MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsTable *milkPoints,
                                        QSqlDatabase db, QObject *parent):
-    Table(new MilkReceptionDao(db), db, parent),
+    Table(new MilkReceptionDao(this), db, parent),
     m_deliverers(_deliverers),
     m_milkPoints(milkPoints)
 {
@@ -157,11 +262,7 @@ QString MilkReceptionTable::tableName() const
 
 std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const milk_id milkReceptionId) const
 {
-    const auto data = dao()->get(milkReceptionId);
-    if (!data)
-        emit error(QString("Отсутствует сдача молока с id = %1").arg(milkReceptionId));
-
-    return data;
+    return dao()->get(milkReceptionId);
 }
 
 MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId)
@@ -187,73 +288,77 @@ QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &wh
     return dao()->get(where);
 }
 
-void MilkReceptionTable::insert(int index, MilkReception *milkReception)
+bool MilkReceptionTable::insert(int index, MilkReception *milkReception)
 {
     if(index < 0 || index > rowCount()) {
-        return;
+        return false;
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    dao()->insert(milkReception->data());
+    const bool isOk = dao()->insert(milkReception->data());
     emit endInsertRows();
+
+    return isOk;
 }
 
-void MilkReceptionTable::append(MilkReception *milkReception)
+bool MilkReceptionTable::append(MilkReception *milkReception)
 {
-    insert(rowCount(), milkReception);
+    return insert(rowCount(), milkReception);
 }
 
-void MilkReceptionTable::update(MilkReception *milkReception) const
+bool MilkReceptionTable::update(MilkReception *milkReception) const
 {
-    dao()->update(milkReception->data());
+    return dao()->update(milkReception->data());
 }
 
-void MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const
+bool MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const
 {
-    m_dao->updateValue(FN_ID, milkReceptionId, delivererId);
+    return m_dao->updateValue(FN_ID, milkReceptionId, delivererId);
 }
 
-void MilkReceptionTable::setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const
+bool MilkReceptionTable::setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const
 {
-    m_dao->updateValue(FN_MILK_POINT_ID, milkReceptionId, milkPointId);
+    return m_dao->updateValue(FN_MILK_POINT_ID, milkReceptionId, milkPointId);
 }
 
-void MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const
+bool MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const
 {
-    m_dao->updateValue(FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
+    return m_dao->updateValue(FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
 }
 
-void MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const
+bool MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const
 {
-    m_dao->updateValue(FN_PRICE_LITER, milkReceptionId, priceLiter);
+    return m_dao->updateValue(FN_PRICE_LITER, milkReceptionId, priceLiter);
 }
 
-void MilkReceptionTable::setLiters(const milk_id milkReceptionId, const double liters) const
+bool MilkReceptionTable::setLiters(const milk_id milkReceptionId, const double liters) const
 {
-    m_dao->updateValue(FN_LITERS, milkReceptionId, liters);
+    return m_dao->updateValue(FN_LITERS, milkReceptionId, liters);
 }
 
-void MilkReceptionTable::setFat(const milk_id milkReceptionId, const double fat) const
+bool MilkReceptionTable::setFat(const milk_id milkReceptionId, const double fat) const
 {
-    m_dao->updateValue(FN_FAT, milkReceptionId, fat);
+    return m_dao->updateValue(FN_FAT, milkReceptionId, fat);
 }
 
 bool MilkReceptionTable::updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const
 {
-    QSqlQuery query(m_db);
-    query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 BETWEEN ? AND ?")
-                  .arg(TABLE_NAME)
-                  .arg(FN_PRICE_LITER)
-                  .arg(FN_DELIVERY_DATE));
-    query.addBindValue(price);
-    query.addBindValue(dateFrom.toString(SC::defaultDateFormat()));
-    query.addBindValue(dateTo.toString(SC::defaultDateFormat()));
+    return dao()->updatePriceLiter(price, dateFrom, dateTo);
+}
 
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-    return true;
+std::tuple<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &from, const QDate &to) const
+{
+    return dao()->getMinMaxPriceLiter(from, to);
+}
+
+QDate MilkReceptionTable::getMinDeliveryDate() const
+{
+    return dao()->getMinDeliveryDate();
+}
+
+QDate MilkReceptionTable::getMaxDeliveryDate() const
+{
+    return dao()->getMaxDeliveryDate();
 }
 
 QString MilkReceptionTable::primaryField() const
@@ -304,50 +409,6 @@ DeliverersTable *MilkReceptionTable::getDeliverers() const
 MilkPointsTable *MilkReceptionTable::getMilkPoints() const
 {
     return m_milkPoints;
-}
-
-QPair<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &min, QDate max) const
-{
-    if (!max.isValid())
-        max = min;
-
-    QSqlQuery query(m_db);
-    query.prepare(QString("SELECT MIN(%1), MAX(%1) FROM %2 WHERE %3 BETWEEN '%4' AND '%5'")
-                  .arg(FN_PRICE_LITER)
-                  .arg(TABLE_NAME)
-                  .arg(FN_DELIVERY_DATE)
-                  .arg(min.toString(SC::defaultDateFormat()))
-                  .arg(max.toString(SC::defaultDateFormat())));
-
-    if (query.exec() && query.first()) {
-        QPair<double, double>(query.value(0).toDouble(), query.value(1).toDouble());
-    }
-
-    return QPair<double, double>(.0, .0);
-}
-
-QDate MilkReceptionTable::getMinDeliveryDate() const
-{
-    QSqlQuery query(m_db);
-    query.prepare(QString("SELECT MIN(%1) FROM %2")
-                  .arg(FN_DELIVERY_DATE)
-                  .arg(TABLE_NAME));
-
-    if (query.exec() && query.first())
-        return query.value(0).toDate();
-
-    return QDate();
-}
-
-QDate MilkReceptionTable::getMaxDeliveryDate() const
-{
-    QSqlQuery query(m_db);
-    query.prepare(QString("SELECT MAX(%1) FROM %2").arg(FN_DELIVERY_DATE).arg(TABLE_NAME));
-
-    if (query.exec() && query.first())
-        return query.value(0).toDate();
-
-    return QDate();
 }
 
 QString db::MilkReceptionTable::getColName(const int position, const bool withTableName) const

@@ -26,11 +26,11 @@ public:
 
     std::experimental::optional<MilkPointData> getMilkPointData(const milk_id milkPointId) const;
     Q_INVOKABLE MilkPoint *getMilkPoint(const qlonglong milkPointId);
-    Q_INVOKABLE void insert(int index, MilkPoint *milkPoint);
-    Q_INVOKABLE void append(MilkPoint *milkPoint);
-    Q_INVOKABLE void update(MilkPoint *milkPoint) const;
-    void setName(const milk_id milkPointId, const QString &milkPointName) const;
-    void setDescription(const milk_id milkPointId, const QString &description) const;
+    Q_INVOKABLE bool insert(int index, MilkPoint *milkPoint);
+    Q_INVOKABLE bool append(MilkPoint *milkPoint);
+    Q_INVOKABLE bool update(MilkPoint *milkPoint) const;
+    Q_INVOKABLE bool setName(const milk_id milkPointId, const QString &milkPointName) const;
+    Q_INVOKABLE bool setDescription(const milk_id milkPointId, const QString &description) const;
 
     LocalitiesTable *localities() const;
 

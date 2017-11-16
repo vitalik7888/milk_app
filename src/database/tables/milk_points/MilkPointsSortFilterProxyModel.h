@@ -11,16 +11,22 @@ class MilkPointsSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(MilkPoint* milkPoint READ milkPoint CONSTANT RESET resetMilkPoint)
+    Q_PROPERTY(bool enableMilkPointDynamicFilter READ isMilkPointDynamicFilterEnabled WRITE setMilkPointDynamicFilter NOTIFY MilkPointDynamicFilterChanged)
 
 public:
     explicit MilkPointsSortFilterProxyModel(QObject *parent = nullptr);
 
     MilkPoint* milkPoint() const { return m_milkPoint; }
+    bool isMilkPointDynamicFilterEnabled() const { return m_isMilkPointDynamicFilterEnabled; }
 
 public slots:
     void invalidateTheFilter();
-    void enableMilkPointDynamicFilter(bool isEnable);
     void resetMilkPoint();
+
+    void setMilkPointDynamicFilter(bool isEnable);
+
+signals:
+    void MilkPointDynamicFilterChanged(bool isEnabled);
 
 protected:
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;

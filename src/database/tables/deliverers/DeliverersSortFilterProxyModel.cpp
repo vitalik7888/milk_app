@@ -16,12 +16,6 @@ DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
     m_deliverer->setLocality(new Locality(m_deliverer));
 }
 
-void DeliverersSortFilterProxyModel::enableDelivererDynamicFilter(bool isEnable)
-{
-    m_isDelivererDynamicFilterEnabled = isEnable;
-    m_isDelivererDynamicFilterEnabled ? delivererConnect() : delivererDisconnect();
-}
-
 void DeliverersSortFilterProxyModel::resetFilter()
 {
     if (m_isDelivererDynamicFilterEnabled) delivererDisconnect();
@@ -32,6 +26,16 @@ void DeliverersSortFilterProxyModel::resetFilter()
     if (m_isDelivererDynamicFilterEnabled) delivererConnect();
 
     invalidateTheFilter();
+}
+
+void DeliverersSortFilterProxyModel::setDelivererDynamicFilter(bool isEnable)
+{
+    if (m_isDelivererDynamicFilterEnabled == isEnable)
+        return;
+
+    m_isDelivererDynamicFilterEnabled = isEnable;
+    m_isDelivererDynamicFilterEnabled ? delivererConnect() : delivererDisconnect();
+    emit delivererDynamicFilterChanged(m_isDelivererDynamicFilterEnabled);
 }
 
 bool DeliverersSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

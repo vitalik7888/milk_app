@@ -8,10 +8,8 @@
 USE_DB_NAMESPACE
 
 
-Dao::Dao(const QString &tableName, const QString &primeryFieldName, const QSqlDatabase &db):
-    m_tableName(tableName),
-    m_primeryFieldName(primeryFieldName),
-    m_db(db)
+Dao::Dao(Table *table):
+    m_table(table)
 {
 
 }
@@ -21,19 +19,26 @@ Dao::~Dao()
 
 }
 
-void Dao::updateValue(const QString &columnName, const milk_id id, const QVariant &value) const
+bool Dao::updateValue(const QString &columnName, const milk_id id, const QVariant &value) const
 {
-    QSqlQuery query(m_db);
+    QSqlQuery query(m_table->database());
     query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 = ?")
-                  .arg(m_tableName)
+                  .arg(m_table->tableName())
                   .arg(columnName)
-                  .arg(m_primeryFieldName));
+                  .arg(m_table->primaryField()));
     query.addBindValue(value);
     query.addBindValue(id);
 
     if (!query.exec()) {
-        const auto errDescr = query.lastError().text();
-        qDebug() << errDescr;
-        throw errDescr;
+        _error(query.lastError().text());
+        return false;
     }
+
+    return true;
+}
+
+void Dao::_error(const QString &error_description) const
+{
+    qDebug() << error_description;
+    emit m_table->error(error_description);
 }

@@ -18,8 +18,8 @@ static const char *FN_NAME = "name";
 static const char *FN_DESCRIPTION = "description";
 
 //--------------------------------------------------------------------------------------------------
-MilkPointDao::MilkPointDao(const QSqlDatabase &db):
-    Dao(TABLE_NAME, FN_ID, db) {}
+MilkPointDao::MilkPointDao(MilkPointsTable *table):
+    Dao(table) {}
 
 std::experimental::optional<MilkPointData> MilkPointDao::get(const milk_id id) const
 {
@@ -39,12 +39,12 @@ std::experimental::optional<MilkPointData> MilkPointDao::get(const milk_id id) c
                     query.value(FN_DESCRIPTION).toString()
                     );
     } else
-        qDebug() << QString("Отсутствует молокопункт с id = %1").arg(id);
+        _error(QString("Отсутствует молокопункт с id = %1").arg(id));
 
     return {};
 }
 
-void MilkPointDao::insert(const MilkPointData &data) const
+bool MilkPointDao::insert(const MilkPointData &data) const
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(
@@ -54,13 +54,14 @@ void MilkPointDao::insert(const MilkPointData &data) const
     query.addBindValue(data.description());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+       _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
-void MilkPointDao::update(const MilkPointData &data) const
+bool MilkPointDao::update(const MilkPointData &data) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
@@ -73,10 +74,11 @@ void MilkPointDao::update(const MilkPointData &data) const
     query.addBindValue(data.id());
 
     if (!query.exec()) {
-        const auto err = query.lastError().text();
-        qDebug() << err;
-        throw err;
+       _error(query.lastError().text());
+        return false;
     }
+
+    return true;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -87,7 +89,7 @@ MilkPointsTable::MilkPointsTable(QObject *parent):
 }
 
 MilkPointsTable::MilkPointsTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent):
-    Table(new MilkPointDao(db), db, parent),
+    Table(new MilkPointDao(this), db, parent),
     m_localities(localities)
 {
     setObjectName("MilkPointsTable");
@@ -108,11 +110,7 @@ QString MilkPointsTable::tableName() const
 
 std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
 {
-    const auto data = dao()->get(milkPointId);
-    if (!data)
-        emit error(QString("Отсутствует молокопункт с id = %1").arg(milkPointId));
-
-    return data;
+    return dao()->get(milkPointId);
 }
 
 MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
@@ -129,35 +127,37 @@ MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
     return milkPoint;
 }
 
-void MilkPointsTable::insert(int index, MilkPoint *milkPoint)
+bool MilkPointsTable::insert(int index, MilkPoint *milkPoint)
 {
     if(index < 0 || index > rowCount()) {
-        return;
+        return false;
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    dao()->insert(milkPoint->data());
+    const bool isOk = dao()->insert(milkPoint->data());
     emit endInsertRows();
+
+    return isOk;
 }
 
-void MilkPointsTable::append(MilkPoint *milkPoint)
+bool MilkPointsTable::append(MilkPoint *milkPoint)
 {
-    insert(rowCount(), milkPoint);
+    return insert(rowCount(), milkPoint);
 }
 
-void MilkPointsTable::update(MilkPoint *milkPoint) const
+bool MilkPointsTable::update(MilkPoint *milkPoint) const
 {
-    dao()->update(milkPoint->data());
+    return dao()->update(milkPoint->data());
 }
 
-void MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
+bool MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
 {
-    m_dao->updateValue(FN_NAME, milkPointId, milkPointName);
+    return m_dao->updateValue(FN_NAME, milkPointId, milkPointName);
 }
 
-void MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
+bool MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
 {
-    m_dao->updateValue(FN_DESCRIPTION, milkPointId, description);
+    return m_dao->updateValue(FN_DESCRIPTION, milkPointId, description);
 }
 
 LocalitiesTable *MilkPointsTable::localities() const
