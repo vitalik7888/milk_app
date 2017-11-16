@@ -1,8 +1,8 @@
 #include "LocalitiesSortFilterProxyModel.h"
 
 USE_DB_NAMESPACE
-
-using COLUMNS = LocalityTableColumns;
+using DC = DbConstants;
+using DCL = DC::Localities;
 
 
 LocalitiesSortFilterProxyModel::LocalitiesSortFilterProxyModel(QObject *parent):
@@ -53,9 +53,9 @@ void LocalitiesSortFilterProxyModel::localityDisconnect()
 
 LocalityData LocalitiesSortFilterProxyModel::getLocalityFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
 {
-    const QModelIndex indexId = sourceModel()->index(sourceRow, COLUMNS::LT_ID, sourceParent),
-            indexName = sourceModel()->index(sourceRow, COLUMNS::LT_NAME, sourceParent),
-            indexDescription = sourceModel()->index(sourceRow, COLUMNS::LT_DESCRIPTION, sourceParent);
+    const QModelIndex indexId = sourceModel()->index(sourceRow, DCL::LT_ID, sourceParent),
+            indexName = sourceModel()->index(sourceRow, DCL::LT_NAME, sourceParent),
+            indexDescription = sourceModel()->index(sourceRow, DCL::LT_DESCRIPTION, sourceParent);
 
     return LocalityData(
                 sourceModel()->data(indexId).toLongLong(),

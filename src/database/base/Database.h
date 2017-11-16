@@ -28,7 +28,7 @@ public:
     explicit Database(QObject *parent = nullptr);
     virtual ~Database();
 
-    Q_INVOKABLE bool openDb(const QString &dbPath);
+    Q_INVOKABLE bool openDb(const QString &dbPath = ":memory:");
     Q_INVOKABLE QSqlError lastError() const;
     Q_INVOKABLE QString choosenDatabase() const;
 
@@ -57,6 +57,8 @@ private:
     MilkPointsTable *m_milkPoints;
     MilkReceptionTable *m_milkReception;
 
+    void createDb(const QString &filePath);
+
     void removeTables();
     void createTables();
     void refreshTables();
@@ -69,6 +71,8 @@ private:
     static int _tablesCount(QQmlListProperty<Table> *list);
     static Table *_getTable(QQmlListProperty<Table> *list, int position);
     static void _removeTables(QQmlListProperty<Table> *list);
+
+    void _error(const QString &errorDescription) const;
 };
 
 DB_END_NAMESPACE

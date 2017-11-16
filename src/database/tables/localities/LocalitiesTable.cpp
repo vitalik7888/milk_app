@@ -9,11 +9,8 @@
 #include <QtDebug>
 
 USE_DB_NAMESPACE
-
-static const char *TABLE_NAME = "localities";
-static const char *FN_ID = "id";
-static const char *FN_NAME = "name";
-static const char *FN_DESCRIPTION = "description";
+using DC = DbConstants;
+using DCL = DC::Localities;
 
 //--------------------------------------------------------------------------------------------------
 LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
@@ -22,14 +19,14 @@ LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
 std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) const {
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getSelectStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION })).arg(FN_ID));
+                  .arg(Utils::Main::getSelectStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION })).arg(DCL::FN_ID));
     query.addBindValue(id);
 
     if (query.exec() && query.first())
     {
         return LocalityData(id,
-                            query.value(FN_NAME).toString(),
-                            query.value(FN_DESCRIPTION).toString()
+                            query.value(DCL::FN_NAME).toString(),
+                            query.value(DCL::FN_DESCRIPTION).toString()
                             );
     } else
         _error(QString("Отсутствует населенный пункт с id = %1").arg(id));
@@ -39,7 +36,7 @@ std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) c
 
 bool LocalitiesDao::insert(const LocalityData &data) const{
     QSqlQuery query(m_table->database());
-    query.prepare(Utils::Main::getPrepInsertStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }));
+    query.prepare(Utils::Main::getPrepInsertStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }));
     query.addBindValue(data.name());
     query.addBindValue(data.description());
 
@@ -54,8 +51,8 @@ bool LocalitiesDao::insert(const LocalityData &data) const{
 bool LocalitiesDao::update(const LocalityData &data) const{
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(TABLE_NAME, { FN_NAME, FN_DESCRIPTION }))
-                  .arg(FN_ID));
+                  .arg(Utils::Main::getPrepUpdateStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }))
+                  .arg(DCL::FN_ID));
     query.addBindValue(data.name());
     query.addBindValue(data.description());
     query.addBindValue(data.id());
@@ -87,7 +84,7 @@ LocalitiesTable::~LocalitiesTable()
 
 QString LocalitiesTable::tableName() const
 {
-    return TABLE_NAME;
+    return DCL::TABLE_NAME;
 }
 
 std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const milk_id localityId) const
@@ -133,38 +130,38 @@ bool LocalitiesTable::update(Locality *locality) const
 
 bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
 {
-    return m_dao->updateValue(FN_ID, localityId, localityName);
+    return m_dao->updateValue(DCL::FN_ID, localityId, localityName);
 }
 
 bool LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
 {
-    return m_dao->updateValue(FN_DESCRIPTION, localityId, description);
+    return m_dao->updateValue(DCL::FN_DESCRIPTION, localityId, description);
 }
 
 QString LocalitiesTable::primaryField() const
 {
-    return FN_ID;
+    return DCL::FN_ID;
 }
 
 QString LocalitiesTable::getColName(const int position, const bool withTableName) const
 {
     QString columnName;
     switch (position) {
-    case LocalityTableColumns::LT_ID:
-        columnName = FN_ID;
+    case DCL::LT_ID:
+        columnName = DCL::FN_ID;
         break;
-    case LocalityTableColumns::LT_NAME:
-        columnName = FN_NAME;
+    case DCL::LT_NAME:
+        columnName = DCL::FN_NAME;
         break;
-    case LocalityTableColumns::LT_DESCRIPTION:
-        columnName = FN_DESCRIPTION;
+    case DCL::LT_DESCRIPTION:
+        columnName = DCL::FN_DESCRIPTION;
         break;
     default:
         columnName = "";
         break;
     }
 
-    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
+    return withTableName ? QString("%1.%2").arg(DCL::TABLE_NAME).arg(columnName) : columnName;
 }
 
 LocalitiesDao *LocalitiesTable::dao() const
@@ -174,11 +171,11 @@ LocalitiesDao *LocalitiesTable::dao() const
 
 int db::LocalitiesTable::getColPosition(const QString &columnName) const
 {
-    if (columnName == FN_ID)
-        return LocalityTableColumns::LT_ID;
-    if (columnName == FN_NAME)
-        return LocalityTableColumns::LT_NAME;
-    if (columnName == FN_DESCRIPTION)
-        return LocalityTableColumns::LT_DESCRIPTION;
+    if (columnName == DCL::FN_ID)
+        return DCL::LT_ID;
+    if (columnName == DCL::FN_NAME)
+        return DCL::LT_NAME;
+    if (columnName == DCL::FN_DESCRIPTION)
+        return DCL::LT_DESCRIPTION;
     return -1;
 }

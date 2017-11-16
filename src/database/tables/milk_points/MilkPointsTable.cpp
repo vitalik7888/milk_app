@@ -10,14 +10,11 @@
 #include <QDebug>
 
 USE_DB_NAMESPACE
+using DC = DbConstants;
+using DCMP = DC::MilkPoints;
+using DCL = DC::Localities;
 
-static const char *TABLE_NAME = "milk_points";
-static const char *FN_ID = "id";
-static const char *FN_LOCALITY_ID = "locality_id";
-static const char *FN_NAME = "name";
-static const char *FN_DESCRIPTION = "description";
 
-//--------------------------------------------------------------------------------------------------
 MilkPointDao::MilkPointDao(MilkPointsTable *table):
     Dao(table) {}
 
@@ -26,17 +23,17 @@ std::experimental::optional<MilkPointData> MilkPointDao::get(const milk_id id) c
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getSelectStr(
-                           TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
-                  .arg(FN_ID));
+                           DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }))
+                  .arg(DCMP::FN_ID));
     query.addBindValue(id);
 
     if (query.exec() && query.first())
     {
         return MilkPointData(
                     id,
-                    query.value(FN_LOCALITY_ID).toLongLong(),
-                    query.value(FN_NAME).toString(),
-                    query.value(FN_DESCRIPTION).toString()
+                    query.value(DCMP::FN_LOCALITY_ID).toLongLong(),
+                    query.value(DCMP::FN_NAME).toString(),
+                    query.value(DCMP::FN_DESCRIPTION).toString()
                     );
     } else
         _error(QString("Отсутствует молокопункт с id = %1").arg(id));
@@ -48,13 +45,13 @@ bool MilkPointDao::insert(const MilkPointData &data) const
 {
     QSqlQuery query;
     query.prepare(Utils::Main::getPrepInsertStr(
-                      TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }));
+                      DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }));
     query.addBindValue(data.localityId());
     query.addBindValue(data.name());
     query.addBindValue(data.description());
 
     if (!query.exec()) {
-       _error(query.lastError().text());
+        _error(query.lastError().text());
         return false;
     }
 
@@ -66,15 +63,15 @@ bool MilkPointDao::update(const MilkPointData &data) const
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(Utils::Main::getPrepUpdateStr(
-                           TABLE_NAME, { FN_LOCALITY_ID, FN_NAME, FN_DESCRIPTION }))
-                  .arg(FN_ID));
+                           DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }))
+                  .arg(DCMP::FN_ID));
     query.addBindValue(data.localityId());
     query.addBindValue(data.name());
     query.addBindValue(data.description());
     query.addBindValue(data.id());
 
     if (!query.exec()) {
-       _error(query.lastError().text());
+        _error(query.lastError().text());
         return false;
     }
 
@@ -105,7 +102,7 @@ MilkPointsTable::~MilkPointsTable()
 
 QString MilkPointsTable::tableName() const
 {
-    return TABLE_NAME;
+    return DCMP::TABLE_NAME;
 }
 
 std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const milk_id milkPointId) const
@@ -152,12 +149,12 @@ bool MilkPointsTable::update(MilkPoint *milkPoint) const
 
 bool MilkPointsTable::setName(const milk_id milkPointId, const QString &milkPointName) const
 {
-    return m_dao->updateValue(FN_NAME, milkPointId, milkPointName);
+    return m_dao->updateValue(DCMP::FN_NAME, milkPointId, milkPointName);
 }
 
 bool MilkPointsTable::setDescription(const milk_id milkPointId, const QString &description) const
 {
-    return m_dao->updateValue(FN_DESCRIPTION, milkPointId, description);
+    return m_dao->updateValue(DCMP::FN_DESCRIPTION, milkPointId, description);
 }
 
 LocalitiesTable *MilkPointsTable::localities() const
@@ -167,31 +164,31 @@ LocalitiesTable *MilkPointsTable::localities() const
 
 QString MilkPointsTable::primaryField() const
 {
-    return FN_ID;
+    return DCMP::FN_ID;
 }
 
 QString MilkPointsTable::getColName(const int position, const bool withTableName) const
 {
     QString columnName;
     switch (position) {
-    case MilkPointsTableColumns::MPT_ID:
-        columnName = FN_ID;
+    case DCMP::MPT_ID:
+        columnName = DCMP::FN_ID;
         break;
-    case MilkPointsTableColumns::MPT_LOCALITY_ID:
-        columnName = FN_LOCALITY_ID;
+    case DCMP::MPT_LOCALITY_ID:
+        columnName = DCMP::FN_LOCALITY_ID;
         break;
-    case MilkPointsTableColumns::MPT_NAME:
-        columnName = FN_NAME;
+    case DCMP::MPT_NAME:
+        columnName = DCMP::FN_NAME;
         break;
-    case MilkPointsTableColumns::MPT_DESCRIPTION:
-        columnName = FN_DESCRIPTION;
+    case DCMP::MPT_DESCRIPTION:
+        columnName = DCMP::FN_DESCRIPTION;
         break;
     default:
         columnName = "";
         break;
     }
 
-    return withTableName ? QString("%1.%2").arg(TABLE_NAME).arg(columnName) : columnName;
+    return withTableName ? QString("%1.%2").arg(DCMP::TABLE_NAME).arg(columnName) : columnName;
 }
 
 MilkPointDao *MilkPointsTable::dao() const
@@ -201,13 +198,13 @@ MilkPointDao *MilkPointsTable::dao() const
 
 int db::MilkPointsTable::getColPosition(const QString &columnName) const
 {
-    if (columnName == FN_ID)
-        return MilkPointsTableColumns::MPT_ID;
-    if (columnName == FN_LOCALITY_ID)
-        return MilkPointsTableColumns::MPT_LOCALITY_ID;
-    if (columnName == FN_NAME)
-        return MilkPointsTableColumns::MPT_NAME;
-    if (columnName == FN_DESCRIPTION)
-        return MilkPointsTableColumns::MPT_DESCRIPTION;
+    if (columnName == DCMP::FN_ID)
+        return DCMP::MPT_ID;
+    if (columnName == DCMP::FN_LOCALITY_ID)
+        return DCMP::MPT_LOCALITY_ID;
+    if (columnName == DCMP::FN_NAME)
+        return DCMP::MPT_NAME;
+    if (columnName == DCMP::FN_DESCRIPTION)
+        return DCMP::MPT_DESCRIPTION;
     return -1;
 }

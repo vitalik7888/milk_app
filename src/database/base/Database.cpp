@@ -6,6 +6,11 @@
 #include <QDebug>
 
 USE_DB_NAMESPACE
+using DC = DbConstants;
+using DCL = DC::Localities;
+using DCD = DC::Deliverers;
+using DCMP = DC::MilkPoints;
+using DCMR = DC::MilkReception;
 
 
 Database::Database(QObject *parent) :
@@ -29,8 +34,16 @@ bool Database::openDb(const QString &dbPath)
 {
     m_db.close();
 
-    m_db.setDatabaseName(dbPath);
-    if (m_db.open()) {
+    // !!!! If using sqlite !!!
+    const bool isFileDbExists = QFile::exists(dbPath);
+    if (!isFileDbExists)
+        createDb(dbPath);
+    else {
+        m_db.setDatabaseName(dbPath);
+        m_db.open();
+    }
+
+    if (m_db.isOpen()) {
         QSqlQuery query("PRAGMA foreign_keys = ON", m_db);
         if (!query.exec())
             qDebug() << "Не удалось включить поддержку внешнего ключа";
@@ -91,6 +104,37 @@ bool Database::isTablesCreated() const
     return !m_tables.isEmpty();
 }
 
+void Database::createDb(const QString &filePath)
+{
+    m_db.setDatabaseName(filePath);
+    if (m_db.open()) {
+        qDebug() << "Creating milk database '" + filePath + "'...";
+
+        QSqlQuery query(m_db);
+        auto execQuery = [this, &query](const QString &_queryStr) {
+            if (!query.exec(_queryStr))
+                _error(query.lastError().text());
+        };
+
+        execQuery("PRAGMA foreign_keys = off;");
+        execQuery("BEGIN TRANSACTION;");
+        execQuery(DCL::CREATE_TABLE_SQL);
+        execQuery(DCMP::CREATE_TABLE_SQL);
+        execQuery(DCD::CREATE_TABLE_SQL);
+        execQuery(DCMR::CREATE_TABLE_SQL);
+        execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_DELIV));
+        execQuery(DC::CREATE_INDEX_RECEPT_DELIV_SQL);
+        execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_POINT));
+        execQuery(DC::CREATE_INDEX_RECEPT_POINT_SQL);
+        execQuery("COMMIT TRANSACTION;");
+        execQuery("PRAGMA foreign_keys = on;");
+
+        qDebug() << "db created";
+    } else {
+        _error(m_db.lastError().text());
+    }
+}
+
 void Database::removeTables()
 {
     for (Table *table : m_tables)
@@ -147,6 +191,11 @@ Table *Database::_getTable(QQmlListProperty<Table> *list, int position)
 void Database::_removeTables(QQmlListProperty<Table> *list)
 {
     reinterpret_cast< Database* >(list->data)->removeTables();
+}
+
+void Database::_error(const QString &errorDescription) const
+{
+    qDebug() << errorDescription;
 }
 
 void Database::refreshTables()

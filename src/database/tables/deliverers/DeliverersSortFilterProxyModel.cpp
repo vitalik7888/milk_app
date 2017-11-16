@@ -5,8 +5,8 @@
 #include <QDebug>
 
 USE_DB_NAMESPACE
-
-using Columns = DeliverersTableColumns;
+using DC = DbConstants;
+using DCD = DC::Deliverers;
 
 
 DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
@@ -61,12 +61,12 @@ bool DeliverersSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, con
 
 DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
 {
-    const QModelIndex indexId = sourceModel()->index(sourceRow, Columns::DT_ID, sourceParent),
-            indexName = sourceModel()->index(sourceRow, Columns::DT_NAME, sourceParent),
-            indexInn = sourceModel()->index(sourceRow, Columns::DT_INN, sourceParent),
-            indexAddress = sourceModel()->index(sourceRow, Columns::DT_ADDRESS, sourceParent),
-            indexLocalityId = sourceModel()->index(sourceRow, Columns::DT_LOCALITY_ID, sourceParent),
-            indexPhoneNumber = sourceModel()->index(sourceRow, Columns::DT_PHONE_NUMBER, sourceParent);
+    const QModelIndex indexId = sourceModel()->index(sourceRow, DCD::DT_ID, sourceParent),
+            indexName = sourceModel()->index(sourceRow, DCD::DT_NAME, sourceParent),
+            indexInn = sourceModel()->index(sourceRow, DCD::DT_INN, sourceParent),
+            indexAddress = sourceModel()->index(sourceRow, DCD::DT_ADDRESS, sourceParent),
+            indexLocalityId = sourceModel()->index(sourceRow, DCD::DT_LOCALITY_ID, sourceParent),
+            indexPhoneNumber = sourceModel()->index(sourceRow, DCD::DT_PHONE_NUMBER, sourceParent);
 
     return {
         sourceModel()->data(indexId).toLongLong(),
