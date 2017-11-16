@@ -27,7 +27,5 @@
         <file alias="milk_point_edit.png">res/img/milk_point/milk_point_edit.png</file>
         <file alias="milk_point_remove.png">res/img/milk_point/milk_point_remove.png</file>
     </qresource>
-    <qresource prefix="/db">
-        <file alias="milk.mdb">res/milk.mdb</file>
-    </qresource>
+    <qresource prefix="/db"/>
 </RCC>
