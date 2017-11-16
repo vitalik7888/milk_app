@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 import Milk.Core 1.0
 import Milk.Settings 1.0
 import Milk.Database 1.0
@@ -10,6 +11,21 @@ ApplicationWindow {
     width: 640
     height: 480
     title: qsTr("Milk app")
+
+    MessageDialog {
+        id: messageDialog
+    }
+
+    FileDialog {
+        id: fileDialogChooseDb
+        title: qsTr("Выберите или создайте базу данных")
+        selectMultiple: false
+        onAccepted: {
+            var dbUrl = fileUrl.toString().replace("file://", "")
+            milkDb.openDb(dbUrl)
+            milkSettings.main.lastChoosenDb = dbUrl
+        }
+    }
 
     SwipeView {
         id: swipeView
@@ -38,14 +54,25 @@ ApplicationWindow {
     }
 
     Connections {
-        target: db
-        onDbOpened: {
+        target: milkDb.deliverers
+
+        onError: {
+            messageDialog.text = error
+            messageDialog.icon = StandardIcon.Warning
+            messageDialog.open()
         }
     }
 
     Component.onCompleted: {
-        settings.readSettings()
-        if (!settings.main.lastChoosenDb.isEmpty)
-            db.openDb(settings.main.lastChoosenDb)
+        milkSettings.readSettings();
+        if (!milkSettings.main.lastChoosenDb.isEmpty)
+            milkDb.openDb(milkSettings.main.lastChoosenDb);
+        else {
+            fileDialogChooseDb.open()
+        }
+    }
+
+    Component.onDestruction: {
+        milkSettings.writeSettings()
     }
 }

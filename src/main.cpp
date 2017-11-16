@@ -2,6 +2,7 @@
 #include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
 #include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
 #include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
+#include <QFile>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -54,8 +55,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("db", core.database());
-    context->setContextProperty("settings", core.settings());
+    context->setContextProperty("milkDb", core.database());
+    context->setContextProperty("milkSettings", core.settings());
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
