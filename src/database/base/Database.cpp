@@ -43,6 +43,9 @@ bool Database::openDb(const QString &dbPath)
     }
 
     if (m_db.isOpen()) {
+        m_dbPath = dbPath;
+        emit dbPathChanged(m_dbPath);
+
         QSqlQuery query("PRAGMA foreign_keys = ON", m_db);
         if (!query.exec())
             qDebug() << "Не удалось включить поддержку внешнего ключа";

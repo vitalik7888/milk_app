@@ -23,6 +23,7 @@ class Database : public QObject
     Q_PROPERTY(MilkPointsTable *milkPoints READ milkPoints NOTIFY milkPointsChanged)
     Q_PROPERTY(MilkReceptionTable *milkReception READ milkReception NOTIFY milkReceptionChanged)
     Q_PROPERTY(QQmlListProperty<Table> tables READ tables)
+    Q_PROPERTY(QString dbPath READ dbPath NOTIFY dbPathChanged)
 
 public:
     explicit Database(QObject *parent = nullptr);
@@ -40,6 +41,8 @@ public:
     int tablesCount() const;
     Q_INVOKABLE bool isTablesCreated() const;
 
+    QString dbPath() const { return m_dbPath; }
+
 signals:
     void dbOpened();
     void localitiesChanged(LocalitiesTable * localities);
@@ -47,10 +50,11 @@ signals:
     void milkPointsChanged(MilkPointsTable * milkPoints);
     void milkReceptionChanged(MilkReceptionTable * milkReception);
     void tablesChanged(QQmlListProperty<Table> tables);
+    void dbPathChanged(QString dbPath);
 
 private:
     QSqlDatabase m_db;
-
+    QString m_dbPath;
     QVector<Table *> m_tables;
     LocalitiesTable *m_localities;
     DeliverersTable *m_deliverers;
