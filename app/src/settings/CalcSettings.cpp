@@ -20,7 +20,7 @@ CalcSettings::CalcSettings(QObject *parent):
 
 }
 
-void CalcSettings::setTextFont(QFont textFont)
+void CalcSettings::setTextFont(const QFont &textFont)
 {
     if (m_textFont == textFont)
         return;
@@ -29,7 +29,7 @@ void CalcSettings::setTextFont(QFont textFont)
     emit textFontChanged(m_textFont);
 }
 
-void CalcSettings::setTextBackColor(QColor textBackColor)
+void CalcSettings::setTextBackColor(const QColor &textBackColor)
 {
     if (m_textBackColor == textBackColor)
         return;
@@ -38,7 +38,7 @@ void CalcSettings::setTextBackColor(QColor textBackColor)
     emit textBackColorChanged(m_textBackColor);
 }
 
-void CalcSettings::setDelivResultFont(QFont delivResultFont)
+void CalcSettings::setDelivResultFont(const QFont &delivResultFont)
 {
     if (m_delivResultFont == delivResultFont)
         return;
@@ -47,7 +47,7 @@ void CalcSettings::setDelivResultFont(QFont delivResultFont)
     emit delivResultFontChanged(m_delivResultFont);
 }
 
-void CalcSettings::setDelivResultColor(QColor delivResultColor)
+void CalcSettings::setDelivResultColor(const QColor &delivResultColor)
 {
     if (m_delivResultColor == delivResultColor)
         return;
@@ -56,7 +56,7 @@ void CalcSettings::setDelivResultColor(QColor delivResultColor)
     emit delivResultColorChanged(m_delivResultColor);
 }
 
-void CalcSettings::setAllResultFont(QFont allResultFont)
+void CalcSettings::setAllResultFont(const QFont &allResultFont)
 {
     if (m_allResultFont == allResultFont)
         return;
@@ -65,7 +65,7 @@ void CalcSettings::setAllResultFont(QFont allResultFont)
     emit allResultFontChanged(m_allResultFont);
 }
 
-void CalcSettings::setAllResultColor(QColor allResultColor)
+void CalcSettings::setAllResultColor(const QColor &allResultColor)
 {
     if (m_allResultColor == allResultColor)
         return;
@@ -74,7 +74,7 @@ void CalcSettings::setAllResultColor(QColor allResultColor)
     emit allResultColorChanged(m_allResultColor);
 }
 
-void CalcSettings::setDateFormat(QString dateFormat)
+void CalcSettings::setDateFormat(const QString &dateFormat)
 {
     if (m_dateFormat == dateFormat)
         return;

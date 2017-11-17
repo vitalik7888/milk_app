@@ -30,7 +30,7 @@ PrintSettings::PrintSettings(QObject *parent) :
 
 PrintSettings::~PrintSettings() {}
 
-void PrintSettings::setTextFont(QFont textFont)
+void PrintSettings::setTextFont(const QFont &textFont)
 {
     if (m_textFont == textFont)
         return;
@@ -39,7 +39,7 @@ void PrintSettings::setTextFont(QFont textFont)
     emit textFontChanged(m_textFont);
 }
 
-void PrintSettings::setCaptionTextFont(QFont captionTextFont)
+void PrintSettings::setCaptionTextFont(const QFont &captionTextFont)
 {
     if (m_captionTextFont == captionTextFont)
         return;
@@ -48,7 +48,7 @@ void PrintSettings::setCaptionTextFont(QFont captionTextFont)
     emit captionTextFontChanged(m_captionTextFont);
 }
 
-void PrintSettings::setCaptionColor(QColor captionColor)
+void PrintSettings::setCaptionColor(const QColor &captionColor)
 {
     if (m_captionColor == captionColor)
         return;
@@ -102,7 +102,7 @@ void PrintSettings::setCellPadding(int cellPadding)
     emit cellPaddingChanged(m_cellPadding);
 }
 
-void PrintSettings::setTableBorderColor(QColor tableBorderColor)
+void PrintSettings::setTableBorderColor(const QColor &tableBorderColor)
 {
     if (m_tableBorderColor == tableBorderColor)
         return;
@@ -111,7 +111,7 @@ void PrintSettings::setTableBorderColor(QColor tableBorderColor)
     emit tableBorderColorChanged(m_tableBorderColor);
 }
 
-void PrintSettings::setTableHeaderFont(QFont tableHeaderFont)
+void PrintSettings::setTableHeaderFont(const QFont &tableHeaderFont)
 {
     if (m_tableHeaderFont == tableHeaderFont)
         return;
@@ -120,7 +120,7 @@ void PrintSettings::setTableHeaderFont(QFont tableHeaderFont)
     emit tableHeaderFontChanged(m_tableHeaderFont);
 }
 
-void PrintSettings::setTableHeaderColor(QColor tableHeaderColor)
+void PrintSettings::setTableHeaderColor(const QColor &tableHeaderColor)
 {
     if (m_tableHeaderColor == tableHeaderColor)
         return;
@@ -129,7 +129,7 @@ void PrintSettings::setTableHeaderColor(QColor tableHeaderColor)
     emit tableHeaderColorChanged(m_tableHeaderColor);
 }
 
-void PrintSettings::setTableTextFont(QFont tableTextFont)
+void PrintSettings::setTableTextFont(const QFont &tableTextFont)
 {
     if (m_tableTextFont == tableTextFont)
         return;
@@ -138,7 +138,7 @@ void PrintSettings::setTableTextFont(QFont tableTextFont)
     emit tableTextFontChanged(m_tableTextFont);
 }
 
-void PrintSettings::setTableTextColor(QColor tableTextColor)
+void PrintSettings::setTableTextColor(const QColor &tableTextColor)
 {
     if (m_tableTextColor == tableTextColor)
         return;
@@ -147,7 +147,7 @@ void PrintSettings::setTableTextColor(QColor tableTextColor)
     emit tableTextColorChanged(m_tableTextColor);
 }
 
-void PrintSettings::setTableResultFont(QFont tableResultFont)
+void PrintSettings::setTableResultFont(const QFont &tableResultFont)
 {
     if (m_tableResultFont == tableResultFont)
         return;
@@ -156,7 +156,7 @@ void PrintSettings::setTableResultFont(QFont tableResultFont)
     emit tableResultFontChanged(m_tableResultFont);
 }
 
-void PrintSettings::setTableResultColor(QColor tableResultColor)
+void PrintSettings::setTableResultColor(const QColor &tableResultColor)
 {
     if (m_tableResultColor == tableResultColor)
         return;

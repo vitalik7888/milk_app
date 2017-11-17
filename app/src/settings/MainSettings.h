@@ -29,11 +29,11 @@ public:
     bool isFetchTablesOnRefresh() const { return m_isFetchTablesOnRefresh; }
 
 public slots:
-    void setLastChoosenDb(QString lastChoosenDb);
+    void setLastChoosenDb(const QString &lastChoosenDb);
     void setPriceLiter(float priceLiter);
-    void setFirmName(QString firmName);
-    void setMilkInspector(QString milkInspector);
-    void setMilkInspector2(QString milkInspector2);
+    void setFirmName(const QString &firmName);
+    void setMilkInspector(const QString &milkInspector);
+    void setMilkInspector2(const QString &milkInspector2);
     void setIsFetchTablesOnRefresh(bool isFetchTablesOnRefresh);
     void reset();
 

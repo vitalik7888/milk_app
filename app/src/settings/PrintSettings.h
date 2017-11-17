@@ -56,21 +56,21 @@ public:
     void clearSettingsColumns();
 
 public slots:
-    void setTextFont(QFont textFont);
-    void setCaptionTextFont(QFont captionTextFont);
-    void setCaptionColor(QColor captionColor);
+    void setTextFont(const QFont &textFont);
+    void setCaptionTextFont(const QFont &captionTextFont);
+    void setCaptionColor(const QColor &captionColor);
     void setTableWidth(int tableWidth);
     void setTableBorderWidth(int tableBorderWidth);
     void setTableBorderStyle(int tableBorderStyle);
     void setCellSpacing(int cellSpacing);
     void setCellPadding(int cellPadding);
-    void setTableBorderColor(QColor tableBorderColor);
-    void setTableHeaderFont(QFont tableHeaderFont);
-    void setTableHeaderColor(QColor tableHeaderColor);
-    void setTableTextFont(QFont tableTextFont);
-    void setTableTextColor(QColor tableTextColor);
-    void setTableResultFont(QFont tableResultFont);
-    void setTableResultColor(QColor tableResultColor);
+    void setTableBorderColor(const QColor &tableBorderColor);
+    void setTableHeaderFont(const QFont &tableHeaderFont);
+    void setTableHeaderColor(const QColor &tableHeaderColor);
+    void setTableTextFont(const QFont &tableTextFont);
+    void setTableTextColor(const QColor &tableTextColor);
+    void setTableResultFont(const QFont &tableResultFont);
+    void setTableResultColor(const QColor &tableResultColor);
     void reset();
 
 signals:

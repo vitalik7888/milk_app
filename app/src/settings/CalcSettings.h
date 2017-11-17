@@ -39,13 +39,13 @@ public:
     void clearSettingsColumns();
 
 public slots:
-    void setTextFont(QFont textFont);
-    void setTextBackColor(QColor textBackColor);
-    void setDelivResultFont(QFont delivResultFont);
-    void setDelivResultColor(QColor delivResultColor);
-    void setAllResultFont(QFont allResultFont);
-    void setAllResultColor(QColor allResultColor);
-    void setDateFormat(QString dateFormat);
+    void setTextFont(const QFont &textFont);
+    void setTextBackColor(const QColor &textBackColor);
+    void setDelivResultFont(const QFont &delivResultFont);
+    void setDelivResultColor(const QColor &delivResultColor);
+    void setAllResultFont(const QFont &allResultFont);
+    void setAllResultColor(const QColor &allResultColor);
+    void setDateFormat(const QString &dateFormat);
     void reset();
 
 signals:

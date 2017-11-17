@@ -35,7 +35,7 @@ MainSettings::~MainSettings()
 {
 }
 
-void MainSettings::setLastChoosenDb(QString lastChoosenDb)
+void MainSettings::setLastChoosenDb(const QString &lastChoosenDb)
 {
     if (m_lastChoosenDb == lastChoosenDb)
         return;
@@ -54,7 +54,7 @@ void MainSettings::setPriceLiter(float priceLiter)
     emit priceLiterChanged(m_priceLiter);
 }
 
-void MainSettings::setFirmName(QString firmName)
+void MainSettings::setFirmName(const QString &firmName)
 {
     if (m_firmName == firmName)
         return;
@@ -63,7 +63,7 @@ void MainSettings::setFirmName(QString firmName)
     emit firmNameChanged(m_firmName);
 }
 
-void MainSettings::setMilkInspector(QString milkInspector)
+void MainSettings::setMilkInspector(const QString &milkInspector)
 {
     if (m_milkInspector == milkInspector)
         return;
@@ -72,7 +72,7 @@ void MainSettings::setMilkInspector(QString milkInspector)
     emit milkInspectorChanged(m_milkInspector);
 }
 
-void MainSettings::setMilkInspector2(QString milkInspector2)
+void MainSettings::setMilkInspector2(const QString &milkInspector2)
 {
     if (m_milkInspector2 == milkInspector2)
         return;
