@@ -8,10 +8,6 @@ ListView {
     id: root
     property MilkPoint currentMilkPoint
 
-    model: MilkPointsTable {
-        id: modelMilkPoints
-    }
-
     onCurrentItemChanged: {
         currentMilkPoint = currentItem.milkPoint
     }

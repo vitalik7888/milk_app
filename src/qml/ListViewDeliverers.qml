@@ -8,10 +8,6 @@ ListView {
     id: root
     property Deliverer currentDeliverer
 
-    model: DeliverersTable {
-        id: modelDeliverers
-    }
-
     onCurrentItemChanged: {
         currentDeliverer = currentItem.deliverer
     }

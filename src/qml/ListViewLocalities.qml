@@ -8,10 +8,6 @@ ListView {
     id: root
     property Locality currentLocality
 
-    model: LocalitiesTable {
-        id: modelLocalities
-    }
-
     onCurrentItemChanged: {
         currentLocality = currentItem.locality
     }

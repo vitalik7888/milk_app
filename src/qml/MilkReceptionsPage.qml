@@ -4,14 +4,11 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import Milk.Core 1.0
-import Milk.Settings 1.0
 import Milk.Database 1.0
 
 Page {
-    property alias buttonAddMilkReception: buttonAddMilkReception
-
     MilkReception {
-        id: milkReception
+        id: curentMilkReception
 
         deliveryDate: calendarMilkReception.selectedDate
         priceLiter: spinBoxPrice.value
@@ -21,32 +18,32 @@ Page {
         milkPoint: listViewCalcMilkPoints.currentMilkPoint
     }
 
+    LocalitiesSortFilterProxyModel {
+        id: localitiesProxy
+
+        sourceModel: milkDb.localities
+        enableLocalityDynamicFilter: true
+    }
+
+    MilkPointsSortFilterProxyModel {
+        id: milkPointsProxy
+
+        enableMilkPointDynamicFilter: true
+        sourceModel: milkDb.milkPoints
+        milkPoint.locality.localityId: listViewCalcLocalities.currentLocality.localityId
+    }
+
+    DeliverersSortFilterProxyModel {
+        id: deliverersProxy
+
+        enableDelivererDynamicFilter: true
+        sourceModel: milkDb.deliverers
+        deliverer.locality.localityId: listViewCalcLocalities.currentLocality.localityId
+    }
+
     RowLayout {
         anchors.fill: parent
         spacing: 4
-
-        LocalitiesSortFilterProxyModel {
-            id: localitiesProxy
-
-            sourceModel: milkDb.localities
-            enableLocalityDynamicFilter: true
-        }
-
-        MilkPointsSortFilterProxyModel {
-            id: milkPointsProxy
-
-            enableMilkPointDynamicFilter: true
-            sourceModel: milkDb.milkPoints
-            milkPoint.locality.localityId: listViewCalcLocalities.currentLocality.localityId
-        }
-
-        DeliverersSortFilterProxyModel {
-            id: deliverersProxy
-
-            sourceModel: milkDb.deliverers
-            enableDelivererDynamicFilter: true
-            deliverer.locality.localityId: listViewCalcLocalities.currentLocality.localityId
-        }
 
         ListViewLocalities {
             id: listViewCalcLocalities
@@ -148,27 +145,17 @@ Page {
 
                     onClicked: {
                         if (spinBoxPrice.value <= 0) {
-                            messageDialog.text = qsTr("Укажите цену за литр молока")
-                            messageDialog.icon = StandardIcon.Information
-                            messageDialog.open()
+                            messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
                         } else if (listViewCalcDeliverers.currentDeliverer === null) {
-                            messageDialog.text = qsTr("Выберите сдатчика")
-                            messageDialog.icon = StandardIcon.Information
-                            messageDialog.open()
+                            messageDialog.showInfo(qsTr("Выберите сдатчика"))
                         } else if (listViewCalcMilkPoints.currentMilkPoint === null) {
-                            messageDialog.text = qsTr("Выберите молокопункт")
-                            messageDialog.icon = StandardIcon.Information
-                            messageDialog.open()
+                            messageDialog.open(qsTr("Выберите молокопункт"))
                         } else if (spinBoxLiters.value <= 0) {
-                            messageDialog.text = qsTr("Укажите количество литров")
-                            messageDialog.icon = StandardIcon.Information
-                            messageDialog.open()
+                            messageDialog.open(qsTr("Укажите количество литров"))
                         } else if (spinBoxFat.value <= 0) {
-                            messageDialog.text = qsTr("Укажите жиры")
-                            messageDialog.icon = StandardIcon.Information
-                            messageDialog.open()
+                            messageDialog.open(qsTr("Укажите жиры"))
                         } else {
-                            if (milkDb.milkReception.append(milkReception)) {
+                            if (milkDb.milkReception.append(curentMilkReception)) {
                                 spinBoxLiters.value = 0.0
                                 spinBoxFat.value = 0.0
                             }

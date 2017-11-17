@@ -7,5 +7,6 @@
         <file>CalcPage.qml</file>
         <file>MilkReceptionsPage.qml</file>
         <file>ListViewMilkPoints.qml</file>
+        <file>MilkMenuBar.qml</file>
     </qresource>
 </RCC>

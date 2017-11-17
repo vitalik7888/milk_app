@@ -1,65 +1,103 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls 1.4
+import QtQuick.Layouts 1.3
 import Milk.Core 1.0
 import Milk.Settings 1.0
 import Milk.Database 1.0
 
 ApplicationWindow {
-    visible: true
-    width: 640
-    height: 480
+    id: appWindow
     title: qsTr("Milk app")
+    visible: true
+
+    width: 800
+    height: 600
+    minimumWidth: 640
+    minimumHeight: 480
+
+    menuBar: MilkMenuBar {}
 
     MessageDialog {
         id: messageDialog
+
+        function showInfo(infoDescription) {
+            messageDialog.text = infoDescription
+            messageDialog.icon = StandardIcon.Information
+            messageDialog.open()
+        }
+
+        function showWarning(warningDescription) {
+            messageDialog.text = warningDescription
+            messageDialog.icon = StandardIcon.Warning
+            messageDialog.open()
+        }
+
+        function showError(errorDescription) {
+            messageDialog.text = errorDescription
+            messageDialog.icon = StandardIcon.Critical
+            messageDialog.open()
+        }
     }
 
     FileDialog {
         id: fileDialogChooseDb
+
         title: qsTr("Выберите или создайте базу данных")
         selectMultiple: false
+
         onAccepted: {
-            var dbUrl = fileUrl.toString().replace("file://", "")
-            milkDb.openDb(dbUrl)
-            milkSettings.main.lastChoosenDb = dbUrl
+            milkDb.openDb(fileUrl.toString().replace("file://", ""))
         }
     }
 
-    SwipeView {
-        id: swipeView
+    TabView {
+        id: tabViewContent
         anchors.fill: parent
-        currentIndex: tabBar.currentIndex
 
-        CalcPage {
+        Tab {
+            title: qsTr("Расчёты")
 
+            CalcPage {
+
+            }
         }
 
-        MilkReceptionsPage {
+        Tab {
+            title: qsTr("Сдача молока")
 
+            MilkReceptionsPage {
+
+            }
         }
     }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-
-        TabButton {
-            text: qsTr("Расчёты")
-        }
-        TabButton {
-            text: qsTr("Сдача молока")
-        }
+    toolBar: ToolBar {
+        height: 20
     }
 
     Connections {
         target: milkDb.deliverers
+        onError: messageDialog.showError(error)
+    }
+    Connections {
+        target: milkDb.localities
+        onError: messageDialog.showError(error)
+    }
+    Connections {
+        target: milkDb.milkPoints
+        onError: messageDialog.showError(error)
+    }
+    Connections {
+        target: milkDb.milkReception
+        onError: messageDialog.showError(error)
+    }
 
-        onError: {
-            messageDialog.text = error
-            messageDialog.icon = StandardIcon.Warning
-            messageDialog.open()
+    Connections {
+        target: milkDb
+
+        onDbOpened: {
+            milkSettings.main.lastChoosenDb = milkDb.dbPath
         }
     }
 
