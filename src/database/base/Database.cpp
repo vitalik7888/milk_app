@@ -22,12 +22,11 @@ Database::Database(QObject *parent) :
     m_milkReception(Q_NULLPTR)
 {
     setObjectName("Database");
-    qDebug() << "init " + this->objectName();
 }
 
 Database::~Database()
 {
-    qDebug() << "delete " + objectName();
+    removeTables();
 }
 
 bool Database::openDb(const QString &dbPath)
@@ -137,15 +136,24 @@ void Database::createDb(const QString &filePath)
 
 void Database::removeTables()
 {
+    if (!isTablesCreated())
+        return;
+
+    qDebug() << "Removing tables...";
+
     for (Table *table : m_tables)
         table->deleteLater();
     m_tables.clear();
+
+    qDebug() << "tables removed";
 }
 
 void Database::createTables()
 {
     if (!m_tables.isEmpty())
         return;
+
+    qDebug() << "Creating tables...";
 
     m_localities = new LocalitiesTable(m_db, this);
     m_deliverers = new DeliverersTable(m_localities, m_db, this);
@@ -158,6 +166,8 @@ void Database::createTables()
     emit deliverersChanged(m_deliverers);
     emit milkPointsChanged(m_milkPoints);
     emit milkReceptionChanged(m_milkReception);
+
+    qDebug() << "tables created";
 }
 
 void Database::clearTables()

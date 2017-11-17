@@ -13,6 +13,7 @@ DB_BEGIN_NAMESPACE
 class MilkPointsTable: public Table
 {
     Q_OBJECT
+    Q_PROPERTY(LocalitiesTable* localities READ localities CONSTANT)
 
 public:
     MilkPointsTable(QObject *parent = Q_NULLPTR);

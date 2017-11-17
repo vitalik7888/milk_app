@@ -46,7 +46,7 @@ void MainSettings::setLastChoosenDb(QString lastChoosenDb)
 
 void MainSettings::setPriceLiter(float priceLiter)
 {
-    qWarning("Floating point comparison needs context sanity check");
+//    qWarning("Floating point comparison needs context sanity check");
     if (qFuzzyCompare(m_priceLiter, priceLiter))
         return;
 

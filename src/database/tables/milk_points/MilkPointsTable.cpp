@@ -90,7 +90,6 @@ MilkPointsTable::MilkPointsTable(LocalitiesTable *localities, QSqlDatabase db, Q
     m_localities(localities)
 {
     setObjectName("MilkPointsTable");
-    qDebug() << "init " + objectName();
 
     setQuery(selectAll());
 }

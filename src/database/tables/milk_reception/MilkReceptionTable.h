@@ -18,6 +18,9 @@ DB_BEGIN_NAMESPACE
 class MilkReceptionTable : public Table
 {
     Q_OBJECT
+    Q_PROPERTY(DeliverersTable* deliverers READ getDeliverers CONSTANT)
+    Q_PROPERTY(MilkPointsTable* milkPoints READ getMilkPoints CONSTANT)
+
 public:
     MilkReceptionTable(QObject *parent = Q_NULLPTR);
     MilkReceptionTable(DeliverersTable *deliverers, MilkPointsTable *milkPoints,

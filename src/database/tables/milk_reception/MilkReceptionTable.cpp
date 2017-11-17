@@ -239,14 +239,12 @@ MilkReceptionTable::MilkReceptionTable(DeliverersTable *_deliverers, MilkPointsT
     m_milkPoints(milkPoints)
 {
     setObjectName("MilkReceptionTable");
-    qDebug() << "init " + objectName();
 
     setQuery(selectAll());
 }
 
 MilkReceptionTable::~MilkReceptionTable()
 {
-    qDebug() << "delete " + objectName();
 }
 
 QString MilkReceptionTable::tableName() const

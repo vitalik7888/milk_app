@@ -21,7 +21,6 @@ Table::Table(Dao *dao, QSqlDatabase db, QObject *parent) :
 
 Table::~Table()
 {
-    qDebug() << "delete " + objectName();
 }
 
 QSqlDatabase Table::database() const

@@ -13,6 +13,8 @@ class DeliverersDao;
 class DeliverersTable : public Table
 {
     Q_OBJECT
+    Q_PROPERTY(LocalitiesTable* localities READ getLocalities CONSTANT)
+
 public:
     DeliverersTable(QObject *parent = Q_NULLPTR);
     DeliverersTable(LocalitiesTable *localities, QSqlDatabase db, QObject *parent = Q_NULLPTR);

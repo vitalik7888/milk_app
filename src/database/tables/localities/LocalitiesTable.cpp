@@ -72,14 +72,12 @@ LocalitiesTable::LocalitiesTable(QSqlDatabase db, QObject *parent):
     Table(new LocalitiesDao(this), db, parent)
 {
     setObjectName("LocalitiesTable");
-    qDebug() << "init " + objectName();
 
     setQuery(selectAll());
 }
 
 LocalitiesTable::~LocalitiesTable()
 {
-    qDebug() << "delete " + objectName();
 }
 
 QString LocalitiesTable::tableName() const

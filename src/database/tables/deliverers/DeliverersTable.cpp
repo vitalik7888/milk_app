@@ -97,7 +97,6 @@ DeliverersTable::DeliverersTable(LocalitiesTable *localities, QSqlDatabase db, Q
     m_localities(localities)
 {
     setObjectName("DeliverersTable");
-    qDebug() << "init " + objectName();
 
     setQuery(selectAll());
 }
