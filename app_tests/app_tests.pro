@@ -9,7 +9,9 @@ include(../app/src/settings/settings.pri)
 
 SOURCES += \ 
     main.cpp \
-    Test_MainSettings.cpp
+    Test_MainSettings.cpp \
+    Test_CalcSettings.cpp
 
 HEADERS += \
-    Test_MainSettings.h
+    Test_MainSettings.h \
+    Test_CalcSettings.h
