@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = milk
 TEMPLATE = app
-#RC_ICONS = cow.ico
+#RC_ICONS = cow.png
 
 CONFIG += c++14
 
