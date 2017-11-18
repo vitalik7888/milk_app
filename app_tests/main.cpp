@@ -7,7 +7,6 @@
 #include "Test_PrintSettings.h"
 #include "Test_Settings.h"
 
-
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -19,12 +18,17 @@ int main(int argc, char *argv[])
     Test_PrintSettings printSettingsTest;
     Test_Settings settingsTest;
 
+    QList<QObject *> tests = {
+        &mainSettingsTest,
+        &settingsColumnTest,
+        &calcSettingsTest,
+        &printSettingsTest,
+        &settingsTest
+    };
+
     int status = 0;
-    status |= QTest::qExec(&mainSettingsTest, argc, argv);
-    status |= QTest::qExec(&settingsColumnTest, argc, argv);
-    status |= QTest::qExec(&calcSettingsTest, argc, argv);
-    status |= QTest::qExec(&printSettingsTest, argc, argv);
-    status |= QTest::qExec(&settingsTest, argc, argv);
+    for (auto test : tests)
+        status |= QTest::qExec(test, argc, argv);
 
     return status;
 }
