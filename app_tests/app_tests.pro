@@ -11,9 +11,11 @@ SOURCES += \
     main.cpp \
     Test_MainSettings.cpp \
     Test_CalcSettings.cpp \
-    Test_SettingsColumn.cpp
+    Test_SettingsColumn.cpp \
+    Test_PrintSettings.cpp
 
 HEADERS += \
     Test_MainSettings.h \
     Test_CalcSettings.h \
-    Test_SettingsColumn.h
+    Test_SettingsColumn.h \
+    Test_PrintSettings.h
