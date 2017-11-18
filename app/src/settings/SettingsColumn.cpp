@@ -37,7 +37,7 @@ void SettingsColumn::setDisplay(const QString &display)
     emit displayChanged(m_display);
 }
 
-void SettingsColumn::setType(int type)
+void SettingsColumn::setType(const int type)
 {
     if (m_type == type)
         return;
@@ -46,7 +46,7 @@ void SettingsColumn::setType(int type)
     emit typeChanged(m_type);
 }
 
-void SettingsColumn::setPrec(int prec)
+void SettingsColumn::setPrec(const int prec)
 {
     if (m_prec == prec)
         return;
@@ -55,7 +55,7 @@ void SettingsColumn::setPrec(int prec)
     emit precChanged(m_prec);
 }
 
-void SettingsColumn::setIsShow(bool isShow)
+void SettingsColumn::setIsShow(const bool isShow)
 {
     if (m_isShow == isShow)
         return;

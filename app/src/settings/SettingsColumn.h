@@ -24,9 +24,9 @@ public:
 
 public slots:
     void setDisplay(const QString &display);
-    void setType(int type);
-    void setPrec(int prec);
-    void setIsShow(bool isShow);
+    void setType(const int type);
+    void setPrec(const int prec);
+    void setIsShow(const bool isShow);
     void reset();
 
 signals:
