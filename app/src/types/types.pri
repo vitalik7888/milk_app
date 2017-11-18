@@ -8,7 +8,8 @@ SOURCES += \
     $$PWD/delivererdata.cpp \
     $$PWD/localitydata.cpp \
     $$PWD/milkpointdata.cpp \
-    $$PWD/milkreceptiondata.cpp
+    $$PWD/milkreceptiondata.cpp \
+    $$PWD/TypesConstants.cpp
 
 HEADERS  += \
     $$PWD/deliverer.h \
@@ -18,4 +19,5 @@ HEADERS  += \
     $$PWD/delivererdata.h \
     $$PWD/localitydata.h \
     $$PWD/milkpointdata.h \
-    $$PWD/milkreceptiondata.h
+    $$PWD/milkreceptiondata.h \
+    $$PWD/TypesConstants.h

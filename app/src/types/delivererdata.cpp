@@ -10,8 +10,8 @@ DelivererData::DelivererData():
 
 }
 
-DelivererData::DelivererData(const milk_id id, const QString &name, const milk_id localityId,
-                             const milk_inn inn, const QString &address, const QString &phoneNumber):
+DelivererData::DelivererData(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_id localityId,
+                             const TypesConstants::milk_inn inn, const QString &address, const QString &phoneNumber):
     m_inn(inn),
     m_id(id),
     m_localityId(localityId),
@@ -32,32 +32,32 @@ bool DelivererData::isValid() const
     return m_id > 0;
 }
 
-milk_inn DelivererData::inn() const
+TypesConstants::milk_inn DelivererData::inn() const
 {
     return m_inn;
 }
 
-void DelivererData::setInn(const milk_inn inn)
+void DelivererData::setInn(const TypesConstants::milk_inn inn)
 {
     m_inn = inn;
 }
 
-milk_id DelivererData::id() const
+TypesConstants::milk_id DelivererData::id() const
 {
     return m_id;
 }
 
-void DelivererData::setId(const milk_id &id)
+void DelivererData::setId(const TypesConstants::milk_id &id)
 {
     m_id = id;
 }
 
-milk_id DelivererData::localityId() const
+TypesConstants::milk_id DelivererData::localityId() const
 {
     return m_localityId;
 }
 
-void DelivererData::setLocalityId(const milk_id &localityId)
+void DelivererData::setLocalityId(const TypesConstants::milk_id &localityId)
 {
     m_localityId = localityId;
 }

@@ -1,8 +1,8 @@
 #ifndef MILKRECEPTION_H
 #define MILKRECEPTION_H
 
-#include "calculateditem.h"
 #include "milkreceptiondata.h"
+#include <QObject>
 // Qt
 #include <QDate>
 
@@ -21,13 +21,13 @@ class MilkReception : public QObject
     Q_PROPERTY(MilkPoint *milkPoint READ milkPoint WRITE setMilkPoint NOTIFY milkPointChanged)
 
 public:
-    MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+    MilkReception(const TypesConstants::milk_id id, const QDate deliveryDate, const double priceLiter,
                   const double liters, const double fat, Deliverer *deliverer = Q_NULLPTR,
                   MilkPoint *milkPoint = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkReception(QObject *parent = Q_NULLPTR);
     virtual ~MilkReception();
 
-    milk_id id() const;
+    TypesConstants::milk_id id() const;
     QDate deliveryDate() const;
     double priceLiter() const;
     double liters() const;
@@ -36,13 +36,10 @@ public:
     MilkPoint *milkPoint() const;
     MilkReceptionData data() const;
 
-    CalculatedItem::Data getCalculationsData() const;
-    Q_INVOKABLE CalculatedItem *getCalculations();
-
     Q_INVOKABLE bool isValid() const;
 
 public slots:
-    void setId(const milk_id &id);
+    void setId(const TypesConstants::milk_id &id);
     void setDeliveryDate(const QDate &deliveryDate);
     void setPriceLiter(double priceLiter);
     void setLiters(double liters);

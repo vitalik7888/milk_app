@@ -17,13 +17,13 @@ public:
     Locality(QObject *parent = Q_NULLPTR);
     virtual ~Locality();
 
-    milk_id id() const;
+    TypesConstants::milk_id id() const;
     QString name() const;
     QString description() const;
     LocalityData data() const;
 
 public slots:
-    void setId(const milk_id &id);
+    void setId(const TypesConstants::milk_id &id);
     void setName(const QString &name);
     void setDescription(const QString &description);
     void reset();

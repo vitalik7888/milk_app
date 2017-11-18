@@ -11,7 +11,7 @@ MilkPoint::MilkPoint(const MilkPointData &data, Locality *locality, QObject *par
 
 }
 
-MilkPoint::MilkPoint(const milk_id id, const QString &name, const QString &description,
+MilkPoint::MilkPoint(const TypesConstants::milk_id id, const QString &name, const QString &description,
                      Locality *locality, QObject *parent):
     MilkPoint({id, locality == Q_NULLPTR ? -1 : locality->id(), name, description}, locality, parent)
 {
@@ -26,7 +26,7 @@ MilkPoint::~MilkPoint() {
 
 }
 
-milk_id MilkPoint::id() const
+TypesConstants::milk_id MilkPoint::id() const
 {
     return m_data.id();
 }
@@ -51,7 +51,7 @@ MilkPointData MilkPoint::data() const
     return m_data;
 }
 
-void MilkPoint::setId(const milk_id &id)
+void MilkPoint::setId(const TypesConstants::milk_id &id)
 {
     if (id == m_data.id())
         return;

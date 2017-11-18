@@ -18,7 +18,7 @@ Locality::~Locality()
 
 }
 
-milk_id Locality::id() const
+TypesConstants::milk_id Locality::id() const
 {
     return m_data.id();
 }
@@ -38,7 +38,7 @@ LocalityData Locality::data() const
     return m_data;
 }
 
-void Locality::setId(const milk_id &id)
+void Locality::setId(const TypesConstants::milk_id &id)
 {
     if (id == m_data.id())
         return;

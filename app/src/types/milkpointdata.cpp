@@ -7,7 +7,7 @@ MilkPointData::MilkPointData():
 
 }
 
-MilkPointData::MilkPointData(const milk_id id, const milk_id localityId, const QString &name,
+MilkPointData::MilkPointData(const TypesConstants::milk_id id, const TypesConstants::milk_id localityId, const QString &name,
                              const QString &description):
     m_id(id),
     m_localityId(localityId),
@@ -17,22 +17,22 @@ MilkPointData::MilkPointData(const milk_id id, const milk_id localityId, const Q
 
 }
 
-milk_id MilkPointData::id() const
+TypesConstants::milk_id MilkPointData::id() const
 {
     return m_id;
 }
 
-void MilkPointData::setId(const milk_id &id)
+void MilkPointData::setId(const TypesConstants::milk_id &id)
 {
     m_id = id;
 }
 
-milk_id MilkPointData::localityId() const
+TypesConstants::milk_id MilkPointData::localityId() const
 {
     return m_localityId;
 }
 
-void MilkPointData::setLocalityId(const milk_id &localityId)
+void MilkPointData::setLocalityId(const TypesConstants::milk_id &localityId)
 {
     m_localityId = localityId;
 }

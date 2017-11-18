@@ -2,7 +2,6 @@
 
 #include "locality.h"
 #include "milkreception.h"
-#include "Utils.h"
 
 
 Deliverer::Deliverer(QObject *parent):
@@ -11,7 +10,7 @@ Deliverer::Deliverer(QObject *parent):
 
 }
 
-Deliverer::Deliverer(const milk_id id, const QString &name, const milk_inn inn,
+Deliverer::Deliverer(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_inn inn,
                      const QString &address, const QString &phoneNumber,
                      Locality *locality, QObject *parent):
     QObject(parent),
@@ -26,7 +25,7 @@ Deliverer::~Deliverer()
 
 }
 
-milk_id Deliverer::id() const
+TypesConstants::milk_id Deliverer::id() const
 {
     return m_data.id();
 }
@@ -41,7 +40,7 @@ QString Deliverer::name() const
     return m_data.name();
 }
 
-milk_inn Deliverer::inn() const
+TypesConstants::milk_inn Deliverer::inn() const
 {
     return m_data.inn();
 }
@@ -56,7 +55,7 @@ QString Deliverer::phoneNumber() const
     return m_data.phoneNumber();
 }
 
-void Deliverer::setId(const milk_id &id)
+void Deliverer::setId(const TypesConstants::milk_id &id)
 {
     if (id == m_data.id())
         return;
@@ -74,7 +73,7 @@ void Deliverer::setName(const QString &name)
     emit nameChanged(name);
 }
 
-void Deliverer::setInn(const milk_inn &inn)
+void Deliverer::setInn(const TypesConstants::milk_inn &inn)
 {
     if (m_data.inn() == inn)
         return;
@@ -123,17 +122,6 @@ bool Deliverer::isHasMilkReceptions() const
     return !m_milkReceptions.empty();
 }
 
-CalculatedItem::Data Deliverer::getCalculations() const
-{
-    CalculatedItem::Data data;
-
-    for (const auto mr: m_milkReceptions) {
-        const auto right = mr->getCalculations()->data();
-        data += right;
-    }
-
-    return data;
-}
 
 bool Deliverer::isValid() const
 {

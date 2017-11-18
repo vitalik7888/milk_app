@@ -7,8 +7,8 @@ MilkReceptionData::MilkReceptionData():
 
 }
 
-MilkReceptionData::MilkReceptionData(const milk_id id, const milk_id delivererId,
-                                     const milk_id milkPointId, const QDate &deliveryDate,
+MilkReceptionData::MilkReceptionData(const TypesConstants::milk_id id, const TypesConstants::milk_id delivererId,
+                                     const TypesConstants::milk_id milkPointId, const QDate &deliveryDate,
                                      const double priceLiter, const double liters, const double fat):
     m_id(id),
     m_delivererId(delivererId),
@@ -38,32 +38,32 @@ MilkReceptionData::~MilkReceptionData()
 
 }
 
-milk_id MilkReceptionData::id() const
+TypesConstants::milk_id MilkReceptionData::id() const
 {
     return m_id;
 }
 
-void MilkReceptionData::setId(const milk_id &id)
+void MilkReceptionData::setId(const TypesConstants::milk_id &id)
 {
     m_id = id;
 }
 
-milk_id MilkReceptionData::delivererId() const
+TypesConstants::milk_id MilkReceptionData::delivererId() const
 {
     return m_delivererId;
 }
 
-void MilkReceptionData::setDelivererId(const milk_id &deliverer)
+void MilkReceptionData::setDelivererId(const TypesConstants::milk_id &deliverer)
 {
     m_delivererId = deliverer;
 }
 
-milk_id MilkReceptionData::milkPointId() const
+TypesConstants::milk_id MilkReceptionData::milkPointId() const
 {
     return m_milkPointId;
 }
 
-void MilkReceptionData::setMilkPointId(const milk_id &milkPoint)
+void MilkReceptionData::setMilkPointId(const TypesConstants::milk_id &milkPoint)
 {
     m_milkPointId = milkPoint;
 }

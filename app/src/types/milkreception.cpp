@@ -10,7 +10,7 @@ MilkReception::MilkReception(QObject *parent):
 
 }
 
-MilkReception::MilkReception(const milk_id id, const QDate deliveryDate, const double priceLiter,
+MilkReception::MilkReception(const TypesConstants::milk_id id, const QDate deliveryDate, const double priceLiter,
                              const double liters, const double fat,
                              Deliverer *deliverer, MilkPoint *milkPoint, QObject *parent):
     QObject(parent),
@@ -28,7 +28,7 @@ MilkReception::~MilkReception()
 
 }
 
-milk_id MilkReception::id() const
+TypesConstants::milk_id MilkReception::id() const
 {
     return m_data.id();
 }
@@ -68,22 +68,12 @@ MilkReceptionData MilkReception::data() const
     return m_data;
 }
 
-CalculatedItem::Data MilkReception::getCalculationsData() const
-{
-    return CalculatedItem(liters(), fat(), priceLiter()).data();
-}
-
-CalculatedItem *MilkReception::getCalculations()
-{
-    return new CalculatedItem(liters(), fat(), priceLiter(), this);
-}
-
 bool MilkReception::isValid() const
 {
     return m_data.isValid();
 }
 
-void MilkReception::setId(const milk_id &id)
+void MilkReception::setId(const TypesConstants::milk_id &id)
 {
     if (id == m_data.id())
         return;

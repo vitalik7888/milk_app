@@ -18,12 +18,12 @@ class MilkPoint : public QObject
 
 public:
     MilkPoint(const MilkPointData &data, Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
-    MilkPoint(const milk_id id, const QString &name, const QString &description,
+    MilkPoint(const TypesConstants::milk_id id, const QString &name, const QString &description,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(QObject *parent = Q_NULLPTR);
     virtual ~MilkPoint();
 
-    milk_id id() const;
+    TypesConstants::milk_id id() const;
     Locality *locality() const;
     QString name() const;
     QString description() const;
@@ -33,7 +33,7 @@ public:
     MilkPointData data() const;
 
 public slots:
-    void setId(const milk_id &id);
+    void setId(const TypesConstants::milk_id &id);
     void setLocality(Locality * locality);
     void setName(const QString &name);
     void setDescription(const QString &description);

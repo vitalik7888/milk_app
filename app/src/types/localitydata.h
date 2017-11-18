@@ -1,19 +1,19 @@
 #ifndef LOCALITYDATA_H
 #define LOCALITYDATA_H
 
-#include "dbconstants.h"
+#include "TypesConstants.h"
 // Qt
 #include <QString>
 
 class LocalityData {
 public:
     LocalityData();
-    LocalityData(const milk_id id, const QString &name, const QString &description);
+    LocalityData(const TypesConstants::milk_id id, const QString &name, const QString &description);
     LocalityData(const LocalityData &data);
     ~LocalityData();
 
-    milk_id id() const;
-    void setId(const milk_id &id);
+    TypesConstants::milk_id id() const;
+    void setId(const TypesConstants::milk_id &id);
 
     QString name() const;
     void setName(const QString &name);
@@ -24,7 +24,7 @@ public:
     bool isValid() const;
 
 private:
-    milk_id m_id;
+    TypesConstants::milk_id m_id;
     QString m_name;
     QString m_description;
 };

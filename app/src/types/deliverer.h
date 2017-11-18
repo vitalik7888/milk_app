@@ -2,7 +2,6 @@
 #define DELIVERER_H
 
 #include "delivererdata.h"
-#include "calculateditem.h"
 // Qt
 #include <QQmlListProperty>
 
@@ -25,15 +24,15 @@ class Deliverer : public QObject
 
 public:
     Deliverer(QObject *parent = Q_NULLPTR);
-    Deliverer(const milk_id id, const QString &name, const milk_inn inn,
+    Deliverer(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_inn inn,
               const QString &address, const QString &phoneNumber,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     virtual ~Deliverer();
 
-    milk_id id() const;
+    TypesConstants::milk_id id() const;
     Locality *locality() const;
     QString name() const;
-    milk_inn inn() const;
+    TypesConstants::milk_inn inn() const;
     QString address() const;
     QString phoneNumber() const;
 
@@ -42,18 +41,15 @@ public:
     int milkReceprionsCount() const;
     Q_INVOKABLE bool isHasMilkReceptions() const;
 
-    CalculatedItem::Data getCalculations() const;
-
     Q_INVOKABLE bool isValid() const;
-    // bool save(DeliverersTable *deliverers);
 
     DelivererData data() const;
 
 public slots:
-    void setId(const milk_id &id);
+    void setId(const TypesConstants::milk_id &id);
     void setLocality(Locality *locality);
     void setName(const QString &name);
-    void setInn(const milk_inn &inn);
+    void setInn(const TypesConstants::milk_inn &inn);
     void setAddress(const QString &address);
     void setPhoneNumber(const QString &phoneNumber);
     void reset();

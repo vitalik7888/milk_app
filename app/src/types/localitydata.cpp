@@ -7,7 +7,7 @@ LocalityData::LocalityData():
 
 }
 
-LocalityData::LocalityData(const milk_id id, const QString &name, const QString &description):
+LocalityData::LocalityData(const TypesConstants::milk_id id, const QString &name, const QString &description):
     m_id(id),
     m_name(name),
     m_description(description)
@@ -28,12 +28,12 @@ LocalityData::~LocalityData()
 
 }
 
-milk_id LocalityData::id() const
+TypesConstants::milk_id LocalityData::id() const
 {
     return m_id;
 }
 
-void LocalityData::setId(const milk_id &id)
+void LocalityData::setId(const TypesConstants::milk_id &id)
 {
     m_id = id;
 }
