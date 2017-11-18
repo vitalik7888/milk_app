@@ -3,7 +3,6 @@
 
 #include "base/Table.h"
 #include "milkreception.h"
-#include <src/core/Constants.h>
 // Qt
 #include <QDate>
 

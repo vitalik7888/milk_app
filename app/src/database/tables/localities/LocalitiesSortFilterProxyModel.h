@@ -1,6 +1,7 @@
 #ifndef LOCALITIESSORTFILTERPROXYMODEL_H
 #define LOCALITIESSORTFILTERPROXYMODEL_H
 
+#include "dbconstants.h"
 #include <locality.h>
 // Qt
 #include <QSortFilterProxyModel>

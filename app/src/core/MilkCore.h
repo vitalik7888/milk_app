@@ -1,6 +1,7 @@
 #ifndef MILKCORE_H
 #define MILKCORE_H
 
+#include "Constants.h"
 #include "src/database/base/Database.h"
 #include "Settings.h"
 // Qt

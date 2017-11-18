@@ -1,7 +1,6 @@
 #include "Table.h"
 
 #include "dao.h"
-#include "Utils.h"
 // Qt
 #include <QSqlQuery>
 #include <QSqlError>
