@@ -5,7 +5,6 @@
 #include <QObject>
 
 class CalcSettings;
-class QSignalSpy;
 
 
 class Test_CalcSettings : public QObject
