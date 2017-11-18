@@ -14,6 +14,7 @@ class Locality : public QObject
 
 public:
     Locality(const LocalityData &data, QObject *parent = Q_NULLPTR);
+    Locality(const Locality &l);
     Locality(QObject *parent = Q_NULLPTR);
     virtual ~Locality();
 
@@ -36,5 +37,7 @@ signals:
 private:
     LocalityData m_data;
 };
+
+Q_DECLARE_METATYPE(Locality)
 
 #endif // LOCALITY_H

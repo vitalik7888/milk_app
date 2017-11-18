@@ -18,6 +18,13 @@ Locality::Locality(const LocalityData &data, QObject *parent):
 
 }
 
+Locality::Locality(const Locality &l):
+    QObject(Q_NULLPTR),
+    m_data(l.data())
+{
+
+}
+
 Locality::~Locality()
 {
 
