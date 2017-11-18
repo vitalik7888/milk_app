@@ -28,7 +28,7 @@ SettingsColumn::SettingsColumn(const QString display, const int type,
 
 SettingsColumn::~SettingsColumn() {}
 
-void SettingsColumn::setDisplay(QString display)
+void SettingsColumn::setDisplay(const QString &display)
 {
     if (m_display == display)
         return;

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-// TODO reset functions
+
 class SettingsColumn : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString display READ display WRITE setDisplay NOTIFY displayChanged RESET resetDisplay)
@@ -23,7 +23,7 @@ public:
     bool isShow() const { return m_isShow; }
 
 public slots:
-    void setDisplay(QString display);
+    void setDisplay(const QString &display);
     void setType(int type);
     void setPrec(int prec);
     void setIsShow(bool isShow);
