@@ -18,7 +18,7 @@ Test_CalcSettings::Test_CalcSettings(QObject *parent) : QObject(parent)
 void Test_CalcSettings::testEmptyConstructor()
 {
     CalcSettings cs;
-    compareDefault(cs);
+    compareDefault(&cs);
 }
 
 void Test_CalcSettings::testMethods()
@@ -32,7 +32,7 @@ void Test_CalcSettings::testMethods()
     cs.setAllResultColor({Qt::green});
     cs.setDateFormat("MMMM");
 
-    compare(cs, {"Times", 10, QFont::Bold}, {Qt::black},
+    compare(&cs, {"Times", 10, QFont::Bold}, {Qt::black},
         {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::green}, "MMMM");
 }
 
@@ -48,7 +48,7 @@ void Test_CalcSettings::testReset()
     cs.setDateFormat("MMMM");
     cs.reset();
 
-    compareDefault(cs);
+    compareDefault(&cs);
 }
 
 void Test_CalcSettings::testSignalTextFontChanged()
@@ -142,28 +142,24 @@ void Test_CalcSettings::testSignalDateFormatChanged()
     QCOMPARE(arguments.at(0).toString(), dateFormat);
 }
 
-void Test_CalcSettings::compare(const CalcSettings &cs, const QFont &textFont,
+void Test_CalcSettings::compare(CalcSettings *cs, const QFont &textFont,
                                 const QColor &textBackColor, const QFont &delivResultFont,
                                 const QColor &delivResultColor, const QFont &allResultFont,
                                 const QColor &allResultColor, const QString &dateFormat)
 {
-    QCOMPARE(cs.textFont(), textFont);
-    QCOMPARE(cs.textBackColor(), textBackColor);
-    QCOMPARE(cs.delivResultFont(), delivResultFont);
-    QCOMPARE(cs.delivResultColor(), delivResultColor);
-    QCOMPARE(cs.allResultFont(), allResultFont);
-    QCOMPARE(cs.allResultColor(), allResultColor);
-    QCOMPARE(cs.dateFormat(), dateFormat);
+    QCOMPARE(cs->textFont(), textFont);
+    QCOMPARE(cs->textBackColor(), textBackColor);
+    QCOMPARE(cs->delivResultFont(), delivResultFont);
+    QCOMPARE(cs->delivResultColor(), delivResultColor);
+    QCOMPARE(cs->allResultFont(), allResultFont);
+    QCOMPARE(cs->allResultColor(), allResultColor);
+    QCOMPARE(cs->dateFormat(), dateFormat);
 }
 
-void Test_CalcSettings::compareDefault(const CalcSettings &cs)
+void Test_CalcSettings::compareDefault(CalcSettings *cs)
 {
-    QCOMPARE(cs.textFont(), SCC::DEF_TEXT_FONT);
-    QCOMPARE(cs.textBackColor(), SCC::DEF_TEXT_BACK_COLOR);
-    QCOMPARE(cs.delivResultFont(), SCC::DEF_DELIV_RESULT_FONT);
-    QCOMPARE(cs.delivResultColor(), SCC::DEF_DELIV_RESULT_COLOR);
-    QCOMPARE(cs.allResultFont(), SCC::DEF_ALL_RESULT_FONT);
-    QCOMPARE(cs.allResultColor(), SCC::DEF_ALL_RESULT_COLOR);
-    QCOMPARE(cs.dateFormat(), SC::defaultDateFormat());
+    compare(cs, SCC::DEF_TEXT_FONT, SCC::DEF_TEXT_BACK_COLOR,
+            SCC::DEF_DELIV_RESULT_FONT, SCC::DEF_DELIV_RESULT_COLOR,
+            SCC::DEF_ALL_RESULT_FONT, SCC::DEF_ALL_RESULT_COLOR, SC::defaultDateFormat());
 }
 

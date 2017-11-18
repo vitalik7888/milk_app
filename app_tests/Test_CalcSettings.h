@@ -13,6 +13,11 @@ class Test_CalcSettings : public QObject
 public:
     explicit Test_CalcSettings(QObject *parent = nullptr);
 
+    static void compare(CalcSettings *cs, const QFont &textFont, const QColor &textBackColor,
+                            const QFont &delivResultFont, const QColor &delivResultColor,
+                            const QFont &allResultFont, const QColor &allResultColor, const QString &dateFormat);
+    static void compareDefault(CalcSettings *cs);
+
 private slots:
     void testEmptyConstructor();
     void testMethods();
@@ -24,12 +29,6 @@ private slots:
     void testSignalAllResultFontChanged();
     void testSignalAllResultColorChanged();
     void testSignalDateFormatChanged();
-
-private:
-    void compare(const CalcSettings &cs, const QFont &textFont, const QColor &textBackColor,
-                 const QFont &delivResultFont, const QColor &delivResultColor,
-                 const QFont &allResultFont, const QColor &allResultColor, const QString &dateFormat);
-    void compareDefault(const CalcSettings &cs);
 };
 
 #endif // TEST_CALCSETTINGS_H

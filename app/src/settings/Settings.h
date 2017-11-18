@@ -18,6 +18,7 @@ class Settings : public QObject
 
 public:
     Settings(QObject *parent = Q_NULLPTR);
+    Settings(const QString &fileName, QObject *parent = Q_NULLPTR);
     virtual ~Settings();
 
     MainSettings *main() { return m_main; }
@@ -53,6 +54,9 @@ private:
 
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key, const QVariant &defaultValue = {}) const;
+
+    QFont readFont(const QString &key, const QFont &defaultFont) const;
+    QColor readColor(const QString &key, const QColor &defaultColor) const;
 };
 
 #endif // SETTINGS_H

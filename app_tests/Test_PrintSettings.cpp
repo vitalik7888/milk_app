@@ -5,6 +5,7 @@
 // Qt
 #include <QTest>
 #include <QSignalSpy>
+#include <QDebug>
 
 using SC = SettingsConstants;
 
@@ -17,7 +18,7 @@ Test_PrintSettings::Test_PrintSettings(QObject *parent) : QObject(parent)
 void Test_PrintSettings::testEmptyConstructor()
 {
     PrintSettings ps;
-    compareDefault(ps);
+    compareDefault(&ps);
 }
 
 void Test_PrintSettings::testMethods()
@@ -38,7 +39,7 @@ void Test_PrintSettings::testMethods()
     ps.setTableTextColor({Qt::white});
     ps.setTableResultFont({"Times", 12, QFont::Bold});
     ps.setTableResultColor({Qt::gray});
-    compare(ps, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold}, {Qt::black}, 2, 3, 4, 2, 2, {Qt::green},
+    compare(&ps, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold}, {Qt::black}, 2, 3, 4, 2, 2, {Qt::green},
             {"Times", 10, QFont::Bold}, {Qt::red}, {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::gray});
 }
 
@@ -61,7 +62,7 @@ void Test_PrintSettings::testReset()
     ps.setTableResultFont({"Times", 12, QFont::Bold});
     ps.setTableResultColor({Qt::gray});
     ps.reset();
-    compareDefault(ps);
+    compareDefault(&ps);
 }
 
 void Test_PrintSettings::testSignalTextFont()
@@ -214,7 +215,7 @@ void Test_PrintSettings::testSignalTableResultColor()
     compareSignal(signalSpy, data, 1);
 }
 
-void Test_PrintSettings::compare(const PrintSettings &ps, const QFont &textFont,
+void Test_PrintSettings::compare(PrintSettings *ps, const QFont &textFont,
                                  const QFont &captionTextFont, const QColor &captionColor,
                                  const int tableWidth, const int tableBorderWidth,
                                  const int tableBorderStyle, const int cellSpacing,
@@ -223,40 +224,32 @@ void Test_PrintSettings::compare(const PrintSettings &ps, const QFont &textFont,
                                  const QFont &tableTextFont, const QColor &tableTextColor,
                                  const QFont &tableResultFont, const QColor &tableResultColor)
 {
-    QCOMPARE(ps.textFont(), textFont);
-    QCOMPARE(ps.captionTextFont(), captionTextFont);
-    QCOMPARE(ps.captionColor(), captionColor);
-    QCOMPARE(ps.tableWidth(), tableWidth);
-    QCOMPARE(ps.tableBorderWidth(), tableBorderWidth);
-    QCOMPARE(ps.tableBorderStyle(), tableBorderStyle);
-    QCOMPARE(ps.cellSpacing(), cellSpacing);
-    QCOMPARE(ps.cellPadding(), cellPadding);
-    QCOMPARE(ps.tableBorderColor(), tableBorderColor);
-    QCOMPARE(ps.tableHeaderFont(), tableHeaderFont);
-    QCOMPARE(ps.tableHeaderColor(), tableHeaderColor);
-    QCOMPARE(ps.tableTextFont(), tableTextFont);
-    QCOMPARE(ps.tableTextColor(), tableTextColor);
-    QCOMPARE(ps.tableResultFont(), tableResultFont);
-    QCOMPARE(ps.tableResultColor(), tableResultColor);
+    QCOMPARE(ps->textFont(), textFont);
+    QCOMPARE(ps->captionTextFont(), captionTextFont);
+    QCOMPARE(ps->captionColor(), captionColor);
+    QCOMPARE(ps->tableWidth(), tableWidth);
+    QCOMPARE(ps->tableBorderWidth(), tableBorderWidth);
+    QCOMPARE(ps->tableBorderStyle(), tableBorderStyle);
+    QCOMPARE(ps->cellSpacing(), cellSpacing);
+    QCOMPARE(ps->cellPadding(), cellPadding);
+    QCOMPARE(ps->tableBorderColor(), tableBorderColor);
+    QCOMPARE(ps->tableHeaderFont(), tableHeaderFont);
+    QCOMPARE(ps->tableHeaderColor(), tableHeaderColor);
+    QCOMPARE(ps->tableTextFont(), tableTextFont);
+    QCOMPARE(ps->tableTextColor(), tableTextColor);
+    QCOMPARE(ps->tableResultFont(), tableResultFont);
+    QCOMPARE(ps->tableResultColor(), tableResultColor);
 }
 
-void Test_PrintSettings::compareDefault(const PrintSettings &ps)
+void Test_PrintSettings::compareDefault(PrintSettings *ps)
 {
-    QCOMPARE(ps.textFont(),             SC::Print::DEF_TEXT_FONT);
-    QCOMPARE(ps.captionTextFont(),      SC::Print::DEF_CAPTION_TEXT_FONT);
-    QCOMPARE(ps.captionColor(),         SC::Print::DEF_CAPTION_COLOR);
-    QCOMPARE(ps.tableWidth(),           SC::Print::DEF_TABLE_WIDTH);
-    QCOMPARE(ps.tableBorderWidth(),     SC::Print::DEF_TABLE_BORDER_WIDTH);
-    QCOMPARE(ps.tableBorderStyle(),     SC::Print::DEF_TABLE_BORDER_STYLE);
-    QCOMPARE(ps.cellSpacing(),          SC::Print::DEF_CELL_SPACING);
-    QCOMPARE(ps.cellPadding(),          SC::Print::DEF_CELL_PADDING);
-    QCOMPARE(ps.tableBorderColor(),     SC::Print::DEF_TABLE_BORDER_COLOR);
-    QCOMPARE(ps.tableHeaderFont(),      SC::Print::DEF_TABLE_HEADER_FONT);
-    QCOMPARE(ps.tableHeaderColor(),     SC::Print::DEF_TABLE_HEADER_COLOR);
-    QCOMPARE(ps.tableTextFont(),        SC::Print::DEF_TABLE_TEXT_FONT);
-    QCOMPARE(ps.tableTextColor(),       SC::Print::DEF_TABLE_TEXT_COLOR);
-    QCOMPARE(ps.tableResultFont(),      SC::Print::DEF_TABLE_RESULT_FONT);
-    QCOMPARE(ps.tableResultColor(),     SC::Print::DEF_TABLE_RESULT_COLOR);
+    compare(ps, SC::Print::DEF_TEXT_FONT, SC::Print::DEF_CAPTION_TEXT_FONT,
+            SC::Print::DEF_CAPTION_COLOR, SC::Print::DEF_TABLE_WIDTH,
+            SC::Print::DEF_TABLE_BORDER_WIDTH, SC::Print::DEF_TABLE_BORDER_STYLE,
+            SC::Print::DEF_CELL_SPACING, SC::Print::DEF_CELL_PADDING,
+            SC::Print::DEF_TABLE_BORDER_COLOR, SC::Print::DEF_TABLE_HEADER_FONT,
+            SC::Print::DEF_TABLE_HEADER_COLOR, SC::Print::DEF_TABLE_TEXT_FONT,
+            SC::Print::DEF_TABLE_TEXT_COLOR, SC::Print::DEF_TABLE_RESULT_FONT, SC::Print::DEF_TABLE_RESULT_COLOR);
 }
 
 void Test_PrintSettings::compareSignal(const QSignalSpy &spy, const QVariant &value, const int count)

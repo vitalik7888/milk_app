@@ -17,14 +17,14 @@ void Test_MainSettings::testEmptyConstructor()
 {
     MainSettings ms;
 
-    compareDefault(ms);
+    compareDefault(&ms);
 }
 
 void Test_MainSettings::testConstructor()
 {
     MainSettings ms("dbName", 10.4f, "firm", "inspector1", "inspector2", false);
 
-    compare(ms, "dbName", 10.4f, "firm", "inspector1", "inspector2", false);
+    compare(&ms, "dbName", 10.4f, "firm", "inspector1", "inspector2", false);
 }
 
 void Test_MainSettings::testMethods()
@@ -37,7 +37,7 @@ void Test_MainSettings::testMethods()
     ms.setMilkInspector2("ins2");
     ms.setIsFetchTablesOnRefresh(true);
 
-    compare(ms, "db_Name", 9.6f, "f_name", "ins1", "ins2", true);
+    compare(&ms, "db_Name", 9.6f, "f_name", "ins1", "ins2", true);
 }
 
 void Test_MainSettings::testReset()
@@ -45,7 +45,7 @@ void Test_MainSettings::testReset()
     MainSettings ms("dbName", 10.4f, "firm", "inspector1", "inspector2", false);
     ms.reset();
 
-    compareDefault(ms);
+    compareDefault(&ms);
 }
 
 void Test_MainSettings::testSignalLastChoosenDbChanged()
@@ -117,17 +117,17 @@ void Test_MainSettings::testSignalIsFetchTablesOnRefreshChanged()
     QCOMPARE(arguments.at(0).toBool(), true);
 }
 
-void Test_MainSettings::compare(const MainSettings &ms, const QString &lastChoosenDb, const float priceLiter, const QString &firmName, const QString &milkInspector, const QString &milkInspector_2, const bool isFetchTablesOnRefresh)
+void Test_MainSettings::compare(MainSettings *ms, const QString &lastChoosenDb, const float priceLiter, const QString &firmName, const QString &milkInspector, const QString &milkInspector_2, const bool isFetchTablesOnRefresh)
 {
-    QCOMPARE(ms.lastChoosenDb(), lastChoosenDb);
-    QCOMPARE(ms.priceLiter(), priceLiter);
-    QCOMPARE(ms.firmName(), firmName);
-    QCOMPARE(ms.milkInspector(), milkInspector);
-    QCOMPARE(ms.milkInspector2(), milkInspector_2);
-    QCOMPARE(ms.isFetchTablesOnRefresh(), isFetchTablesOnRefresh);
+    QCOMPARE(ms->lastChoosenDb(), lastChoosenDb);
+    QCOMPARE(ms->priceLiter(), priceLiter);
+    QCOMPARE(ms->firmName(), firmName);
+    QCOMPARE(ms->milkInspector(), milkInspector);
+    QCOMPARE(ms->milkInspector2(), milkInspector_2);
+    QCOMPARE(ms->isFetchTablesOnRefresh(), isFetchTablesOnRefresh);
 }
 
-void Test_MainSettings::compareDefault(const MainSettings &ms)
+void Test_MainSettings::compareDefault(MainSettings *ms)
 {
     compare(ms, SC::DEF_LAST_CHOOSEN_DB, SC::DEF_PRICE_LITER, SC::DEF_FIRM_NAME,
             SC::DEF_MILK_INSPECTOR, SC::DEF_MILK_INSPECTOR2, SC::DEF_IS_FETCH_TABLE_ON_REFRESH);

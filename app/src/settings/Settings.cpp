@@ -59,9 +59,15 @@ static inline QString qtr(const char *value)
 
 
 Settings::Settings(QObject *parent):
+    Settings(QString(), parent)
+{
+}
+
+Settings::Settings(const QString &fileName, QObject *parent):
     QObject(parent)
 {
-    m_settings = new QSettings(this);
+    fileName.isEmpty() ? m_settings = new QSettings(this) :
+            m_settings = new QSettings(fileName, QSettings::NativeFormat, this);
 
     m_main = new MainSettings(this);
 
@@ -138,8 +144,8 @@ void Settings::writePrintSettings()
 {
     m_settings->beginGroup(GROUP_PRINT);
 
-    setValue(P_TEXT_FONT, print()->textFont().toString());
-    setValue(P_CAPTION_FONT, print()->captionTextFont().toString());
+    setValue(P_TEXT_FONT, print()->textFont());
+    setValue(P_CAPTION_FONT, print()->captionTextFont());
     setValue(P_CAPTION_COLOR, print()->captionColor().name());
     setValue(PT_WIDTH, print()->tableWidth());
     setValue(PT_BORDER_WIDTH, print()->tableBorderWidth());
@@ -147,11 +153,11 @@ void Settings::writePrintSettings()
     setValue(PT_CELL_SPACING, print()->cellSpacing());
     setValue(PT_CELL_PADDING, print()->cellPadding());
     setValue(PT_BORDER_COLOR, print()->tableBorderColor().name());
-    setValue(PT_HEADER_FONT, print()->tableHeaderFont().toString());
+    setValue(PT_HEADER_FONT, print()->tableHeaderFont());
     setValue(PT_HEADER_COLOR, print()->tableHeaderColor().name());
-    setValue(PT_TEXT_FONT, print()->tableTextFont().toString());
+    setValue(PT_TEXT_FONT, print()->tableTextFont());
     setValue(PT_TEXT_COLOR, print()->tableTextColor().name());
-    setValue(PT_RESULT_FONT, print()->tableResultFont().toString());
+    setValue(PT_RESULT_FONT, print()->tableResultFont());
     setValue(PT_RESULT_COLOR, print()->tableResultColor().name());
 
     m_settings->beginWriteArray(COL_ARRAY);
@@ -190,12 +196,12 @@ void Settings::readCalcSettings()
     m_settings->beginGroup(GROUP_CALC);
 
     calc()->setDateFormat(value(C_DATE_FORMAT, SC::defaultDateFormat()).toString());
-    calc()->setTextFont(value(C_TEXT_FONT, SC::Calc::DEF_TEXT_FONT).toString());
-    calc()->setTextBackColor(value(C_TEXT_COLOR, SC::Calc::DEF_TEXT_BACK_COLOR.name()).toString());
-    calc()->setDelivResultFont(value(C_DELIV_RES_FONT, SC::Calc::DEF_DELIV_RESULT_FONT.toString()).toString());
-    calc()->setDelivResultColor(value(C_DELIV_RES_COLOR, SC::Calc::DEF_DELIV_RESULT_COLOR.name()).toString());
-    calc()->setAllResultFont(value(C_ALL_RES_FONT, SC::Calc::DEF_ALL_RESULT_FONT.toString()).toString());
-    calc()->setAllResultColor(value(C_ALL_RES_COLOR, SC::Calc::DEF_ALL_RESULT_COLOR.name()).toString());
+    calc()->setTextFont(readFont(C_TEXT_FONT, SC::Calc::DEF_TEXT_FONT));
+    calc()->setTextBackColor(readColor(C_TEXT_COLOR, SC::Calc::DEF_TEXT_BACK_COLOR));
+    calc()->setDelivResultFont(readFont(C_DELIV_RES_FONT, SC::Calc::DEF_DELIV_RESULT_FONT.toString()));
+    calc()->setDelivResultColor(readColor(C_DELIV_RES_COLOR, SC::Calc::DEF_DELIV_RESULT_COLOR));
+    calc()->setAllResultFont(readFont(C_ALL_RES_FONT, SC::Calc::DEF_ALL_RESULT_FONT.toString()));
+    calc()->setAllResultColor(readColor(C_ALL_RES_COLOR, SC::Calc::DEF_ALL_RESULT_COLOR));
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
     for (int i = 0; i < size; ++i) {
@@ -215,21 +221,21 @@ void Settings::readPrintSettings()
 {
     m_settings->beginGroup(GROUP_PRINT);
 
-    print()->setTextFont(value(P_TEXT_FONT, SC::Print::DEF_TEXT_FONT).toString());
-    print()->setCaptionTextFont(value(P_CAPTION_FONT, SC::Print::DEF_CAPTION_TEXT_FONT).toString());
-    print()->setCaptionColor(value(P_CAPTION_COLOR, SC::Print::DEF_CAPTION_COLOR.name()).toString());
+    print()->setTextFont(readFont(P_TEXT_FONT, SC::Print::DEF_TEXT_FONT));
+    print()->setCaptionTextFont(readFont(P_CAPTION_FONT, SC::Print::DEF_CAPTION_TEXT_FONT));
+    print()->setCaptionColor(readColor(P_CAPTION_COLOR, SC::Print::DEF_CAPTION_COLOR));
     print()->setTableWidth(value(PT_WIDTH, SC::Print::DEF_TABLE_WIDTH).toInt());
     print()->setTableBorderWidth(value(PT_BORDER_WIDTH, SC::Print::DEF_TABLE_BORDER_WIDTH).toInt());
     print()->setTableBorderStyle(value(PT_BORDER_STYLE, SC::Print::DEF_TABLE_BORDER_STYLE).toInt());
     print()->setCellSpacing(value(PT_CELL_SPACING, SC::Print::DEF_CELL_SPACING).toInt());
     print()->setCellPadding(value(PT_CELL_PADDING, SC::Print::DEF_CELL_PADDING).toInt());
-    print()->setTableBorderColor(value(PT_BORDER_COLOR, SC::Print::DEF_TABLE_BORDER_COLOR.name()).toString());
-    print()->setTableHeaderFont(value(PT_HEADER_FONT, SC::Print::DEF_TABLE_HEADER_FONT).toString());
-    print()->setTableHeaderColor(value(PT_HEADER_COLOR, SC::Print::DEF_TABLE_HEADER_COLOR).toString());
-    print()->setTableTextFont(value(PT_TEXT_FONT, SC::Print::DEF_TABLE_TEXT_FONT).toString());
-    print()->setTableTextColor(value(PT_TEXT_COLOR, SC::Print::DEF_TABLE_TEXT_COLOR.name()).toString());
-    print()->setTableResultFont(value(PT_RESULT_FONT, SC::Print::DEF_TABLE_RESULT_FONT).toString());
-    print()->setTableResultColor(value(PT_RESULT_COLOR, SC::Print::DEF_TABLE_RESULT_COLOR.name()).toString());
+    print()->setTableBorderColor(readColor(PT_BORDER_COLOR, SC::Print::DEF_TABLE_BORDER_COLOR));
+    print()->setTableHeaderFont(readFont(PT_HEADER_FONT, SC::Print::DEF_TABLE_HEADER_FONT));
+    print()->setTableHeaderColor(readColor(PT_HEADER_COLOR, SC::Print::DEF_TABLE_HEADER_COLOR));
+    print()->setTableTextFont(readFont(PT_TEXT_FONT, SC::Print::DEF_TABLE_TEXT_FONT));
+    print()->setTableTextColor(readColor(PT_TEXT_COLOR, SC::Print::DEF_TABLE_TEXT_COLOR));
+    print()->setTableResultFont(readFont(PT_RESULT_FONT, SC::Print::DEF_TABLE_RESULT_FONT));
+    print()->setTableResultColor(readColor(PT_RESULT_COLOR, SC::Print::DEF_TABLE_RESULT_COLOR));
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
 
@@ -293,4 +299,16 @@ void Settings::setValue(const QString &key, const QVariant &value)
 QVariant Settings::value(const QString &key, const QVariant &defaultValue) const
 {
     return m_settings->value(key, defaultValue);
+}
+
+QFont Settings::readFont(const QString &key, const QFont &defaultFont) const
+{
+    QFont font;
+    font.fromString(value(key, defaultFont).toString());
+    return font;
+}
+
+QColor Settings::readColor(const QString &key, const QColor &defaultColor) const
+{
+    return { value(key, defaultColor.name()).toString() };
 }

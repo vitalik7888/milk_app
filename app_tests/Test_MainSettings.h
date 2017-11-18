@@ -12,6 +12,11 @@ class Test_MainSettings : public QObject
 public:
     explicit Test_MainSettings(QObject *parent = nullptr);
 
+    static void compare(MainSettings *ms, const QString &lastChoosenDb, const float priceLiter, const QString &firmName,
+                 const QString &milkInspector, const QString &milkInspector_2,
+                 const bool isFetchTablesOnRefresh);
+    static void compareDefault(MainSettings *ms);
+
 private slots:
     void testEmptyConstructor();
     void testConstructor();
@@ -23,12 +28,6 @@ private slots:
     void testSignalMilkInspectorChanged();
     void testSignalMilkInspector2Changed();
     void testSignalIsFetchTablesOnRefreshChanged();
-
-private:
-    void compare(const MainSettings &ms, const QString &lastChoosenDb, const float priceLiter, const QString &firmName,
-                 const QString &milkInspector, const QString &milkInspector_2,
-                 const bool isFetchTablesOnRefresh);
-    void compareDefault(const MainSettings &ms);
 };
 
 #endif // TEST_MAINSETTINGS_H
