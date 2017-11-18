@@ -1,14 +1,20 @@
 #include "milkreceptiondata.h"
 
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCMR = TC::MilkReception;
+
 
 MilkReceptionData::MilkReceptionData():
-    MilkReceptionData(-1, -1, -1, QDate(), .0, .0, .0)
+    MilkReceptionData(TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID,
+                      TCMR::DEF_DELIVERY_DATE, TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT)
 {
 
 }
 
-MilkReceptionData::MilkReceptionData(const TypesConstants::milk_id id, const TypesConstants::milk_id delivererId,
-                                     const TypesConstants::milk_id milkPointId, const QDate &deliveryDate,
+MilkReceptionData::MilkReceptionData(const TC::milk_id id, const TC::milk_id delivererId,
+                                     const TC::milk_id milkPointId, const QDate &deliveryDate,
                                      const double priceLiter, const double liters, const double fat):
     m_id(id),
     m_delivererId(delivererId),
@@ -38,32 +44,32 @@ MilkReceptionData::~MilkReceptionData()
 
 }
 
-TypesConstants::milk_id MilkReceptionData::id() const
+TC::milk_id MilkReceptionData::id() const
 {
     return m_id;
 }
 
-void MilkReceptionData::setId(const TypesConstants::milk_id &id)
+void MilkReceptionData::setId(const TC::milk_id &id)
 {
     m_id = id;
 }
 
-TypesConstants::milk_id MilkReceptionData::delivererId() const
+TC::milk_id MilkReceptionData::delivererId() const
 {
     return m_delivererId;
 }
 
-void MilkReceptionData::setDelivererId(const TypesConstants::milk_id &deliverer)
+void MilkReceptionData::setDelivererId(const TC::milk_id &deliverer)
 {
     m_delivererId = deliverer;
 }
 
-TypesConstants::milk_id MilkReceptionData::milkPointId() const
+TC::milk_id MilkReceptionData::milkPointId() const
 {
     return m_milkPointId;
 }
 
-void MilkReceptionData::setMilkPointId(const TypesConstants::milk_id &milkPoint)
+void MilkReceptionData::setMilkPointId(const TC::milk_id &milkPoint)
 {
     m_milkPointId = milkPoint;
 }

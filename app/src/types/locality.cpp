@@ -1,5 +1,10 @@
 #include "locality.h"
 
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+
+
 Locality::Locality(QObject *parent):
     Locality({}, parent)
 {
@@ -18,7 +23,7 @@ Locality::~Locality()
 
 }
 
-TypesConstants::milk_id Locality::id() const
+TC::milk_id Locality::id() const
 {
     return m_data.id();
 }
@@ -38,7 +43,7 @@ LocalityData Locality::data() const
     return m_data;
 }
 
-void Locality::setId(const TypesConstants::milk_id &id)
+void Locality::setId(const TC::milk_id &id)
 {
     if (id == m_data.id())
         return;

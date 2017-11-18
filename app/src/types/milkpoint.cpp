@@ -1,6 +1,10 @@
 #include "milkpoint.h"
 
 #include "locality.h"
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCMP = TC::MilkPoints;
 
 
 MilkPoint::MilkPoint(const MilkPointData &data, Locality *locality, QObject *parent):
@@ -11,14 +15,14 @@ MilkPoint::MilkPoint(const MilkPointData &data, Locality *locality, QObject *par
 
 }
 
-MilkPoint::MilkPoint(const TypesConstants::milk_id id, const QString &name, const QString &description,
+MilkPoint::MilkPoint(const TC::milk_id id, const QString &name, const QString &description,
                      Locality *locality, QObject *parent):
-    MilkPoint({id, locality == Q_NULLPTR ? -1 : locality->id(), name, description}, locality, parent)
+    MilkPoint({id, locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id(), name, description}, locality, parent)
 {
 }
 
 MilkPoint::MilkPoint(QObject *parent):
-    MilkPoint(-1, QString(), QString(), Q_NULLPTR, parent) {
+    MilkPoint(TCMP::DEF_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION, Q_NULLPTR, parent) {
 
 }
 
@@ -26,7 +30,7 @@ MilkPoint::~MilkPoint() {
 
 }
 
-TypesConstants::milk_id MilkPoint::id() const
+TC::milk_id MilkPoint::id() const
 {
     return m_data.id();
 }
@@ -51,7 +55,7 @@ MilkPointData MilkPoint::data() const
     return m_data;
 }
 
-void MilkPoint::setId(const TypesConstants::milk_id &id)
+void MilkPoint::setId(const TC::milk_id &id)
 {
     if (id == m_data.id())
         return;
@@ -95,7 +99,7 @@ void MilkPoint::setLocality(Locality *locality)
         return;
 
     m_locality = locality;
-    m_data.setLocalityId(locality == Q_NULLPTR ? -1 : locality->id());
+    m_data.setLocalityId(locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id());
     emit localityChanged(m_locality);
 }
 

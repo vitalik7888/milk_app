@@ -2,19 +2,25 @@
 
 #include "locality.h"
 #include "milkreception.h"
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCD = TC::Deliverers;
 
 
 Deliverer::Deliverer(QObject *parent):
-    Deliverer(-1, QString(), -1, QString(), QString(), Q_NULLPTR, parent)
+    Deliverer(TCD::DEF_ID, TCD::DEF_NAME, TCD::DEF_INN, TCD::DEF_ADDRESS,
+              TCD::DEF_PHONE_NUMBER, Q_NULLPTR, parent)
 {
 
 }
 
-Deliverer::Deliverer(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_inn inn,
-                     const QString &address, const QString &phoneNumber,
-                     Locality *locality, QObject *parent):
+Deliverer::Deliverer(const TC::milk_id id, const QString &name,
+                     const TC::milk_inn inn, const QString &address,
+                     const QString &phoneNumber, Locality *locality, QObject *parent):
     QObject(parent),
-    m_data(id, name, locality == Q_NULLPTR ? -1 : locality->id(), inn, address, phoneNumber),
+    m_data(id, name, locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id(),
+           inn, address, phoneNumber),
     m_locality(locality)
 {
 
@@ -25,7 +31,7 @@ Deliverer::~Deliverer()
 
 }
 
-TypesConstants::milk_id Deliverer::id() const
+TC::milk_id Deliverer::id() const
 {
     return m_data.id();
 }
@@ -40,7 +46,7 @@ QString Deliverer::name() const
     return m_data.name();
 }
 
-TypesConstants::milk_inn Deliverer::inn() const
+TC::milk_inn Deliverer::inn() const
 {
     return m_data.inn();
 }
@@ -55,7 +61,7 @@ QString Deliverer::phoneNumber() const
     return m_data.phoneNumber();
 }
 
-void Deliverer::setId(const TypesConstants::milk_id &id)
+void Deliverer::setId(const TC::milk_id &id)
 {
     if (id == m_data.id())
         return;
@@ -73,7 +79,7 @@ void Deliverer::setName(const QString &name)
     emit nameChanged(name);
 }
 
-void Deliverer::setInn(const TypesConstants::milk_inn &inn)
+void Deliverer::setInn(const TC::milk_inn &inn)
 {
     if (m_data.inn() == inn)
         return;
@@ -97,7 +103,7 @@ void Deliverer::setLocality(Locality *locality)
         return;
 
     m_locality = locality;
-    m_data.setId(locality == Q_NULLPTR ? -1 : locality->id());
+    m_data.setId(locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id());
     emit localityChanged(locality);
 }
 

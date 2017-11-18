@@ -46,6 +46,7 @@ public slots:
     void setFat(double fat);
     void setDeliverer(Deliverer *deliverer);
     void setMilkPoint(MilkPoint *milkPoint);
+    void reset();
 
 signals:
     void idChanged(qlonglong milkReceptionId);

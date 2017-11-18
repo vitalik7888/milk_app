@@ -1,13 +1,18 @@
 #include "localitydata.h"
 
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCL = TC::Localities;
+
 
 LocalityData::LocalityData():
-    LocalityData(-1, "", "")
+    LocalityData(TCL::DEF_ID, TCL::DEF_NAME, TCL::DEF_DESCRIPTION)
 {
 
 }
 
-LocalityData::LocalityData(const TypesConstants::milk_id id, const QString &name, const QString &description):
+LocalityData::LocalityData(const TC::milk_id id, const QString &name, const QString &description):
     m_id(id),
     m_name(name),
     m_description(description)
@@ -28,12 +33,12 @@ LocalityData::~LocalityData()
 
 }
 
-TypesConstants::milk_id LocalityData::id() const
+TC::milk_id LocalityData::id() const
 {
     return m_id;
 }
 
-void LocalityData::setId(const TypesConstants::milk_id &id)
+void LocalityData::setId(const TC::milk_id &id)
 {
     m_id = id;
 }

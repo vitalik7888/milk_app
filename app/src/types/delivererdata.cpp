@@ -3,15 +3,19 @@
 // Qt
 #include <QtDebug>
 
+using TC = TypesConstants;
+using TCD = TC::Deliverers;
+
 
 DelivererData::DelivererData():
-    DelivererData(-1, "", -1, 0, "", "")
+    DelivererData(TCD::DEF_ID, TCD::DEF_NAME, TCD::DEF_LOCALITY_ID,
+                  TCD::DEF_INN, TCD::DEF_ADDRESS, TCD::DEF_PHONE_NUMBER)
 {
 
 }
 
-DelivererData::DelivererData(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_id localityId,
-                             const TypesConstants::milk_inn inn, const QString &address, const QString &phoneNumber):
+DelivererData::DelivererData(const TC::milk_id id, const QString &name, const TC::milk_id localityId,
+                             const TC::milk_inn inn, const QString &address, const QString &phoneNumber):
     m_inn(inn),
     m_id(id),
     m_localityId(localityId),
@@ -32,32 +36,32 @@ bool DelivererData::isValid() const
     return m_id > 0;
 }
 
-TypesConstants::milk_inn DelivererData::inn() const
+TC::milk_inn DelivererData::inn() const
 {
     return m_inn;
 }
 
-void DelivererData::setInn(const TypesConstants::milk_inn inn)
+void DelivererData::setInn(const TC::milk_inn inn)
 {
     m_inn = inn;
 }
 
-TypesConstants::milk_id DelivererData::id() const
+TC::milk_id DelivererData::id() const
 {
     return m_id;
 }
 
-void DelivererData::setId(const TypesConstants::milk_id &id)
+void DelivererData::setId(const TC::milk_id &id)
 {
     m_id = id;
 }
 
-TypesConstants::milk_id DelivererData::localityId() const
+TC::milk_id DelivererData::localityId() const
 {
     return m_localityId;
 }
 
-void DelivererData::setLocalityId(const TypesConstants::milk_id &localityId)
+void DelivererData::setLocalityId(const TC::milk_id &localityId)
 {
     m_localityId = localityId;
 }

@@ -2,20 +2,25 @@
 
 #include "deliverer.h"
 #include "milkpoint.h"
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCMR = TC::MilkReception;
 
 
 MilkReception::MilkReception(QObject *parent):
-    MilkReception(-1, QDate(), .0, .0, .0, Q_NULLPTR, Q_NULLPTR, parent)
+    MilkReception(TCMR::DEF_ID, TCMR::DEF_DELIVERY_DATE,
+                  TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR, parent)
 {
 
 }
 
-MilkReception::MilkReception(const TypesConstants::milk_id id, const QDate deliveryDate, const double priceLiter,
+MilkReception::MilkReception(const TC::milk_id id, const QDate deliveryDate, const double priceLiter,
                              const double liters, const double fat,
                              Deliverer *deliverer, MilkPoint *milkPoint, QObject *parent):
     QObject(parent),
-    m_data(id, deliverer == Q_NULLPTR ? -1 : deliverer->id(),
-               milkPoint == Q_NULLPTR ? -1 : milkPoint->id(),
+    m_data(id, deliverer == Q_NULLPTR ? TCMR::DEF_ID_DELIVERER : deliverer->id(),
+               milkPoint == Q_NULLPTR ? TCMR::DEF_MILK_POINT_ID : milkPoint->id(),
            deliveryDate, priceLiter, liters, fat),
     m_deliverer(deliverer),
     m_milkPoint(milkPoint)
@@ -28,7 +33,7 @@ MilkReception::~MilkReception()
 
 }
 
-TypesConstants::milk_id MilkReception::id() const
+TC::milk_id MilkReception::id() const
 {
     return m_data.id();
 }
@@ -73,7 +78,7 @@ bool MilkReception::isValid() const
     return m_data.isValid();
 }
 
-void MilkReception::setId(const TypesConstants::milk_id &id)
+void MilkReception::setId(const TC::milk_id &id)
 {
     if (id == m_data.id())
         return;
@@ -88,7 +93,7 @@ void MilkReception::setDeliverer(Deliverer *deliverer)
         return;
 
     m_deliverer = deliverer;
-    m_data.setDelivererId(deliverer == Q_NULLPTR ? -1 : deliverer->id());
+    m_data.setDelivererId(deliverer == Q_NULLPTR ? TCMR::DEF_ID_DELIVERER: deliverer->id());
     emit delivererChanged(deliverer);
 }
 
@@ -98,8 +103,15 @@ void MilkReception::setMilkPoint(MilkPoint *milkPoint)
         return;
 
     m_milkPoint = milkPoint;
-    m_data.setMilkPointId(milkPoint == Q_NULLPTR ? -1 : milkPoint->id());
+    m_data.setMilkPointId(milkPoint == Q_NULLPTR ? TCMR::DEF_MILK_POINT_ID : milkPoint->id());
     emit milkPointChanged(milkPoint);
+}
+
+void MilkReception::reset()
+{
+    m_data = {};
+    m_milkPoint = Q_NULLPTR;
+    m_deliverer = Q_NULLPTR;
 }
 
 void MilkReception::setDeliveryDate(const QDate &deliveryDate)

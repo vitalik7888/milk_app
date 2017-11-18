@@ -1,13 +1,18 @@
 #include "milkpointdata.h"
 
+#include "TypesConstants.h"
+
+using TC = TypesConstants;
+using TCMP = TC::MilkPoints;
+
 
 MilkPointData::MilkPointData():
-    MilkPointData(-1, -1, "", "")
+    MilkPointData(TCMP::DEF_ID, TCMP::DEF_LOCALITY_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION)
 {
 
 }
 
-MilkPointData::MilkPointData(const TypesConstants::milk_id id, const TypesConstants::milk_id localityId, const QString &name,
+MilkPointData::MilkPointData(const TC::milk_id id, const TC::milk_id localityId, const QString &name,
                              const QString &description):
     m_id(id),
     m_localityId(localityId),
@@ -17,22 +22,22 @@ MilkPointData::MilkPointData(const TypesConstants::milk_id id, const TypesConsta
 
 }
 
-TypesConstants::milk_id MilkPointData::id() const
+TC::milk_id MilkPointData::id() const
 {
     return m_id;
 }
 
-void MilkPointData::setId(const TypesConstants::milk_id &id)
+void MilkPointData::setId(const TC::milk_id &id)
 {
     m_id = id;
 }
 
-TypesConstants::milk_id MilkPointData::localityId() const
+TC::milk_id MilkPointData::localityId() const
 {
     return m_localityId;
 }
 
-void MilkPointData::setLocalityId(const TypesConstants::milk_id &localityId)
+void MilkPointData::setLocalityId(const TC::milk_id &localityId)
 {
     m_localityId = localityId;
 }
