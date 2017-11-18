@@ -12,17 +12,17 @@ include(../app/src/types/types.pri)
 
 SOURCES += \ 
     main.cpp \
-    Test_MainSettings.cpp \
-    Test_CalcSettings.cpp \
-    Test_SettingsColumn.cpp \
-    Test_PrintSettings.cpp \
-    Test_Settings.cpp \
+    settings/Test_MainSettings.cpp \
+    settings/Test_CalcSettings.cpp \
+    settings/Test_SettingsColumn.cpp \
+    settings/Test_PrintSettings.cpp \
+    settings/Test_Settings.cpp \
     types/Test_Deliverer.cpp
 
 HEADERS += \
-    Test_MainSettings.h \
-    Test_CalcSettings.h \
-    Test_SettingsColumn.h \
-    Test_PrintSettings.h \
-    Test_Settings.h \
+    settings/Test_MainSettings.h \
+    settings/Test_CalcSettings.h \
+    settings/Test_SettingsColumn.h \
+    settings/Test_PrintSettings.h \
+    settings/Test_Settings.h \
     types/Test_Deliverer.h

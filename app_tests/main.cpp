@@ -2,11 +2,11 @@
 #include <QTest>
 #include <locality.h>
 
-#include "Test_MainSettings.h"
-#include "Test_SettingsColumn.h"
-#include "Test_CalcSettings.h"
-#include "Test_PrintSettings.h"
-#include "Test_Settings.h"
+#include "settings/Test_MainSettings.h"
+#include "settings/Test_SettingsColumn.h"
+#include "settings/Test_CalcSettings.h"
+#include "settings/Test_PrintSettings.h"
+#include "settings/Test_Settings.h"
 #include "types/Test_Deliverer.h"
 
 int main(int argc, char *argv[])
