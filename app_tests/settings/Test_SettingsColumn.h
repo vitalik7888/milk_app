@@ -12,6 +12,10 @@ class Test_SettingsColumn : public QObject
 public:
     explicit Test_SettingsColumn(QObject *parent = nullptr);
 
+    static void compare(SettingsColumn *sc, const QString display, const int type,
+                 const int prec, bool isShow);
+    static void compareDefault(SettingsColumn *sc);
+
 private slots:
     void testEmptyConstructor();
     void testConstructor();
@@ -21,11 +25,6 @@ private slots:
     void testSignalTypeChanged();
     void testSignalPrecChanged();
     void testSignalIsShowChanged();
-
-private:
-    void compare(const SettingsColumn &sc, const QString display, const int type,
-                 const int prec, bool isShow);
-    void compareDefault(const SettingsColumn &sc);
 };
 
 #endif // TEST_SETTINGSCOLUMN_H

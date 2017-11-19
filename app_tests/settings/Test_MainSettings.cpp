@@ -6,6 +6,7 @@
 #include <QtTest/QtTest>
 
 using SC = SettingsConstants;
+using SCM = SC::Main;
 
 
 Test_MainSettings::Test_MainSettings(QObject *parent) : QObject(parent)
@@ -129,6 +130,6 @@ void Test_MainSettings::compare(MainSettings *ms, const QString &lastChoosenDb, 
 
 void Test_MainSettings::compareDefault(MainSettings *ms)
 {
-    compare(ms, SC::DEF_LAST_CHOOSEN_DB, SC::DEF_PRICE_LITER, SC::DEF_FIRM_NAME,
-            SC::DEF_MILK_INSPECTOR, SC::DEF_MILK_INSPECTOR2, SC::DEF_IS_FETCH_TABLE_ON_REFRESH);
+    compare(ms, SCM::DEF_LAST_CHOOSEN_DB, SCM::DEF_PRICE_LITER, SCM::DEF_FIRM_NAME,
+            SCM::DEF_MILK_INSPECTOR, SCM::DEF_MILK_INSPECTOR2, SCM::DEF_IS_FETCH_TABLE_ON_REFRESH);
 }

@@ -1,7 +1,8 @@
 #ifndef TEST_CALCSETTINGS_H
 #define TEST_CALCSETTINGS_H
 
-#include <functional>
+#include "SettingsConstants.h"
+// Qt
 #include <QObject>
 
 class CalcSettings;
@@ -15,7 +16,8 @@ public:
 
     static void compare(CalcSettings *cs, const QFont &textFont, const QColor &textBackColor,
                             const QFont &delivResultFont, const QColor &delivResultColor,
-                            const QFont &allResultFont, const QColor &allResultColor, const QString &dateFormat);
+                            const QFont &allResultFont, const QColor &allResultColor,
+                        const QString &dateFormat, const SettingsConstants::SettingsColumns &columns);
     static void compareDefault(CalcSettings *cs);
 
 private slots:

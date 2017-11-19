@@ -76,10 +76,11 @@ void Test_Settings::testReadWriteSettings()
     m_settings->readSettings();
 
     Test_MainSettings::compare(main, "db_Name", 9.6f, "f_name", "ins1", "ins2", true);
-    Test_PrintSettings::compare(print, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold}, {Qt::black}, 2, 3, 4, 2, 2, {Qt::green},
-    {"Times", 10, QFont::Bold}, {Qt::red}, {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::gray});
-    Test_CalcSettings::compare(calc, {"Times", 10, QFont::Bold}, {Qt::black},
-    {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::green}, "MMMM");
+    Test_PrintSettings::compare(print, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold},
+    {Qt::black}, 2, 3, 4, 2, 2, {Qt::green}, {"Times", 10, QFont::Bold}, {Qt::red},
+    {"Times", 11, QFont::Bold}, {Qt::white},  {"Times", 12, QFont::Bold}, {Qt::gray}, calc->getColumns());
+    Test_CalcSettings::compare(calc, {"Times", 10, QFont::Bold}, {Qt::black}, {"Times", 11, QFont::Bold},
+    {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::green}, "MMMM", print->getColumns());
 }
 
 void Test_Settings::testReadWriteSettingsAfterReset()

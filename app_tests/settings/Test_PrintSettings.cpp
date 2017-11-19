@@ -1,7 +1,8 @@
 #include "Test_PrintSettings.h"
 
+#include "Test_SettingsColumn.h"
 #include "PrintSettings.h"
-#include "SettingsConstants.h"
+#include <SettingsColumn.h>
 // Qt
 #include <QTest>
 #include <QSignalSpy>
@@ -39,8 +40,15 @@ void Test_PrintSettings::testMethods()
     ps.setTableTextColor({Qt::white});
     ps.setTableResultFont({"Times", 12, QFont::Bold});
     ps.setTableResultColor({Qt::gray});
-    compare(&ps, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold}, {Qt::black}, 2, 3, 4, 2, 2, {Qt::green},
-            {"Times", 10, QFont::Bold}, {Qt::red}, {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::gray});
+    const SC::SettingsColumns columns = {
+        new SettingsColumn("a", 1, 2, true, &ps),
+        new SettingsColumn("b", 2, 1, false, &ps)
+    };
+    ps.setSettingsColumns(columns);
+
+    compare(&ps, {"Times", 10, QFont::Bold}, {"Times", 9, QFont::Bold}, {Qt::black}, 2, 3, 4, 2, 2,
+    {Qt::green}, {"Times", 10, QFont::Bold}, {Qt::red}, {"Times", 11, QFont::Bold}, {Qt::white},
+    {"Times", 12, QFont::Bold}, {Qt::gray}, columns);
 }
 
 void Test_PrintSettings::testReset()
@@ -61,6 +69,10 @@ void Test_PrintSettings::testReset()
     ps.setTableTextColor({Qt::white});
     ps.setTableResultFont({"Times", 12, QFont::Bold});
     ps.setTableResultColor({Qt::gray});
+    ps.setSettingsColumns({
+                              new SettingsColumn("a", 1, 2, true, &ps),
+                              new SettingsColumn("b", 2, 1, false, &ps)
+                          });
     ps.reset();
     compareDefault(&ps);
 }
@@ -222,7 +234,8 @@ void Test_PrintSettings::compare(PrintSettings *ps, const QFont &textFont,
                                  const int cellPadding, const QColor &tableBorderColor,
                                  const QFont &tableHeaderFont, const QColor &tableHeaderColor,
                                  const QFont &tableTextFont, const QColor &tableTextColor,
-                                 const QFont &tableResultFont, const QColor &tableResultColor)
+                                 const QFont &tableResultFont, const QColor &tableResultColor,
+                                 const SettingsConstants::SettingsColumns &columns)
 {
     QCOMPARE(ps->textFont(), textFont);
     QCOMPARE(ps->captionTextFont(), captionTextFont);
@@ -239,6 +252,13 @@ void Test_PrintSettings::compare(PrintSettings *ps, const QFont &textFont,
     QCOMPARE(ps->tableTextColor(), tableTextColor);
     QCOMPARE(ps->tableResultFont(), tableResultFont);
     QCOMPARE(ps->tableResultColor(), tableResultColor);
+    const auto csColumns = ps->getColumns();
+    QCOMPARE(csColumns.size(), columns.size());
+    for (int i = 0; i < csColumns.size(); ++i) {
+        SettingsColumn *column = columns[i];
+        Test_SettingsColumn::compare(csColumns[i], column->display(), column->type(),
+                                     column->prec(), column->isShow());
+    }
 }
 
 void Test_PrintSettings::compareDefault(PrintSettings *ps)
@@ -249,7 +269,8 @@ void Test_PrintSettings::compareDefault(PrintSettings *ps)
             SC::Print::DEF_CELL_SPACING, SC::Print::DEF_CELL_PADDING,
             SC::Print::DEF_TABLE_BORDER_COLOR, SC::Print::DEF_TABLE_HEADER_FONT,
             SC::Print::DEF_TABLE_HEADER_COLOR, SC::Print::DEF_TABLE_TEXT_FONT,
-            SC::Print::DEF_TABLE_TEXT_COLOR, SC::Print::DEF_TABLE_RESULT_FONT, SC::Print::DEF_TABLE_RESULT_COLOR);
+            SC::Print::DEF_TABLE_TEXT_COLOR, SC::Print::DEF_TABLE_RESULT_FONT,
+            SC::Print::DEF_TABLE_RESULT_COLOR, {});
 }
 
 void Test_PrintSettings::compareSignal(const QSignalSpy &spy, const QVariant &value, const int count)

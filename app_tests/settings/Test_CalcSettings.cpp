@@ -1,10 +1,11 @@
 #include "Test_CalcSettings.h"
 
+#include "Test_SettingsColumn.h"
 #include <CalcSettings.h>
-#include "SettingsConstants.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>
+#include <SettingsColumn.h>
 
 using SC = SettingsConstants;
 using SCC = SC::Calc;
@@ -31,9 +32,14 @@ void Test_CalcSettings::testMethods()
     cs.setAllResultFont({"Times", 12, QFont::Bold});
     cs.setAllResultColor({Qt::green});
     cs.setDateFormat("MMMM");
+    const SC::SettingsColumns columns = {
+        new SettingsColumn("a", 1, 2, true, &cs),
+        new SettingsColumn("b", 2, 1, false, &cs)
+    };
+    cs.setSettingsColumns(columns);
 
     compare(&cs, {"Times", 10, QFont::Bold}, {Qt::black},
-        {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::green}, "MMMM");
+    {"Times", 11, QFont::Bold}, {Qt::white}, {"Times", 12, QFont::Bold}, {Qt::green}, "MMMM", columns);
 }
 
 void Test_CalcSettings::testReset()
@@ -46,6 +52,10 @@ void Test_CalcSettings::testReset()
     cs.setAllResultFont({"Times", 12, QFont::Bold});
     cs.setAllResultColor({Qt::green});
     cs.setDateFormat("MMMM");
+    cs.setSettingsColumns({
+                              new SettingsColumn("a", 1, 2, true, &cs),
+                              new SettingsColumn("b", 2, 1, false, &cs)
+                          });
     cs.reset();
 
     compareDefault(&cs);
@@ -145,7 +155,8 @@ void Test_CalcSettings::testSignalDateFormatChanged()
 void Test_CalcSettings::compare(CalcSettings *cs, const QFont &textFont,
                                 const QColor &textBackColor, const QFont &delivResultFont,
                                 const QColor &delivResultColor, const QFont &allResultFont,
-                                const QColor &allResultColor, const QString &dateFormat)
+                                const QColor &allResultColor, const QString &dateFormat,
+                                const SC::SettingsColumns &columns)
 {
     QCOMPARE(cs->textFont(), textFont);
     QCOMPARE(cs->textBackColor(), textBackColor);
@@ -154,12 +165,19 @@ void Test_CalcSettings::compare(CalcSettings *cs, const QFont &textFont,
     QCOMPARE(cs->allResultFont(), allResultFont);
     QCOMPARE(cs->allResultColor(), allResultColor);
     QCOMPARE(cs->dateFormat(), dateFormat);
+    const auto csColumns = cs->getColumns();
+    QCOMPARE(csColumns.size(), columns.size());
+    for (int i = 0; i < csColumns.size(); ++i) {
+        SettingsColumn *column = columns[i];
+        Test_SettingsColumn::compare(csColumns[i], column->display(), column->type(),
+                                     column->prec(), column->isShow());
+    }
 }
 
 void Test_CalcSettings::compareDefault(CalcSettings *cs)
 {
     compare(cs, SCC::DEF_TEXT_FONT, SCC::DEF_TEXT_BACK_COLOR,
             SCC::DEF_DELIV_RESULT_FONT, SCC::DEF_DELIV_RESULT_COLOR,
-            SCC::DEF_ALL_RESULT_FONT, SCC::DEF_ALL_RESULT_COLOR, SC::defaultDateFormat());
+            SCC::DEF_ALL_RESULT_FONT, SCC::DEF_ALL_RESULT_COLOR, SC::defaultDateFormat(), {});
 }
 

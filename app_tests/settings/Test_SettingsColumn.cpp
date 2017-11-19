@@ -18,13 +18,13 @@ Test_SettingsColumn::Test_SettingsColumn(QObject *parent) : QObject(parent)
 void Test_SettingsColumn::testEmptyConstructor()
 {
     SettingsColumn sc;
-    compareDefault(sc);
+    compareDefault(&sc);
 }
 
 void Test_SettingsColumn::testConstructor()
 {
     SettingsColumn sc("display", 1, 2, false);
-    compare(sc, "display", 1, 2, false);
+    compare(&sc, "display", 1, 2, false);
 }
 
 void Test_SettingsColumn::testMethods()
@@ -34,7 +34,7 @@ void Test_SettingsColumn::testMethods()
     sc.setType(2);
     sc.setPrec(1);
     sc.setIsShow(true);
-    compare(sc, "dis", 2, 1, true);
+    compare(&sc, "dis", 2, 1, true);
 }
 
 void Test_SettingsColumn::testReset()
@@ -45,24 +45,24 @@ void Test_SettingsColumn::testReset()
     sc.setPrec(1);
     sc.setIsShow(true);
     sc.reset();
-    compareDefault(sc);
+    compareDefault(&sc);
 }
 
-void Test_SettingsColumn::compare(const SettingsColumn &sc, const QString display,
+void Test_SettingsColumn::compare(SettingsColumn *sc, const QString display,
                                   const int type, const int prec, bool isShow)
 {
-    QCOMPARE(sc.display(), display);
-    QCOMPARE(sc.type(), type);
-    QCOMPARE(sc.prec(), prec);
-    QCOMPARE(sc.isShow(), isShow);
+    QCOMPARE(sc->display(), display);
+    QCOMPARE(sc->type(), type);
+    QCOMPARE(sc->prec(), prec);
+    QCOMPARE(sc->isShow(), isShow);
 }
 
-void Test_SettingsColumn::compareDefault(const SettingsColumn &sc)
+void Test_SettingsColumn::compareDefault(SettingsColumn *sc)
 {
-    QCOMPARE(sc.display(),  SCCOL::DEF_DISPLAY);
-    QCOMPARE(sc.type(),     SCCOL::DEF_TYPE);
-    QCOMPARE(sc.prec(),     SCCOL::DEF_PREC);
-    QCOMPARE(sc.isShow(),   SCCOL::DEF_IS_SHOW);
+    QCOMPARE(sc->display(),  SCCOL::DEF_DISPLAY);
+    QCOMPARE(sc->type(),     SCCOL::DEF_TYPE);
+    QCOMPARE(sc->prec(),     SCCOL::DEF_PREC);
+    QCOMPARE(sc->isShow(),   SCCOL::DEF_IS_SHOW);
 }
 
 void Test_SettingsColumn::testSignalDisplayChanged()
