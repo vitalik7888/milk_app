@@ -9,6 +9,7 @@
 #include "settings/Test_Settings.h"
 #include "types/Test_Deliverer.h"
 #include "types/Test_Locality.h"
+#include "types/Test_MilkPoint.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     // types
     Test_Deliverer delivererTest;
     Test_Locality localityTest;
+    Test_MilkPoint milkPointTest;
 
     QList<QObject *> tests = {
         &mainSettingsTest,
@@ -34,7 +36,8 @@ int main(int argc, char *argv[])
         &printSettingsTest,
         &settingsTest,
         &delivererTest,
-        &localityTest
+        &localityTest,
+        &milkPointTest
     };
 
     int status = 0;
