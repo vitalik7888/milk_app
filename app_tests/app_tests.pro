@@ -17,7 +17,8 @@ SOURCES += \
     settings/Test_SettingsColumn.cpp \
     settings/Test_PrintSettings.cpp \
     settings/Test_Settings.cpp \
-    types/Test_Deliverer.cpp
+    types/Test_Deliverer.cpp \
+    types/Test_Locality.cpp
 
 HEADERS += \
     settings/Test_MainSettings.h \
@@ -25,4 +26,5 @@ HEADERS += \
     settings/Test_SettingsColumn.h \
     settings/Test_PrintSettings.h \
     settings/Test_Settings.h \
-    types/Test_Deliverer.h
+    types/Test_Deliverer.h \
+    types/Test_Locality.h

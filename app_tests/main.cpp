@@ -8,6 +8,7 @@
 #include "settings/Test_PrintSettings.h"
 #include "settings/Test_Settings.h"
 #include "types/Test_Deliverer.h"
+#include "types/Test_Locality.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     Test_Settings settingsTest;
     // types
     Test_Deliverer delivererTest;
+    Test_Locality localityTest;
 
     QList<QObject *> tests = {
         &mainSettingsTest,
@@ -31,7 +33,8 @@ int main(int argc, char *argv[])
         &calcSettingsTest,
         &printSettingsTest,
         &settingsTest,
-        &delivererTest
+        &delivererTest,
+        &localityTest
     };
 
     int status = 0;

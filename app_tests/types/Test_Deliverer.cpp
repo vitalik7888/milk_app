@@ -134,7 +134,7 @@ void Test_Deliverer::testSignalId()
 void Test_Deliverer::testSignalLocality()
 {
     Deliverer deliverer;
-    Locality data({1, "n", "d"});
+    Locality data({16, "_n", "d_"});
     QSignalSpy signalSpy(&deliverer, &Deliverer::localityChanged);
     deliverer.setLocality(&data);
     deliverer.setLocality(&data);
