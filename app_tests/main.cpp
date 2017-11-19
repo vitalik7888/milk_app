@@ -1,7 +1,9 @@
 #include <QCoreApplication>
 #include <QTest>
-#include <locality.h>
 
+#include <milkpoint.h>
+#include <deliverer.h>
+#include <locality.h>
 #include "settings/Test_MainSettings.h"
 #include "settings/Test_SettingsColumn.h"
 #include "settings/Test_CalcSettings.h"
@@ -10,6 +12,8 @@
 #include "types/Test_Deliverer.h"
 #include "types/Test_Locality.h"
 #include "types/Test_MilkPoint.h"
+#include "types/Test_MilkReception.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -17,27 +21,19 @@ int main(int argc, char *argv[])
     app.setAttribute(Qt::AA_Use96Dpi, true);
 
     qRegisterMetaType<Locality *>();
-
-    // settings
-    Test_MainSettings mainSettingsTest;
-    Test_SettingsColumn settingsColumnTest;
-    Test_CalcSettings calcSettingsTest;
-    Test_PrintSettings printSettingsTest;
-    Test_Settings settingsTest;
-    // types
-    Test_Deliverer delivererTest;
-    Test_Locality localityTest;
-    Test_MilkPoint milkPointTest;
+    qRegisterMetaType<Deliverer *>();
+    qRegisterMetaType<MilkPoint *>();
 
     QList<QObject *> tests = {
-        &mainSettingsTest,
-        &settingsColumnTest,
-        &calcSettingsTest,
-        &printSettingsTest,
-        &settingsTest,
-        &delivererTest,
-        &localityTest,
-        &milkPointTest
+        new Test_MainSettings(&app),
+        new Test_SettingsColumn(&app),
+        new Test_CalcSettings(&app),
+        new Test_PrintSettings(&app),
+        new Test_Settings(&app),
+        new Test_Deliverer(&app),
+        new Test_Locality(&app),
+        new Test_MilkPoint(&app),
+        new Test_MilkReception(&app)
     };
 
     int status = 0;

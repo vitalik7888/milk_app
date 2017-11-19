@@ -19,7 +19,8 @@ SOURCES += \
     settings/Test_Settings.cpp \
     types/Test_Deliverer.cpp \
     types/Test_Locality.cpp \
-    types/Test_MilkPoint.cpp
+    types/Test_MilkPoint.cpp \
+    types/Test_MilkReception.cpp
 
 HEADERS += \
     settings/Test_MainSettings.h \
@@ -29,4 +30,5 @@ HEADERS += \
     settings/Test_Settings.h \
     types/Test_Deliverer.h \
     types/Test_Locality.h \
-    types/Test_MilkPoint.h
+    types/Test_MilkPoint.h \
+    types/Test_MilkReception.h
