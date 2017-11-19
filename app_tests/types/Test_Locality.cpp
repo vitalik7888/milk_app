@@ -52,6 +52,13 @@ void Test_Locality::testDataConstructor()
     compare(&ld, 42, "N", "Descr-");
 }
 
+void Test_Locality::testDataCopyConstructor()
+{
+    LocalityData ldToCopy(42, "N", "Descr-");
+    LocalityData ld(ldToCopy);
+    compare(&ld, ldToCopy.id(), ldToCopy.name(), ldToCopy.description());
+}
+
 void Test_Locality::testDataMethods()
 {
     LocalityData ld;
@@ -65,6 +72,13 @@ void Test_Locality::testEmptyConstructor()
 {
     Locality l;
     compareDefault(&l);
+}
+
+void Test_Locality::testCopyConstructor()
+{
+    Locality localityToCopy({42, "N", "Descr-"});
+    Locality l(localityToCopy);
+    compare(&l, localityToCopy.id(), localityToCopy.name(), localityToCopy.description());
 }
 
 void Test_Locality::testConstructor()
