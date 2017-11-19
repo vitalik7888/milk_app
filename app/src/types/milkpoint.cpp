@@ -7,17 +7,11 @@ using TC = TypesConstants;
 using TCMP = TC::MilkPoints;
 
 
-MilkPoint::MilkPoint(const MilkPointData &data, Locality *locality, QObject *parent):
-    QObject(parent),
-    m_data(data),
-    m_locality(locality)
-{
-
-}
-
 MilkPoint::MilkPoint(const TC::milk_id id, const QString &name, const QString &description,
                      Locality *locality, QObject *parent):
-    MilkPoint({id, locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id(), name, description}, locality, parent)
+    QObject(parent),
+    m_data{id, locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id(), name, description},
+    m_locality(locality)
 {
 }
 

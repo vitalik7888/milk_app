@@ -17,7 +17,6 @@ class MilkPoint : public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
-    MilkPoint(const MilkPointData &data, Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(const TypesConstants::milk_id id, const QString &name, const QString &description,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(QObject *parent = Q_NULLPTR);

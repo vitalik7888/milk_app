@@ -117,7 +117,7 @@ MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
 
     const auto data = mpData.value();
     auto locality = localities()->getLocality(data.localityId());
-    auto milkPoint = new MilkPoint(data, locality, this);
+    auto milkPoint = new MilkPoint(data.id(), data.name(), data.description(), locality, this);
     locality->setParent(milkPoint);
 
     return milkPoint;
