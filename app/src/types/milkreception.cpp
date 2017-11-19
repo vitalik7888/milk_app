@@ -120,7 +120,7 @@ void MilkReception::setDeliveryDate(const QDate &deliveryDate)
         return;
 
     m_data.setDeliveryDate(deliveryDate);
-    emit deliveryDateChanged(deliveryDate);
+    emit deliveryDateChanged(m_data.deliveryDate());
 }
 
 void MilkReception::setPriceLiter(double priceLiter)

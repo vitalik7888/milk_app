@@ -15,6 +15,14 @@ MilkPoint::MilkPoint(const TC::milk_id id, const QString &name, const QString &d
 {
 }
 
+MilkPoint::MilkPoint(const MilkPoint &milkPoint):
+    QObject(milkPoint.parent()),
+    m_data(milkPoint.data()),
+    m_locality(milkPoint.locality())
+{
+
+}
+
 MilkPoint::MilkPoint(QObject *parent):
     MilkPoint(TCMP::DEF_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION, Q_NULLPTR, parent) {
 

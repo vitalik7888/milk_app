@@ -14,7 +14,7 @@ class Locality : public QObject
 
 public:
     Locality(const LocalityData &data, QObject *parent = Q_NULLPTR);
-    Locality(const Locality &l);
+    Locality(const Locality &locality);
     Locality(QObject *parent = Q_NULLPTR);
     virtual ~Locality();
 

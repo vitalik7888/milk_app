@@ -19,6 +19,7 @@ class MilkPoint : public QObject
 public:
     MilkPoint(const TypesConstants::milk_id id, const QString &name, const QString &description,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    MilkPoint(const MilkPoint &milkPoint);
     MilkPoint(QObject *parent = Q_NULLPTR);
     virtual ~MilkPoint();
 
@@ -48,5 +49,7 @@ private:
     MilkPointData m_data;
     Locality *m_locality;
 };
+
+Q_DECLARE_METATYPE(MilkPoint)
 
 #endif // MILKPOINT_H

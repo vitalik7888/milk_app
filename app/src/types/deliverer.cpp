@@ -15,6 +15,15 @@ Deliverer::Deliverer(QObject *parent):
 
 }
 
+Deliverer::Deliverer(const Deliverer &deliverer):
+    QObject(deliverer.parent()),
+    m_data(deliverer.data()),
+    m_locality(deliverer.locality()),
+    m_milkReceptions(deliverer.getMilkReceptions())
+{
+
+}
+
 Deliverer::Deliverer(const TC::milk_id id, const QString &name,
                      const TC::milk_inn inn, const QString &address,
                      const QString &phoneNumber, Locality *locality, QObject *parent):
@@ -146,6 +155,11 @@ QQmlListProperty<MilkReception> Deliverer::milkReceptions()
                                            &Deliverer::milkReceprionsCount,
                                            &Deliverer::milkReception,
                                            &Deliverer::clearMilkReceptions);
+}
+
+DelivererMilkReceptions Deliverer::getMilkReceptions() const
+{
+    return m_milkReceptions;
 }
 
 int Deliverer::milkReceprionsCount() const

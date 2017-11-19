@@ -24,6 +24,7 @@ class Deliverer : public QObject
 
 public:
     Deliverer(QObject *parent = Q_NULLPTR);
+    Deliverer(const Deliverer &deliverer);
     Deliverer(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_inn inn,
               const QString &address, const QString &phoneNumber,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
@@ -37,6 +38,7 @@ public:
     QString phoneNumber() const;
 
     QQmlListProperty<MilkReception> milkReceptions();
+    DelivererMilkReceptions getMilkReceptions() const;
     MilkReception *milkReception(int pos) const;
     int milkReceprionsCount() const;
     Q_INVOKABLE bool isHasMilkReceptions() const;
@@ -74,5 +76,7 @@ private:
     static MilkReception *milkReception(QQmlListProperty<MilkReception> *, int);
     static void clearMilkReceptions(QQmlListProperty<MilkReception> *);
 };
+
+Q_DECLARE_METATYPE(Deliverer)
 
 #endif // DELIVERER_H
