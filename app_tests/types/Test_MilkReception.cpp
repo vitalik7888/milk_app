@@ -79,6 +79,14 @@ void Test_MilkReception::testDataConstructor()
     compare(&mrd, 22, 2, 1, QDate(), 5.6, 112, 3.7);
 }
 
+void Test_MilkReception::testDataCopyConstructor()
+{
+    MilkReceptionData mrdToCopy(22, 2, 1, QDate(), 5.6, 112, 3.7);
+    MilkReceptionData mrd(mrdToCopy);
+    compare(&mrd, mrdToCopy.id(), mrdToCopy.delivererId(), mrdToCopy.milkPointId(),
+            mrdToCopy.deliveryDate(), mrdToCopy.priceLiter(), mrdToCopy.liters(), mrdToCopy.fat());
+}
+
 void Test_MilkReception::testDataMethods()
 {
     MilkReceptionData mrd;

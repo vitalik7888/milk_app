@@ -30,6 +30,7 @@ public:
 private slots:
     void testEmptyDataConstructor();
     void testDataConstructor();
+    void testDataCopyConstructor();
     void testDataMethods();
     void testEmptyConstructor();
     void testConstructor();
