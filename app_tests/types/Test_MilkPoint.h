@@ -28,6 +28,7 @@ private slots:
     void testDataConstructor();
     void testDataMethods();
     void testEmptyConstructor();
+    void testCopyConstructor();
     void testConstructor();
     void testMethods();
     void testReset();

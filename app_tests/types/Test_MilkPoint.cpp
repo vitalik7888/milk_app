@@ -75,6 +75,14 @@ void Test_MilkPoint::testEmptyConstructor()
     compareDefault(&mp);
 }
 
+void Test_MilkPoint::testCopyConstructor()
+{
+    Locality l({11, "ln", "ld"});
+    MilkPoint mpToCopy(42, "n", "d", &l);
+    MilkPoint mp(mpToCopy);
+    compare(&mp, mpToCopy.id(), mpToCopy.name(), mpToCopy.description(), &l);
+}
+
 void Test_MilkPoint::testConstructor()
 {
     Locality l({11, "ln", "ld"});
