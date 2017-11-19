@@ -196,4 +196,5 @@ void CalcSettings::reset()
     resetAllResultFont();
     resetAllResultColor();
     resetDateFormat();
+    m_columns.clear();
 }

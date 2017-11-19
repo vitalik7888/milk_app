@@ -305,8 +305,7 @@ void PrintSettings::resetTableResultColor()
 
 void PrintSettings::resetColumns()
 {
-    for (SettingsColumn *column : m_columns)
-        column->reset();
+    m_columns.clear();
 }
 
 void PrintSettings::reset()

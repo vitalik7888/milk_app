@@ -46,17 +46,12 @@ static const char *C_DELIV_RES_FONT = "delivResFont";
 static const char *C_DELIV_RES_COLOR = "delivResColor";
 static const char *C_ALL_RES_FONT = "allResFont";
 static const char *C_ALL_RES_COLOR = "allResColor";
+}
 
 using SC = SettingsConstants;
 using SCC = SettingsConstants::Column;
 using SCM = SettingsConstants::Main;
 using COLTYPE = SC::SettingsColumnType;
-
-static inline QString qtr(const char *value)
-{
-    return QObject::tr(value);
-}
-}
 
 
 Settings::Settings(QObject *parent):
@@ -73,32 +68,7 @@ Settings::Settings(const QString &fileName, QObject *parent):
     m_main = new MainSettings(this);
 
     m_print = new PrintSettings(this);
-    print()->appendSettingsColumn(new SettingsColumn(qtr("№ п/п"), COLTYPE::SerialNumber, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Ф. И. О."), COLTYPE::String, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Физ. вес"), COLTYPE::Double, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("% жир"), COLTYPE::Double, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Белок"), COLTYPE::Double, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Жироед."), COLTYPE::Double, SCC::DEF_PREC, false, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Зачет. вес"), COLTYPE::Double, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Оплата(без премии)"), COLTYPE::Double, SCC::DEF_PREC, false, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Премия"), COLTYPE::Double, SCC::DEF_PREC, false, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Сумма"), COLTYPE::Double, SCC::DEF_PREC, true, print()));
-    print()->appendSettingsColumn(new SettingsColumn(qtr("Подпись"), COLTYPE::String, SCC::DEF_PREC, true, print()));
-
-
     m_calc = new CalcSettings(this);
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Ф. И. О."), COLTYPE::String, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Молокопункты"), COLTYPE::String, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Дата сдачи"), COLTYPE::Date, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Цена за литр"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Литры"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Жиры"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Белок"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Жироед."), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Зачет. вес"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Оплата(без премии)"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Премия"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
-    calc()->appendSettingsColumn(new SettingsColumn(qtr("Сумма"), COLTYPE::Double, SCC::DEF_PREC, true, calc()));
 }
 
 Settings::~Settings()
@@ -241,14 +211,14 @@ void Settings::readPrintSettings()
     const auto size = m_settings->beginReadArray(COL_ARRAY);
 
     for (int i = 0; i < size; ++i) {
-            m_settings->setArrayIndex(i);
-            print()->appendSettingsColumn(
-                        new SettingsColumn(
-                            value(COL_DISPLAY).toString(),
-                            value(COL_TYPE).toInt(),
-                            value(COL_PREC).toInt(),
-                            value(COL_IS_SHOW).toBool(),
-                            print()));
+        m_settings->setArrayIndex(i);
+        print()->appendSettingsColumn(
+                    new SettingsColumn(
+                        value(COL_DISPLAY).toString(),
+                        value(COL_TYPE).toInt(),
+                        value(COL_PREC).toInt(),
+                        value(COL_IS_SHOW).toBool(),
+                        print()));
     }
     m_settings->endArray();
 
