@@ -86,6 +86,15 @@ void Test_Deliverer::testEmptyConstructor()
     compareDefault(&dd);
 }
 
+void Test_Deliverer::testCopyConstructor()
+{
+    auto locality = new Locality({1, "n", "d"}, this);
+    Deliverer dd{1, "name", 164, "address", "123", locality};
+    Deliverer d(dd);
+    compare(&d, dd.id(), dd.name(), dd.locality(),
+            dd.inn(), dd.address(), dd.phoneNumber());
+}
+
 void Test_Deliverer::testConstructor()
 {
     auto locality = new Locality({1, "n", "d"}, this);
