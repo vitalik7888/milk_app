@@ -17,6 +17,7 @@
 #include "types/Test_MilkReception.h"
 // calc
 #include "calc/Test_CalcUtils.h"
+#include "calc/Test_CalculatedItem.h"
 
 
 int main(int argc, char *argv[])
@@ -41,7 +42,8 @@ int main(int argc, char *argv[])
         new Test_MilkPoint(&app),
         new Test_MilkReception(&app),
         // calc
-        new Test_CalcUtils(&app)
+        new Test_CalcUtils(&app),
+        new Test_CalculatedItem(&app)
     };
 
     int status = 0;
