@@ -13,6 +13,7 @@ public:
     explicit Test_Settings(QObject *parent = nullptr);
 
 private slots:
+    void initTestCase();
     void testEmptyConstructor();
     void testReadWriteDefaultSettings();
     void testReadWriteSettings();

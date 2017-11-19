@@ -14,6 +14,11 @@ using SC = SettingsConstants;
 
 Test_Settings::Test_Settings(QObject *parent) : QObject(parent)
 {
+
+}
+
+void Test_Settings::initTestCase()
+{
     const QString fileName = "test_settings";
     QFile::remove(fileName);
     m_settings = new Settings(fileName, this);
