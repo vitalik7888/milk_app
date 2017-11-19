@@ -1,6 +1,7 @@
 #ifndef PRINTSETTINGS_H
 #define PRINTSETTINGS_H
 
+#include "SettingsConstants.h"
 // Qt
 #include <QVector>
 #include <QQmlListProperty>
@@ -50,7 +51,10 @@ public:
     QColor tableResultColor() const { return m_tableResultColor; }
     QQmlListProperty<SettingsColumn> columns();
 
+    SettingsConstants::SettingsColumns getColumns() const;
     void appendSettingsColumn(SettingsColumn *column);
+    void appendSettingsColumns(const SettingsConstants::SettingsColumns &columns);
+    void setSettingsColumns(const SettingsConstants::SettingsColumns &columns);
     int settingsColumnsCount() const;
     SettingsColumn *settingColumn(int position) const;
     void clearSettingsColumns();

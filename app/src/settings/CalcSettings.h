@@ -1,6 +1,7 @@
 #ifndef CALCSETTINGS_H
 #define CALCSETTINGS_H
 
+#include "SettingsConstants.h"
 // Qt
 #include <QVector>
 #include <QQmlListProperty>
@@ -33,7 +34,10 @@ public:
     QString dateFormat() const { return m_dateFormat; }
     QQmlListProperty<SettingsColumn> columns();
 
+    SettingsConstants::SettingsColumns getColumns() const;
     void appendSettingsColumn(SettingsColumn *column);
+    void appendSettingsColumns(const SettingsConstants::SettingsColumns &columns);
+    void setSettingsColumns(const SettingsConstants::SettingsColumns &columns);
     int settingsColumnsCount() const;
     SettingsColumn *settingColumn(int position) const;
     void clearSettingsColumns();
@@ -65,7 +69,7 @@ private:
     QFont m_allResultFont;
     QColor m_allResultColor;
     QString m_dateFormat;
-    QVector<SettingsColumn *> m_columns;
+    SettingsConstants::SettingsColumns m_columns;
 
     static void appendSettingsColumn(QQmlListProperty<SettingsColumn> *list, SettingsColumn *column);
     static int settingsColumnsCount(QQmlListProperty<SettingsColumn> *list);

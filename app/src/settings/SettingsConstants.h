@@ -5,6 +5,10 @@
 #include <QFont>
 #include <QString>
 
+
+class SettingsColumn;
+
+
 class SettingsConstants
 {
 public:
@@ -17,15 +21,20 @@ public:
         Date
     };
 
-    static const QString DEF_LAST_CHOOSEN_DB;
-    static const float DEF_PRICE_LITER;
-    static const QString DEF_FIRM_NAME;
-    static const QString DEF_MILK_INSPECTOR;
-    static const QString DEF_MILK_INSPECTOR2;
-    static const bool DEF_IS_FETCH_TABLE_ON_REFRESH;
+    using SettingsColumns = QVector<SettingsColumn *>;
+
+    class Main {
+    public:
+        static const QString DEF_LAST_CHOOSEN_DB;
+        static const float DEF_PRICE_LITER;
+        static const QString DEF_FIRM_NAME;
+        static const QString DEF_MILK_INSPECTOR;
+        static const QString DEF_MILK_INSPECTOR2;
+        static const bool DEF_IS_FETCH_TABLE_ON_REFRESH;
+    };
 
     class Column {
-      public:
+    public:
         static const QString DEF_DISPLAY;
         static const int DEF_TYPE;
         static const int DEF_PREC;
@@ -44,7 +53,7 @@ public:
 
 
     class Print {
-      public:
+    public:
         static const QFont DEF_TEXT_FONT;
         static const QFont DEF_CAPTION_TEXT_FONT;
         static const QColor DEF_CAPTION_COLOR;

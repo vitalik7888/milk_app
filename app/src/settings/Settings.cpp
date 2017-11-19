@@ -49,6 +49,7 @@ static const char *C_ALL_RES_COLOR = "allResColor";
 
 using SC = SettingsConstants;
 using SCC = SettingsConstants::Column;
+using SCM = SettingsConstants::Main;
 using COLTYPE = SC::SettingsColumnType;
 
 static inline QString qtr(const char *value)
@@ -181,12 +182,12 @@ void Settings::readMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    main()->setLastChoosenDb(value(LAST_CHOOSEN_DB, SC::DEF_LAST_CHOOSEN_DB).toString());
-    main()->setPriceLiter(value(PRICE, SC::DEF_PRICE_LITER).toFloat());
-    main()->setFirmName(value(FIRM_NAME, SC::DEF_FIRM_NAME).toString());
-    main()->setMilkInspector(value(MILK_INSPECTOR, SC::DEF_MILK_INSPECTOR).toString());
-    main()->setMilkInspector2(value(MILK_INSPECTOR_2, SC::DEF_MILK_INSPECTOR2).toString());
-    main()->setIsFetchTablesOnRefresh(value(FETCH_MORE, SC::DEF_IS_FETCH_TABLE_ON_REFRESH).toBool());
+    main()->setLastChoosenDb(value(LAST_CHOOSEN_DB, SCM::DEF_LAST_CHOOSEN_DB).toString());
+    main()->setPriceLiter(value(PRICE, SCM::DEF_PRICE_LITER).toFloat());
+    main()->setFirmName(value(FIRM_NAME, SCM::DEF_FIRM_NAME).toString());
+    main()->setMilkInspector(value(MILK_INSPECTOR, SCM::DEF_MILK_INSPECTOR).toString());
+    main()->setMilkInspector2(value(MILK_INSPECTOR_2, SCM::DEF_MILK_INSPECTOR2).toString());
+    main()->setIsFetchTablesOnRefresh(value(FETCH_MORE, SCM::DEF_IS_FETCH_TABLE_ON_REFRESH).toBool());
 
     m_settings->endGroup();
 }

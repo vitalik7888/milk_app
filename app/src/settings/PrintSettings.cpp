@@ -1,7 +1,6 @@
 #include "PrintSettings.h"
 
 #include "SettingsColumn.h"
-#include "SettingsConstants.h"
 
 using SC = SettingsConstants;
 using SCP = SC::Print;
@@ -170,6 +169,16 @@ void PrintSettings::appendSettingsColumn(SettingsColumn *column)
     m_columns.append(column);
 }
 
+void PrintSettings::appendSettingsColumns(const SettingsConstants::SettingsColumns &columns)
+{
+    m_columns.append(columns);
+}
+
+void PrintSettings::setSettingsColumns(const SettingsConstants::SettingsColumns &columns)
+{
+    m_columns = columns;
+}
+
 int PrintSettings::settingsColumnsCount() const
 {
     return m_columns.size();
@@ -192,6 +201,11 @@ QQmlListProperty<SettingsColumn> PrintSettings::columns()
                                             &PrintSettings::settingsColumnsCount,
                                             &PrintSettings::settingColumn,
                                             &PrintSettings::clearSettingsColumns);
+}
+
+SettingsConstants::SettingsColumns PrintSettings::getColumns() const
+{
+    return m_columns;
 }
 
 void PrintSettings::appendSettingsColumn(QQmlListProperty<SettingsColumn> *list, SettingsColumn *column)

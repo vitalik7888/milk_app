@@ -1,7 +1,6 @@
 #include "CalcSettings.h"
 
 #include "SettingsColumn.h"
-#include "SettingsConstants.h"
 
 using SC = SettingsConstants;
 using SCC = SC::Calc;
@@ -88,6 +87,16 @@ void CalcSettings::appendSettingsColumn(SettingsColumn *column)
     m_columns.append(column);
 }
 
+void CalcSettings::appendSettingsColumns(const SettingsConstants::SettingsColumns &columns)
+{
+    m_columns.append(columns);
+}
+
+void CalcSettings::setSettingsColumns(const SettingsConstants::SettingsColumns &columns)
+{
+    m_columns = columns;
+}
+
 int CalcSettings::settingsColumnsCount() const
 {
     return m_columns.size();
@@ -110,6 +119,11 @@ QQmlListProperty<SettingsColumn> CalcSettings::columns()
                                             &CalcSettings::settingsColumnsCount,
                                             &CalcSettings::settingColumn,
                                             &CalcSettings::clearSettingsColumns);
+}
+
+QVector<SettingsColumn *> CalcSettings::getColumns() const
+{
+    return m_columns;
 }
 
 void CalcSettings::appendSettingsColumn(QQmlListProperty<SettingsColumn> *list, SettingsColumn *column)

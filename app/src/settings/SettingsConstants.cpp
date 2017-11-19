@@ -1,11 +1,11 @@
 #include "SettingsConstants.h"
 
-const QString SettingsConstants::DEF_LAST_CHOOSEN_DB = QString();
-const float SettingsConstants::DEF_PRICE_LITER = 0.0f;
-const QString SettingsConstants::DEF_FIRM_NAME = QString();
-const QString SettingsConstants::DEF_MILK_INSPECTOR = QString();
-const QString SettingsConstants::DEF_MILK_INSPECTOR2 = QString();
-const bool SettingsConstants::DEF_IS_FETCH_TABLE_ON_REFRESH = false;
+const QString SettingsConstants::Main::DEF_LAST_CHOOSEN_DB = QString();
+const float SettingsConstants::Main::DEF_PRICE_LITER = 0.0f;
+const QString SettingsConstants::Main::DEF_FIRM_NAME = QString();
+const QString SettingsConstants::Main::DEF_MILK_INSPECTOR = QString();
+const QString SettingsConstants::Main::DEF_MILK_INSPECTOR2 = QString();
+const bool SettingsConstants::Main::DEF_IS_FETCH_TABLE_ON_REFRESH = false;
 
 const QString SettingsConstants::Column::DEF_DISPLAY = QString();
 const int SettingsConstants::Column::DEF_TYPE = -1;

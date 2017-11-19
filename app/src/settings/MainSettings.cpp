@@ -20,12 +20,12 @@ MainSettings::MainSettings(const QString &lastChoosenDb, const float priceLiter,
 }
 
 MainSettings::MainSettings(QObject *parent):
-    MainSettings(SC::DEF_LAST_CHOOSEN_DB,
-                 SC::DEF_PRICE_LITER,
-                 SC::DEF_FIRM_NAME,
-                 SC::DEF_MILK_INSPECTOR,
-                 SC::DEF_MILK_INSPECTOR2,
-                 SC::DEF_IS_FETCH_TABLE_ON_REFRESH,
+    MainSettings(SC::Main::DEF_LAST_CHOOSEN_DB,
+                 SC::Main::DEF_PRICE_LITER,
+                 SC::Main::DEF_FIRM_NAME,
+                 SC::Main::DEF_MILK_INSPECTOR,
+                 SC::Main::DEF_MILK_INSPECTOR2,
+                 SC::Main::DEF_IS_FETCH_TABLE_ON_REFRESH,
                  parent)
 {
 
@@ -102,30 +102,30 @@ void MainSettings::reset()
 
 void MainSettings::resetLastChoosenDb()
 {
-    m_lastChoosenDb = SC::DEF_LAST_CHOOSEN_DB;
+    m_lastChoosenDb = SC::Main::DEF_LAST_CHOOSEN_DB;
 }
 
 void MainSettings::resetPriceLiter()
 {
-    m_priceLiter = SC::DEF_PRICE_LITER;
+    m_priceLiter = SC::Main::DEF_PRICE_LITER;
 }
 
 void MainSettings::resetFirmName()
 {
-    m_firmName = SC::DEF_FIRM_NAME;
+    m_firmName = SC::Main::DEF_FIRM_NAME;
 }
 
 void MainSettings::resetMilkInspector()
 {
-    m_milkInspector = SC::DEF_MILK_INSPECTOR;
+    m_milkInspector = SC::Main::DEF_MILK_INSPECTOR;
 }
 
 void MainSettings::resetMilkInspector2()
 {
-    m_milkInspector2 = SC::DEF_MILK_INSPECTOR2;
+    m_milkInspector2 = SC::Main::DEF_MILK_INSPECTOR2;
 }
 
 void MainSettings::resetFetchTablesOnRefresh()
 {
-    m_isFetchTablesOnRefresh = SC::DEF_IS_FETCH_TABLE_ON_REFRESH;
+    m_isFetchTablesOnRefresh = SC::Main::DEF_IS_FETCH_TABLE_ON_REFRESH;
 }
