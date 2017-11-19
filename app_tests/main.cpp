@@ -19,6 +19,33 @@
 #include "calc/Test_CalcUtils.h"
 #include "calc/Test_CalculatedItem.h"
 
+using Tests = QList<QObject *>;
+
+void addSettingsTests(Tests &tests, QObject *parent) {
+    tests.append({
+                     new Test_MainSettings(parent),
+                     new Test_SettingsColumn(parent),
+                     new Test_CalcSettings(parent),
+                     new Test_PrintSettings(parent),
+                     new Test_Settings(parent)
+                 });
+}
+
+void addTypesTests(Tests &tests, QObject *parent) {
+    tests.append({
+                     new Test_Deliverer(parent),
+                     new Test_Locality(parent),
+                     new Test_MilkPoint(parent),
+                     new Test_MilkReception(parent)
+                 });
+}
+
+void addCalcTests(Tests &tests, QObject *parent) {
+    tests.append({
+                     new Test_CalcUtils(parent),
+                     new Test_CalculatedItem(parent)
+                 });
+}
 
 int main(int argc, char *argv[])
 {
@@ -29,22 +56,10 @@ int main(int argc, char *argv[])
     qRegisterMetaType<Deliverer *>();
     qRegisterMetaType<MilkPoint *>();
 
-    QList<QObject *> tests = {
-        // settings
-        new Test_MainSettings(&app),
-        new Test_SettingsColumn(&app),
-        new Test_CalcSettings(&app),
-        new Test_PrintSettings(&app),
-        new Test_Settings(&app),
-        // types
-        new Test_Deliverer(&app),
-        new Test_Locality(&app),
-        new Test_MilkPoint(&app),
-        new Test_MilkReception(&app),
-        // calc
-        new Test_CalcUtils(&app),
-        new Test_CalculatedItem(&app)
-    };
+    QList<QObject *> tests;
+    addSettingsTests(tests, &app);
+    addTypesTests(tests, &app);
+    addCalcTests(tests, &app);
 
     int status = 0;
     for (auto test : tests)
