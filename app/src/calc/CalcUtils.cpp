@@ -25,6 +25,9 @@ double CalcUtils::liters(const double fatUnits, const double fat) {
 
 double CalcUtils::fatUnits(const double liters, const double fat)
 {
+    if (liters <= .0 || fat <= .0)
+        return .0;
+
     return liters * fat;
 }
 
@@ -46,10 +49,14 @@ double CalcUtils::premiumForFat(const double fat, const double paymentWithOutPre
 
 double CalcUtils::paymentWithOutPremium(const double liters, const double price)
 {
+    if (liters <= .0 || price <= .0)
+        return .0;
     return liters * price;
 }
 
 double CalcUtils::sum(const double rankWeight, const double price)
 {
+    if (rankWeight <= .0 || price <= .0)
+        return .0;
     return rankWeight * price;
 }
