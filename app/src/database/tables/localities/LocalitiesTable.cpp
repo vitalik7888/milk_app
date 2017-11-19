@@ -1,7 +1,7 @@
 #include "LocalitiesTable.h"
 
 #include "localitiesdao.h"
-#include "Utils.h"
+#include "DbUtils.h"
 // Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
@@ -16,10 +16,10 @@ using DCL = DC::Localities;
 LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
     Dao(table) {}
 
-std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) const {
+std::experimental::optional<LocalityData> LocalitiesDao::get(const DbConstants::milk_id id) const {
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getSelectStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION })).arg(DCL::FN_ID));
+                  .arg(DbUtils::getSelectStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION })).arg(DCL::FN_ID));
     query.addBindValue(id);
 
     if (query.exec() && query.first())
@@ -36,7 +36,7 @@ std::experimental::optional<LocalityData> LocalitiesDao::get(const milk_id id) c
 
 bool LocalitiesDao::insert(const LocalityData &data) const{
     QSqlQuery query(m_table->database());
-    query.prepare(Utils::Main::getPrepInsertStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }));
+    query.prepare(DbUtils::getPrepInsertStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }));
     query.addBindValue(data.name());
     query.addBindValue(data.description());
 
@@ -51,7 +51,7 @@ bool LocalitiesDao::insert(const LocalityData &data) const{
 bool LocalitiesDao::update(const LocalityData &data) const{
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }))
+                  .arg(DbUtils::getPrepUpdateStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }))
                   .arg(DCL::FN_ID));
     query.addBindValue(data.name());
     query.addBindValue(data.description());
@@ -85,7 +85,7 @@ QString LocalitiesTable::tableName() const
     return DCL::TABLE_NAME;
 }
 
-std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const milk_id localityId) const
+std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const DbConstants::milk_id localityId) const
 {
     const auto data = dao()->get(localityId);
     if (!data)
@@ -126,12 +126,12 @@ bool LocalitiesTable::update(Locality *locality) const
     return dao()->update(locality->data());
 }
 
-bool LocalitiesTable::setName(const milk_id localityId, const QString &localityName) const
+bool LocalitiesTable::setName(const DbConstants::milk_id localityId, const QString &localityName) const
 {
     return m_dao->updateValue(DCL::FN_ID, localityId, localityName);
 }
 
-bool LocalitiesTable::setDescription(const milk_id localityId, const QString &description) const
+bool LocalitiesTable::setDescription(const DbConstants::milk_id localityId, const QString &description) const
 {
     return m_dao->updateValue(DCL::FN_DESCRIPTION, localityId, description);
 }

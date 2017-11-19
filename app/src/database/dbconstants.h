@@ -8,11 +8,12 @@
 #define DB_BEGIN_NAMESPACE namespace DB_NAMESPACE {
 #define DB_END_NAMESPACE }
 
-using milk_id = qlonglong;
-using milk_inn = qlonglong;
 
 class DbConstants {
 public:
+    using milk_id = qlonglong;
+    using milk_inn = qlonglong;
+
     static QString dropTableIfExistsSql(const QString &tableName);
     static QString dropIndexIfExistsSql(const QString &indexName);
 

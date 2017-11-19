@@ -98,7 +98,7 @@ void DeliverersSortFilterProxyModel::delivererDisconnect()
     disconnect(m_deliverer->locality(), &Locality::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const milk_id id) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const DbConstants::milk_id id) const
 {
     return m_deliverer->id() <= 0 ? true : m_deliverer->id() == id;
 }
@@ -108,7 +108,7 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByName(const QString &name
     return m_deliverer->name().isEmpty() ? true : name.contains(m_deliverer->name());
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowByInn(const milk_id inn) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByInn(const DbConstants::milk_id inn) const
 {
     return m_deliverer->inn() == -1 ? true : m_deliverer->inn() == inn;
 }
@@ -123,7 +123,7 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByPhoneNumber(const QStrin
     return m_deliverer->phoneNumber().isEmpty() ? true : phoneNumber.contains(m_deliverer->phoneNumber());
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const milk_id localityId) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const DbConstants::milk_id localityId) const
 {
     if (!m_deliverer->locality())
         return true;

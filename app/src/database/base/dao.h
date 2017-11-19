@@ -13,7 +13,7 @@ public:
     Dao(Table *table);
     virtual ~Dao();
 
-    bool updateValue(const QString &columnName, const milk_id id, const QVariant &value) const;
+    bool updateValue(const QString &columnName, const DbConstants::milk_id id, const QVariant &value) const;
 
 protected:
     Table *m_table;

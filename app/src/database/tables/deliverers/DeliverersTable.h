@@ -29,16 +29,16 @@ public:
 
     LocalitiesTable *getLocalities() const;
 
-    std::experimental::optional<DelivererData> getDelivererData(const milk_id delivererId) const;
+    std::experimental::optional<DelivererData> getDelivererData(const DbConstants::milk_id delivererId) const;
     Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
     Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
     Q_INVOKABLE bool append(Deliverer *deliverer);
     Q_INVOKABLE bool update(Deliverer *deliverer) const;
-    Q_INVOKABLE bool setName(const milk_id delivererId, const QString &tableName) const;
-    Q_INVOKABLE bool setLocalityId(const milk_id delivererId, const milk_id localityId) const;
-    Q_INVOKABLE bool setInn(const milk_id delivererId, const milk_inn inn) const;
-    Q_INVOKABLE bool setAddress(const milk_id delivererId, const QString &address) const;
-    Q_INVOKABLE bool setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const;
+    Q_INVOKABLE bool setName(const DbConstants::milk_id delivererId, const QString &tableName) const;
+    Q_INVOKABLE bool setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const;
+    Q_INVOKABLE bool setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const;
+    Q_INVOKABLE bool setAddress(const DbConstants::milk_id delivererId, const QString &address) const;
+    Q_INVOKABLE bool setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const;
 
 private:
     LocalitiesTable *m_localities;

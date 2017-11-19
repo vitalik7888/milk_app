@@ -2,7 +2,7 @@
 
 #include "deliverersdao.h"
 #include "tables/localities/LocalitiesTable.h"
-#include "Utils.h"
+#include "DbUtils.h"
 // Qt
 #include <QSqlQuery>
 #include <QSqlError>
@@ -20,11 +20,11 @@ DeliverersDao::DeliverersDao(DeliverersTable *table):
 
 }
 
-std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const milk_id delivererId) const
+std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const DbConstants::milk_id delivererId) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getSelectStr(DCD::TABLE_NAME,
+                  .arg(DbUtils::getSelectStr(DCD::TABLE_NAME,
     { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER })).arg(DCD::FN_ID));
     query.addBindValue(delivererId);
 
@@ -47,7 +47,7 @@ std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const mil
 bool DeliverersDao::insert(const DelivererData &deliverer) const
 {
     QSqlQuery query;
-    query.prepare(Utils::Main::getPrepInsertStr(DCD::TABLE_NAME,
+    query.prepare(DbUtils::getPrepInsertStr(DCD::TABLE_NAME,
     { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER }));
     query.addBindValue(deliverer.name());
     query.addBindValue(deliverer.localityId());
@@ -67,7 +67,7 @@ bool DeliverersDao::update(const DelivererData &deliverer) const
 {
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getPrepUpdateStr(DCD::TABLE_NAME,
+                  .arg(DbUtils::getPrepUpdateStr(DCD::TABLE_NAME,
     { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER })).arg(DCD::FN_ID));
 
     query.addBindValue(deliverer.name());
@@ -106,7 +106,7 @@ DeliverersTable::~DeliverersTable()
 
 }
 
-std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const milk_id delivererId) const
+std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const DbConstants::milk_id delivererId) const
 {
     return dao()->getDeliverer(delivererId);
 }
@@ -150,27 +150,27 @@ bool DeliverersTable::update(Deliverer *deliverer) const
     return dao()->update(deliverer->data());
 }
 
-bool DeliverersTable::setName(const milk_id delivererId, const QString &_name) const
+bool DeliverersTable::setName(const DbConstants::milk_id delivererId, const QString &_name) const
 {
     return m_dao->updateValue(DCD::FN_NAME, delivererId, _name);
 }
 
-bool DeliverersTable::setLocalityId(const milk_id delivererId, const milk_id localityId) const
+bool DeliverersTable::setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const
 {
     return m_dao->updateValue(DCD::FN_LOCALITY_ID, delivererId, localityId);
 }
 
-bool DeliverersTable::setInn(const milk_id delivererId, const milk_inn inn) const
+bool DeliverersTable::setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const
 {
     return m_dao->updateValue(DCD::FN_INN, delivererId, inn);
 }
 
-bool DeliverersTable::setAddress(const milk_id delivererId, const QString &address) const
+bool DeliverersTable::setAddress(const DbConstants::milk_id delivererId, const QString &address) const
 {
     return m_dao->updateValue(DCD::FN_ADDRESS, delivererId, address);
 }
 
-bool DeliverersTable::setPhoneNumber(const milk_id delivererId, const QString &phoneNumber) const
+bool DeliverersTable::setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const
 {
     return m_dao->updateValue(DCD::FN_PHONE_NUMBER, delivererId, phoneNumber);
 }

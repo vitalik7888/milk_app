@@ -14,7 +14,7 @@ class MilkPointDao: public Dao {
 public:
     MilkPointDao(MilkPointsTable *table);
 
-    std::experimental::optional<MilkPointData> get(const milk_id id) const;
+    std::experimental::optional<MilkPointData> get(const DbConstants::milk_id id) const;
     bool insert(const MilkPointData &data) const;
     bool update(const MilkPointData &data) const;
 };

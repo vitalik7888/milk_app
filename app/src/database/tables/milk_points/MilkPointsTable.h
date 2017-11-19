@@ -25,13 +25,13 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    std::experimental::optional<MilkPointData> getMilkPointData(const milk_id milkPointId) const;
+    std::experimental::optional<MilkPointData> getMilkPointData(const DbConstants::milk_id milkPointId) const;
     Q_INVOKABLE MilkPoint *getMilkPoint(const qlonglong milkPointId);
     Q_INVOKABLE bool insert(int index, MilkPoint *milkPoint);
     Q_INVOKABLE bool append(MilkPoint *milkPoint);
     Q_INVOKABLE bool update(MilkPoint *milkPoint) const;
-    Q_INVOKABLE bool setName(const milk_id milkPointId, const QString &milkPointName) const;
-    Q_INVOKABLE bool setDescription(const milk_id milkPointId, const QString &description) const;
+    Q_INVOKABLE bool setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const;
+    Q_INVOKABLE bool setDescription(const DbConstants::milk_id milkPointId, const QString &description) const;
 
     LocalitiesTable *localities() const;
 

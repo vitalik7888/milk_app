@@ -14,7 +14,7 @@ class LocalitiesDao: public Dao {
 public:
     LocalitiesDao(LocalitiesTable *table);
 
-    std::experimental::optional<LocalityData> get(const milk_id id) const;
+    std::experimental::optional<LocalityData> get(const DbConstants::milk_id id) const;
     bool insert(const LocalityData &data) const;
     bool update(const LocalityData &data) const;
 };

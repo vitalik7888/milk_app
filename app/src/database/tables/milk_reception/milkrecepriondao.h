@@ -20,7 +20,7 @@ class MilkReceptionDao: public Dao {
 public:
     MilkReceptionDao(MilkReceptionTable *table);
 
-    std::experimental::optional<MilkReceptionData> get(const milk_id id) const;
+    std::experimental::optional<MilkReceptionData> get(const DbConstants::milk_id id) const;
     QList<MilkReceptionData> get(const QString &where = QString()) const;
     bool insert(const MilkReceptionData &data) const;
     bool update(const MilkReceptionData &data) const;

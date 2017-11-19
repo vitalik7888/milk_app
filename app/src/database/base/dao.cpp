@@ -19,7 +19,7 @@ Dao::~Dao()
 
 }
 
-bool Dao::updateValue(const QString &columnName, const milk_id id, const QVariant &value) const
+bool Dao::updateValue(const QString &columnName, const DbConstants::milk_id id, const QVariant &value) const
 {
     QSqlQuery query(m_table->database());
     query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 = ?")

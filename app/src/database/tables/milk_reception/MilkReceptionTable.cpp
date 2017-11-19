@@ -4,7 +4,7 @@
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "SettingsConstants.h"
-#include "Utils.h"
+#include "DbUtils.h"
 // Qt
 #include <QSqlRecord>
 #include <QSqlQuery>
@@ -23,11 +23,11 @@ using DCMP = DC::MilkPoints;
 
 MilkReceptionDao::MilkReceptionDao(MilkReceptionTable *table) : Dao(table) { }
 
-std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const milk_id id) const
+std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const DbConstants::milk_id id) const
 {
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(Utils::Main::getSelectStr(DCMR::TABLE_NAME,
+                  .arg(DbUtils::getSelectStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
                   .arg(DCMR::FN_ID));
     query.addBindValue(id);
@@ -53,7 +53,7 @@ QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
 {
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1%2")
-                  .arg(Utils::Main::getSelectStr(DCMR::TABLE_NAME,
+                  .arg(DbUtils::getSelectStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID, DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
                   .arg(where.isEmpty() ? QString() : " WHERE " + where));
 
@@ -79,7 +79,7 @@ QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
 bool MilkReceptionDao::insert(const MilkReceptionData &data) const
 {
     QSqlQuery query(m_table->database());
-    query.prepare(Utils::Main::getPrepInsertStr(DCMR::TABLE_NAME,
+    query.prepare(DbUtils::getPrepInsertStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }));
     query.addBindValue(data.delivererId());
     query.addBindValue(data.milkPointId());
@@ -99,7 +99,7 @@ bool MilkReceptionDao::insert(const MilkReceptionData &data) const
 bool MilkReceptionDao::update(const MilkReceptionData &data) const
 {
     QSqlQuery query(m_table->database());
-    query.prepare(QString("%1 WHERE %2 = ?").arg(Utils::Main::getPrepUpdateStr(DCMR::TABLE_NAME,
+    query.prepare(QString("%1 WHERE %2 = ?").arg(DbUtils::getPrepUpdateStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
                   .arg(DCMR::FN_ID));
     query.addBindValue(data.milkPointId());
@@ -252,7 +252,7 @@ QString MilkReceptionTable::tableName() const
     return DCMR::TABLE_NAME;
 }
 
-std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const milk_id milkReceptionId) const
+std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const DbConstants::milk_id milkReceptionId) const
 {
     return dao()->get(milkReceptionId);
 }
@@ -303,32 +303,32 @@ bool MilkReceptionTable::update(MilkReception *milkReception) const
     return dao()->update(milkReception->data());
 }
 
-bool MilkReceptionTable::setIdDeliverer(const milk_id milkReceptionId, const milk_id delivererId) const
+bool MilkReceptionTable::setIdDeliverer(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id delivererId) const
 {
     return m_dao->updateValue(DCMR::FN_ID, milkReceptionId, delivererId);
 }
 
-bool MilkReceptionTable::setIdMilkPoint(const milk_id milkReceptionId, const milk_id milkPointId) const
+bool MilkReceptionTable::setIdMilkPoint(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id milkPointId) const
 {
     return m_dao->updateValue(DCMR::FN_MILK_POINT_ID, milkReceptionId, milkPointId);
 }
 
-bool MilkReceptionTable::setDeliveryDate(const milk_id milkReceptionId, const QDate &deliveryDate) const
+bool MilkReceptionTable::setDeliveryDate(const DbConstants::milk_id milkReceptionId, const QDate &deliveryDate) const
 {
     return m_dao->updateValue(DCMR::FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
 }
 
-bool MilkReceptionTable::setPriceLiter(const milk_id milkReceptionId, const double priceLiter) const
+bool MilkReceptionTable::setPriceLiter(const DbConstants::milk_id milkReceptionId, const double priceLiter) const
 {
     return m_dao->updateValue(DCMR::FN_PRICE_LITER, milkReceptionId, priceLiter);
 }
 
-bool MilkReceptionTable::setLiters(const milk_id milkReceptionId, const double liters) const
+bool MilkReceptionTable::setLiters(const DbConstants::milk_id milkReceptionId, const double liters) const
 {
     return m_dao->updateValue(DCMR::FN_LITERS, milkReceptionId, liters);
 }
 
-bool MilkReceptionTable::setFat(const milk_id milkReceptionId, const double fat) const
+bool MilkReceptionTable::setFat(const DbConstants::milk_id milkReceptionId, const double fat) const
 {
     return m_dao->updateValue(DCMR::FN_FAT, milkReceptionId, fat);
 }
@@ -360,7 +360,7 @@ QString MilkReceptionTable::primaryField() const
 
 QString MilkReceptionTable::selectAll() const
 {
-    const auto select = Utils::Main::getSelectStr(DCMR::TABLE_NAME,
+    const auto select = DbUtils::getSelectStr(DCMR::TABLE_NAME,
     {
                                                       getColName(DCMR::RMT_ID, true),
                                                       getColName(DCMR::RMT_ID_DELIVERER, true),

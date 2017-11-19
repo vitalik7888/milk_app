@@ -37,7 +37,7 @@ bool Table::isEmpty() const
     return (rowCount() == 0);
 }
 
-bool Table::remove(const milk_id id) const
+bool Table::remove(const DbConstants::milk_id id) const
 {
     QSqlQuery query;
     query.prepare(QString("DELETE FROM %1 WHERE %2 = ?").arg(tableName()).arg(primaryField()));

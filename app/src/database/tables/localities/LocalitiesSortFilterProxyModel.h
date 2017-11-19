@@ -41,7 +41,7 @@ private:
 
     LocalityData getLocalityFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const;
 
-    bool isFilterAcceptRowById(const milk_id id) const;
+    bool isFilterAcceptRowById(const DbConstants::milk_id id) const;
     bool isFilterAcceptRowByName(const QString &name) const;
     bool isFilterAcceptRowByDescription(const QString &description) const;
     bool isFilterAcceptRowByLocality(const LocalityData &data) const;

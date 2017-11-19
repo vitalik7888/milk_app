@@ -10,7 +10,8 @@ SOURCES += \
     $$PWD/tables/deliverers/DeliverersSortFilterProxyModel.cpp \
     $$PWD/tables/localities/LocalitiesSortFilterProxyModel.cpp \
     $$PWD/tables/milk_points/MilkPointsSortFilterProxyModel.cpp \
-    $$PWD/dbconstants.cpp
+    $$PWD/dbconstants.cpp \
+    $$PWD/DbUtils.cpp
 
 HEADERS  += \
     $$PWD/dbconstants.h \
@@ -27,4 +28,5 @@ HEADERS  += \
     $$PWD/tables/milk_reception/milkrecepriondao.h \
     $$PWD/tables/deliverers/DeliverersSortFilterProxyModel.h \
     $$PWD/tables/localities/LocalitiesSortFilterProxyModel.h \
-    $$PWD/tables/milk_points/MilkPointsSortFilterProxyModel.h
+    $$PWD/tables/milk_points/MilkPointsSortFilterProxyModel.h \
+    $$PWD/DbUtils.h

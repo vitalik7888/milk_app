@@ -42,8 +42,8 @@ private:
 
     MilkPointData getMilkPointFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const;
 
-    bool isFilterAcceptRowById(const milk_id id) const;
-    bool isFilterAcceptRowByLocalityId(const milk_id localityId) const;
+    bool isFilterAcceptRowById(const DbConstants::milk_id id) const;
+    bool isFilterAcceptRowByLocalityId(const DbConstants::milk_id localityId) const;
     bool isFilterAcceptRowByName(const QString &name) const;
     bool isFilterAcceptRowByDescription(const QString &description) const;
     bool isFilterAcceptRowByMilkPoint(const MilkPointData &data) const;

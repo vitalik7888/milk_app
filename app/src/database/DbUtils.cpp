@@ -1,15 +1,15 @@
-#include "Utils.h"
+#include "DbUtils.h"
 
-// Qt
-#include <QList>
+#include <QStringList>
 
 
-bool Utils::Main::isAutoIncrIdIsValid(const milk_id id)
+
+bool DbUtils::isAutoIncrIdIsValid(const DbConstants::milk_id id)
 {
     return id > 0;
 }
 
-QString Utils::Main::getSelectStr(const QString &tableName, const QStringList &columns)
+QString DbUtils::getSelectStr(const QString &tableName, const QStringList &columns)
 {
     if (columns.empty())
         return QString();
@@ -21,7 +21,7 @@ QString Utils::Main::getSelectStr(const QString &tableName, const QStringList &c
     return queryStr.replace(queryStr.length() - 2, 2, " FROM " + tableName);
 }
 
-QString Utils::Main::getPrepUpdateStr(const QString &tableName, const QStringList &columns)
+QString DbUtils::getPrepUpdateStr(const QString &tableName, const QStringList &columns)
 {
     if (columns.empty())
         return QString();
@@ -33,7 +33,7 @@ QString Utils::Main::getPrepUpdateStr(const QString &tableName, const QStringLis
     return queryStr.replace(queryStr.length() - 2, 2, " ");
 }
 
-QString Utils::Main::getPrepInsertStr(const QString &tableName, const QStringList &columns)
+QString DbUtils::getPrepInsertStr(const QString &tableName, const QStringList &columns)
 {
     if (columns.empty())
         return QString();

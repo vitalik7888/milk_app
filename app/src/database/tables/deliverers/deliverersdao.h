@@ -14,7 +14,7 @@ class DeliverersDao: public Dao {
 public:
     explicit DeliverersDao(DeliverersTable *table);
 
-    std::experimental::optional<DelivererData> getDeliverer(const milk_id delivererId) const;
+    std::experimental::optional<DelivererData> getDeliverer(const DbConstants::milk_id delivererId) const;
     bool insert(const DelivererData &deliverer) const;
     bool update(const DelivererData &deliverer) const;
 };

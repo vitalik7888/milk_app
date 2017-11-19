@@ -38,7 +38,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
-    Q_INVOKABLE bool remove(const milk_id id) const;
+    Q_INVOKABLE bool remove(const DbConstants::milk_id id) const;
     Q_INVOKABLE bool removeAll() const;
 
     Q_INVOKABLE virtual void refresh();
