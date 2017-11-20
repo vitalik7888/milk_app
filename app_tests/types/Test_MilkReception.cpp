@@ -3,12 +3,12 @@
 #include <milkreception.h>
 #include <locality.h>
 #include <milkpoint.h>
+#include <deliverer.h>
 #include "Test_Deliverer.h"
 #include "Test_MilkPoint.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>
-#include <deliverer.h>
 
 using TC = TypesConstants;
 using TCMR = TC::MilkReception;
@@ -17,26 +17,6 @@ using TCMR = TC::MilkReception;
 Test_MilkReception::Test_MilkReception(QObject *parent) : QObject(parent)
 {
 
-}
-
-void Test_MilkReception::compare(MilkReceptionData *mrd, const TC::milk_id id,
-                                 const TC::milk_id delivererId, const TC::milk_id milkPointId,
-                                 const QDate &deliveryDate, const double priceLiter,
-                                 const double liters, const double fat)
-{
-    QCOMPARE(mrd->id(), id);
-    QCOMPARE(mrd->delivererId(), delivererId);
-    QCOMPARE(mrd->milkPointId(), milkPointId);
-    QCOMPARE(mrd->deliveryDate(), deliveryDate);
-    QCOMPARE(mrd->priceLiter(), priceLiter);
-    QCOMPARE(mrd->liters(), liters);
-    QCOMPARE(mrd->fat(), fat);
-}
-
-void Test_MilkReception::compareDefault(MilkReceptionData *mrd)
-{
-    compare(mrd, TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID, TCMR::DEF_DELIVERY_DATE,
-            TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT);
 }
 
 void Test_MilkReception::compare(MilkReception *mr, const TC::milk_id id, const QDate deliveryDate,
@@ -67,46 +47,19 @@ void Test_MilkReception::compareDefault(MilkReception *mr)
             TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR);
 }
 
-void Test_MilkReception::testEmptyDataConstructor()
+void Test_MilkReception::compare(MilkReception *left, MilkReception *right)
 {
-    MilkReceptionData mrd;
-    compareDefault(&mrd);
+    compare(left, right->id(), right->deliveryDate(), right->priceLiter(), right->liters(),
+            right->fat(), right->deliverer(), right->milkPoint());
 }
 
-void Test_MilkReception::testDataConstructor()
-{
-    MilkReceptionData mrd(22, 2, 1, QDate(), 5.6, 112, 3.7);
-    compare(&mrd, 22, 2, 1, QDate(), 5.6, 112, 3.7);
-}
-
-void Test_MilkReception::testDataCopyConstructor()
-{
-    MilkReceptionData mrdToCopy(22, 2, 1, QDate(), 5.6, 112, 3.7);
-    MilkReceptionData mrd(mrdToCopy);
-    compare(&mrd, mrdToCopy.id(), mrdToCopy.delivererId(), mrdToCopy.milkPointId(),
-            mrdToCopy.deliveryDate(), mrdToCopy.priceLiter(), mrdToCopy.liters(), mrdToCopy.fat());
-}
-
-void Test_MilkReception::testDataMethods()
-{
-    MilkReceptionData mrd;
-    mrd.setId(22);
-    mrd.setDelivererId(2);
-    mrd.setMilkPointId(1);
-    mrd.setDeliveryDate(QDate());
-    mrd.setPriceLiter(5.6);
-    mrd.setLiters(112);
-    mrd.setFat(3.7);
-    compare(&mrd, 22, 2, 1, QDate(), 5.6, 112, 3.7);
-}
-
-void Test_MilkReception::testEmptyConstructor()
+void Test_MilkReception::emptyConstructor()
 {
     MilkReception mr;
     compareDefault(&mr);
 }
 
-void Test_MilkReception::testConstructor()
+void Test_MilkReception::constructor()
 {
     Deliverer d(1, "name", 23, "address", "234");
     MilkPoint mp(42, "n", "d");
@@ -116,7 +69,16 @@ void Test_MilkReception::testConstructor()
     compare(&mr, 22, QDate(), 5.6, 112, 3.7, &d, &mp);
 }
 
-void Test_MilkReception::testMethods()
+void Test_MilkReception::copyConstructor()
+{
+    MilkReception mrToCopy(22, QDate(), 5.6, 112, 3.7,
+                     new Deliverer(1, "name", 23, "address", "234"),
+                     new MilkPoint(42, "n", "d"));
+    MilkReception mr(mrToCopy);
+    compare(&mr, &mrToCopy);
+}
+
+void Test_MilkReception::methods()
 {
     Deliverer d(1, "name", 23, "address", "234");
     MilkPoint mp(42, "n", "d");
@@ -133,7 +95,7 @@ void Test_MilkReception::testMethods()
     compare(&mr, 22, QDate(), 5.6, 112, 3.7, &d, &mp);
 }
 
-void Test_MilkReception::testReset()
+void Test_MilkReception::reset()
 {
     Deliverer d(1, "name", 23, "address", "234");
     MilkPoint mp(42, "n", "d");
@@ -151,7 +113,16 @@ void Test_MilkReception::testReset()
     compareDefault(&mr);
 }
 
-void Test_MilkReception::testSignalId()
+void Test_MilkReception::storingInQVariant()
+{
+    Deliverer d(1, "name", 23, "address", "234");
+    MilkPoint mp(42, "n", "d");
+    MilkReception mr(22, QDate(), 5.6, 112, 3.7, &d, &mp);
+    auto milkReception = QVariant::fromValue(mr).value<MilkReception>();
+    compare(&milkReception, &mr);
+}
+
+void Test_MilkReception::signalIdChanged()
 {
     MilkReception mr;
     const TC::milk_id data = 15;
@@ -163,7 +134,7 @@ void Test_MilkReception::testSignalId()
     QCOMPARE(arguments.at(0).toLongLong(), data);
 }
 
-void Test_MilkReception::testSignalDeliveryDate()
+void Test_MilkReception::signalDeliveryDateChanged()
 {
     MilkReception mr;
     const QDate data(10, 10, 10);
@@ -175,7 +146,7 @@ void Test_MilkReception::testSignalDeliveryDate()
     QCOMPARE(arguments.at(0).toDate(), data);
 }
 
-void Test_MilkReception::testSignalPriceLiter()
+void Test_MilkReception::signalPriceLiterChanged()
 {
     MilkReception mr;
     const double data = TCMR::DEF_PRICE_LITER + 2.7;
@@ -187,7 +158,7 @@ void Test_MilkReception::testSignalPriceLiter()
     QCOMPARE(arguments.at(0).toDouble(), data);
 }
 
-void Test_MilkReception::testSignalLiters()
+void Test_MilkReception::signalLitersChanged()
 {
     MilkReception mr;
     const double data = TCMR::DEF_LITERS + 3.6;
@@ -199,7 +170,7 @@ void Test_MilkReception::testSignalLiters()
     QCOMPARE(arguments.at(0).toDouble(), data);
 }
 
-void Test_MilkReception::testSignalFat()
+void Test_MilkReception::signalFatChanged()
 {
     MilkReception mr;
     const double data = TCMR::DEF_FAT + 1.6;
@@ -211,7 +182,7 @@ void Test_MilkReception::testSignalFat()
     QCOMPARE(arguments.at(0).toDouble(), data);
 }
 
-void Test_MilkReception::testSignalDeliverer()
+void Test_MilkReception::signalDelivererChanged()
 {
     Deliverer data(1, "name", 23, "address", "234");
 
@@ -225,7 +196,7 @@ void Test_MilkReception::testSignalDeliverer()
     QCOMPARE(deliverer, &data);
 }
 
-void Test_MilkReception::testSignalMilkPoint()
+void Test_MilkReception::signalMilkPointChanged()
 {
     MilkPoint data(42, "n", "d");
 

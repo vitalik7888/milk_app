@@ -17,32 +17,26 @@ class Test_MilkReception : public QObject
 public:
     explicit Test_MilkReception(QObject *parent = nullptr);
 
-    static void compare(MilkReceptionData *mrd, const TypesConstants::milk_id id,
-                        const TypesConstants::milk_id delivererId, const TypesConstants::milk_id milkPointId,
-                        const QDate &deliveryDate, const double priceLiter,
-                        const double liters, const double fat);
-    static void compareDefault(MilkReceptionData *mrd);
     static void compare(MilkReception *mr,const TypesConstants::milk_id id, const QDate deliveryDate,
                         const double priceLiter, const double liters, const double fat,
                         Deliverer *deliverer, MilkPoint *milkPoint);
     static void compareDefault(MilkReception *mr);
+    static void compare(MilkReception *left, MilkReception *right);
 
 private slots:
-    void testEmptyDataConstructor();
-    void testDataConstructor();
-    void testDataCopyConstructor();
-    void testDataMethods();
-    void testEmptyConstructor();
-    void testConstructor();
-    void testMethods();
-    void testReset();
-    void testSignalId();
-    void testSignalDeliveryDate();
-    void testSignalPriceLiter();
-    void testSignalLiters();
-    void testSignalFat();
-    void testSignalDeliverer();
-    void testSignalMilkPoint();
+    void emptyConstructor();
+    void constructor();
+    void copyConstructor();
+    void methods();
+    void reset();
+    void storingInQVariant();
+    void signalIdChanged();
+    void signalDeliveryDateChanged();
+    void signalPriceLiterChanged();
+    void signalLitersChanged();
+    void signalFatChanged();
+    void signalDelivererChanged();
+    void signalMilkPointChanged();
 };
 
 #endif // TEST_MILKRECEPTION_H

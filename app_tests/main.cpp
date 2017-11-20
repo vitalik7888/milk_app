@@ -16,6 +16,7 @@
 #include "types/Test_LocalityData.h"
 #include "types/Test_Locality.h"
 #include "types/Test_MilkPoint.h"
+#include "types/Test_MilkReceptionData.h"
 #include "types/Test_MilkReception.h"
 // calc
 #include "calc/Test_CalcUtils.h"
@@ -43,6 +44,7 @@ void addTypesTests(Tests &tests, QObject *parent) {
                      new Test_LocalityData(parent),
                      new Test_Locality(parent),
                      new Test_MilkPoint(parent),
+                     new Test_MilkReceptionData(parent),
                      new Test_MilkReception(parent)
                  });
 }

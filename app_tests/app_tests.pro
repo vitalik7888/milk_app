@@ -25,7 +25,8 @@ SOURCES += \
     calc/Test_CalculatedItem.cpp \
     db/Test_LocalitiesTable.cpp \
     types/Test_DelivererData.cpp \
-    types/Test_LocalityData.cpp
+    types/Test_LocalityData.cpp \
+    types/Test_MilkReceptionData.cpp
 
 HEADERS += \
     settings/Test_MainSettings.h \
@@ -41,4 +42,5 @@ HEADERS += \
     calc/Test_CalculatedItem.h \
     db/Test_LocalitiesTable.h \
     types/Test_DelivererData.h \
-    types/Test_LocalityData.h
+    types/Test_LocalityData.h \
+    types/Test_MilkReceptionData.h
