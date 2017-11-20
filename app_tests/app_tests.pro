@@ -22,7 +22,9 @@ SOURCES += \
     types/Test_MilkPoint.cpp \
     types/Test_MilkReception.cpp \
     calc/Test_CalcUtils.cpp \
-    calc/Test_CalculatedItem.cpp
+    calc/Test_CalculatedItem.cpp \
+    db/Test_LocalitiesTable.cpp \
+    types/Test_DelivererData.cpp
 
 HEADERS += \
     settings/Test_MainSettings.h \
@@ -35,4 +37,6 @@ HEADERS += \
     types/Test_MilkPoint.h \
     types/Test_MilkReception.h \
     calc/Test_CalcUtils.h \
-    calc/Test_CalculatedItem.h
+    calc/Test_CalculatedItem.h \
+    db/Test_LocalitiesTable.h \
+    types/Test_DelivererData.h

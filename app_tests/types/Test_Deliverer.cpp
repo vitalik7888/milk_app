@@ -14,25 +14,6 @@ Test_Deliverer::Test_Deliverer(QObject *parent) : QObject(parent)
 {
 }
 
-void Test_Deliverer::compare(DelivererData *deliverer, const TC::milk_id id,
-                             const QString &name, const TC::milk_id localityId,
-                             const TC::milk_inn inn, const QString &address,
-                             const QString &phoneNumber)
-{
-    QCOMPARE(deliverer->id(), id);
-    QCOMPARE(deliverer->name(), name);
-    QCOMPARE(deliverer->localityId(), localityId);
-    QCOMPARE(deliverer->inn(), inn);
-    QCOMPARE(deliverer->address(), address);
-    QCOMPARE(deliverer->phoneNumber(), phoneNumber);
-}
-
-void Test_Deliverer::compareDefault(DelivererData *deliverer)
-{
-    compare(deliverer, TCD::DEF_ID, TCD::DEF_NAME, TCD::DEF_LOCALITY_ID, TCD::DEF_INN,
-            TCD::DEF_ADDRESS, TCD::DEF_PHONE_NUMBER);
-}
-
 void Test_Deliverer::compare(Deliverer *deliverer, const TypesConstants::milk_id id,
                              const QString &name, Locality *locality, const TypesConstants::milk_inn inn,
                              const QString &address, const QString &phoneNumber)
@@ -56,53 +37,33 @@ void Test_Deliverer::compareDefault(Deliverer *deliverer)
             TCD::DEF_ADDRESS, TCD::DEF_PHONE_NUMBER);
 }
 
-void Test_Deliverer::testEmptyDataConstructor()
+void Test_Deliverer::compare(Deliverer *left, Deliverer *right)
 {
-    DelivererData dd;
-    compareDefault(&dd);
+    compare(left, right->id(), right->name(), right->locality(), right->inn(), right->address(), right->phoneNumber());
 }
 
-void Test_Deliverer::testDataConstructor()
-{
-    DelivererData dd{1, "name", 23, 164, "address", "234"};
-    compare(&dd, 1, "name", 23, 164, "address", "234");
-}
-
-void Test_Deliverer::testDataMethods()
-{
-    DelivererData dd;
-    dd.setId(1);
-    dd.setName("name");
-    dd.setLocalityId(23);
-    dd.setInn(164);
-    dd.setAddress("address");
-    dd.setPhoneNumber("345");
-    compare(&dd, 1, "name", 23, 164, "address", "345");
-}
-
-void Test_Deliverer::testEmptyConstructor()
+void Test_Deliverer::emptyConstructor()
 {
     Deliverer dd;
     compareDefault(&dd);
 }
 
-void Test_Deliverer::testCopyConstructor()
+void Test_Deliverer::copyConstructor()
 {
     auto locality = new Locality({1, "n", "d"}, this);
-    Deliverer dd{1, "name", 164, "address", "123", locality};
-    Deliverer d(dd);
-    compare(&d, dd.id(), dd.name(), dd.locality(),
-            dd.inn(), dd.address(), dd.phoneNumber());
+    Deliverer delivererToCopy{1, "name", 164, "address", "123", locality};
+    Deliverer deliverer(delivererToCopy);
+    compare(&deliverer, &delivererToCopy);
 }
 
-void Test_Deliverer::testConstructor()
+void Test_Deliverer::constructor()
 {
     auto locality = new Locality({1, "n", "d"}, this);
     Deliverer dd{1, "name", 164, "address", "123", locality};
     compare(&dd, 1, "name", locality, 164, "address", "123");
 }
 
-void Test_Deliverer::testMethods()
+void Test_Deliverer::methods()
 {
     auto locality = new Locality({1, "n", "d"}, this);
     Deliverer dd;
@@ -115,7 +76,18 @@ void Test_Deliverer::testMethods()
     compare(&dd, 1, "name", locality, 164, "address", "345");
 }
 
-void Test_Deliverer::testReset()
+void Test_Deliverer::storingInQVariant()
+{
+    Deliverer delivererToCopy{1, "name", 164, "address", "123", new Locality({1, "n", "d"}, this)};
+
+    QVariant variant;
+    variant.setValue(delivererToCopy);
+    auto deliverer = variant.value<Deliverer>();
+
+    compare(&deliverer, &delivererToCopy);
+}
+
+void Test_Deliverer::reset()
 {
     Deliverer dd;
     dd.setId(1);
@@ -128,7 +100,7 @@ void Test_Deliverer::testReset()
     compareDefault(&dd);
 }
 
-void Test_Deliverer::testSignalId()
+void Test_Deliverer::signalIdChanged()
 {
     Deliverer deliverer;
     const TC::milk_id data = 15;
@@ -140,7 +112,7 @@ void Test_Deliverer::testSignalId()
     QCOMPARE(arguments.at(0).toLongLong(), data);
 }
 
-void Test_Deliverer::testSignalLocality()
+void Test_Deliverer::signalLocalityChanged()
 {
     Deliverer deliverer;
     Locality data({16, "_n", "d_"});
@@ -157,7 +129,7 @@ void Test_Deliverer::testSignalLocality()
 
 }
 
-void Test_Deliverer::testSignalName()
+void Test_Deliverer::signalNameChanged()
 {
     Deliverer deliverer;
     const QString data = "15";
@@ -169,7 +141,7 @@ void Test_Deliverer::testSignalName()
     QCOMPARE(arguments.at(0).toString(), data);
 }
 
-void Test_Deliverer::testSignalInn()
+void Test_Deliverer::signalInnChanged()
 {
     Deliverer deliverer;
     const TC::milk_id data = 15;
@@ -181,7 +153,7 @@ void Test_Deliverer::testSignalInn()
     QCOMPARE(arguments.at(0).toLongLong(), data);
 }
 
-void Test_Deliverer::testSignalAddress()
+void Test_Deliverer::signalAddressChanged()
 {
     Deliverer deliverer;
     const QString data = "a";
@@ -193,7 +165,7 @@ void Test_Deliverer::testSignalAddress()
     QCOMPARE(arguments.at(0).toString(), data);
 }
 
-void Test_Deliverer::testSignalPhoneNumber()
+void Test_Deliverer::signalPhoneNumberChanged()
 {
     Deliverer deliverer;
     const QString data = "13336";

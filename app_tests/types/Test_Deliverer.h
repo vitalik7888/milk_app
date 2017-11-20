@@ -16,30 +16,25 @@ class Test_Deliverer : public QObject
 public:
     explicit Test_Deliverer(QObject *parent = nullptr);
 
-    static void compare(DelivererData *deliverer, const TypesConstants::milk_id id,
-                        const QString &name, const TypesConstants::milk_id localityId, const TypesConstants::milk_inn inn,
-                        const QString &address, const QString &phoneNumber);
-    static void compareDefault(DelivererData *deliverer);
     static void compare(Deliverer *deliverer, const TypesConstants::milk_id id,
                         const QString &name, Locality *locality, const TypesConstants::milk_inn inn,
                         const QString &address, const QString &phoneNumber);
     static void compareDefault(Deliverer *deliverer);
+    static void compare(Deliverer *left, Deliverer *right);
 
 private slots:
-    void testEmptyDataConstructor();
-    void testDataConstructor();
-    void testDataMethods();
-    void testEmptyConstructor();
-    void testCopyConstructor();
-    void testConstructor();
-    void testMethods();
-    void testReset();
-    void testSignalId();
-    void testSignalLocality();
-    void testSignalName();
-    void testSignalInn();
-    void testSignalAddress();
-    void testSignalPhoneNumber();
+    void emptyConstructor();
+    void copyConstructor();
+    void constructor();
+    void methods();
+    void storingInQVariant();
+    void reset();
+    void signalIdChanged();
+    void signalLocalityChanged();
+    void signalNameChanged();
+    void signalInnChanged();
+    void signalAddressChanged();
+    void signalPhoneNumberChanged();
 };
 
 #endif // TEST_DELIVERER_H

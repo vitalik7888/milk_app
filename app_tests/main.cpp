@@ -8,9 +8,10 @@
 #include "settings/Test_PrintSettings.h"
 #include "settings/Test_Settings.h"
 // types
-#include <milkpoint.h>
 #include <deliverer.h>
 #include <locality.h>
+#include <milkpoint.h>
+#include "types/Test_DelivererData.h"
 #include "types/Test_Deliverer.h"
 #include "types/Test_Locality.h"
 #include "types/Test_MilkPoint.h"
@@ -18,6 +19,9 @@
 // calc
 #include "calc/Test_CalcUtils.h"
 #include "calc/Test_CalculatedItem.h"
+// db
+#include "db/Test_LocalitiesTable.h"
+
 
 using Tests = QList<QObject *>;
 
@@ -33,6 +37,7 @@ void addSettingsTests(Tests &tests, QObject *parent) {
 
 void addTypesTests(Tests &tests, QObject *parent) {
     tests.append({
+                     new Test_DelivererData(parent),
                      new Test_Deliverer(parent),
                      new Test_Locality(parent),
                      new Test_MilkPoint(parent),
@@ -47,6 +52,12 @@ void addCalcTests(Tests &tests, QObject *parent) {
                  });
 }
 
+//void addDbTests(Tests &tests, QObject *parent) {
+//    tests.append({
+//                     new Test_LocalitiesTable(parent)
+//                 });
+//}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -60,6 +71,7 @@ int main(int argc, char *argv[])
     addSettingsTests(tests, &app);
     addTypesTests(tests, &app);
     addCalcTests(tests, &app);
+//    addDbTests(tests, &app);
 
     int status = 0;
     for (auto test : tests)
