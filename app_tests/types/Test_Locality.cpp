@@ -14,19 +14,6 @@ Test_Locality::Test_Locality(QObject *parent) : QObject(parent)
 
 }
 
-void Test_Locality::compare(LocalityData *locality, const TC::milk_id id,
-                            const QString &name, const QString &description)
-{
-    QCOMPARE(locality->id(), id);
-    QCOMPARE(locality->name(), name);
-    QCOMPARE(locality->description(), description);
-}
-
-void Test_Locality::compareDefault(LocalityData *locality)
-{
-    compare(locality, TCL::DEF_ID, TCL::DEF_NAME, TCL::DEF_DESCRIPTION);
-}
-
 void Test_Locality::compare(Locality *locality, const TC::milk_id id, const QString &name,
                             const QString &description)
 {
@@ -40,54 +27,31 @@ void Test_Locality::compareDefault(Locality *locality)
     compare(locality, TCL::DEF_ID, TCL::DEF_NAME, TCL::DEF_DESCRIPTION);
 }
 
-void Test_Locality::testEmptyDataConstructor()
+void Test_Locality::compare(Locality *left, Locality *right)
 {
-    LocalityData ld;
-    compareDefault(&ld);
+    compare(left, right->id(), right->name(), right->description());
 }
 
-void Test_Locality::testDataConstructor()
-{
-    LocalityData ld(42, "N", "Descr-");
-    compare(&ld, 42, "N", "Descr-");
-}
-
-void Test_Locality::testDataCopyConstructor()
-{
-    LocalityData ldToCopy(42, "N", "Descr-");
-    LocalityData ld(ldToCopy);
-    compare(&ld, ldToCopy.id(), ldToCopy.name(), ldToCopy.description());
-}
-
-void Test_Locality::testDataMethods()
-{
-    LocalityData ld;
-    ld.setId(123);
-    ld.setName("dd");
-    ld.setDescription("fff");
-    compare(&ld, 123, "dd", "fff");
-}
-
-void Test_Locality::testEmptyConstructor()
+void Test_Locality::emptyConstructor()
 {
     Locality l;
     compareDefault(&l);
 }
 
-void Test_Locality::testCopyConstructor()
+void Test_Locality::copyConstructor()
 {
     Locality localityToCopy({42, "N", "Descr-"});
     Locality l(localityToCopy);
-    compare(&l, localityToCopy.id(), localityToCopy.name(), localityToCopy.description());
+    compare(&l, &localityToCopy);
 }
 
-void Test_Locality::testConstructor()
+void Test_Locality::constructor()
 {
     Locality l({42, "N", "Descr-"});
     compare(&l, 42, "N", "Descr-");
 }
 
-void Test_Locality::testMethods()
+void Test_Locality::methods()
 {
     Locality l;
     l.setId(123);
@@ -96,17 +60,24 @@ void Test_Locality::testMethods()
     compare(&l, 123, "dd", "fff");
 }
 
-void Test_Locality::testReset()
+void Test_Locality::reset()
 {
     Locality l;
-    l.setId(123);
-    l.setName("dd");
-    l.setDescription("fff");
+    l.setId(126643);
+    l.setName("dhtd");
+    l.setDescription("ffaf");
     l.reset();
     compareDefault(&l);
 }
 
-void Test_Locality::testSignalId()
+void Test_Locality::storingInQVariant()
+{
+    Locality localityToCopy({42, "N", "Descr-"});
+    auto locality = QVariant::fromValue(localityToCopy).value<Locality>();
+    compare(&locality, &localityToCopy);
+}
+
+void Test_Locality::signalIdChanged()
 {
     Locality l;
     const TC::milk_id data = 15;
@@ -118,7 +89,7 @@ void Test_Locality::testSignalId()
     QCOMPARE(arguments.at(0).toLongLong(), data);
 }
 
-void Test_Locality::testSignalName()
+void Test_Locality::signalNameChanged()
 {
     Locality l;
     const QString data = "vdv";
@@ -130,7 +101,7 @@ void Test_Locality::testSignalName()
     QCOMPARE(arguments.at(0).toString(), data);
 }
 
-void Test_Locality::testSignalDescription()
+void Test_Locality::signalDescriptionChanged()
 {
     Locality l;
     const QString data = "aaa";

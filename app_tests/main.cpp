@@ -13,6 +13,7 @@
 #include <milkpoint.h>
 #include "types/Test_DelivererData.h"
 #include "types/Test_Deliverer.h"
+#include "types/Test_LocalityData.h"
 #include "types/Test_Locality.h"
 #include "types/Test_MilkPoint.h"
 #include "types/Test_MilkReception.h"
@@ -39,6 +40,7 @@ void addTypesTests(Tests &tests, QObject *parent) {
     tests.append({
                      new Test_DelivererData(parent),
                      new Test_Deliverer(parent),
+                     new Test_LocalityData(parent),
                      new Test_Locality(parent),
                      new Test_MilkPoint(parent),
                      new Test_MilkReception(parent)
