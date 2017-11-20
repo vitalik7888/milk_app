@@ -1,4 +1,4 @@
-#include "dbconstants.h"
+#include "DbConstants.h"
 
 // Qt
 #include <QString>

@@ -1,9 +1,9 @@
 #ifndef LOCALITY_TABLE_H
 #define LOCALITY_TABLE_H
 
-#include "dbconstants.h"
+#include "DbConstants.h"
 #include "base/Table.h"
-#include "locality.h"
+#include "Locality.h"
 
 #include <experimental/optional>
 

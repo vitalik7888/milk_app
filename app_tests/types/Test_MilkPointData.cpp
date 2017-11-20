@@ -1,6 +1,6 @@
 #include "Test_MilkPointData.h"
 
-#include <milkpointdata.h>
+#include <MilkPointData.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

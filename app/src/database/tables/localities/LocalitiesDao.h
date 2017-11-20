@@ -1,7 +1,7 @@
 #ifndef LOCALITIESDAO_H
 #define LOCALITIESDAO_H
 
-#include <base/dao.h>
+#include <base/Dao.h>
 
 DB_BEGIN_NAMESPACE
 

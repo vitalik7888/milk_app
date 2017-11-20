@@ -1,23 +1,23 @@
 INCLUDEPATH += $$PWD
 
 SOURCES += \
-    $$PWD/deliverer.cpp \
-    $$PWD/locality.cpp \
-    $$PWD/milkpoint.cpp \
-    $$PWD/milkreception.cpp \
-    $$PWD/delivererdata.cpp \
-    $$PWD/localitydata.cpp \
-    $$PWD/milkpointdata.cpp \
-    $$PWD/milkreceptiondata.cpp \
-    $$PWD/TypesConstants.cpp
+    $$PWD/TypesConstants.cpp \
+    $$PWD/Deliverer.cpp \
+    $$PWD/DelivererData.cpp \
+    $$PWD/Locality.cpp \
+    $$PWD/LocalityData.cpp \
+    $$PWD/MilkPoint.cpp \
+    $$PWD/MilkPointData.cpp \
+    $$PWD/MilkReception.cpp \
+    $$PWD/MilkReceptionData.cpp
 
 HEADERS  += \
-    $$PWD/deliverer.h \
-    $$PWD/locality.h \
-    $$PWD/milkpoint.h \
-    $$PWD/milkreception.h \
-    $$PWD/delivererdata.h \
-    $$PWD/localitydata.h \
-    $$PWD/milkpointdata.h \
-    $$PWD/milkreceptiondata.h \
-    $$PWD/TypesConstants.h
+    $$PWD/TypesConstants.h \
+    $$PWD/Deliverer.h \
+    $$PWD/DelivererData.h \
+    $$PWD/Locality.h \
+    $$PWD/LocalityData.h \
+    $$PWD/MilkPoint.h \
+    $$PWD/MilkPointData.h \
+    $$PWD/MilkReception.h \
+    $$PWD/MilkReceptionData.h

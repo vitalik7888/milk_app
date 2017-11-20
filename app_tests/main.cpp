@@ -8,9 +8,9 @@
 #include "settings/Test_PrintSettings.h"
 #include "settings/Test_Settings.h"
 // types
-#include <deliverer.h>
-#include <locality.h>
-#include <milkpoint.h>
+#include <Deliverer.h>
+#include <Locality.h>
+#include <MilkPoint.h>
 #include "types/Test_DelivererData.h"
 #include "types/Test_Deliverer.h"
 #include "types/Test_LocalityData.h"
@@ -23,7 +23,7 @@
 #include "calc/Test_CalcUtils.h"
 #include "calc/Test_CalculatedItem.h"
 // db
-#include "db/Test_LocalitiesTable.h"
+//#include "db/Test_LocalitiesTable.h"
 
 
 using Tests = QList<QObject *>;

@@ -1,7 +1,7 @@
 #ifndef MILKRECEPTION_H
 #define MILKRECEPTION_H
 
-#include "milkreceptiondata.h"
+#include "MilkReceptionData.h"
 #include <QObject>
 // Qt
 #include <QDate>

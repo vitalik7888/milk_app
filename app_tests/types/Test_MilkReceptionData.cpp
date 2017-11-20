@@ -1,6 +1,6 @@
 #include "Test_MilkReceptionData.h"
 
-#include <milkreceptiondata.h>
+#include <MilkReceptionData.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

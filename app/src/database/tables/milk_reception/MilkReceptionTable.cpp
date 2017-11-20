@@ -1,6 +1,6 @@
 #include "MilkReceptionTable.h"
 
-#include "milkrecepriondao.h"
+#include "MilkReceprionDao.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"
 #include "SettingsConstants.h"

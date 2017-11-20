@@ -1,6 +1,6 @@
 #include "Test_Locality.h"
 
-#include "locality.h"
+#include "Locality.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>

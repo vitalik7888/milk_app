@@ -1,7 +1,7 @@
 #ifndef MILK_TABLE
 #define MILK_TABLE
 
-#include "dbconstants.h"
+#include "DbConstants.h"
 // Qt
 #include <QSqlQueryModel>
 #include <QSqlRecord>

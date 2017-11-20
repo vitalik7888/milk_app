@@ -1,4 +1,4 @@
-#include "localitydata.h"
+#include "LocalityData.h"
 
 #include "TypesConstants.h"
 

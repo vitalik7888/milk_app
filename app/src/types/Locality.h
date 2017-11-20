@@ -1,7 +1,7 @@
 #ifndef LOCALITY_H
 #define LOCALITY_H
 
-#include "localitydata.h"
+#include "LocalityData.h"
 // Qt
 #include <QObject>
 

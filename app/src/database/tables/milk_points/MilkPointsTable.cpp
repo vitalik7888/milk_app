@@ -1,6 +1,6 @@
 #include "MilkPointsTable.h"
 
-#include "milkpointdao.h"
+#include "MilkpointsDao.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "DbUtils.h"
 // Qt

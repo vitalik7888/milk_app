@@ -1,6 +1,6 @@
 #include "DeliverersTable.h"
 
-#include "deliverersdao.h"
+#include "DeliverersDao.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "DbUtils.h"
 // Qt

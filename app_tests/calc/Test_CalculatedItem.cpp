@@ -1,6 +1,6 @@
 #include "Test_CalculatedItem.h"
 
-#include "calculateditem.h"
+#include "CalculatedItem.h"
 // Qt
 #include <QTest>
 

@@ -1,4 +1,4 @@
-#include "calculateditem.h"
+#include "CalculatedItem.h"
 
 #include "CalcUtils.h"
 

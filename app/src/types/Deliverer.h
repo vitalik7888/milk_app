@@ -1,7 +1,7 @@
 #ifndef DELIVERER_H
 #define DELIVERER_H
 
-#include "delivererdata.h"
+#include "DelivererData.h"
 // Qt
 #include <QQmlListProperty>
 

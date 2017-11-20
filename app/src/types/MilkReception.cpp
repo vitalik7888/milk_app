@@ -1,7 +1,7 @@
-#include "milkreception.h"
+#include "MilkReception.h"
 
-#include "deliverer.h"
-#include "milkpoint.h"
+#include "Deliverer.h"
+#include "MilkPoint.h"
 #include "TypesConstants.h"
 
 using TC = TypesConstants;

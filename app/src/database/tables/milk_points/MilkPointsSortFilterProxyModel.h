@@ -1,8 +1,8 @@
 #ifndef MILKPOINTSSORTFILTERPROXYMODEL_H
 #define MILKPOINTSSORTFILTERPROXYMODEL_H
 
-#include "dbconstants.h"
-#include "milkpoint.h"
+#include "DbConstants.h"
+#include "MilkPoint.h"
 // Qt
 #include <QSortFilterProxyModel>
 

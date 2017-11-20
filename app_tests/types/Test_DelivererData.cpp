@@ -1,6 +1,6 @@
 #include "Test_DelivererData.h"
 
-#include <delivererdata.h>
+#include <DelivererData.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

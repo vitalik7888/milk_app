@@ -1,7 +1,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "dbconstants.h"
+#include "DbConstants.h"
 #include "tables/localities/LocalitiesTable.h"
 #include "tables/deliverers/DeliverersTable.h"
 #include "tables/milk_points/MilkPointsTable.h"

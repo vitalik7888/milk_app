@@ -1,7 +1,7 @@
 #ifndef MILKPOINT_H
 #define MILKPOINT_H
 
-#include "milkpointdata.h"
+#include "MilkPointData.h"
 // Qt
 #include <QObject>
 

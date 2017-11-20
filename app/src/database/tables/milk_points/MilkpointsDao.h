@@ -1,7 +1,7 @@
 #ifndef MILKPOINTDAO_H
 #define MILKPOINTDAO_H
 
-#include <base/dao.h>
+#include <base/Dao.h>
 
 DB_BEGIN_NAMESPACE
 

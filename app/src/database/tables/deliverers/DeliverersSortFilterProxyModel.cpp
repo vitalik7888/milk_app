@@ -1,6 +1,6 @@
 #include "DeliverersSortFilterProxyModel.h"
 
-#include "locality.h"
+#include "Locality.h"
 // Qt
 #include <QDebug>
 

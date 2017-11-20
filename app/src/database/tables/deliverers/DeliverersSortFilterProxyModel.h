@@ -1,8 +1,8 @@
 #ifndef DELIVERERSSORTFILTERPROXYMODEL_H
 #define DELIVERERSSORTFILTERPROXYMODEL_H
 
-#include "dbconstants.h"
-#include "deliverer.h"
+#include "DbConstants.h"
+#include "Deliverer.h"
 // Qt
 #include <QSortFilterProxyModel>
 

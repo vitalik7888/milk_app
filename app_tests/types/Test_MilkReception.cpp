@@ -1,9 +1,9 @@
 #include "Test_MilkReception.h"
 
-#include <milkreception.h>
-#include <locality.h>
-#include <milkpoint.h>
-#include <deliverer.h>
+#include <MilkReception.h>
+#include <Locality.h>
+#include <MilkPoint.h>
+#include <Deliverer.h>
 #include "Test_Deliverer.h"
 #include "Test_MilkPoint.h"
 // Qt

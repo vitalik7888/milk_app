@@ -1,7 +1,7 @@
 #include "Test_Deliverer.h"
 
-#include <deliverer.h>
-#include "locality.h"
+#include <Deliverer.h>
+#include "Locality.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>

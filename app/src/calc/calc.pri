@@ -1,10 +1,10 @@
 INCLUDEPATH += $$PWD
 
 SOURCES += \
-    $$PWD/calculateditem.cpp \
-    $$PWD/CalcUtils.cpp
+    $$PWD/CalcUtils.cpp \
+    $$PWD/CalculatedItem.cpp
 
 HEADERS  += \
-    $$PWD/calculateditem.h \
     $$PWD/CalcUtils.h \
-    $$PWD/CalcConstants.h
+    $$PWD/CalcConstants.h \
+    $$PWD/CalculatedItem.h

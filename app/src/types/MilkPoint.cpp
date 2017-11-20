@@ -1,6 +1,6 @@
-#include "milkpoint.h"
+#include "MilkPoint.h"
 
-#include "locality.h"
+#include "Locality.h"
 #include "TypesConstants.h"
 
 using TC = TypesConstants;

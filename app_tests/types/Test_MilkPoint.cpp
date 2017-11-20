@@ -1,8 +1,8 @@
 #include "Test_Locality.h"
 #include "Test_MilkPoint.h"
 
-#include <locality.h>
-#include <milkpoint.h>
+#include <Locality.h>
+#include <MilkPoint.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

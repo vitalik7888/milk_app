@@ -1,7 +1,7 @@
 #ifndef DELIVERERSDAO_H
 #define DELIVERERSDAO_H
 
-#include <base/dao.h>
+#include <base/Dao.h>
 
 DB_BEGIN_NAMESPACE
 

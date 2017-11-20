@@ -1,6 +1,6 @@
 #include "LocalitiesTable.h"
 
-#include "localitiesdao.h"
+#include "LocalitiesDao.h"
 #include "DbUtils.h"
 // Qt
 #include <QSqlRecord>

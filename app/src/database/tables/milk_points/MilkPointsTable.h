@@ -2,7 +2,7 @@
 #define MILKPOINTS_TABLE_H
 
 #include "base/Table.h"
-#include "milkpoint.h"
+#include "MilkPoint.h"
 
 #include <experimental/optional>
 
