@@ -14,11 +14,22 @@ DelivererData::DelivererData():
 
 }
 
+DelivererData::DelivererData(const DelivererData &data):
+    m_id(data.id()),
+    m_localityId(data.localityId()),
+    m_inn(data.inn()),
+    m_name(data.name()),
+    m_address(data.address()),
+    m_phoneNumber(data.phoneNumber())
+{
+
+}
+
 DelivererData::DelivererData(const TC::milk_id id, const QString &name, const TC::milk_id localityId,
                              const TC::milk_inn inn, const QString &address, const QString &phoneNumber):
-    m_inn(inn),
     m_id(id),
     m_localityId(localityId),
+    m_inn(inn),
     m_name(name),
     m_address(address),
     m_phoneNumber(phoneNumber)

@@ -4,11 +4,14 @@
 #include "TypesConstants.h"
 // Qt
 #include <QString>
+#include <QMetaType>
+
 
 class DelivererData
 {
 public:
     DelivererData();
+    DelivererData(const DelivererData &data);
     DelivererData(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_id localityId, const TypesConstants::milk_inn inn,
               const QString &address, const QString &phoneNumber);
     virtual ~DelivererData();
@@ -34,13 +37,15 @@ public:
     void setPhoneNumber(const QString &phoneNumber);
 
 private:
-    TypesConstants::milk_inn m_inn;
     TypesConstants::milk_id m_id;
     TypesConstants::milk_id m_localityId;
+    TypesConstants::milk_inn m_inn;
     QString m_name;
     QString m_address;
     QString m_phoneNumber; // +9(999)999-99-99
 };
+
+Q_DECLARE_METATYPE(DelivererData)
 
 QDebug operator<<(QDebug dbg, const DelivererData &data);
 
