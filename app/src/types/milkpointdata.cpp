@@ -12,6 +12,15 @@ MilkPointData::MilkPointData():
 
 }
 
+MilkPointData::MilkPointData(const MilkPointData &mp):
+    m_id(mp.id()),
+    m_localityId(mp.localityId()),
+    m_name(mp.name()),
+    m_description(mp.description())
+{
+
+}
+
 MilkPointData::MilkPointData(const TC::milk_id id, const TC::milk_id localityId, const QString &name,
                              const QString &description):
     m_id(id),

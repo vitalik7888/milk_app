@@ -4,12 +4,14 @@
 #include "TypesConstants.h"
 // Qt
 #include <QString>
+#include <QMetaType>
 
 
 class MilkPointData
 {
 public:
     MilkPointData();
+    MilkPointData(const MilkPointData &mp);
     MilkPointData(const TypesConstants::milk_id id, const TypesConstants::milk_id localityId,
                   const QString &name, const QString &description);
 
@@ -33,5 +35,7 @@ private:
     QString m_name;
     QString m_description;
 };
+
+Q_DECLARE_METATYPE(MilkPointData)
 
 #endif // MILKPOINTDATA_H
