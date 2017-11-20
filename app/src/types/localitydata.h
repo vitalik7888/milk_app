@@ -4,6 +4,8 @@
 #include "TypesConstants.h"
 // Qt
 #include <QString>
+#include <QMetaType>
+
 
 class LocalityData {
 public:
@@ -28,5 +30,7 @@ private:
     QString m_name;
     QString m_description;
 };
+
+Q_DECLARE_METATYPE(LocalityData)
 
 #endif // LOCALITYDATA_H

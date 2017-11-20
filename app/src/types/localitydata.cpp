@@ -12,7 +12,8 @@ LocalityData::LocalityData():
 
 }
 
-LocalityData::LocalityData(const TC::milk_id id, const QString &name, const QString &description):
+LocalityData::LocalityData(const TC::milk_id id, const QString &name,
+                           const QString &description):
     m_id(id),
     m_name(name),
     m_description(description)
