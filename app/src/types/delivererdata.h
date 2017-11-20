@@ -12,7 +12,8 @@ class DelivererData
 public:
     DelivererData();
     DelivererData(const DelivererData &data);
-    DelivererData(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_id localityId, const TypesConstants::milk_inn inn,
+    DelivererData(const TypesConstants::milk_id id, const QString &name,
+                  const TypesConstants::milk_id localityId, const TypesConstants::milk_inn inn,
               const QString &address, const QString &phoneNumber);
     virtual ~DelivererData();
 

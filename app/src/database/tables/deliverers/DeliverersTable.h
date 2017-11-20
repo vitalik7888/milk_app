@@ -13,7 +13,7 @@ class DeliverersDao;
 class DeliverersTable : public Table
 {
     Q_OBJECT
-    Q_PROPERTY(LocalitiesTable* localities READ getLocalities CONSTANT)
+    Q_PROPERTY(LocalitiesTable* localities READ localities CONSTANT)
 
 public:
     DeliverersTable(QObject *parent = Q_NULLPTR);
@@ -27,23 +27,25 @@ public:
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
     QString primaryField() const Q_DECL_OVERRIDE;
 
-    LocalitiesTable *getLocalities() const;
+    LocalitiesTable *localities() const;
 
     std::experimental::optional<DelivererData> getDelivererData(const DbConstants::milk_id delivererId) const;
     Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
     Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
     Q_INVOKABLE bool append(Deliverer *deliverer);
     Q_INVOKABLE bool update(Deliverer *deliverer) const;
-    Q_INVOKABLE bool setName(const DbConstants::milk_id delivererId, const QString &tableName) const;
-    Q_INVOKABLE bool setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const;
-    Q_INVOKABLE bool setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const;
-    Q_INVOKABLE bool setAddress(const DbConstants::milk_id delivererId, const QString &address) const;
-    Q_INVOKABLE bool setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const;
+    bool setName(const DbConstants::milk_id delivererId, const QString &tableName) const;
+    bool setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const;
+    bool setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const;
+    bool setAddress(const DbConstants::milk_id delivererId, const QString &address) const;
+    bool setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const;
 
 private:
     LocalitiesTable *m_localities;
 
     DeliverersDao *dao() const;
+
+    static DelivererData fromRecord(const QSqlRecord &record);
 };
 
 DB_END_NAMESPACE

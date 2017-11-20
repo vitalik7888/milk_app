@@ -20,32 +20,11 @@ DeliverersDao::DeliverersDao(DeliverersTable *table):
 
 }
 
-std::experimental::optional<DelivererData> DeliverersDao::getDeliverer(const DbConstants::milk_id delivererId) const
+bool DeliverersDao::insert(const QVariant &data) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getSelectStr(DCD::TABLE_NAME,
-    { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER })).arg(DCD::FN_ID));
-    query.addBindValue(delivererId);
+    Q_ASSERT(data.canConvert<DelivererData>());
+    const auto deliverer = data.value<DelivererData>();
 
-    if (query.exec() && query.first())
-    {
-        return DelivererData(
-                    delivererId,
-                    query.value(DCD::FN_NAME).toString(),
-                    query.value(DCD::FN_LOCALITY_ID).toLongLong(),
-                    query.value(DCD::FN_INN).toInt(),
-                    query.value(DCD::FN_ADDRESS).toString(),
-                    query.value(DCD::FN_PHONE_NUMBER).toString()
-                    );
-    } else
-        _error(QString("Отсутствует сдатчик с id = %1").arg(QString::number(delivererId)));
-
-    return {};
-}
-
-bool DeliverersDao::insert(const DelivererData &deliverer) const
-{
     QSqlQuery query;
     query.prepare(DbUtils::getPrepInsertStr(DCD::TABLE_NAME,
     { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER }));
@@ -63,8 +42,11 @@ bool DeliverersDao::insert(const DelivererData &deliverer) const
     return true;
 }
 
-bool DeliverersDao::update(const DelivererData &deliverer) const
+bool DeliverersDao::update(const QVariant &data) const
 {
+    Q_ASSERT(data.canConvert<DelivererData>());
+    const auto deliverer = data.value<DelivererData>();
+
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(DbUtils::getPrepUpdateStr(DCD::TABLE_NAME,
@@ -108,7 +90,11 @@ DeliverersTable::~DeliverersTable()
 
 std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const DbConstants::milk_id delivererId) const
 {
-    return dao()->getDeliverer(delivererId);
+    const auto deliverer = dao()->get(delivererId);
+    if (!deliverer.isNull())
+        return fromRecord(deliverer.value<QSqlRecord>());
+
+    return {};
 }
 
 Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
@@ -118,7 +104,7 @@ Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
         return Q_NULLPTR;
 
     const auto data = delivererData.value();
-    auto locality = getLocalities()->getLocality(data.localityId());
+    auto locality = localities()->getLocality(data.localityId());
     auto deliverer = new Deliverer(data.id(), data.name(), data.inn(), data.address(),
                                    data.phoneNumber(), locality, this);
     locality->setParent(deliverer);
@@ -134,7 +120,7 @@ bool DeliverersTable::insert(int index, Deliverer *deliverer)
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    const bool isOk = dao()->insert(deliverer->data());
+    const bool isOk = dao()->insert(QVariant::fromValue(deliverer->data()));
     emit endInsertRows();
 
     return isOk;
@@ -147,7 +133,7 @@ bool DeliverersTable::append(Deliverer *deliverer)
 
 bool DeliverersTable::update(Deliverer *deliverer) const
 {
-    return dao()->update(deliverer->data());
+    return dao()->update(QVariant::fromValue(deliverer->data()));
 }
 
 bool DeliverersTable::setName(const DbConstants::milk_id delivererId, const QString &_name) const
@@ -175,7 +161,7 @@ bool DeliverersTable::setPhoneNumber(const DbConstants::milk_id delivererId, con
     return m_dao->updateValue(DCD::FN_PHONE_NUMBER, delivererId, phoneNumber);
 }
 
-LocalitiesTable *DeliverersTable::getLocalities() const
+LocalitiesTable *DeliverersTable::localities() const
 {
     return m_localities;
 }
@@ -213,6 +199,18 @@ QString DeliverersTable::primaryField() const
 DeliverersDao *DeliverersTable::dao() const
 {
     return dynamic_cast<DeliverersDao *>(m_dao.data());
+}
+
+DelivererData DeliverersTable::fromRecord(const QSqlRecord &record)
+{
+    return {
+        record.value(DCD::FN_ID).toLongLong(),
+                record.value(DCD::FN_NAME).toString(),
+                record.value(DCD::FN_LOCALITY_ID).toLongLong(),
+                record.value(DCD::FN_INN).toLongLong(),
+                record.value(DCD::FN_ADDRESS).toString(),
+                record.value(DCD::FN_PHONE_NUMBER).toString(),
+    };
 }
 
 QString db::DeliverersTable::getColName(const int position, const bool withTableName) const

@@ -2,8 +2,6 @@
 #define DELIVERERSDAO_H
 
 #include <base/dao.h>
-#include "delivererdata.h"
-#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -14,9 +12,8 @@ class DeliverersDao: public Dao {
 public:
     explicit DeliverersDao(DeliverersTable *table);
 
-    std::experimental::optional<DelivererData> getDeliverer(const DbConstants::milk_id delivererId) const;
-    bool insert(const DelivererData &deliverer) const;
-    bool update(const DelivererData &deliverer) const;
+    virtual bool insert(const QVariant &data) const Q_DECL_OVERRIDE;
+    virtual bool update(const QVariant &data) const Q_DECL_OVERRIDE;
 };
 
 DB_END_NAMESPACE

@@ -23,70 +23,20 @@ using DCMP = DC::MilkPoints;
 
 MilkReceptionDao::MilkReceptionDao(MilkReceptionTable *table) : Dao(table) { }
 
-std::experimental::optional<MilkReceptionData> MilkReceptionDao::get(const DbConstants::milk_id id) const
+bool MilkReceptionDao::insert(const QVariant &data) const
 {
-    QSqlQuery query(m_table->database());
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getSelectStr(DCMR::TABLE_NAME,
-    { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
-                  .arg(DCMR::FN_ID));
-    query.addBindValue(id);
+    Q_ASSERT(data.canConvert<MilkReceptionData>());
+    const MilkReceptionData milkReception = data.value<MilkReceptionData>();
 
-    if (query.exec() && query.first())
-    {
-        return MilkReceptionData(
-                    id,
-                    query.value(DCMR::FN_ID_DELIVERER).toLongLong(),
-                    query.value(DCMR::FN_MILK_POINT_ID).toLongLong(),
-                    query.value(DCMR::FN_DELIVERY_DATE).toDate(),
-                    query.value(DCMR::FN_PRICE_LITER).toDouble(),
-                    query.value(DCMR::FN_LITERS).toDouble(),
-                    query.value(DCMR::FN_FAT).toDouble()
-                    );
-    } else
-        _error(QString("Отсутствует сдача молока с id = %1").arg(id));
-
-    return {};
-}
-
-QList<MilkReceptionData> MilkReceptionDao::get(const QString &where) const
-{
-    QSqlQuery query(m_table->database());
-    query.prepare(QString("%1%2")
-                  .arg(DbUtils::getSelectStr(DCMR::TABLE_NAME,
-    { DCMR::FN_ID, DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
-                  .arg(where.isEmpty() ? QString() : " WHERE " + where));
-
-    QList<MilkReceptionData> mrd;
-    if (query.exec())
-    {
-        while (query.next()) {
-            mrd.append({query.value(DCMR::FN_ID).toLongLong(),
-                        query.value(DCMR::FN_ID_DELIVERER).toLongLong(),
-                        query.value(DCMR::FN_MILK_POINT_ID).toLongLong(),
-                        query.value(DCMR::FN_DELIVERY_DATE).toDate(),
-                        query.value(DCMR::FN_PRICE_LITER).toDouble(),
-                        query.value(DCMR::FN_LITERS).toDouble(),
-                        query.value(DCMR::FN_FAT).toDouble()
-                       });
-        }
-    } else
-        _error(query.lastError().text());
-
-    return mrd;
-}
-
-bool MilkReceptionDao::insert(const MilkReceptionData &data) const
-{
     QSqlQuery query(m_table->database());
     query.prepare(DbUtils::getPrepInsertStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }));
-    query.addBindValue(data.delivererId());
-    query.addBindValue(data.milkPointId());
-    query.addBindValue(data.deliveryDate().toString(SC::defaultDateFormat()));
-    query.addBindValue(data.priceLiter());
-    query.addBindValue(data.liters());
-    query.addBindValue(data.fat());
+    query.addBindValue(milkReception.delivererId());
+    query.addBindValue(milkReception.milkPointId());
+    query.addBindValue(milkReception.deliveryDate().toString(SC::defaultDateFormat()));
+    query.addBindValue(milkReception.priceLiter());
+    query.addBindValue(milkReception.liters());
+    query.addBindValue(milkReception.fat());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -96,18 +46,21 @@ bool MilkReceptionDao::insert(const MilkReceptionData &data) const
     return true;
 }
 
-bool MilkReceptionDao::update(const MilkReceptionData &data) const
+bool MilkReceptionDao::update(const QVariant &data) const
 {
+    Q_ASSERT(data.canConvert<MilkReceptionData>());
+    const MilkReceptionData milkReception = data.value<MilkReceptionData>();
+
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?").arg(DbUtils::getPrepUpdateStr(DCMR::TABLE_NAME,
     { DCMR::FN_ID_DELIVERER, DCMR::FN_MILK_POINT_ID, DCMR::FN_DELIVERY_DATE, DCMR::FN_PRICE_LITER, DCMR::FN_LITERS, DCMR::FN_FAT }))
                   .arg(DCMR::FN_ID));
-    query.addBindValue(data.milkPointId());
-    query.addBindValue(data.deliveryDate());
-    query.addBindValue(data.priceLiter());
-    query.addBindValue(data.liters());
-    query.addBindValue(data.fat());
-    query.addBindValue(data.delivererId());
+    query.addBindValue(milkReception.milkPointId());
+    query.addBindValue(milkReception.deliveryDate());
+    query.addBindValue(milkReception.priceLiter());
+    query.addBindValue(milkReception.liters());
+    query.addBindValue(milkReception.fat());
+    query.addBindValue(milkReception.delivererId());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -254,7 +207,11 @@ QString MilkReceptionTable::tableName() const
 
 std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const DbConstants::milk_id milkReceptionId) const
 {
-    return dao()->get(milkReceptionId);
+    auto data = dao()->get(milkReceptionId);
+    if (data.isNull())
+        return {};
+
+    return fromRecord(data.value<QSqlRecord>());
 }
 
 MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId)
@@ -264,8 +221,8 @@ MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptio
         return Q_NULLPTR;
 
     const auto mrData = data.value();
-    const auto deliverer = getDeliverers()->getDeliverer(mrData.delivererId());
-    const auto milkPoint = getMilkPoints()->getMilkPoint(mrData.milkPointId());
+    const auto deliverer = deliverers()->getDeliverer(mrData.delivererId());
+    const auto milkPoint = milkPoints()->getMilkPoint(mrData.milkPointId());
 
     auto milkReception = new MilkReception(mrData.id(), mrData.deliveryDate(), mrData.priceLiter(),
                                            mrData.liters(), mrData.fat(), deliverer, milkPoint, this);
@@ -277,7 +234,13 @@ MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptio
 
 QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &where) const
 {
-    return dao()->get(where);
+    const QList<QSqlRecord> data = dao()->getAll(where).value< QList<QSqlRecord> >();
+
+    QList<MilkReceptionData> milkReceptions;
+    for (const auto &record : data)
+        milkReceptions.append(fromRecord(record));
+
+    return milkReceptions;
 }
 
 bool MilkReceptionTable::insert(int index, MilkReception *milkReception)
@@ -287,7 +250,7 @@ bool MilkReceptionTable::insert(int index, MilkReception *milkReception)
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    const bool isOk = dao()->insert(milkReception->data());
+    const bool isOk = dao()->insert(QVariant::fromValue(milkReception->data()));
     emit endInsertRows();
 
     return isOk;
@@ -300,7 +263,7 @@ bool MilkReceptionTable::append(MilkReception *milkReception)
 
 bool MilkReceptionTable::update(MilkReception *milkReception) const
 {
-    return dao()->update(milkReception->data());
+    return dao()->update(QVariant::fromValue(milkReception->data()));
 }
 
 bool MilkReceptionTable::setIdDeliverer(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id delivererId) const
@@ -362,16 +325,16 @@ QString MilkReceptionTable::selectAll() const
 {
     const auto select = DbUtils::getSelectStr(DCMR::TABLE_NAME,
     {
-                                                      getColName(DCMR::RMT_ID, true),
-                                                      getColName(DCMR::RMT_ID_DELIVERER, true),
-                                                      m_deliverers->getColName(DCD::DT_NAME, true) + " AS " + DCMR::FN_DELIVERER_NAME,
-                                                      getColName(DCMR::RMT_MILK_POINT_ID, true),
-                                                      m_milkPoints->getColName(DCMP::MPT_NAME, true) + " AS " + DCMR::FN_MILK_POINT_NAME,
-                                                      getColName(DCMR::RMT_DELIVERY_DATE, true),
-                                                      getColName(DCMR::RMT_PRICE_LITER, true),
-                                                      getColName(DCMR::RMT_LITERS, true),
-                                                      getColName(DCMR::RMT_FAT, true)
-                                                  });
+                                                  getColName(DCMR::RMT_ID, true),
+                                                  getColName(DCMR::RMT_ID_DELIVERER, true),
+                                                  m_deliverers->getColName(DCD::DT_NAME, true) + " AS " + DCMR::FN_DELIVERER_NAME,
+                                                  getColName(DCMR::RMT_MILK_POINT_ID, true),
+                                                  m_milkPoints->getColName(DCMP::MPT_NAME, true) + " AS " + DCMR::FN_MILK_POINT_NAME,
+                                                  getColName(DCMR::RMT_DELIVERY_DATE, true),
+                                                  getColName(DCMR::RMT_PRICE_LITER, true),
+                                                  getColName(DCMR::RMT_LITERS, true),
+                                                  getColName(DCMR::RMT_FAT, true)
+                                              });
     const auto join = QString("LEFT JOIN %2 ON %3 = %4 LEFT JOIN %5 ON %6 = %7")
             .arg(m_deliverers->tableName())
             .arg(getColName(DCMR::RMT_ID_DELIVERER, true))
@@ -393,12 +356,13 @@ MilkReceptionDao *MilkReceptionTable::dao() const
     return dynamic_cast<MilkReceptionDao *>(m_dao.data());
 }
 
-DeliverersTable *MilkReceptionTable::getDeliverers() const
+
+DeliverersTable *MilkReceptionTable::deliverers() const
 {
     return m_deliverers;
 }
 
-MilkPointsTable *MilkReceptionTable::getMilkPoints() const
+MilkPointsTable *MilkReceptionTable::milkPoints() const
 {
     return m_milkPoints;
 }
@@ -463,4 +427,17 @@ int db::MilkReceptionTable::getColPosition(const QString &columnName) const
     if (columnName == DCMR::FN_FAT)
         return DCMR::RMT_FAT;
     return -1;
+}
+
+MilkReceptionData MilkReceptionTable::fromRecord(const QSqlRecord &record)
+{
+    return {
+        record.value(DCMR::FN_ID).toLongLong(),
+                record.value(DCMR::FN_ID_DELIVERER).toLongLong(),
+                record.value(DCMR::FN_MILK_POINT_ID).toLongLong(),
+                record.value(DCMR::FN_DELIVERY_DATE).toDate(),
+                record.value(DCMR::FN_PRICE_LITER).toDouble(),
+                record.value(DCMR::FN_LITERS).toDouble(),
+                record.value(DCMR::FN_FAT).toDouble()
+    };
 }

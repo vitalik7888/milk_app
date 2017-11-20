@@ -18,37 +18,17 @@ using DCL = DC::Localities;
 MilkPointDao::MilkPointDao(MilkPointsTable *table):
     Dao(table) {}
 
-std::experimental::optional<MilkPointData> MilkPointDao::get(const DbConstants::milk_id id) const
+bool MilkPointDao::insert(const QVariant &data) const
 {
-    QSqlQuery query;
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getSelectStr(
-                           DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }))
-                  .arg(DCMP::FN_ID));
-    query.addBindValue(id);
+    Q_ASSERT(data.canConvert<MilkPointData>());
+    const MilkPointData milkPoint = data.value<MilkPointData>();
 
-    if (query.exec() && query.first())
-    {
-        return MilkPointData(
-                    id,
-                    query.value(DCMP::FN_LOCALITY_ID).toLongLong(),
-                    query.value(DCMP::FN_NAME).toString(),
-                    query.value(DCMP::FN_DESCRIPTION).toString()
-                    );
-    } else
-        _error(QString("Отсутствует молокопункт с id = %1").arg(id));
-
-    return {};
-}
-
-bool MilkPointDao::insert(const MilkPointData &data) const
-{
     QSqlQuery query;
     query.prepare(DbUtils::getPrepInsertStr(
                       DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }));
-    query.addBindValue(data.localityId());
-    query.addBindValue(data.name());
-    query.addBindValue(data.description());
+    query.addBindValue(milkPoint.localityId());
+    query.addBindValue(milkPoint.name());
+    query.addBindValue(milkPoint.description());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -58,17 +38,20 @@ bool MilkPointDao::insert(const MilkPointData &data) const
     return true;
 }
 
-bool MilkPointDao::update(const MilkPointData &data) const
+bool MilkPointDao::update(const QVariant &data) const
 {
+    Q_ASSERT(data.canConvert<MilkPointData>());
+    const MilkPointData milkPoint = data.value<MilkPointData>();
+
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(DbUtils::getPrepUpdateStr(
                            DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }))
                   .arg(DCMP::FN_ID));
-    query.addBindValue(data.localityId());
-    query.addBindValue(data.name());
-    query.addBindValue(data.description());
-    query.addBindValue(data.id());
+    query.addBindValue(milkPoint.localityId());
+    query.addBindValue(milkPoint.name());
+    query.addBindValue(milkPoint.description());
+    query.addBindValue(milkPoint.id());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -106,7 +89,11 @@ QString MilkPointsTable::tableName() const
 
 std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const DbConstants::milk_id milkPointId) const
 {
-    return dao()->get(milkPointId);
+    auto data = dao()->get(milkPointId);
+    if (data.isNull())
+        return {};
+
+    return fromRecord(data.value<QSqlRecord>());
 }
 
 MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
@@ -130,7 +117,7 @@ bool MilkPointsTable::insert(int index, MilkPoint *milkPoint)
     }
 
     emit beginInsertRows(QModelIndex(), index, index);
-    const bool isOk = dao()->insert(milkPoint->data());
+    const bool isOk = dao()->insert(QVariant::fromValue(milkPoint->data()));
     emit endInsertRows();
 
     return isOk;
@@ -143,7 +130,7 @@ bool MilkPointsTable::append(MilkPoint *milkPoint)
 
 bool MilkPointsTable::update(MilkPoint *milkPoint) const
 {
-    return dao()->update(milkPoint->data());
+    return dao()->update(QVariant::fromValue(milkPoint->data()));
 }
 
 bool MilkPointsTable::setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const
@@ -193,6 +180,16 @@ QString MilkPointsTable::getColName(const int position, const bool withTableName
 MilkPointDao *MilkPointsTable::dao() const
 {
     return dynamic_cast<MilkPointDao *>(m_dao.data());
+}
+
+MilkPointData MilkPointsTable::fromRecord(const QSqlRecord &record)
+{
+    return {
+        record.value(DCMP::FN_ID).toLongLong(),
+                record.value(DCMP::FN_LOCALITY_ID).toLongLong(),
+                record.value(DCMP::FN_NAME).toString(),
+                record.value(DCMP::FN_DESCRIPTION).toString()
+    };
 }
 
 int db::MilkPointsTable::getColPosition(const QString &columnName) const

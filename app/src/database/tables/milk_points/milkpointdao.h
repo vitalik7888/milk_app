@@ -2,8 +2,6 @@
 #define MILKPOINTDAO_H
 
 #include <base/dao.h>
-#include "milkpointdata.h"
-#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -14,9 +12,8 @@ class MilkPointDao: public Dao {
 public:
     MilkPointDao(MilkPointsTable *table);
 
-    std::experimental::optional<MilkPointData> get(const DbConstants::milk_id id) const;
-    bool insert(const MilkPointData &data) const;
-    bool update(const MilkPointData &data) const;
+    virtual bool insert(const QVariant &data) const Q_DECL_OVERRIDE;
+    virtual bool update(const QVariant &data) const Q_DECL_OVERRIDE;
 };
 
 DB_END_NAMESPACE

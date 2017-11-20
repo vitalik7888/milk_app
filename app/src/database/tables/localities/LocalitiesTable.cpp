@@ -16,29 +16,15 @@ using DCL = DC::Localities;
 LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
     Dao(table) {}
 
-std::experimental::optional<LocalityData> LocalitiesDao::get(const DbConstants::milk_id id) const {
-    QSqlQuery query(m_table->database());
-    query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getSelectStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION })).arg(DCL::FN_ID));
-    query.addBindValue(id);
+bool LocalitiesDao::insert(const QVariant &data) const
+{
+    Q_ASSERT(data.canConvert<LocalityData>());
+    const LocalityData locality = data.value<LocalityData>();
 
-    if (query.exec() && query.first())
-    {
-        return LocalityData(id,
-                            query.value(DCL::FN_NAME).toString(),
-                            query.value(DCL::FN_DESCRIPTION).toString()
-                            );
-    } else
-        _error(QString("Отсутствует населенный пункт с id = %1").arg(id));
-
-    return {};
-}
-
-bool LocalitiesDao::insert(const LocalityData &data) const{
     QSqlQuery query(m_table->database());
     query.prepare(DbUtils::getPrepInsertStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }));
-    query.addBindValue(data.name());
-    query.addBindValue(data.description());
+    query.addBindValue(locality.name());
+    query.addBindValue(locality.description());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -48,14 +34,18 @@ bool LocalitiesDao::insert(const LocalityData &data) const{
     return true;
 }
 
-bool LocalitiesDao::update(const LocalityData &data) const{
+bool LocalitiesDao::update(const QVariant &data) const
+{
+    Q_ASSERT(data.canConvert<LocalityData>());
+    const LocalityData locality = data.value<LocalityData>();
+
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(DbUtils::getPrepUpdateStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }))
                   .arg(DCL::FN_ID));
-    query.addBindValue(data.name());
-    query.addBindValue(data.description());
-    query.addBindValue(data.id());
+    query.addBindValue(locality.name());
+    query.addBindValue(locality.description());
+    query.addBindValue(locality.id());
 
     if (!query.exec()) {
         _error(query.lastError().text());
@@ -88,15 +78,15 @@ QString LocalitiesTable::tableName() const
 std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const DbConstants::milk_id localityId) const
 {
     const auto data = dao()->get(localityId);
-    if (!data)
-        emit error(QString("Отсутствует населенный пункт с id = %1").arg(localityId));
+    if (!data.isNull())
+        return {};
 
-    return data;
+    return fromRecord(data.value<QSqlRecord>());
 }
 
 Locality *LocalitiesTable::getLocality(const qlonglong localityId)
 {
-    const auto data = dao()->get(localityId);
+    const auto data = getLocalityData(localityId);
     if (!data)
         return Q_NULLPTR;
 
@@ -110,7 +100,7 @@ bool LocalitiesTable::insert(int position, Locality *locality)
     }
 
     emit beginInsertRows(QModelIndex(), position, position);
-    const bool isOk = dao()->insert(locality->data());
+    const bool isOk = dao()->insert(QVariant::fromValue(locality->data()));
     emit endInsertRows();
 
     return isOk;
@@ -123,7 +113,7 @@ bool LocalitiesTable::append(Locality *locality)
 
 bool LocalitiesTable::update(Locality *locality) const
 {
-    return dao()->update(locality->data());
+    return dao()->update(QVariant::fromValue(locality->data()));
 }
 
 bool LocalitiesTable::setName(const DbConstants::milk_id localityId, const QString &localityName) const
@@ -165,6 +155,15 @@ QString LocalitiesTable::getColName(const int position, const bool withTableName
 LocalitiesDao *LocalitiesTable::dao() const
 {
     return dynamic_cast<LocalitiesDao *>(m_dao.data());
+}
+
+LocalityData LocalitiesTable::fromRecord(const QSqlRecord &record)
+{
+    return {
+        record.value(DCL::FN_ID).toLongLong(),
+                record.value(DCL::FN_NAME).toString(),
+                record.value(DCL::FN_DESCRIPTION).toString()
+    };
 }
 
 int db::LocalitiesTable::getColPosition(const QString &columnName) const

@@ -2,8 +2,6 @@
 #define LOCALITIESDAO_H
 
 #include <base/dao.h>
-#include "localitydata.h"
-#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -14,9 +12,8 @@ class LocalitiesDao: public Dao {
 public:
     LocalitiesDao(LocalitiesTable *table);
 
-    std::experimental::optional<LocalityData> get(const DbConstants::milk_id id) const;
-    bool insert(const LocalityData &data) const;
-    bool update(const LocalityData &data) const;
+    virtual bool insert(const QVariant &variant) const Q_DECL_OVERRIDE;
+    virtual bool update(const QVariant &variant) const Q_DECL_OVERRIDE;
 };
 
 DB_END_NAMESPACE

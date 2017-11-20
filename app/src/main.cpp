@@ -7,6 +7,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+
 void qmlRegisterSettings()
 {
     const char *uri = "Milk.Settings";

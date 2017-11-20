@@ -15,6 +15,8 @@ public:
     static QString getPrepUpdateStr(const QString &tableName, const QStringList &columns);
     static QString getPrepInsertStr(const QString &tableName, const QStringList &columns);
 
+//    template<class T>
+//    static T fromRecord(const QSqlRecord &record);
 };
 
 #endif // DBUTILS_H

@@ -2,8 +2,6 @@
 #define MILKRECEPRIONDAO_H
 
 #include <base/dao.h>
-#include "milkreceptiondata.h"
-#include <experimental/optional>
 
 DB_BEGIN_NAMESPACE
 
@@ -20,10 +18,8 @@ class MilkReceptionDao: public Dao {
 public:
     MilkReceptionDao(MilkReceptionTable *table);
 
-    std::experimental::optional<MilkReceptionData> get(const DbConstants::milk_id id) const;
-    QList<MilkReceptionData> get(const QString &where = QString()) const;
-    bool insert(const MilkReceptionData &data) const;
-    bool update(const MilkReceptionData &data) const;
+    bool insert(const QVariant &data) const;
+    bool update(const QVariant &data) const;
 
     bool updatePriceLiter(const double price, const QDate &dateFrom, const QDate &dateTo) const;
     double getMinPriceLiter(const QDate &from, const QDate &to) const;

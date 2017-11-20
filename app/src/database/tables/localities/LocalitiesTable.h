@@ -34,6 +34,8 @@ public:
 
 private:
     LocalitiesDao *dao() const;
+
+    static LocalityData fromRecord(const QSqlRecord &record);
 };
 
 DB_END_NAMESPACE

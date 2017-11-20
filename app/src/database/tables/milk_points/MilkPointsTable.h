@@ -30,8 +30,8 @@ public:
     Q_INVOKABLE bool insert(int index, MilkPoint *milkPoint);
     Q_INVOKABLE bool append(MilkPoint *milkPoint);
     Q_INVOKABLE bool update(MilkPoint *milkPoint) const;
-    Q_INVOKABLE bool setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const;
-    Q_INVOKABLE bool setDescription(const DbConstants::milk_id milkPointId, const QString &description) const;
+    bool setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const;
+    bool setDescription(const DbConstants::milk_id milkPointId, const QString &description) const;
 
     LocalitiesTable *localities() const;
 
@@ -39,6 +39,8 @@ private:
     LocalitiesTable *m_localities;
 
     MilkPointDao *dao() const;
+
+    static MilkPointData fromRecord(const QSqlRecord &record);
 };
 
 DB_END_NAMESPACE

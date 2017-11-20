@@ -17,8 +17,8 @@ DB_BEGIN_NAMESPACE
 class MilkReceptionTable : public Table
 {
     Q_OBJECT
-    Q_PROPERTY(DeliverersTable* deliverers READ getDeliverers CONSTANT)
-    Q_PROPERTY(MilkPointsTable* milkPoints READ getMilkPoints CONSTANT)
+    Q_PROPERTY(DeliverersTable* deliverers READ deliverers CONSTANT)
+    Q_PROPERTY(MilkPointsTable* milkPoints READ milkPoints CONSTANT)
 
 public:
     MilkReceptionTable(QObject *parent = Q_NULLPTR);
@@ -48,8 +48,8 @@ public:
     bool setLiters(const DbConstants::milk_id milkReceptionId, const double liters) const;
     bool setFat(const DbConstants::milk_id milkReceptionId, const double fate) const;
 
-    DeliverersTable *getDeliverers() const;
-    MilkPointsTable *getMilkPoints() const;
+    DeliverersTable *deliverers() const;
+    MilkPointsTable *milkPoints() const;
 
     std::tuple<double, double> getMinMaxPriceLiter(const QDate &from, const QDate &to = QDate()) const;
     Q_INVOKABLE QDate getMinDeliveryDate() const;
@@ -60,6 +60,8 @@ private:
     MilkPointsTable *m_milkPoints;
 
     MilkReceptionDao *dao() const;
+
+    static MilkReceptionData fromRecord(const QSqlRecord &record);
 };
 
 DB_END_NAMESPACE
