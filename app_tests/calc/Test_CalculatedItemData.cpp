@@ -79,13 +79,12 @@ void Test_CalculatedItemData::calculatedResult()
 
 void Test_CalculatedItemData::add()
 {
-//    const QList<CalculatedItemData> calcItems {
-//        {22.00, 3.20, 15.00},
-//        {55.00, 3.40, 15.00},
-//    };
-//    CalculatedItemData result;
-//    for (const auto &item : calcItems)
-//        result += item;
-//    compare(result, 219.00, 3.415530, 18.00, 3.01, 748.00, 220.00, 3533.00, 17.29, 3550.29);
+    const QList<CalculatedItemData> calcItems {
+        {12.0, 5.1, 15.00},
+    };
+    CalculatedItemData result;
+    for (const auto &item : calcItems)
+        result += item;
+    compare(result, 12.0, 5.1, .0, 4.5, 61.2, 18.0, 180.0, 90.0, 270.0);
 }
 
