@@ -28,6 +28,15 @@ MilkReception::MilkReception(const TC::milk_id id, const QDate deliveryDate, con
 
 }
 
+MilkReception::MilkReception(const MilkReception &mr):
+    QObject(mr.parent()),
+    m_data(mr.data()),
+    m_deliverer(mr.deliverer()),
+    m_milkPoint(mr.milkPoint())
+{
+
+}
+
 MilkReception::~MilkReception()
 {
 

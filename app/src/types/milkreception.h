@@ -24,6 +24,7 @@ public:
     MilkReception(const TypesConstants::milk_id id, const QDate deliveryDate, const double priceLiter,
                   const double liters, const double fat, Deliverer *deliverer = Q_NULLPTR,
                   MilkPoint *milkPoint = Q_NULLPTR, QObject *parent = Q_NULLPTR);
+    MilkReception(const MilkReception &mr);
     MilkReception(QObject *parent = Q_NULLPTR);
     virtual ~MilkReception();
 
@@ -62,5 +63,7 @@ private:
     Deliverer *m_deliverer;
     MilkPoint *m_milkPoint;
 };
+
+Q_DECLARE_METATYPE(MilkReception)
 
 #endif // MILKRECEPTION_H

@@ -4,6 +4,8 @@
 #include "TypesConstants.h"
 // Qt
 #include <QDate>
+#include <QMetaType>
+
 
 class MilkReceptionData
 {
@@ -47,5 +49,7 @@ private:
     double   m_liters;
     double   m_fat;
 };
+
+Q_DECLARE_METATYPE(MilkReceptionData)
 
 #endif // MILKRECEPTIONDATA_H
