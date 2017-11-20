@@ -21,7 +21,7 @@
 #include "types/Test_MilkReception.h"
 // calc
 #include "calc/Test_CalcUtils.h"
-#include "calc/Test_CalculatedItem.h"
+#include "calc/Test_CalculatedItemData.h"
 // db
 #include "db/Test_LocalitiesTable.h"
 
@@ -54,7 +54,7 @@ void addTypesTests(Tests &tests, QObject *parent) {
 void addCalcTests(Tests &tests, QObject *parent) {
     tests.append({
                      new Test_CalcUtils(parent),
-                     new Test_CalculatedItem(parent)
+                     new Test_CalculatedItemData(parent)
                  });
 }
 
