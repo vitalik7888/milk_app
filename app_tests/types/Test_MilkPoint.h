@@ -16,26 +16,22 @@ class Test_MilkPoint : public QObject
 public:
     explicit Test_MilkPoint(QObject *parent = nullptr);
 
-    static void compare(MilkPointData *mpd, const TypesConstants::milk_id id,
-                        const TypesConstants::milk_id localityId, const QString &name, const QString &description);
-    static void compareDefault(MilkPointData *mpd);
     static void compare(MilkPoint *mp,const TypesConstants::milk_id id, const QString &name, const QString &description,
                         Locality *locality);
     static void compareDefault(MilkPoint *mp);
+    static void compare(MilkPoint *left, MilkPoint *right);
 
 private slots:
-    void testEmptyDataConstructor();
-    void testDataConstructor();
-    void testDataMethods();
-    void testEmptyConstructor();
-    void testCopyConstructor();
-    void testConstructor();
-    void testMethods();
-    void testReset();
-    void testSignalId();
-    void testSignalLocality();
-    void testSignalName();
-    void testSignalDescription();
+    void emptyConstructor();
+    void copyConstructor();
+    void constructor();
+    void methods();
+    void reset();
+    void storingInQVariant();
+    void signalIdChanged();
+    void signalLocalityChanged();
+    void signalNameChanged();
+    void signalDescriptionChanged();
 };
 
 #endif // TEST_MILKPOINT_H

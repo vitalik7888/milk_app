@@ -16,21 +16,6 @@ Test_MilkPoint::Test_MilkPoint(QObject *parent) : QObject(parent)
 
 }
 
-void Test_MilkPoint::compare(MilkPointData *mpd, const TC::milk_id id,
-                             const TC::milk_id localityId, const QString &name,
-                             const QString &description)
-{
-    QCOMPARE(mpd->id(), id);
-    QCOMPARE(mpd->localityId(), localityId);
-    QCOMPARE(mpd->name(), name);
-    QCOMPARE(mpd->description(), description);
-}
-
-void Test_MilkPoint::compareDefault(MilkPointData *mpd)
-{
-    compare(mpd, TCMP::DEF_ID, TCMP::DEF_LOCALITY_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION);
-}
-
 void Test_MilkPoint::compare(MilkPoint *mp, const TC::milk_id id, const QString &name,
                              const QString &description, Locality *locality)
 {
@@ -47,50 +32,38 @@ void Test_MilkPoint::compareDefault(MilkPoint *mp)
     compare(mp, TCMP::DEF_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION, Q_NULLPTR);
 }
 
-void Test_MilkPoint::testEmptyDataConstructor()
+void Test_MilkPoint::compare(MilkPoint *left, MilkPoint *right)
 {
-    MilkPointData mpd;
-    compareDefault(&mpd);
+    compare(left, right->id(), right->name(), right->description(), right->locality());
 }
 
-void Test_MilkPoint::testDataConstructor()
+void Test_MilkPoint::storingInQVariant()
 {
-    MilkPointData mpd(42, 1, "n", "d");
-    compare(&mpd, 42, 1, "n", "d");
+    MilkPoint mpToCopy(42, "n", "d", new Locality({11, "ln", "ld"}));
+    auto mp = QVariant::fromValue(mpToCopy).value<MilkPoint>();
+    compare(&mp, &mpToCopy);
 }
 
-void Test_MilkPoint::testDataMethods()
-{
-    MilkPointData mpd;
-    mpd.setId(42);
-    mpd.setLocalityId(1);
-    mpd.setName("n");
-    mpd.setDescription("d");
-    compare(&mpd, 42, 1, "n", "d");
-}
-
-void Test_MilkPoint::testEmptyConstructor()
+void Test_MilkPoint::emptyConstructor()
 {
     MilkPoint mp;
     compareDefault(&mp);
 }
 
-void Test_MilkPoint::testCopyConstructor()
+void Test_MilkPoint::copyConstructor()
 {
-    Locality l({11, "ln", "ld"});
-    MilkPoint mpToCopy(42, "n", "d", &l);
-    MilkPoint mp(mpToCopy);
-    compare(&mp, mpToCopy.id(), mpToCopy.name(), mpToCopy.description(), &l);
+    MilkPoint mpToCopy(42, "n", "d", new Locality({11, "ln", "ld"}));
+    compare(new MilkPoint(mpToCopy), &mpToCopy);
 }
 
-void Test_MilkPoint::testConstructor()
+void Test_MilkPoint::constructor()
 {
     Locality l({11, "ln", "ld"});
     MilkPoint mp(42, "n", "d", &l);
     compare(&mp, 42, "n", "d", &l);
 }
 
-void Test_MilkPoint::testMethods()
+void Test_MilkPoint::methods()
 {
     Locality l({64, "lcn", "l234d"});
 
@@ -102,7 +75,7 @@ void Test_MilkPoint::testMethods()
     compare(&mp, 42, "n", "d", &l);
 }
 
-void Test_MilkPoint::testReset()
+void Test_MilkPoint::reset()
 {
     MilkPoint mp;
     mp.setId(42);
@@ -113,7 +86,7 @@ void Test_MilkPoint::testReset()
     compareDefault(&mp);
 }
 
-void Test_MilkPoint::testSignalId()
+void Test_MilkPoint::signalIdChanged()
 {
     MilkPoint mp;
     const TC::milk_id data = 15;
@@ -125,7 +98,7 @@ void Test_MilkPoint::testSignalId()
     QCOMPARE(arguments.at(0).toLongLong(), data);
 }
 
-void Test_MilkPoint::testSignalLocality()
+void Test_MilkPoint::signalLocalityChanged()
 {
     MilkPoint mp;
     Locality data({321, "dddd", "cccc"});
@@ -139,7 +112,7 @@ void Test_MilkPoint::testSignalLocality()
     Test_Locality::compare(&data, locality->id(), locality->name(), locality->description());
 }
 
-void Test_MilkPoint::testSignalName()
+void Test_MilkPoint::signalNameChanged()
 {
     MilkPoint mp;
     const QString data = "name";
@@ -151,7 +124,7 @@ void Test_MilkPoint::testSignalName()
     QCOMPARE(arguments.at(0).toString(), data);
 }
 
-void Test_MilkPoint::testSignalDescription()
+void Test_MilkPoint::signalDescriptionChanged()
 {
     MilkPoint mp;
     const QString data = "descr";
