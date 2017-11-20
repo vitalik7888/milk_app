@@ -23,7 +23,7 @@
 #include "calc/Test_CalcUtils.h"
 #include "calc/Test_CalculatedItem.h"
 // db
-//#include "db/Test_LocalitiesTable.h"
+#include "db/Test_LocalitiesTable.h"
 
 
 using Tests = QList<QObject *>;
@@ -58,11 +58,11 @@ void addCalcTests(Tests &tests, QObject *parent) {
                  });
 }
 
-//void addDbTests(Tests &tests, QObject *parent) {
-//    tests.append({
-//                     new Test_LocalitiesTable(parent)
-//                 });
-//}
+void addDbTests(Tests &tests, QObject *parent) {
+    tests.append({
+                     new Test_LocalitiesTable(parent)
+                 });
+}
 
 int main(int argc, char *argv[])
 {
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     addSettingsTests(tests, &app);
     addTypesTests(tests, &app);
     addCalcTests(tests, &app);
-//    addDbTests(tests, &app);
+    addDbTests(tests, &app);
 
     int status = 0;
     for (auto test : tests)
