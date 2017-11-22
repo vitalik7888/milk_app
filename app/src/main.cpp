@@ -2,10 +2,12 @@
 #include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
 #include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
 #include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
+#include "src/calc/CalcItemModel.h"
 #include <QFile>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDebug>
 
 
 void qmlRegisterSettings()
@@ -33,11 +35,17 @@ void qmlRegisterDb()
 
 void qmlRegisterMilkTypes()
 {
-    const char *uri = "Milk.Core";
+    const char *uri = "Milk.Types";
     qmlRegisterType<Locality>(uri, 1, 0, "Locality");
     qmlRegisterType<MilkPoint>(uri, 1, 0, "MilkPoint");
     qmlRegisterType<Deliverer>(uri, 1, 0, "Deliverer");
     qmlRegisterType<MilkReception>(uri, 1, 0, "MilkReception");
+}
+
+void qmlRegisterCalcTypes() {
+    const char *uri = "Milk.Calc";
+    qmlRegisterType<CalculatedItem>(uri, 1, 0, "CalculatedItem");
+    qmlRegisterType<CalcItemModel>(uri, 1, 0, "CalcItemModel");
 }
 
 int main(int argc, char *argv[])
@@ -47,17 +55,18 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
+    qmlRegisterType<CalcItemModel>("MilkCore", 1, 0, "MilkCore");
     qmlRegisterSettings();
     qmlRegisterDb();
     qmlRegisterMilkTypes();
+    qmlRegisterCalcTypes();
 
-    MilkCore core;
+    auto milkCore = new MilkCore(&app);
 
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("milkDb", core.database());
-    context->setContextProperty("milkSettings", core.settings());
+    context->setContextProperty("milkCore", milkCore);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

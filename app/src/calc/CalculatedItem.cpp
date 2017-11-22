@@ -1,80 +1,194 @@
 #include "CalculatedItem.h"
 
-#include "CalcUtils.h"
 
+CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter,
+                               CalculatedItem *parent, QObject *objectParent):
+    QObject(objectParent),
+    m_parent(parent),
+    m_itemData(liters, fat, priceForLiter)
+{
+}
 
 CalculatedItem::CalculatedItem(QObject *parent):
     QObject(parent),
-    m_data()
+    m_parent(Q_NULLPTR)
 {
 
 }
 
-CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter, QObject *parent):
-    QObject(parent),
-    m_data(liters, fat, priceForLiter)
+CalculatedItem::~CalculatedItem()
 {
+    qDeleteAll<Items>(m_items);
+    m_items.clear();
 }
 
-double CalculatedItem::liters() const
+void CalculatedItem::setItems(const Items &calcItems)
 {
-    return m_data.liters();
+    m_items = calcItems;
+    addData(m_items);
 }
 
-double CalculatedItem::fat() const
+void CalculatedItem::setParent(CalculatedItem *parent)
 {
-    return m_data.fat();
+    if (m_parent == parent)
+        return;
+
+    m_parent = parent;
+    emit parentChanged(m_parent);
 }
 
-double CalculatedItem::priceForLiter() const
+void CalculatedItem::setDelivererName(const QString &delivererName)
 {
-    return m_data.priceForLiter();
+    if (m_delivererName == delivererName)
+        return;
+
+    m_delivererName = delivererName;
+    emit delivererNameChanged(m_delivererName);
 }
 
-double CalculatedItem::protein() const
+void CalculatedItem::setDeliveryDate(const QDate &deliveryDate)
 {
-    return m_data.protein();
+    if (m_deliveryDate == deliveryDate)
+        return;
+
+    m_deliveryDate = deliveryDate;
+    emit deliveryDateChanged(m_deliveryDate);
 }
 
-double CalculatedItem::fatUnits() const
+void CalculatedItem::setMilkPointName(const QString &milkPointName)
 {
-    return m_data.fatUnits();
+    if (m_milkPointName == milkPointName)
+        return;
+
+    m_milkPointName = milkPointName;
+    emit milkPointNameChanged(m_milkPointName);
 }
 
-double CalculatedItem::rankWeight() const
+CalculatedItem *CalculatedItem::item(const int position) const
 {
-    return m_data.rankWeight();
+    return m_items.at(position);
 }
 
-double CalculatedItem::paymentWithOutPremium() const
+int CalculatedItem::itemsCount() const
 {
-    return m_data.paymentWithOutPremium();
+    return m_items.size();
 }
 
-double CalculatedItem::premiumForFat() const
+void CalculatedItem::clearItems()
 {
-    return m_data.premiumForFat();
+    m_items.clear();
+    m_itemData = CalculatedItemData();
 }
 
-double CalculatedItem::sum() const
+QVariant CalculatedItem::data(const Columns column) const
 {
-    return m_data.sum();
+    switch (column) {
+    case Columns::Name: return QVariant::fromValue(m_delivererName);
+    case Columns::Date: return QVariant::fromValue(m_deliveryDate);
+    case Columns::MilkPointName: return QVariant::fromValue(m_milkPointName);
+    case Columns::Price: return QVariant::fromValue(m_itemData.priceForLiter());
+    case Columns::Liters: return QVariant::fromValue(m_itemData.liters());
+    case Columns::Fat: return QVariant::fromValue(m_itemData.fat());
+    case Columns::Protein: return QVariant::fromValue(m_itemData.protein());
+    case Columns::FatUnits: return QVariant::fromValue(m_itemData.fatUnits());
+    case Columns::RankWeight: return QVariant::fromValue(m_itemData.rankWeight());
+    case Columns::PaymentWithOutPremium: return QVariant::fromValue(m_itemData.paymentWithOutPremium());
+    case Columns::PremiumForFat: return QVariant::fromValue(m_itemData.premiumForFat());
+    case Columns::Sum: return QVariant::fromValue(m_itemData.sum());
+    case Columns::ColumnsCount: break;
+    }
+
+    return QVariant();
 }
 
-CalculatedItemData CalculatedItem::data() const
+int CalculatedItem::row() const
 {
-    return m_data;
+    return m_parent ? m_parent->m_items.indexOf(const_cast<CalculatedItem *>(this)) : 0;
 }
 
-//CalculatedItem *CalculatedItem::operator+(CalculatedItem *r)
-//{
-//    auto ci = new CalculatedItem(); // FIXME parent
-//    ci->m_data = ci->m_data + r->data();
-//    return ci;
-//}
-
-CalculatedItem *CalculatedItem::operator+=(CalculatedItem *r)
+int CalculatedItem::columnCount() const
 {
-    m_data += r->data();
-    return this;
+    return static_cast<int>(Columns::ColumnsCount);
+}
+
+void CalculatedItem::addItem(CalculatedItem *item)
+{
+    addData(item->itemData());
+    m_items.append(item);
+}
+
+void CalculatedItem::addItems(const Items &calcItems)
+{
+    m_items.append(calcItems);
+    addData(calcItems);
+}
+
+void CalculatedItem::addData(const Items &calcItems)
+{
+    const auto beforeData = m_itemData;
+
+    for (auto item : calcItems)
+        m_itemData += item->itemData();
+
+    checkItemsData(beforeData, itemData());
+}
+
+void CalculatedItem::addData(const CalculatedItemData &item)
+{
+    const auto beforeData = m_itemData;
+
+    m_itemData += item;
+
+    checkItemsData(beforeData, itemData());
+}
+
+void CalculatedItem::checkItemsData(const CalculatedItemData &beforeData, const CalculatedItemData &afterData)
+{
+    if (beforeData.liters() < afterData.liters())
+        emit litersChanged(afterData.liters());
+    if (beforeData.fat() < afterData.fat())
+        emit fatChanged(afterData.fat());
+    if (beforeData.priceForLiter() < afterData.priceForLiter())
+        emit priceChanged(afterData.priceForLiter());
+    if (beforeData.protein() < afterData.protein())
+        emit proteinChanged(afterData.protein());
+    if (beforeData.fatUnits() < afterData.fatUnits())
+        emit fatUnitsChanged(afterData.fatUnits());
+    if (beforeData.rankWeight() < afterData.rankWeight())
+        emit rankWeightChanged(afterData.rankWeight());
+    if (beforeData.paymentWithOutPremium() < afterData.paymentWithOutPremium())
+        emit paymentWithOutPremiumChanged(afterData.paymentWithOutPremium());
+    if (beforeData.premiumForFat() < afterData.premiumForFat())
+        emit premiumForFatChanged(afterData.premiumForFat());
+    if (beforeData.sum() < afterData.sum())
+        emit sumChanged(afterData.sum());
+}
+
+QQmlListProperty<CalculatedItem> CalculatedItem::items()
+{
+    return QQmlListProperty<CalculatedItem>(this, this,
+                                           &CalculatedItem::appendItem,
+                                           &CalculatedItem::itemsCount,
+                                           &CalculatedItem::item,
+                                           &CalculatedItem::clearItems);
+}
+
+void CalculatedItem::appendItem(QQmlListProperty<CalculatedItem> *list, CalculatedItem *item)
+{
+    reinterpret_cast< CalculatedItem* >(list->data)->addItem(item);
+}
+
+int CalculatedItem::itemsCount(QQmlListProperty<CalculatedItem> *list)
+{
+    return reinterpret_cast< CalculatedItem* >(list->data)->itemsCount();
+}
+
+CalculatedItem *CalculatedItem::item(QQmlListProperty<CalculatedItem> *list, int position)
+{
+    return reinterpret_cast< CalculatedItem* >(list->data)->item(position);
+}
+
+void CalculatedItem::clearItems(QQmlListProperty<CalculatedItem> *list)
+{
+    reinterpret_cast< CalculatedItem* >(list->data)->clearItems();
 }

@@ -97,6 +97,17 @@ std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(con
     return {};
 }
 
+QList<DelivererData> DeliverersTable::getDeliverersData(const QString &where) const
+{
+    const auto data = dao()->getAll(where).value< QList<QSqlRecord> >();
+
+    QList<DelivererData> deliverers;
+    for (const auto &record : data)
+        deliverers.append(fromRecord(record));
+
+    return deliverers;
+}
+
 Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
 {
     const auto delivererData = getDelivererData(delivererId);

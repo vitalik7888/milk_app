@@ -4,6 +4,8 @@
 #include "DbConstants.h"
 
 class QStringList;
+template<class T>
+class QSet;
 
 
 class DbUtils
@@ -15,8 +17,7 @@ public:
     static QString getPrepUpdateStr(const QString &tableName, const QStringList &columns);
     static QString getPrepInsertStr(const QString &tableName, const QStringList &columns);
 
-//    template<class T>
-//    static T fromRecord(const QSqlRecord &record);
+    static QString getStrDeliverersIn(const QSet<DbConstants::milk_id> &deliverersIds);
 };
 
 #endif // DBUTILS_H

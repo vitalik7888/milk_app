@@ -15,6 +15,8 @@ public:
     MilkPointData(const TypesConstants::milk_id id, const TypesConstants::milk_id localityId,
                   const QString &name, const QString &description);
 
+    MilkPointData &operator =(const MilkPointData &data);
+
     TypesConstants::milk_id id() const;
     void setId(const TypesConstants::milk_id &id);
 

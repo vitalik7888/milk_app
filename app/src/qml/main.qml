@@ -2,7 +2,8 @@ import QtQuick 2.7
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
-import Milk.Core 1.0
+import MilkCore 1.0
+import Milk.Types 1.0
 import Milk.Settings 1.0
 import Milk.Database 1.0
 
@@ -47,7 +48,7 @@ ApplicationWindow {
         selectMultiple: false
 
         onAccepted: {
-            milkDb.openDb(fileUrl.toString().replace("file://", ""))
+            milkCore.db.openDb(fileUrl.toString().replace("file://", ""))
         }
     }
 
@@ -59,7 +60,7 @@ ApplicationWindow {
             title: qsTr("Расчёты")
 
             CalcPage {
-
+                id : calcPage
             }
         }
 
@@ -77,40 +78,40 @@ ApplicationWindow {
     }
 
     Connections {
-        target: milkDb.deliverers
+        target: milkCore.db.deliverers
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkDb.localities
+        target: milkCore.db.localities
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkDb.milkPoints
+        target: milkCore.db.milkPoints
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkDb.milkReception
+        target: milkCore.db.milkReception
         onError: messageDialog.showError(error)
     }
 
     Connections {
-        target: milkDb
+        target: milkCore.db
 
         onDbOpened: {
-            milkSettings.main.lastChoosenDb = milkDb.dbPath
+            milkCore.settings.main.lastChoosenDb = milkCore.db.dbPath
         }
     }
 
     Component.onCompleted: {
-        milkSettings.readSettings();
-        if (!milkSettings.main.lastChoosenDb.isEmpty)
-            milkDb.openDb(milkSettings.main.lastChoosenDb);
+        milkCore.settings.readSettings();
+        if (!milkCore.settings.main.lastChoosenDb.isEmpty)
+            milkCore.db.openDb(milkCore.settings.main.lastChoosenDb);
         else {
             fileDialogChooseDb.open()
         }
     }
 
     Component.onDestruction: {
-        milkSettings.writeSettings()
+        milkCore.settings.writeSettings()
     }
 }

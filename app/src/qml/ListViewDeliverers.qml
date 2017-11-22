@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.0
-import Milk.Core 1.0
+import Milk.Types 1.0
 import Milk.Database 1.0
 
 ListView {

@@ -30,6 +30,7 @@ public:
     LocalitiesTable *localities() const;
 
     std::experimental::optional<DelivererData> getDelivererData(const DbConstants::milk_id delivererId) const;
+    QList<DelivererData> getDeliverersData(const QString &where) const;
     Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
     Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
     Q_INVOKABLE bool append(Deliverer *deliverer);

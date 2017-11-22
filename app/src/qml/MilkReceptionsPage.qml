@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
-import Milk.Core 1.0
+import Milk.Types 1.0
 import Milk.Database 1.0
 
 Page {
@@ -21,7 +21,7 @@ Page {
     LocalitiesSortFilterProxyModel {
         id: localitiesProxy
 
-        sourceModel: milkDb.localities
+        sourceModel: milkCore.db.localities
         enableLocalityDynamicFilter: true
     }
 
@@ -29,7 +29,7 @@ Page {
         id: milkPointsProxy
 
         enableMilkPointDynamicFilter: true
-        sourceModel: milkDb.milkPoints
+        sourceModel: milkCore.db.milkPoints
         milkPoint.locality.localityId: listViewCalcLocalities.currentLocality.localityId
     }
 
@@ -37,7 +37,7 @@ Page {
         id: deliverersProxy
 
         enableDelivererDynamicFilter: true
-        sourceModel: milkDb.deliverers
+        sourceModel: milkCore.db.deliverers
         deliverer.locality.localityId: listViewCalcLocalities.currentLocality.localityId
     }
 
@@ -93,7 +93,7 @@ Page {
                         id: spinBoxPrice
 
                         decimals: 2
-                        value: milkSettings.main.priceLiter
+                        value: milkCore.settings.main.priceLiter
                     }
                 }
 
@@ -155,7 +155,7 @@ Page {
                         } else if (spinBoxFat.value <= 0) {
                             messageDialog.open(qsTr("Укажите жиры"))
                         } else {
-                            if (milkDb.milkReception.append(curentMilkReception)) {
+                            if (milkCore.db.milkReception.append(curentMilkReception)) {
                                 spinBoxLiters.value = 0.0
                                 spinBoxFat.value = 0.0
                             }

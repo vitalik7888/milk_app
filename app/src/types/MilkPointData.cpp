@@ -31,6 +31,18 @@ MilkPointData::MilkPointData(const TC::milk_id id, const TC::milk_id localityId,
 
 }
 
+MilkPointData &MilkPointData::operator =(const MilkPointData &data)
+{
+    if (&data != this) {
+        m_id = data.id();
+        m_localityId = data.localityId();
+        m_name = data.name();
+        m_description = data.description();
+    }
+
+    return *this;
+}
+
 TC::milk_id MilkPointData::id() const
 {
     return m_id;

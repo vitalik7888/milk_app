@@ -1,16 +1,24 @@
 #include "MilkCore.h"
 
+#include <DbUtils.h>
+// Qt
+#include <QDebug>
+
 USE_DB_NAMESPACE
 
 using SC = SettingsConstants;
 using SCC = SettingsConstants::Column;
 using COLTYPE = SC::SettingsColumnType;
+using DBC = DbConstants;
+using DBCMR = DBC::MilkReception;
 
 
-MilkCore::MilkCore() :
-    m_settings(new Settings()),
-    m_database(new Database())
+MilkCore::MilkCore(QObject *parent) :
+    QObject(parent)
 {
+    m_settings = new Settings();
+    m_database = new Database();
+
     auto print = m_settings->print();
     print->setSettingsColumns(
     {
@@ -46,6 +54,89 @@ MilkCore::MilkCore() :
 
 MilkCore::~MilkCore() {}
 
-Settings *MilkCore::settings() const { return m_settings.data(); }
+Settings *MilkCore::settings() const { return m_settings; }
 
-Database *MilkCore::database() const { return m_database.data(); }
+Database *MilkCore::database() const { return m_database; }
+
+CalculatedItem *MilkCore::getCalculations(const QString &where)
+{
+    auto root = new CalculatedItem;
+    root->setDelivererName("All");
+
+    QHash<DBC::milk_id, MilkPointData> milkPointsData;
+    QHash<DBC::milk_id, CalculatedItem *> deliverersCi;
+
+    auto getMilkPoint = [this, &milkPointsData](const DBC::milk_id id) -> MilkPointData {
+        if (milkPointsData.contains(id))
+            return milkPointsData[id];
+        else {
+            const auto mpdOptional = database()->milkPoints()->getMilkPointData(id);
+            if (mpdOptional) {
+                milkPointsData.insert(id, mpdOptional.value());
+                return mpdOptional.value();
+            }
+        }
+        return {};
+    };
+
+    auto getDelivererCi = [this, &deliverersCi](const DBC::milk_id id) -> CalculatedItem* {
+        if (deliverersCi.contains(id))
+            return deliverersCi[id];
+        else {
+            const auto delivererOptional = database()->deliverers()->getDelivererData(id);
+            if (delivererOptional) {
+                const auto delivererData = delivererOptional.value();
+
+                auto delivererCi = new CalculatedItem;
+                delivererCi->setDelivererName(delivererData.name());
+
+                deliverersCi.insert(id, delivererCi);
+                return delivererCi;
+            }
+        }
+
+        return Q_NULLPTR;
+    };
+
+    const auto milkReceptions = database()->milkReception()->getMilkReceptionsData(where);
+    for (const auto mr : milkReceptions) {
+        auto delivererCi = getDelivererCi(mr.delivererId());
+
+        const auto milkPointData = getMilkPoint(mr.milkPointId());
+
+        auto milkReceptionCalcItem = new CalculatedItem(mr.liters(), mr.fat(), mr.priceLiter(), delivererCi);
+        milkReceptionCalcItem->setDeliveryDate(mr.deliveryDate());
+        milkReceptionCalcItem->setMilkPointName(milkPointData.name());
+
+        delivererCi->addItem(milkReceptionCalcItem);
+    }
+    for (auto item : deliverersCi) {
+        item->setParent(root);
+        root->addItem(item);
+    }
+
+    return root;
+}
+
+CalcItemModel *MilkCore::getCalcItemModel(const qlonglong delivererId, const qlonglong milkPointId,
+                                          const QDate &dateFrom, const QDate &dateTo)
+{
+    const auto delivererWhere = delivererId <= 0 ?
+                "" : QString("%1 = %2")
+                .arg(DBCMR::FN_ID_DELIVERER)
+                .arg(delivererId);
+    const auto milkPointWhere = milkPointId <= 0 ?
+                "" : QString("%1 = %2")
+                .arg((delivererWhere.isEmpty() ? "" : " AND ") + DBCMR::FN_MILK_POINT_ID)
+                .arg(milkPointId);
+    const auto dateWhere = !dateFrom.isValid() ?
+                "" : QString("%1 BETWEEN %2 AND %3")
+                .arg((milkPointWhere.isEmpty() ? "" : " AND ") + DBCMR::FN_DELIVERY_DATE)
+                .arg(dateFrom.toString(SC::defaultDateFormat()))
+                .arg(dateTo.toString(SC::defaultDateFormat()));
+
+    auto model = new CalcItemModel(getCalculations(delivererWhere + milkPointWhere + dateWhere), this);
+    model->setDateFormat(SC::defaultDateFormat());
+    return model;
+}
+

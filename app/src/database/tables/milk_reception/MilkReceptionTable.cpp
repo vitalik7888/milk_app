@@ -37,7 +37,6 @@ bool MilkReceptionDao::insert(const QVariant &data) const
     query.addBindValue(milkReception.priceLiter());
     query.addBindValue(milkReception.liters());
     query.addBindValue(milkReception.fat());
-
     if (!query.exec()) {
         _error(query.lastError().text());
         return false;
@@ -232,7 +231,7 @@ MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptio
     return milkReception;
 }
 
-QList<MilkReceptionData> MilkReceptionTable::getMilkReceptions(const QString &where) const
+QList<MilkReceptionData> MilkReceptionTable::getMilkReceptionsData(const QString &where) const
 {
     const QList<QSqlRecord> data = dao()->getAll(where).value< QList<QSqlRecord> >();
 

@@ -1,5 +1,7 @@
 #include "DbUtils.h"
 
+// Qt
+#include <QSet>
 #include <QStringList>
 
 
@@ -49,4 +51,17 @@ QString DbUtils::getPrepInsertStr(const QString &tableName, const QStringList &c
     values.replace(values.length() - 2, 2, ")");
 
     return queryStr + values;
+}
+
+QString DbUtils::getStrDeliverersIn(const QSet<DbConstants::milk_id> &deliverersIds)
+{
+    QString deliverersIn;
+    if (!deliverersIds.isEmpty()) {
+        deliverersIn = DbConstants::Deliverers::FN_ID + " IN (";
+        for (const auto _id : deliverersIds)
+            deliverersIn.append(QString("%1, ").arg(_id));
+        deliverersIn.replace(deliverersIn.size() - 2, 2, ")");
+    }
+
+    return deliverersIn;
 }
