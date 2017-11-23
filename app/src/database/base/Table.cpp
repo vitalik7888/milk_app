@@ -39,28 +39,12 @@ bool Table::isEmpty() const
 
 bool Table::remove(const DbConstants::milk_id id) const
 {
-    QSqlQuery query;
-    query.prepare(QString("DELETE FROM %1 WHERE %2 = ?").arg(tableName()).arg(primaryField()));
-    query.addBindValue(id);
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-
-    return true;
+    return m_dao->remove(id);
 }
 
 bool Table::removeAll() const
 {
-    QSqlQuery query;
-    query.prepare("DELETE FROM " + tableName());
-
-    if (!query.exec()) {
-        emit error(query.lastError().text());
-        return false;
-    }
-    return true;
+    return m_dao->remove();
 }
 
 void Table::refresh()
