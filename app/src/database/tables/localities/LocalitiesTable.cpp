@@ -84,7 +84,7 @@ std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const
     return fromRecord(data.value<QSqlRecord>());
 }
 
-Locality *LocalitiesTable::getLocality(const qlonglong localityId)
+Locality *LocalitiesTable::getLocality(const int localityId)
 {
     const auto data = getLocalityData(localityId);
     if (!data)
@@ -160,7 +160,7 @@ LocalitiesDao *LocalitiesTable::dao() const
 LocalityData LocalitiesTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCL::FN_ID).toLongLong(),
+        record.value(DCL::FN_ID).toInt(),
                 record.value(DCL::FN_NAME).toString(),
                 record.value(DCL::FN_DESCRIPTION).toString()
     };

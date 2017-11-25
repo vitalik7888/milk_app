@@ -35,7 +35,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
     std::experimental::optional<MilkReceptionData> getMilkReceptionData(const DbConstants::milk_id milkReceptionId) const;
-    MilkReception *getMilkReception(const qlonglong milkReceptionId);
+    MilkReception *getMilkReception(const int milkReceptionId);
     QList<MilkReceptionData> getMilkReceptionsData(const QString &where = QString()) const;
     Q_INVOKABLE bool insert(int index, MilkReception *milkReception);
     Q_INVOKABLE bool append(MilkReception *milkReception);

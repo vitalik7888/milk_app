@@ -70,7 +70,7 @@ QString Deliverer::phoneNumber() const
     return m_data.phoneNumber();
 }
 
-void Deliverer::setId(const TC::milk_id &id)
+void Deliverer::setId(const int id)
 {
     if (id == m_data.id())
         return;

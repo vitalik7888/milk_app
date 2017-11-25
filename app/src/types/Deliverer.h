@@ -14,7 +14,7 @@ using DelivererMilkReceptions = QList<MilkReception *>;
 class Deliverer : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong delivererId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int delivererId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(qlonglong inn READ inn WRITE setInn NOTIFY innChanged)
@@ -48,7 +48,7 @@ public:
     DelivererData data() const;
 
 public slots:
-    void setId(const TypesConstants::milk_id &id);
+    void setId(const int id);
     void setLocality(Locality *locality);
     void setName(const QString &name);
     void setInn(const TypesConstants::milk_inn &inn);
@@ -57,7 +57,7 @@ public slots:
     void reset();
 
 signals:
-    void idChanged(qlonglong delivererId);
+    void idChanged(int delivererId);
     void localityChanged(Locality * locality);
     void nameChanged(QString name);
     void innChanged(qlonglong inn);

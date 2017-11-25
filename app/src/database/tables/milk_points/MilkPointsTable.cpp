@@ -96,7 +96,7 @@ std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(con
     return fromRecord(data.value<QSqlRecord>());
 }
 
-MilkPoint *MilkPointsTable::getMilkPoint(const qlonglong milkPointId)
+MilkPoint *MilkPointsTable::getMilkPoint(const int milkPointId)
 {
     const auto mpData = getMilkPointData(milkPointId);
     if (!mpData)
@@ -185,8 +185,8 @@ MilkPointDao *MilkPointsTable::dao() const
 MilkPointData MilkPointsTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCMP::FN_ID).toLongLong(),
-                record.value(DCMP::FN_LOCALITY_ID).toLongLong(),
+        record.value(DCMP::FN_ID).toInt(),
+                record.value(DCMP::FN_LOCALITY_ID).toInt(),
                 record.value(DCMP::FN_NAME).toString(),
                 record.value(DCMP::FN_DESCRIPTION).toString()
     };

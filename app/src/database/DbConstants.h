@@ -11,7 +11,7 @@
 
 class DbConstants {
 public:
-    using milk_id = qlonglong;
+    using milk_id = int;
     using milk_inn = qlonglong;
 
     static QString dropTableIfExistsSql(const QString &tableName);

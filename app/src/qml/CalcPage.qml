@@ -84,12 +84,10 @@ Page {
                         Layout.fillWidth: true
                         Layout.minimumWidth: 100
 
-                        ListViewLocalities {
+                        ViewLocalities {
                             id: viewLocalities
 
                             anchors.fill: parent
-
-                            model: milkCore.db.localities
                         }
                     }
 
@@ -103,14 +101,12 @@ Page {
                             checked: false
                             text: qsTr("Выбрать молокопункт")
                         }
-                        ListViewMilkPoints {
+                        ViewMilkPoints {
                             id: viewMilkPoints
-
                             anchors.fill: parent
-
                             enabled: checkBoxFilterMilkPoint.checked
 
-                            model: milkCore.db.milkPoints
+                            filter.locality.localityId: viewLocalities.currentLocality.localityId
                         }
                     }
 
@@ -124,14 +120,12 @@ Page {
                             checked: false
                             text: qsTr("Выбрать сдатчика")
                         }
-                        ListViewDeliverers {
+                        ViewDeliverers {
                             id: viewDeliverers
-
                             anchors.fill: parent
-
                             enabled: checkBoxFilterDeliverer.checked
 
-                            model: milkCore.db.deliverers
+                            filter.locality.localityId: viewLocalities.currentLocality.localityId
                         }
                     }
                 }
@@ -164,52 +158,52 @@ Page {
                     C14.TableViewColumn {
                         title: "MilkPointName"
                         role: "mpName"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Price"
                         role: "price"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Liters"
                         role: "liters"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Fat"
                         role: "fat"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Protein"
                         role: "protein"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "FatUnits"
                         role: "fatUnits"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "RankWeight"
                         role: "rankWeight"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Payment"
                         role: "payment"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Premium"
                         role: "premium"
-                        width: 50
+                        width: 80
                     }
                     C14.TableViewColumn {
                         title: "Sum"
                         role: "sum"
-                        width: 50
+                        width: 80
                     }
 
                     itemDelegate: Item {

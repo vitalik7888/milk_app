@@ -12,7 +12,7 @@ class Deliverer;
 class MilkReception : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong milkReceptionId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int milkReceptionId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QDate deliveryDate READ deliveryDate WRITE setDeliveryDate NOTIFY deliveryDateChanged)
     Q_PROPERTY(double priceLiter READ priceLiter WRITE setPriceLiter NOTIFY priceLiterChanged)
     Q_PROPERTY(double liters READ liters WRITE setLiters NOTIFY litersChanged)
@@ -50,7 +50,7 @@ public slots:
     void reset();
 
 signals:
-    void idChanged(qlonglong milkReceptionId);
+    void idChanged(int milkReceptionId);
     void deliveryDateChanged(QDate deliveryDate);
     void priceLiterChanged(double priceLiter);
     void litersChanged(double liters);

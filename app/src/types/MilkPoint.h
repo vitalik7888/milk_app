@@ -11,7 +11,7 @@ class Locality;
 class MilkPoint : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong milkPointId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int milkPointId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
@@ -40,7 +40,7 @@ public slots:
     void reset();
 
 signals:
-    void idChanged(qlonglong milkPointId);
+    void idChanged(int milkPointId);
     void localityChanged(Locality * locality);
     void nameChanged(QString name);
     void descriptionChanged(QString description);

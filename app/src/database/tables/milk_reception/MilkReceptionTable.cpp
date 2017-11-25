@@ -213,7 +213,7 @@ std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkRecept
     return fromRecord(data.value<QSqlRecord>());
 }
 
-MilkReception *MilkReceptionTable::getMilkReception(const qlonglong milkReceptionId)
+MilkReception *MilkReceptionTable::getMilkReception(const int milkReceptionId)
 {
     const auto data = getMilkReceptionData(milkReceptionId);
     if (!data)
@@ -431,9 +431,9 @@ int db::MilkReceptionTable::getColPosition(const QString &columnName) const
 MilkReceptionData MilkReceptionTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCMR::FN_ID).toLongLong(),
-                record.value(DCMR::FN_ID_DELIVERER).toLongLong(),
-                record.value(DCMR::FN_MILK_POINT_ID).toLongLong(),
+        record.value(DCMR::FN_ID).toInt(),
+                record.value(DCMR::FN_ID_DELIVERER).toInt(),
+                record.value(DCMR::FN_MILK_POINT_ID).toInt(),
                 record.value(DCMR::FN_DELIVERY_DATE).toDate(),
                 record.value(DCMR::FN_PRICE_LITER).toDouble(),
                 record.value(DCMR::FN_LITERS).toDouble(),

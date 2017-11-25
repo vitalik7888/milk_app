@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
@@ -14,62 +14,40 @@ Page {
         priceLiter: spinBoxPrice.value
         liters:  spinBoxLiters.value
         fat: spinBoxFat.value
-        deliverer: listViewCalcDeliverers.currentDeliverer
-        milkPoint: listViewCalcMilkPoints.currentMilkPoint
-    }
-
-    LocalitiesSortFilterProxyModel {
-        id: localitiesProxy
-
-        sourceModel: milkCore.db.localities
-        enableLocalityDynamicFilter: true
-    }
-
-    MilkPointsSortFilterProxyModel {
-        id: milkPointsProxy
-
-        enableMilkPointDynamicFilter: true
-        sourceModel: milkCore.db.milkPoints
-        milkPoint.locality.localityId: listViewCalcLocalities.currentLocality.localityId
-    }
-
-    DeliverersSortFilterProxyModel {
-        id: deliverersProxy
-
-        enableDelivererDynamicFilter: true
-        sourceModel: milkCore.db.deliverers
-        deliverer.locality.localityId: listViewCalcLocalities.currentLocality.localityId
+        deliverer: viewDeliverers.currentDeliverer
+        milkPoint: viewMilkPoints.currentMilkPoint
     }
 
     RowLayout {
         anchors.fill: parent
         spacing: 4
 
-        ListViewLocalities {
-            id: listViewCalcLocalities
+        ViewLocalities {
+            id: viewLocalities
 
             Layout.fillHeight: true
-            Layout.minimumWidth: 100
-
-            model: localitiesProxy
+            Layout.fillWidth: true
+            Layout.minimumWidth: 160
         }
 
-        ListViewDeliverers {
-            id: listViewCalcDeliverers
+        ViewDeliverers {
+            id: viewDeliverers
 
             Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            model: deliverersProxy
+            filter.locality.localityId: viewLocalities.currentLocality.localityId
         }
 
-        ListViewMilkPoints {
-            id: listViewCalcMilkPoints
+        ViewMilkPoints {
+            id: viewMilkPoints
 
             Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            model: milkPointsProxy
+            filter.locality.localityId: viewLocalities.currentLocality.localityId
         }
 
         GroupBox {
@@ -146,14 +124,14 @@ Page {
                     onClicked: {
                         if (spinBoxPrice.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
-                        } else if (listViewCalcDeliverers.currentDeliverer === null) {
+                        } else if (viewDeliverers.currentDeliverer === null) {
                             messageDialog.showInfo(qsTr("Выберите сдатчика"))
-                        } else if (listViewCalcMilkPoints.currentMilkPoint === null) {
-                            messageDialog.open(qsTr("Выберите молокопункт"))
+                        } else if (viewMilkPoints.currentMilkPoint === null) {
+                            messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else if (spinBoxLiters.value <= 0) {
-                            messageDialog.open(qsTr("Укажите количество литров"))
+                            messageDialog.showInfo(qsTr("Укажите количество литров"))
                         } else if (spinBoxFat.value <= 0) {
-                            messageDialog.open(qsTr("Укажите жиры"))
+                            messageDialog.showInfo(qsTr("Укажите жиры"))
                         } else {
                             if (milkCore.db.milkReception.append(curentMilkReception)) {
                                 spinBoxLiters.value = 0.0

@@ -69,9 +69,9 @@ DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int so
             indexPhoneNumber = sourceModel()->index(sourceRow, DCD::DT_PHONE_NUMBER, sourceParent);
 
     return {
-        sourceModel()->data(indexId).toLongLong(),
+        sourceModel()->data(indexId).toInt(),
                 sourceModel()->data(indexName).toString(),
-                sourceModel()->data(indexLocalityId).toLongLong(),
+                sourceModel()->data(indexLocalityId).toInt(),
                 sourceModel()->data(indexInn).toLongLong(),
                 sourceModel()->data(indexAddress).toString(),
                 sourceModel()->data(indexPhoneNumber).toString()

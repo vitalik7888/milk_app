@@ -8,7 +8,7 @@
 class TypesConstants
 {
 public:
-    using milk_id = qlonglong;
+    using milk_id = int;
     using milk_inn = qlonglong;
 
     class Deliverers {

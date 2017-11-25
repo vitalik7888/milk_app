@@ -215,9 +215,9 @@ DeliverersDao *DeliverersTable::dao() const
 DelivererData DeliverersTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCD::FN_ID).toLongLong(),
+        record.value(DCD::FN_ID).toInt(),
                 record.value(DCD::FN_NAME).toString(),
-                record.value(DCD::FN_LOCALITY_ID).toLongLong(),
+                record.value(DCD::FN_LOCALITY_ID).toInt(),
                 record.value(DCD::FN_INN).toLongLong(),
                 record.value(DCD::FN_ADDRESS).toString(),
                 record.value(DCD::FN_PHONE_NUMBER).toString(),

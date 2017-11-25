@@ -2,11 +2,12 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>DateEdit.qml</file>
-        <file>ListViewLocalities.qml</file>
-        <file>ListViewDeliverers.qml</file>
+        <file>ViewLocalities.qml</file>
+        <file>ViewDeliverers.qml</file>
         <file>CalcPage.qml</file>
         <file>MilkReceptionsPage.qml</file>
-        <file>ListViewMilkPoints.qml</file>
+        <file>ViewMilkPoints.qml</file>
         <file>MilkMenuBar.qml</file>
+        <file>EditPage.qml</file>
     </qresource>
 </RCC>

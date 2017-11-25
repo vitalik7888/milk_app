@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.2
 import MilkCore 1.0
 import Milk.Types 1.0
 import Milk.Settings 1.0
@@ -55,6 +56,14 @@ ApplicationWindow {
     TabView {
         id: tabViewContent
         anchors.fill: parent
+
+        Tab {
+            title: qsTr("Редактирование")
+
+            EditPage {
+
+            }
+        }
 
         Tab {
             title: qsTr("Расчёты")

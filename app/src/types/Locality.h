@@ -8,7 +8,7 @@
 class Locality : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qlonglong localityId READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int localityId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
@@ -30,7 +30,7 @@ public slots:
     void reset();
 
 signals:
-    void idChanged(qlonglong localityId);
+    void idChanged(int localityId);
     void nameChanged(QString name);
     void descriptionChanged(QString description);
 

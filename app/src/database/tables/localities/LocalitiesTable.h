@@ -25,12 +25,12 @@ public:
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
     std::experimental::optional<LocalityData> getLocalityData(const DbConstants::milk_id localityId) const;
-    Q_INVOKABLE Locality *getLocality(const qlonglong localityId);
+    Q_INVOKABLE Locality *getLocality(const int localityId);
     Q_INVOKABLE bool insert(int position, Locality *locality);
     Q_INVOKABLE bool append(Locality *locality);
     Q_INVOKABLE bool update(Locality *locality) const;
-    Q_INVOKABLE bool setName(const DbConstants::milk_id localityId, const QString &localityName) const;
-    Q_INVOKABLE bool setDescription(const DbConstants::milk_id localityId, const QString &description) const;
+    Q_INVOKABLE bool setName(const int localityId, const QString &localityName) const;
+    Q_INVOKABLE bool setDescription(const int localityId, const QString &description) const;
 
 private:
     LocalitiesDao *dao() const;
