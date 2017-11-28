@@ -31,8 +31,9 @@ public:
 
     std::experimental::optional<DelivererData> getDelivererData(const DbConstants::milk_id delivererId) const;
     QList<DelivererData> getDeliverersData(const QString &where) const;
-    Q_INVOKABLE Deliverer *getDeliverer(const qlonglong delivererId);
+    Q_INVOKABLE Deliverer *getDeliverer(const int delivererId);
     Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
     Q_INVOKABLE bool append(Deliverer *deliverer);
     Q_INVOKABLE bool update(Deliverer *deliverer) const;
     bool setName(const DbConstants::milk_id delivererId, const QString &tableName) const;

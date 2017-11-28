@@ -6,6 +6,9 @@
 class QStringList;
 template<class T>
 class QSet;
+DB_BEGIN_NAMESPACE
+class Table;
+DB_END_NAMESPACE
 
 
 class DbUtils
@@ -17,7 +20,7 @@ public:
     static QString getPrepUpdateStr(const QString &tableName, const QStringList &columns);
     static QString getPrepInsertStr(const QString &tableName, const QStringList &columns);
 
-    static QString getStrDeliverersIn(const QSet<DbConstants::milk_id> &deliverersIds);
+    static QString getStrIdsIn(DB_NAMESPACE::Table *table, const QSet<DbConstants::milk_id> &ids);
 };
 
 #endif // DBUTILS_H

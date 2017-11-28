@@ -4,6 +4,8 @@
 // Qt
 #include <QDebug>
 
+#include <base/Table.h>
+
 USE_DB_NAMESPACE
 using DC = DbConstants;
 using DCD = DC::Deliverers;
@@ -14,6 +16,12 @@ DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
 {
     m_deliverer = new Deliverer(this);
     m_deliverer->setLocality(new Locality(m_deliverer));
+}
+
+QModelIndex DeliverersSortFilterProxyModel::sourceIdIndex(const int row) const
+{
+    Table *table = qobject_cast<Table *>(sourceModel());
+    return mapToSource(index(row, table->getColPosition(table->primaryField())));
 }
 
 void DeliverersSortFilterProxyModel::resetFilter()

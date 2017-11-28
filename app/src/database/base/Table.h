@@ -26,31 +26,38 @@ public:
     QSqlDatabase database() const;
 
     virtual QString tableName() const = 0;
-    Q_INVOKABLE virtual QString getColName(const int position, const bool withTableName = false) const = 0;
-    Q_INVOKABLE virtual int getColPosition(const QString &columnName) const = 0;
+    virtual QString getColName(const int position, const bool withTableName = false) const = 0;
+    virtual int getColPosition(const QString &columnName) const = 0;
     virtual QString primaryField() const = 0;
 
-    Q_INVOKABLE virtual QString selectAll() const;
-    Q_INVOKABLE bool isEmpty() const;
+    virtual QString selectAll() const;
+    bool isEmpty() const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
-
-    Q_INVOKABLE bool remove(const DbConstants::milk_id id) const;
-    Q_INVOKABLE bool removeAll() const;
-
-    Q_INVOKABLE virtual void refresh();
+    virtual bool removeRows(int row, int count, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
     bool getIsFetchOnRefresh() const;
     void setIsFetchOnRefresh(const bool isFetchOnRefresh);
+
+public slots:
+    bool append(const QVariant &data);
+    bool removeAll();
+    virtual QVariant get(const int row) = 0;
+    bool insert(int position, const QVariant &data);
+    bool remove(const int row);
+    virtual bool set(const int row, const QVariant &data);
+    virtual void refresh();
 
 protected:
     QSqlDatabase m_db;
     QScopedPointer<Dao> m_dao;
 
     bool m_isFetchOnRefresh;
+
+    DbConstants::milk_id getIdByRow(const int row) const;
 
 signals:
     void error(const QString &error) const;

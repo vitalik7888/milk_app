@@ -1,9 +1,11 @@
 #include "DbUtils.h"
 
+#include <base/Table.h>
 // Qt
 #include <QSet>
 #include <QStringList>
 
+USE_DB_NAMESPACE
 
 
 bool DbUtils::isAutoIncrIdIsValid(const DbConstants::milk_id id)
@@ -53,12 +55,15 @@ QString DbUtils::getPrepInsertStr(const QString &tableName, const QStringList &c
     return queryStr + values;
 }
 
-QString DbUtils::getStrDeliverersIn(const QSet<DbConstants::milk_id> &deliverersIds)
+QString DbUtils::getStrIdsIn(Table *table, const QSet<DbConstants::milk_id> &ids)
 {
+    if (ids.isEmpty())
+        return "";
+
     QString deliverersIn;
-    if (!deliverersIds.isEmpty()) {
-        deliverersIn = DbConstants::Deliverers::FN_ID + " IN (";
-        for (const auto _id : deliverersIds)
+    if (!ids.isEmpty()) {
+        deliverersIn = table->primaryField() + " IN (";
+        for (const auto _id : ids)
             deliverersIn.append(QString("%1, ").arg(_id));
         deliverersIn.replace(deliverersIn.size() - 2, 2, ")");
     }

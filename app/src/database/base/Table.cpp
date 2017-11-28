@@ -1,6 +1,7 @@
 #include "Table.h"
 
 #include "Dao.h"
+#include <DbUtils.h>
 // Qt
 #include <QSqlQuery>
 #include <QSqlError>
@@ -37,21 +38,14 @@ bool Table::isEmpty() const
     return (rowCount() == 0);
 }
 
-bool Table::remove(const DbConstants::milk_id id) const
-{
-    return m_dao->remove(id);
-}
-
-bool Table::removeAll() const
-{
-    return m_dao->remove();
-}
-
 void Table::refresh()
 {
     emit startRefresh();
 
-    setQuery(query().lastQuery());
+    const QString queryStr = query().executedQuery();
+    clear();
+    query().clear();
+    setQuery(queryStr);
 
     if (m_isFetchOnRefresh)
     {
@@ -72,26 +66,14 @@ void Table::setIsFetchOnRefresh(const bool isFetchOnRefresh)
     m_isFetchOnRefresh = isFetchOnRefresh;
 }
 
-bool Table::setData(const QModelIndex &_index, const QVariant &value, int role)
+DbConstants::milk_id Table::getIdByRow(const int row) const
 {
-    Q_UNUSED(role);
+    bool ok = false;
+    const int _id = data(index(row, 0)).toInt(&ok);
+    if (!ok)
+        return -1;
 
-    const auto idColumn = record().indexOf(primaryField());
-    if (_index.column() == idColumn)
-        return false;
-
-    const auto primaryKeyIndex = index(_index.row(), idColumn);
-    const auto id = data(primaryKeyIndex).toLongLong();
-
-    try {
-        m_dao->updateValue(getColName(_index.column()), id, value);
-        refresh();
-        emit dataChanged(_index, _index);
-    } catch (const QString &) {
-        return false;
-    }
-
-    return true;
+    return _id;
 }
 
 QHash<int, QByteArray> Table::roleNames() const
@@ -103,6 +85,53 @@ QHash<int, QByteArray> Table::roleNames() const
     }
 
     return roles;
+}
+
+bool Table::insert(int position, const QVariant &data)
+{
+    if(position < 0 || position > rowCount()) {
+        return false;
+    }
+
+    emit beginInsertRows(QModelIndex(), position, position);
+    const bool isOk = m_dao->insert(data);
+    emit endInsertRows();
+
+    if (isOk)
+        refresh();
+
+    return isOk;
+}
+
+bool Table::remove(const int row)
+{
+    return removeRow(row);
+}
+
+bool Table::append(const QVariant &data)
+{
+    return insert(rowCount(), data);
+}
+
+bool Table::removeAll()
+{
+    beginRemoveRows({}, 0, rowCount() - 1);
+
+    bool isOk = m_dao->remove();
+
+    endRemoveRows();
+
+    return isOk;
+}
+
+bool Table::set(const int row, const QVariant &data)
+{
+    bool isOk = m_dao->update(data);
+    if (isOk) {
+        emit dataChanged(index(row, 0), index(rowCount(), columnCount()), roleNames().keys().toVector());
+        refresh();
+    }
+    return isOk;
 }
 
 QVariant Table::data(const QModelIndex &_index, int role) const
@@ -121,13 +150,56 @@ QVariant Table::data(const QModelIndex &_index, int role) const
     return value;
 }
 
+bool Table::setData(const QModelIndex &_index, const QVariant &value, int role)
+{
+    if (!_index.isValid())
+        return false;
+
+    const int _id = data(this->index(_index.row(), 0)).toInt();
+    const int column =  role < Qt::UserRole ? _index.column() : role - Qt::UserRole - 1;
+    const QString colName = getColName(column);
+    if (m_dao->updateValue(colName, _id, value)) {
+        emit dataChanged(_index, _index, {role});
+        refresh();
+        return true;
+    }
+
+    return false;
+}
+
 Qt::ItemFlags Table::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags flags = QSqlQueryModel::flags(index);
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
 
-    const auto idColumn = record().indexOf(primaryField());
-    if (index.column() != idColumn)
-        flags |= Qt::ItemIsEditable;
+    return QSqlQueryModel::flags(index) | Qt::ItemIsEditable;
+}
 
-    return flags;
+
+bool db::Table::removeRows(int row, int count, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row + count - 1);
+
+    const int columnId = getColPosition(primaryField());
+    bool isOk = false;
+    if (count == 1) {
+        bool ok = false;
+        const auto _id = data(index(row, columnId, parent)).toInt(&ok);
+        if (ok)
+            isOk = m_dao->remove(_id);
+    } else {
+        bool ok = false;
+        QSet<DbConstants::milk_id> _ids;
+        for (int i = row; i < row + count; i++) {
+            const auto _id = data(index(i, columnId, parent)).toInt(&ok);
+            if (ok)
+                _ids.insert(_id);
+        }
+        if (!_ids.isEmpty())
+            isOk = m_dao->remove(DbUtils::getStrIdsIn(this, _ids));
+    }
+
+    endRemoveRows();
+
+    return isOk;
 }

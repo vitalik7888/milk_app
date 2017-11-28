@@ -78,7 +78,7 @@ QString LocalitiesTable::tableName() const
 std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const DbConstants::milk_id localityId) const
 {
     const auto data = dao()->get(localityId);
-    if (!data.isNull())
+    if (data.isNull())
         return {};
 
     return fromRecord(data.value<QSqlRecord>());
@@ -95,25 +95,32 @@ Locality *LocalitiesTable::getLocality(const int localityId)
 
 bool LocalitiesTable::insert(int position, Locality *locality)
 {
-    if(position < 0 || position > rowCount()) {
-        return false;
-    }
-
-    emit beginInsertRows(QModelIndex(), position, position);
-    const bool isOk = dao()->insert(QVariant::fromValue(locality->data()));
-    emit endInsertRows();
-
-    return isOk;
+    return Table::insert(position, QVariant::fromValue(locality->data()));
 }
 
 bool LocalitiesTable::append(Locality *locality)
 {
-    return insert(rowCount(), locality);
+    return Table::append(QVariant::fromValue(locality->data()));
 }
 
-bool LocalitiesTable::update(Locality *locality) const
+QVariant LocalitiesTable::get(const int row)
 {
-    return dao()->update(QVariant::fromValue(locality->data()));
+    const auto _id = getIdByRow(row);
+    if (_id < 0)
+        return {};
+
+    return QVariant::fromValue(
+                new Locality({
+                                 _id,
+                                 this->data(index(row, DCL::LT_NAME)).toString(),
+                                 this->data(index(row, DCL::LT_DESCRIPTION)).toString()
+                             },
+                             this));
+}
+
+bool LocalitiesTable::set(const int row, Locality *locality)
+{
+    return Table::set(row, QVariant::fromValue(locality->data()));
 }
 
 bool LocalitiesTable::setName(const DbConstants::milk_id localityId, const QString &localityName) const

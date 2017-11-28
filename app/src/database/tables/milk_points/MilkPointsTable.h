@@ -29,6 +29,7 @@ public:
     Q_INVOKABLE MilkPoint *getMilkPoint(const int milkPointId);
     Q_INVOKABLE bool insert(int index, MilkPoint *milkPoint);
     Q_INVOKABLE bool append(MilkPoint *milkPoint);
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
     Q_INVOKABLE bool update(MilkPoint *milkPoint) const;
     bool setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const;
     bool setDescription(const DbConstants::milk_id milkPointId, const QString &description) const;

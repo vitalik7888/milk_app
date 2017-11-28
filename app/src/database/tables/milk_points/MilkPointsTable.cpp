@@ -204,3 +204,9 @@ int db::MilkPointsTable::getColPosition(const QString &columnName) const
         return DCMP::MPT_DESCRIPTION;
     return -1;
 }
+
+
+QVariant db::MilkPointsTable::get(const int row)
+{
+    return QVariant::fromValue(getMilkPoint(data(index(row, 0)).toInt()));
+}

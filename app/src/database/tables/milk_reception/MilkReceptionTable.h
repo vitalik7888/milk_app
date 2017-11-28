@@ -54,6 +54,7 @@ public:
     std::tuple<double, double> getMinMaxPriceLiter(const QDate &from, const QDate &to = QDate()) const;
     Q_INVOKABLE QDate getMinDeliveryDate() const;
     Q_INVOKABLE QDate getMaxDeliveryDate() const;
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
 
 private:
     DeliverersTable *m_deliverers;

@@ -55,7 +55,7 @@ QVariant Dao::getAll(const QString &where) const
 bool Dao::remove(const QString &where) const
 {
     QSqlQuery query(m_table->database());
-    if (!query.exec(QString("DELETE FROM %1")
+    if (!query.exec(QString("DELETE FROM %1%2")
                     .arg(m_table->tableName())
                     .arg(where.isEmpty() ? "" : " WHERE " + where)))
     {

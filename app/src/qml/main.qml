@@ -1,7 +1,7 @@
-import QtQuick 2.7
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls 1.4
+import QtQuick 2.9
+import Qt.labs.platform 1.0
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 import MilkCore 1.0
 import Milk.Types 1.0
@@ -18,7 +18,18 @@ ApplicationWindow {
     minimumWidth: 640
     minimumHeight: 480
 
-    menuBar: MilkMenuBar {}
+    MilkMenu {
+        id: milkMenu
+
+        x: btnMilkMenu.x
+        y: btnMilkMenu.y
+    }
+
+    MilkShortCuts {}
+
+    Dialogs {
+        id: dialogs
+    }
 
     MessageDialog {
         id: messageDialog
@@ -46,44 +57,57 @@ ApplicationWindow {
         id: fileDialogChooseDb
 
         title: qsTr("Выберите или создайте базу данных")
-        selectMultiple: false
+        //        selectMultiple: false
 
         onAccepted: {
             milkCore.db.openDb(fileUrl.toString().replace("file://", ""))
         }
     }
 
-    TabView {
-        id: tabViewContent
-        anchors.fill: parent
+    header: ToolBar {
+        RowLayout {
+            anchors.fill: parent
 
-        Tab {
-            title: qsTr("Редактирование")
-
-            EditPage {
-
+            Label {
+                text: ""
+                elide: Label.ElideRight
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                Layout.fillWidth: true
             }
-        }
-
-        Tab {
-            title: qsTr("Расчёты")
-
-            CalcPage {
-                id : calcPage
-            }
-        }
-
-        Tab {
-            title: qsTr("Сдача молока")
-
-            MilkReceptionsPage {
-
+            ToolButton {
+                id: btnMilkMenu
+                text: qsTr("⋮")
+                onClicked: milkMenu.open()
             }
         }
     }
 
-    toolBar: ToolBar {
-        height: 20
+    SwipeView {
+        id: mainView
+        currentIndex: bar.currentIndex
+        anchors.fill: parent
+
+        MilkReceptionsPage {
+            id: milkReceptionPage
+        }
+
+        CalcPage {
+            id: calcPage
+        }
+    }
+
+    footer:  TabBar {
+        id: bar
+        width: parent.width
+        currentIndex: 1
+
+        TabButton {
+            text: qsTr("Сдача молока")
+        }
+        TabButton {
+            text: qsTr("Расчёты")
+        }
     }
 
     Connections {

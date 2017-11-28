@@ -7,7 +7,10 @@
         <file>CalcPage.qml</file>
         <file>MilkReceptionsPage.qml</file>
         <file>ViewMilkPoints.qml</file>
-        <file>MilkMenuBar.qml</file>
-        <file>EditPage.qml</file>
+        <file>MilkMenu.qml</file>
+        <file>DialogAddEditLocality.qml</file>
+        <file>MilkShortCuts.qml</file>
+        <file>Dialogs.qml</file>
+        <file>Filter.qml</file>
     </qresource>
 </RCC>

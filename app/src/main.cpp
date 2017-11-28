@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
-    qmlRegisterType<CalcItemModel>("MilkCore", 1, 0, "MilkCore");
+    qmlRegisterType<MilkCore>("MilkCore", 1, 0, "MilkCore");
     qmlRegisterSettings();
     qmlRegisterDb();
     qmlRegisterMilkTypes();

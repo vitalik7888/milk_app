@@ -2,12 +2,25 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
+import QtQuick.Dialogs 1.2
+import QtQuick.Controls 2.2
+import MilkCore 1.0
 import Milk.Types 1.0
 import Milk.Database 1.0
 
 Item {
+//    id: root
+
     property Deliverer currentDeliverer
     property alias filter: proxy.deliverer
+
+    function removeCurrentRow() {
+        return removeRow(view.currentIndex)
+    }
+
+    function removeRow(row) {
+        return milkCore.db.deliverers.removeRowByIndex(proxy.sourceIdIndex(row))
+    }
 
     GroupBox {
         title: qsTr("Сдатчики")
@@ -15,6 +28,7 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
+            spacing: 4
 
             TextField {
                 id: textFieldFilterName
@@ -25,7 +39,7 @@ Item {
             }
 
             ListView {
-                id: root
+                id: view
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -38,6 +52,7 @@ Item {
                     sourceModel: milkCore.db.deliverers
                     deliverer.name: textFieldFilterName.text
                 }
+                currentIndex: 0
 
                 onCurrentItemChanged: {
                     currentDeliverer = currentItem.deliverer
@@ -52,9 +67,13 @@ Item {
                         inn: f_inn
                         address: f_address
                         phoneNumber: f_phone_number
+
+                        function remove() {
+                            removeRow(index)
+                        }
                     }
 
-                    text: f_name
+                    text: deliverer.name
                     width: parent.width
 
                     contentItem: Text {
@@ -68,9 +87,27 @@ Item {
                         wrapMode: Text.Wrap
                     }
 
+                    ToolButton {
+                        id: btnDeliverersMenu
+                        text: qsTr("⋮")
+                        width: 10
+
+                        height: parent.height
+                        x: parent.x + parent.width - width
+
+                        onClicked: {
+                            var pos = btnDeliverersMenu.mapToItem(itemDeliverers, 0, 0)
+                            itemDeliverers.menu.x = pos.x - itemDeliverers.menu.width / 2
+                            itemDeliverers.menu.y = pos.y
+                            itemDeliverers.menu.deliverer = deliverer
+                            itemDeliverers.menu.open()
+                        }
+
+                    }
+
                     onClicked:  {
-                        root.forceActiveFocus()
-                        root.currentIndex = index
+                        view.forceActiveFocus()
+                        view.currentIndex = index
                     }
                 }
 

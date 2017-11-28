@@ -36,6 +36,7 @@ Item {
                     enableMilkPointDynamicFilter: true
                     milkPoint.name: textFieldFilterName.text
                 }
+                currentIndex: 0
 
                 onCurrentItemChanged: {
                     currentMilkPoint = currentItem.milkPoint

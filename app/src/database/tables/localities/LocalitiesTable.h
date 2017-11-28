@@ -28,7 +28,8 @@ public:
     Q_INVOKABLE Locality *getLocality(const int localityId);
     Q_INVOKABLE bool insert(int position, Locality *locality);
     Q_INVOKABLE bool append(Locality *locality);
-    Q_INVOKABLE bool update(Locality *locality) const;
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
+    Q_INVOKABLE bool set(const int row, Locality *locality);
     Q_INVOKABLE bool setName(const int localityId, const QString &localityName) const;
     Q_INVOKABLE bool setDescription(const int localityId, const QString &description) const;
 

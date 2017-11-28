@@ -20,6 +20,8 @@ public:
     Locality* locality() const { return m_locality; }
     bool isLocalityDynamicFilterEnabled() const { return m_isLocalityDynamicFilterEnabled; }
 
+    Q_INVOKABLE int sourceRow(const int row) const;
+
 public slots:
     void invalidateTheFilter();
     void resetLocality();

@@ -108,7 +108,7 @@ QList<DelivererData> DeliverersTable::getDeliverersData(const QString &where) co
     return deliverers;
 }
 
-Deliverer *DeliverersTable::getDeliverer(const qlonglong delivererId)
+Deliverer *DeliverersTable::getDeliverer(const int delivererId)
 {
     const auto delivererData = getDelivererData(delivererId);
     if (!delivererData)
@@ -269,4 +269,10 @@ int db::DeliverersTable::getColPosition(const QString &columnName) const
     if (columnName == DCD::FN_PHONE_NUMBER)
         return DCD::DT_PHONE_NUMBER;
     return -1;
+}
+
+
+QVariant db::DeliverersTable::get(const int row)
+{
+    return QVariant::fromValue(getDeliverer(data(index(row, 0)).toInt()));
 }

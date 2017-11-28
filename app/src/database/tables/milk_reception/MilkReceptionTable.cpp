@@ -440,3 +440,9 @@ MilkReceptionData MilkReceptionTable::fromRecord(const QSqlRecord &record)
                 record.value(DCMR::FN_FAT).toDouble()
     };
 }
+
+
+QVariant db::MilkReceptionTable::get(const int row)
+{
+    return QVariant::fromValue(getMilkReception(data(index(row, 0)).toInt()));
+}

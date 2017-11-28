@@ -1,5 +1,7 @@
 #include "LocalitiesSortFilterProxyModel.h"
 
+#include <base/Table.h>
+
 USE_DB_NAMESPACE
 using DC = DbConstants;
 using DCL = DC::Localities;
@@ -104,4 +106,10 @@ bool LocalitiesSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, con
     }
 
     return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
+}
+
+int LocalitiesSortFilterProxyModel::sourceRow(const int row) const
+{
+    Table *table = qobject_cast<Table *>(sourceModel());
+    return mapToSource(index(row, table->getColPosition(table->primaryField()))).row();
 }
