@@ -1,8 +1,10 @@
 #include "MilkPointsSortFilterProxyModel.h"
 
 #include "Locality.h"
+#include <base/Table.h>
 // Qt
 #include <QDebug>
+
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
@@ -14,6 +16,12 @@ MilkPointsSortFilterProxyModel::MilkPointsSortFilterProxyModel(QObject *parent) 
 {
     m_milkPoint = new MilkPoint(this);
     m_milkPoint->setLocality(new Locality(m_milkPoint));
+}
+
+int MilkPointsSortFilterProxyModel::sourceRow(const int row) const
+{
+    Table *table = qobject_cast<Table *>(sourceModel());
+    return mapToSource(index(row, table->getColPosition(table->primaryField()))).row();
 }
 
 void MilkPointsSortFilterProxyModel::invalidateTheFilter()

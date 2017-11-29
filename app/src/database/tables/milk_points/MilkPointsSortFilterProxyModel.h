@@ -20,6 +20,8 @@ public:
     MilkPoint* milkPoint() const { return m_milkPoint; }
     bool isMilkPointDynamicFilterEnabled() const { return m_isMilkPointDynamicFilterEnabled; }
 
+    Q_INVOKABLE int sourceRow(const int row) const;
+
 public slots:
     void invalidateTheFilter();
     void resetMilkPoint();

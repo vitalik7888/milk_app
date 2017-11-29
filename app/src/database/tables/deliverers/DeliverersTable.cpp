@@ -125,51 +125,17 @@ Deliverer *DeliverersTable::getDeliverer(const int delivererId)
 
 bool DeliverersTable::insert(int index, Deliverer *deliverer)
 {
-    if(index < 0 || index > rowCount()) {
-        emit error("Данная позиция не входит в диапазон");
-        return false;
-    }
-
-    emit beginInsertRows(QModelIndex(), index, index);
-    const bool isOk = dao()->insert(QVariant::fromValue(deliverer->data()));
-    emit endInsertRows();
-
-    return isOk;
+    return Table::insert(index, QVariant::fromValue(deliverer->data()));
 }
 
 bool DeliverersTable::append(Deliverer *deliverer)
 {
-    return insert(rowCount(), deliverer);
+    return Table::append(QVariant::fromValue(deliverer->data()));
 }
 
-bool DeliverersTable::update(Deliverer *deliverer) const
+bool DeliverersTable::set(const int row, Deliverer *deliverer)
 {
-    return dao()->update(QVariant::fromValue(deliverer->data()));
-}
-
-bool DeliverersTable::setName(const DbConstants::milk_id delivererId, const QString &_name) const
-{
-    return m_dao->updateValue(DCD::FN_NAME, delivererId, _name);
-}
-
-bool DeliverersTable::setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const
-{
-    return m_dao->updateValue(DCD::FN_LOCALITY_ID, delivererId, localityId);
-}
-
-bool DeliverersTable::setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const
-{
-    return m_dao->updateValue(DCD::FN_INN, delivererId, inn);
-}
-
-bool DeliverersTable::setAddress(const DbConstants::milk_id delivererId, const QString &address) const
-{
-    return m_dao->updateValue(DCD::FN_ADDRESS, delivererId, address);
-}
-
-bool DeliverersTable::setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const
-{
-    return m_dao->updateValue(DCD::FN_PHONE_NUMBER, delivererId, phoneNumber);
+    return Table::set(row, QVariant::fromValue(deliverer->data()));
 }
 
 LocalitiesTable *DeliverersTable::localities() const
@@ -274,5 +240,17 @@ int db::DeliverersTable::getColPosition(const QString &columnName) const
 
 QVariant db::DeliverersTable::get(const int row)
 {
-    return QVariant::fromValue(getDeliverer(data(index(row, 0)).toInt()));
+    const auto _id = getIdByRow(row);
+    if (_id < 0)
+        return {};
+
+    auto locality = localities()->getLocality(data(index(row, DCD::DT_LOCALITY_ID)).toInt());
+    return QVariant::fromValue(new Deliverer(
+                                   _id,
+                                   data(index(row, DCD::DT_NAME)).toString(),
+                                   data(index(row, DCD::DT_INN)).toLongLong(),
+                                   data(index(row, DCD::DT_ADDRESS)).toString(),
+                                   data(index(row, DCD::DT_PHONE_NUMBER)).toString(),
+                                   locality,
+                                   this));
 }

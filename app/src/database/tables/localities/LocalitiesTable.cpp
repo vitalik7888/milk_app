@@ -123,16 +123,6 @@ bool LocalitiesTable::set(const int row, Locality *locality)
     return Table::set(row, QVariant::fromValue(locality->data()));
 }
 
-bool LocalitiesTable::setName(const DbConstants::milk_id localityId, const QString &localityName) const
-{
-    return m_dao->updateValue(DCL::FN_ID, localityId, localityName);
-}
-
-bool LocalitiesTable::setDescription(const DbConstants::milk_id localityId, const QString &description) const
-{
-    return m_dao->updateValue(DCL::FN_DESCRIPTION, localityId, description);
-}
-
 QString LocalitiesTable::primaryField() const
 {
     return DCL::FN_ID;

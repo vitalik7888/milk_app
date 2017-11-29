@@ -1,10 +1,9 @@
 #include "DeliverersSortFilterProxyModel.h"
 
 #include "Locality.h"
+#include <base/Table.h>
 // Qt
 #include <QDebug>
-
-#include <base/Table.h>
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
@@ -18,10 +17,10 @@ DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
     m_deliverer->setLocality(new Locality(m_deliverer));
 }
 
-QModelIndex DeliverersSortFilterProxyModel::sourceIdIndex(const int row) const
+int DeliverersSortFilterProxyModel::sourceRow(const int row) const
 {
     Table *table = qobject_cast<Table *>(sourceModel());
-    return mapToSource(index(row, table->getColPosition(table->primaryField())));
+    return mapToSource(index(row, table->getColPosition(table->primaryField()))).row();
 }
 
 void DeliverersSortFilterProxyModel::resetFilter()

@@ -33,14 +33,9 @@ public:
     QList<DelivererData> getDeliverersData(const QString &where) const;
     Q_INVOKABLE Deliverer *getDeliverer(const int delivererId);
     Q_INVOKABLE bool insert(int index, Deliverer *deliverer);
-    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
     Q_INVOKABLE bool append(Deliverer *deliverer);
-    Q_INVOKABLE bool update(Deliverer *deliverer) const;
-    bool setName(const DbConstants::milk_id delivererId, const QString &tableName) const;
-    bool setLocalityId(const DbConstants::milk_id delivererId, const DbConstants::milk_id localityId) const;
-    bool setInn(const DbConstants::milk_id delivererId, const DbConstants::milk_inn inn) const;
-    bool setAddress(const DbConstants::milk_id delivererId, const QString &address) const;
-    bool setPhoneNumber(const DbConstants::milk_id delivererId, const QString &phoneNumber) const;
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
+    Q_INVOKABLE bool set(const int row, Deliverer *deliverer);
 
 private:
     LocalitiesTable *m_localities;

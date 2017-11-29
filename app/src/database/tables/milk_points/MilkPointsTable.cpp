@@ -112,35 +112,17 @@ MilkPoint *MilkPointsTable::getMilkPoint(const int milkPointId)
 
 bool MilkPointsTable::insert(int index, MilkPoint *milkPoint)
 {
-    if(index < 0 || index > rowCount()) {
-        return false;
-    }
-
-    emit beginInsertRows(QModelIndex(), index, index);
-    const bool isOk = dao()->insert(QVariant::fromValue(milkPoint->data()));
-    emit endInsertRows();
-
-    return isOk;
+    return Table::insert(index, QVariant::fromValue(milkPoint->data()));
 }
 
 bool MilkPointsTable::append(MilkPoint *milkPoint)
 {
-    return insert(rowCount(), milkPoint);
+    return Table::append(QVariant::fromValue(milkPoint->data()));
 }
 
-bool MilkPointsTable::update(MilkPoint *milkPoint) const
+bool MilkPointsTable::set(const int row, MilkPoint *milkPoint)
 {
-    return dao()->update(QVariant::fromValue(milkPoint->data()));
-}
-
-bool MilkPointsTable::setName(const DbConstants::milk_id milkPointId, const QString &milkPointName) const
-{
-    return m_dao->updateValue(DCMP::FN_NAME, milkPointId, milkPointName);
-}
-
-bool MilkPointsTable::setDescription(const DbConstants::milk_id milkPointId, const QString &description) const
-{
-    return m_dao->updateValue(DCMP::FN_DESCRIPTION, milkPointId, description);
+    return Table::set(row, QVariant::fromValue(milkPoint->data()));
 }
 
 LocalitiesTable *MilkPointsTable::localities() const
@@ -208,5 +190,15 @@ int db::MilkPointsTable::getColPosition(const QString &columnName) const
 
 QVariant db::MilkPointsTable::get(const int row)
 {
-    return QVariant::fromValue(getMilkPoint(data(index(row, 0)).toInt()));
-}
+    const auto _id = getIdByRow(row);
+    if (_id < 0)
+        return {};
+
+    auto locality = localities()->getLocality(data(index(row, DCMP::MPT_LOCALITY_ID)).toInt());
+    return QVariant::fromValue(new MilkPoint(
+                                   _id,
+                                   data(index(row, DCMP::MPT_NAME)).toString(),
+                                   data(index(row, DCMP::MPT_DESCRIPTION)).toString(),
+                                   locality,
+                                   this)
+                               );}

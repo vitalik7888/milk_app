@@ -21,7 +21,7 @@ public:
     Deliverer* deliverer() const { return m_deliverer; }
     bool isDelivererDynamicFilterEnabled() const { return m_isDelivererDynamicFilterEnabled; }
 
-    Q_INVOKABLE QModelIndex sourceIdIndex(const int row) const;
+    Q_INVOKABLE int sourceRow(const int row) const;
 
 public slots:
     void invalidateTheFilter();
