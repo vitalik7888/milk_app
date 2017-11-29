@@ -4,8 +4,6 @@
 // Qt
 #include <QDebug>
 
-USE_DB_NAMESPACE
-
 using SC = SettingsConstants;
 using SCC = SettingsConstants::Column;
 using COLTYPE = SC::SettingsColumnType;

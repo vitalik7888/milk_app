@@ -2,9 +2,9 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4 as C14
-import MilkCore 1.0
-import Milk.Database 1.0
-import Milk.Calc 1.0
+import com.milk.core 1.0
+import com.milk.db 1.0
+import com.milk.calc 1.0
 
 Page {
     id: page
@@ -30,6 +30,8 @@ Page {
 
     Filter {
         id: filter
+
+        x: parent.x + parent.width / 2 - width / 2
     }
 
     ColumnLayout {

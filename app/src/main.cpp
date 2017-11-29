@@ -2,7 +2,7 @@
 #include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
 #include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
 #include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
-#include "src/calc/CalcItemModel.h"
+// Qt
 #include <QFile>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -12,7 +12,7 @@
 
 void qmlRegisterSettings()
 {
-    const char *uri = "Milk.Settings";
+    const char *uri = "com.milk.settings";
     qmlRegisterType<Settings>(uri, 1, 0, "Settings");
     qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
     qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
@@ -21,21 +21,21 @@ void qmlRegisterSettings()
 
 void qmlRegisterDb()
 {
-    const char *uri = "Milk.Database";
-    qmlRegisterType<DB_NAMESPACE::Database>(uri, 1, 0, "Database");
-    qmlRegisterType<DB_NAMESPACE::Table>();
-    qmlRegisterType<DB_NAMESPACE::LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
-    qmlRegisterType<DB_NAMESPACE::MilkPointsTable>(uri, 1, 0, "MilkPointsTable");
-    qmlRegisterType<DB_NAMESPACE::DeliverersTable>(uri, 1, 0, "DeliverersTable");
-    qmlRegisterType<DB_NAMESPACE::MilkReceptionTable>(uri, 1, 0, "MilkReceptionTable");
-    qmlRegisterType<DB_NAMESPACE::LocalitiesSortFilterProxyModel>(uri, 1, 0, "LocalitiesSortFilterProxyModel");
-    qmlRegisterType<DB_NAMESPACE::MilkPointsSortFilterProxyModel>(uri, 1, 0, "MilkPointsSortFilterProxyModel");
-    qmlRegisterType<DB_NAMESPACE::DeliverersSortFilterProxyModel>(uri, 1, 0, "DeliverersSortFilterProxyModel");
+    const char *uri = "com.milk.db";
+    qmlRegisterType<Database>(uri, 1, 0, "Database");
+    qmlRegisterType<Table>();
+    qmlRegisterType<LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
+    qmlRegisterType<MilkPointsTable>(uri, 1, 0, "MilkPointsTable");
+    qmlRegisterType<DeliverersTable>(uri, 1, 0, "DeliverersTable");
+    qmlRegisterType<MilkReceptionTable>(uri, 1, 0, "MilkReceptionTable");
+    qmlRegisterType<LocalitiesSortFilterProxyModel>(uri, 1, 0, "LocalitiesSortFilterProxyModel");
+    qmlRegisterType<MilkPointsSortFilterProxyModel>(uri, 1, 0, "MilkPointsSortFilterProxyModel");
+    qmlRegisterType<DeliverersSortFilterProxyModel>(uri, 1, 0, "DeliverersSortFilterProxyModel");
 }
 
 void qmlRegisterMilkTypes()
 {
-    const char *uri = "Milk.Types";
+    const char *uri = "com.milk.types";
     qmlRegisterType<Locality>(uri, 1, 0, "Locality");
     qmlRegisterType<MilkPoint>(uri, 1, 0, "MilkPoint");
     qmlRegisterType<Deliverer>(uri, 1, 0, "Deliverer");
@@ -43,7 +43,7 @@ void qmlRegisterMilkTypes()
 }
 
 void qmlRegisterCalcTypes() {
-    const char *uri = "Milk.Calc";
+    const char *uri = "com.milk.calc";
     qmlRegisterType<CalculatedItem>(uri, 1, 0, "CalculatedItem");
     qmlRegisterType<CalcItemModel>(uri, 1, 0, "CalcItemModel");
 }
@@ -55,18 +55,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
-    qmlRegisterType<MilkCore>("MilkCore", 1, 0, "MilkCore");
+//    QScopedPointer<MilkCore> milkCore(new MilkCore);
+    QQmlApplicationEngine engine;
     qmlRegisterSettings();
     qmlRegisterDb();
     qmlRegisterMilkTypes();
     qmlRegisterCalcTypes();
-
-    auto milkCore = new MilkCore(&app);
-
-    QQmlApplicationEngine engine;
-
-    QQmlContext *context = engine.rootContext();
-    context->setContextProperty("milkCore", milkCore);
+    qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())

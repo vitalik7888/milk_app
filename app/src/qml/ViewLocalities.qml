@@ -1,23 +1,26 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls 2.2
-import MilkCore 1.0
-import Milk.Types 1.0
-import Milk.Database 1.0
+import com.milk.core 1.0
+import com.milk.types 1.0
+import com.milk.db 1.0
+import com.milk.settings 1.0
 
 Item {
-    property Locality currentLocality
+    readonly property alias milkTable: proxy.sourceModel
+
+    property Locality currentMilkItem
     property alias filter: proxy.locality
 
     function currentSourceRow() {
         return proxy.sourceRow(view.currentIndex)
     }
 
+    height: 200
+    width: 160
+
     GroupBox {
-        title: qsTr("Населенный пункт")
         anchors.fill: parent
 
         ColumnLayout {
@@ -74,17 +77,17 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignCenter
+                Layout.minimumWidth: 100
 
                 model: LocalitiesSortFilterProxyModel {
                     id: proxy
-
                     sourceModel: milkCore.db.localities
                     enableLocalityDynamicFilter: true
                     locality.name: textFieldFilterName.text
                 }
 
                 onCurrentIndexChanged: {
-                    currentLocality = proxy.sourceModel.get(currentIndex)
+                    currentMilkItem = milkTable.get(currentIndex)
                 }
 
                 remove: Transition {
@@ -120,5 +123,8 @@ Item {
         }
     }
 
-    //    Component.onCompleted: view.currentIndex = 0
+    Connections {
+        target: milkCore.db
+        onLocalitiesChanged: view.currentIndex = 0
+    }
 }

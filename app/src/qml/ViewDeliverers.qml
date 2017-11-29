@@ -1,16 +1,12 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls 2.2
-import MilkCore 1.0
-import Milk.Types 1.0
-import Milk.Database 1.0
+import com.milk.core 1.0
+import com.milk.types 1.0
+import com.milk.db 1.0
 
 Item {
-//    id: root
-
     property Deliverer currentDeliverer
     property alias filter: proxy.deliverer
 
@@ -21,6 +17,9 @@ Item {
     function removeRow(row) {
         return milkCore.db.deliverers.removeRowByIndex(proxy.sourceIdIndex(row))
     }
+
+    height: 200
+    width: 160
 
     GroupBox {
         title: qsTr("Сдатчики")

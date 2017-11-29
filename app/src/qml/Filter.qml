@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as C14
+import com.milk.core 1.0
 
 Popup {
     id: popup
@@ -18,47 +19,43 @@ Popup {
     }
 
     function getDateFrom() {
-        return checkBoxFilterDate.checked ? calendarFrom.selectedDate : null
+        return checkBoxFilterDate.checked ? dateEditFrom.selectedDate : null
     }
 
     function getDateTo() {
-        return checkBoxFilterDate.checked ? calendarTo.selectedDate : null
+        return checkBoxFilterDate.checked ? dateEditFrom.selectedDate : null
     }
+    height: 500
 
-    RowLayout {
+    GridLayout {
         anchors.fill: parent
+        columns: 3
+        rows: 2
 
         GroupBox {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
+            height: 40
+            title: qsTr("Дата")
+
             label: CheckBox {
                 id: checkBoxFilterDate
                 checked: false
                 text: qsTr("Выбрать даты")
             }
 
-            title: qsTr("Дата")
-
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignLeft
-
             ColumnLayout {
-                Layout.fillHeight: true
-
+                Layout.fillWidth: true
                 enabled: checkBoxFilterDate.checked
 
-                Text {
-                    text: qsTr("С")
+                DateEdit {
+                    id: dateEditFrom
+                    Layout.fillWidth: true
                 }
 
-                C14.Calendar {
-                    id: calendarFrom
-                }
-
-                Text {
-                    text: qsTr("По")
-                }
-
-                C14.Calendar {
-                    id: calendarTo
+                DateEdit {
+                    id: dateEditTo
+                    Layout.fillWidth: true
                 }
             }
         }
@@ -67,18 +64,7 @@ Popup {
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumWidth: 100
-
-            ViewLocalities {
-                id: viewLocalities
-
-                anchors.fill: parent
-            }
-        }
-
-        GroupBox {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumWidth: 100
+            Layout.rowSpan: 2
 
             label: CheckBox {
                 id: checkBoxFilterMilkPoint
@@ -90,7 +76,7 @@ Popup {
                 anchors.fill: parent
                 enabled: checkBoxFilterMilkPoint.checked
 
-                filter.locality.localityId: viewLocalities.currentLocality.localityId
+                filter.locality.localityId: viewLocalities.currentMilkItem.localityId
             }
         }
 
@@ -98,6 +84,7 @@ Popup {
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumWidth: 100
+            Layout.rowSpan: 2
 
             label: CheckBox {
                 id: checkBoxFilterDeliverer
@@ -109,8 +96,15 @@ Popup {
                 anchors.fill: parent
                 enabled: checkBoxFilterDeliverer.checked
 
-                filter.locality.localityId: viewLocalities.currentLocality.localityId
+                filter.locality.localityId: viewLocalities.currentMilkItem.localityId
             }
+        }
+
+        ViewLocalities {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            id: viewLocalities
         }
     }
 }

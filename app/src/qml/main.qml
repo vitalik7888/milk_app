@@ -1,12 +1,12 @@
 import QtQuick 2.9
-import Qt.labs.platform 1.0
+import Qt.labs.platform 1.0 as Labs10
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
-import MilkCore 1.0
-import Milk.Types 1.0
-import Milk.Settings 1.0
-import Milk.Database 1.0
+import com.milk.core 1.0
+import com.milk.types 1.0
+import com.milk.settings 1.0
+import com.milk.db 1.0
 
 ApplicationWindow {
     id: appWindow
@@ -17,6 +17,10 @@ ApplicationWindow {
     height: 600
     minimumWidth: 640
     minimumHeight: 480
+
+    MilkCore {
+        id: milkCore
+    }
 
     MilkMenu {
         id: milkMenu
@@ -31,7 +35,7 @@ ApplicationWindow {
         id: dialogs
     }
 
-    MessageDialog {
+    Labs10.MessageDialog {
         id: messageDialog
 
         function showInfo(infoDescription) {
@@ -53,14 +57,14 @@ ApplicationWindow {
         }
     }
 
-    FileDialog {
+    Labs10.FileDialog {
         id: fileDialogChooseDb
 
         title: qsTr("Выберите или создайте базу данных")
         //        selectMultiple: false
 
         onAccepted: {
-            milkCore.db.openDb(fileUrl.toString().replace("file://", ""))
+            milkCore.db.openDb(currentFile.toString().replace("file://", ""))
         }
     }
 
@@ -80,6 +84,7 @@ ApplicationWindow {
                 text: qsTr("⋮")
                 onClicked: milkMenu.open()
             }
+
         }
     }
 

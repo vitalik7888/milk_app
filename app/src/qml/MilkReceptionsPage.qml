@@ -1,10 +1,10 @@
-import QtQuick 2.7
+import QtQuick 2.9
 import QtQuick.Controls 2.2
-import QtQuick.Controls 1.4
+import QtQuick.Controls 1.4 as C14
 import QtQuick.Layouts 1.3
-import QtQuick.Dialogs 1.2
-import Milk.Types 1.0
-import Milk.Database 1.0
+import com.milk.core 1.0
+import com.milk.types 1.0
+import com.milk.db 1.0
 
 Page {
     MilkReception {
@@ -37,7 +37,7 @@ Page {
             Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            filter.locality.localityId: viewLocalities.currentLocality.localityId
+            filter.locality.localityId: viewLocalities.currentMilkItem.localityId
         }
 
         ViewMilkPoints {
@@ -47,7 +47,7 @@ Page {
             Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            filter.locality.localityId: viewLocalities.currentLocality.localityId
+            filter.locality.localityId: viewLocalities.currentMilkItem.localityId
         }
 
         GroupBox {
@@ -69,9 +69,16 @@ Page {
 
                     SpinBox {
                         id: spinBoxPrice
-
-                        decimals: 2
                         value: milkCore.settings.main.priceLiter
+                        property int decimals: 2
+
+                        textFromValue: function(value, locale) {
+                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxPrice.decimals)
+                        }
+
+                        valueFromText: function(text, locale) {
+                            return Number.fromLocaleString(locale, text) * 100
+                        }
                     }
                 }
 
@@ -82,7 +89,7 @@ Page {
                         text: qsTr("Дата сдачи")
                     }
 
-                    Calendar {
+                    C14.Calendar {
                         id: calendarMilkReception
 
                     }
@@ -96,9 +103,16 @@ Page {
 
                     SpinBox {
                         id: spinBoxLiters
+                        value: 0
+                        property int decimals: 2
 
-                        decimals: 2
-                        value: 0.0
+                        textFromValue: function(value, locale) {
+                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxLiters.decimals)
+                        }
+
+                        valueFromText: function(text, locale) {
+                            return Number.fromLocaleString(locale, text) * 100
+                        }
                     }
 
 
@@ -108,9 +122,16 @@ Page {
 
                     SpinBox {
                         id: spinBoxFat
+                        value: 0
+                        property int decimals: 2
 
-                        decimals: 2
-                        value: 0.0
+                        textFromValue: function(value, locale) {
+                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxFat.decimals)
+                        }
+
+                        valueFromText: function(text, locale) {
+                            return Number.fromLocaleString(locale, text) * 100
+                        }
                     }
                 }
 

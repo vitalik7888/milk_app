@@ -1,83 +1,92 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.4
+import QtQuick 2.9
+import QtQuick.Controls 2.2
+import QtQuick.Controls 1.4 as C14
+import QtQuick.Layouts 1.3
 
-Item {
-    id: dateEdit
-
+Rectangle {
     readonly property date currentDate: calendar.selectedDate
-    readonly property bool isCalendarOpened: calendar.visible
-    property string color: "lightblue"
 
-    signal calendarOpened;
-    signal calendarClosed;
+    height: 40
+    width: 240
 
-    width: textField.width + btnOpen.width
-    height: textField.height
+    RowLayout {
+        anchors.fill: parent
 
-    Column {
-        id: column
-        spacing: 2
-
-        Row {
-            spacing: 5
-            TextEdit {
-                id: textField
-                text: calendar.selectedDate
-//                readOnly: true
-
-                Keys.onUpPressed: calendar.__selectNextDay()
-                Keys.onDownPressed: calendar.__selectPreviousDay()
-            }
-            Rectangle {
-                id: btnOpen
-                radius: 5
-                width: 30
-                height: textField.height
-                color: dateEdit.color
-
-                Text {
-                    text: "*"
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        dateEdit.isCalendarOpened ?  closeCalendar() : openCalendar()
-                    }
-                }
-            }
+        Label {
+            text: qsTr("Д:")
         }
 
-        Calendar {
-            id: calendar
-            visible: false
+        TextField {
+            id: textFieldDay
+            Layout.preferredWidth: 40
+            text: calendar.selectedDate.getDate()
+            readOnly: true
+            Keys.onUpPressed: calendar.__selectNextDay()
+            Keys.onDownPressed: calendar.__selectPreviousDay()
+//            Keys.onRightPressed: to month
+        }
+        Label {
+            text: qsTr("М:")
+        }
+
+        TextField {
+            id: textFieldMonth
+            Layout.preferredWidth: 40
+            text: calendar.selectedDate.getMonth()
+            readOnly: true
+            Keys.onUpPressed: calendar.__selectNextMonth()
+            Keys.onDownPressed: calendar.__selectPreviousMonth()
+        }
+        Label {
+            text: qsTr("Г:")
+        }
+
+        TextField {
+            id: textFieldYear
+            Layout.preferredWidth: 60
+            text: calendar.selectedDate.getFullYear()
+            readOnly: true
+            Keys.onUpPressed: calendar.selectNextYear()
+            Keys.onDownPressed: calendar.selectPreviousYear()
+        }
+
+        ToolButton {
+            id: btnOpenCalendar
+            text: ":"
+            width: 20
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignLeft
 
             onClicked: {
-                closeCalendar()
+                popup.open()
             }
 
-            function open()
-            {
-                visible = true
-            }
-
-            function close()
-            {
-                visible = false
-            }
         }
     }
 
-    function openCalendar()
-    {
-        calendar.open()
-        calendarOpened()
-    }
+    Popup {
+        id: popup
+        width: 250
+        height: 250
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
-    function closeCalendar()
-    {
-        calendar.close()
-        calendarClosed()
+        C14.Calendar {
+            id: calendar
+            anchors.fill: parent
+
+            function selectNextYear() {
+                selectedDate = new Date(selectedDate.getFullYear() + 1,
+                                        selectedDate.getMonth(),
+                                        selectedDate.getDate())
+            }
+
+            function selectPreviousYear() {
+                selectedDate = new Date(selectedDate.getFullYear() - 1,
+                                        selectedDate.getMonth(),
+                                        selectedDate.getDate())
+            }
+        }
     }
 }
