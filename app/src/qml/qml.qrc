@@ -12,5 +12,8 @@
         <file>MilkShortCuts.qml</file>
         <file>Dialogs.qml</file>
         <file>Filter.qml</file>
+        <file>DialogRemoveMilkPoint.qml</file>
+        <file>DialogRemoveLocality.qml</file>
+        <file>DialogAddEditMilkPoint.qml</file>
     </qresource>
 </RCC>

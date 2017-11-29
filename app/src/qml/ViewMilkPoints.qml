@@ -7,18 +7,23 @@ import com.milk.types 1.0
 import com.milk.db 1.0
 
 Item {
-    property MilkPoint currentMilkPoint
+    readonly property alias milkTable: proxy.sourceModel
+    property MilkPoint currentMilkItem
     property alias filter: proxy.milkPoint
+
+    function currentSourceRow() {
+        return proxy.sourceRow(view.currentIndex)
+    }
 
     height: 200
     width: 160
 
     GroupBox {
-        title: qsTr("Молокопункт")
         anchors.fill: parent
 
         ColumnLayout {
             anchors.fill: parent
+            spacing: 4
 
             TextField {
                 id: textFieldFilterName
@@ -26,6 +31,49 @@ Item {
                 height: 40
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
+            }
+            ToolBar {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                RowLayout {
+                    ToolButton {
+                        Image {
+                            source: "/img/milk_point/milk_point_add.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogAddEditMilkPoint.row = currentSourceRow()
+                            dialogs.dialogAddEditMilkPoint.openInsert()
+                        }
+                    }
+                    ToolButton {
+                        Image {
+                            source: "/img/milk_point/milk_point_edit.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogAddEditMilkPoint.row = currentSourceRow()
+                            dialogs.dialogAddEditMilkPoint.openUpdate()
+                        }
+                    }
+                    ToolButton {
+                        Image {
+                            source: "/img/milk_point/milk_point_remove.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogRemoveMilkPoint.row = currentSourceRow()
+                            dialogs.dialogRemoveMilkPoint.open()
+                        }
+                    }
+                }
             }
 
             ListView {
@@ -40,21 +88,21 @@ Item {
                     enableMilkPointDynamicFilter: true
                     milkPoint.name: textFieldFilterName.text
                 }
-                currentIndex: 0
 
                 onCurrentItemChanged: {
-                    currentMilkPoint = currentItem.milkPoint
+                    currentMilkItem = milkTable.get(currentIndex)
+                }
+
+                remove: Transition {
+                    ParallelAnimation {
+                        NumberAnimation { property: "opacity"; to: 0; duration: 1000 }
+                        NumberAnimation { properties: "x,y"; to: 100; duration: 1000 }
+                    }
                 }
 
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    property MilkPoint milkPoint: MilkPoint {
-                        milkPointId: f_id
-                        name: f_name
-                        description: f_description
-                    }
-
                     text: f_name
                     width: parent.width
 
@@ -76,5 +124,10 @@ Item {
                 }
             }
         }
+    }
+
+    Connections {
+        target: milkCore.db
+        onMilkPointsChanged: view.currentIndex = 0
     }
 }

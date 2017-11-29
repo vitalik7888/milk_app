@@ -11,11 +11,11 @@ Popup {
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
     function getDelivererId() {
-        return checkBoxFilterDeliverer.checked ? viewDeliverers.currentDeliverer.delivererId : -1
+        return checkBoxFilterDeliverer.checked ? viewDeliverers.currentMilkItem.delivererId : -1
     }
 
     function getMilkPointId() {
-        return checkBoxFilterMilkPoint.checked ? viewMilkPoints.currentMilkPoint.milkPointId : -1
+        return checkBoxFilterMilkPoint.checked ? viewMilkPoints.currentMilkItem.milkPointId : -1
     }
 
     function getDateFrom() {

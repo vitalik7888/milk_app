@@ -14,8 +14,8 @@ Page {
         priceLiter: spinBoxPrice.value
         liters:  spinBoxLiters.value
         fat: spinBoxFat.value
-        deliverer: viewDeliverers.currentDeliverer
-        milkPoint: viewMilkPoints.currentMilkPoint
+        deliverer: viewDeliverers.currentMilkItem
+        milkPoint: viewMilkPoints.currentMilkItem
     }
 
     RowLayout {
@@ -145,9 +145,9 @@ Page {
                     onClicked: {
                         if (spinBoxPrice.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
-                        } else if (viewDeliverers.currentDeliverer === null) {
+                        } else if (viewDeliverers.currentMilkItem === null) {
                             messageDialog.showInfo(qsTr("Выберите сдатчика"))
-                        } else if (viewMilkPoints.currentMilkPoint === null) {
+                        } else if (viewMilkPoints.currentMilkItem === null) {
                             messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else if (spinBoxLiters.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите количество литров"))

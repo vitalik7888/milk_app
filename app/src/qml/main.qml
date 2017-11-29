@@ -13,9 +13,9 @@ ApplicationWindow {
     title: qsTr("Milk app")
     visible: true
 
-    width: 800
+    width: 900
     height: 600
-    minimumWidth: 640
+    minimumWidth: 800
     minimumHeight: 480
 
     MilkCore {
@@ -33,6 +33,7 @@ ApplicationWindow {
 
     Dialogs {
         id: dialogs
+        anchors.centerIn: parent
     }
 
     Labs10.MessageDialog {
@@ -105,7 +106,7 @@ ApplicationWindow {
     footer:  TabBar {
         id: bar
         width: parent.width
-        currentIndex: 1
+        currentIndex: 0
 
         TabButton {
             text: qsTr("Сдача молока")

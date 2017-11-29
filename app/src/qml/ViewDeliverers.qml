@@ -7,22 +7,18 @@ import com.milk.types 1.0
 import com.milk.db 1.0
 
 Item {
-    property Deliverer currentDeliverer
+    readonly property alias milkTable: proxy.sourceModel
+    property Deliverer currentMilkItem
     property alias filter: proxy.deliverer
 
-    function removeCurrentRow() {
-        return removeRow(view.currentIndex)
-    }
-
-    function removeRow(row) {
-        return milkCore.db.deliverers.removeRowByIndex(proxy.sourceIdIndex(row))
+    function currentSourceRow() {
+        return proxy.sourceRow(view.currentIndex)
     }
 
     height: 200
     width: 160
 
     GroupBox {
-        title: qsTr("Сдатчики")
         anchors.fill: parent
 
         ColumnLayout {
@@ -35,6 +31,50 @@ Item {
                 height: 40
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
+            }
+
+            ToolBar {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+
+                RowLayout {
+                    ToolButton {
+                        Image {
+                            source: "/img/user/user_add.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogAddEditDeliverer.row = currentSourceRow()
+                            dialogs.dialogAddEditDeliverer.openInsert()
+                        }
+                    }
+                    ToolButton {
+                        Image {
+                            source: "/img/user/user_edit.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogAddEditDeliverer.row = currentSourceRow()
+                            dialogs.dialogAddEditDeliverer.openUpdate()
+                        }
+                    }
+                    ToolButton {
+                        Image {
+                            source: "/img/user/user_remove.png"
+                            width:  32
+                            height: 32
+                        }
+
+                        onClicked: {
+                            dialogs.dialogRemoveDeliverer.row = currentSourceRow()
+                            dialogs.dialogRemoveDeliverer.open()
+                        }
+                    }
+                }
             }
 
             ListView {
@@ -51,28 +91,22 @@ Item {
                     sourceModel: milkCore.db.deliverers
                     deliverer.name: textFieldFilterName.text
                 }
-                currentIndex: 0
 
                 onCurrentItemChanged: {
-                    currentDeliverer = currentItem.deliverer
+                    currentMilkItem = milkTable.get(currentIndex)
+                }
+
+                remove: Transition {
+                    ParallelAnimation {
+                        NumberAnimation { property: "opacity"; to: 0; duration: 1000 }
+                        NumberAnimation { properties: "x,y"; to: 100; duration: 1000 }
+                    }
                 }
 
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    property Deliverer deliverer: Deliverer {
-                        delivererId: f_id
-                        name: f_name
-                        inn: f_inn
-                        address: f_address
-                        phoneNumber: f_phone_number
-
-                        function remove() {
-                            removeRow(index)
-                        }
-                    }
-
-                    text: deliverer.name
+                    text: f_name
                     width: parent.width
 
                     contentItem: Text {
@@ -86,24 +120,6 @@ Item {
                         wrapMode: Text.Wrap
                     }
 
-                    ToolButton {
-                        id: btnDeliverersMenu
-                        text: qsTr("⋮")
-                        width: 10
-
-                        height: parent.height
-                        x: parent.x + parent.width - width
-
-                        onClicked: {
-                            var pos = btnDeliverersMenu.mapToItem(itemDeliverers, 0, 0)
-                            itemDeliverers.menu.x = pos.x - itemDeliverers.menu.width / 2
-                            itemDeliverers.menu.y = pos.y
-                            itemDeliverers.menu.deliverer = deliverer
-                            itemDeliverers.menu.open()
-                        }
-
-                    }
-
                     onClicked:  {
                         view.forceActiveFocus()
                         view.currentIndex = index
@@ -112,5 +128,10 @@ Item {
 
             }
         }
+    }
+
+    Connections {
+        target: milkCore.db
+        onDeliverersChanged: view.currentIndex = 0
     }
 }

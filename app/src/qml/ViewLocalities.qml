@@ -9,7 +9,6 @@ import com.milk.settings 1.0
 
 Item {
     readonly property alias milkTable: proxy.sourceModel
-
     property Locality currentMilkItem
     property alias filter: proxy.locality
 
