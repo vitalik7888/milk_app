@@ -1,7 +1,6 @@
 #include "DeliverersSortFilterProxyModel.h"
 
 #include "Locality.h"
-#include <base/Table.h>
 // Qt
 #include <QDebug>
 
@@ -10,16 +9,10 @@ using DC = DbConstants;
 
 
 DeliverersSortFilterProxyModel::DeliverersSortFilterProxyModel(QObject *parent):
-    QSortFilterProxyModel(parent)
+    MilkSortFilterProxyModel(parent)
 {
     m_deliverer = new Deliverer(this);
     m_deliverer->setLocality(new Locality(m_deliverer));
-}
-
-int DeliverersSortFilterProxyModel::sourceRow(const int row) const
-{
-    Table *table = qobject_cast<Table *>(sourceModel());
-    return mapToSource(index(row, table->getColPosition(table->primaryField()))).row();
 }
 
 void DeliverersSortFilterProxyModel::resetFilter()

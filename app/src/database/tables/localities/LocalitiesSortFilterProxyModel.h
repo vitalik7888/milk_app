@@ -1,14 +1,14 @@
 #ifndef LOCALITIESSORTFILTERPROXYMODEL_H
 #define LOCALITIESSORTFILTERPROXYMODEL_H
 
-#include "DbConstants.h"
+
 #include <Locality.h>
-// Qt
-#include <QSortFilterProxyModel>
+#include <base/MilkSortFilterProxyModel.h>
+
 
 DB_BEGIN_NAMESPACE
 
-class LocalitiesSortFilterProxyModel : public QSortFilterProxyModel
+class LocalitiesSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Locality* locality READ locality CONSTANT RESET resetLocality)
@@ -19,8 +19,6 @@ public:
 
     Locality* locality() const { return m_locality; }
     bool isLocalityDynamicFilterEnabled() const { return m_isLocalityDynamicFilterEnabled; }
-
-    Q_INVOKABLE int sourceRow(const int row) const;
 
 public slots:
     void invalidateTheFilter();

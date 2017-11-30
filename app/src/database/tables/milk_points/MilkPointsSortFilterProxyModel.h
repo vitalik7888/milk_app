@@ -1,14 +1,14 @@
 #ifndef MILKPOINTSSORTFILTERPROXYMODEL_H
 #define MILKPOINTSSORTFILTERPROXYMODEL_H
 
-#include "DbConstants.h"
+
 #include "MilkPoint.h"
-// Qt
-#include <QSortFilterProxyModel>
+#include <base/MilkSortFilterProxyModel.h>
+
 
 DB_BEGIN_NAMESPACE
 
-class MilkPointsSortFilterProxyModel : public QSortFilterProxyModel
+class MilkPointsSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(MilkPoint* milkPoint READ milkPoint CONSTANT RESET resetMilkPoint)
@@ -19,8 +19,6 @@ public:
 
     MilkPoint* milkPoint() const { return m_milkPoint; }
     bool isMilkPointDynamicFilterEnabled() const { return m_isMilkPointDynamicFilterEnabled; }
-
-    Q_INVOKABLE int sourceRow(const int row) const;
 
 public slots:
     void invalidateTheFilter();

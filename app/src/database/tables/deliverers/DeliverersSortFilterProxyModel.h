@@ -1,15 +1,13 @@
 #ifndef DELIVERERSSORTFILTERPROXYMODEL_H
 #define DELIVERERSSORTFILTERPROXYMODEL_H
 
-#include "DbConstants.h"
 #include "Deliverer.h"
-// Qt
-#include <QSortFilterProxyModel>
+#include "base/MilkSortFilterProxyModel.h"
 
 DB_BEGIN_NAMESPACE
 
 
-class DeliverersSortFilterProxyModel : public QSortFilterProxyModel
+class DeliverersSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Deliverer* deliverer READ deliverer CONSTANT RESET resetFilter)
@@ -20,8 +18,6 @@ public:
 
     Deliverer* deliverer() const { return m_deliverer; }
     bool isDelivererDynamicFilterEnabled() const { return m_isDelivererDynamicFilterEnabled; }
-
-    Q_INVOKABLE int sourceRow(const int row) const;
 
 public slots:
     void invalidateTheFilter();

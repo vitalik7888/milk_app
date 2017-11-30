@@ -144,6 +144,16 @@ bool Table::setValue(const int row, const int column, const QVariant &value, con
     return setData(index(row, column), value, role);
 }
 
+int Table::findRowById(const int id) const
+{
+    for (int row = 0; row < rowCount(); ++row) {
+        if (getIdByRow(row) == id)
+            return row;
+    }
+
+    return -1;
+}
+
 QVariant Table::data(const QModelIndex &_index, int role) const
 {
     QVariant value;

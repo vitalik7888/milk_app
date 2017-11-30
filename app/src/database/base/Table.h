@@ -47,6 +47,7 @@ public:
     Q_INVOKABLE virtual bool set(const int row, const QVariant &data);
     Q_INVOKABLE QVariant getValue(const int row, const int column) const;
     Q_INVOKABLE bool setValue(const int row, const int column, const QVariant &value, const int role = Qt::EditRole);
+    Q_INVOKABLE int findRowById(const int id) const;
 
     bool getIsFetchOnRefresh() const;
     void setIsFetchOnRefresh(const bool isFetchOnRefresh);
