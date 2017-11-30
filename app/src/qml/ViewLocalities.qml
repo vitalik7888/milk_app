@@ -9,11 +9,15 @@ import com.milk.settings 1.0
 
 Item {
     readonly property alias milkTable: proxy.sourceModel
-    property Locality currentMilkItem
+    readonly property alias proxy: proxy
     property alias filter: proxy.locality
+    readonly property alias viewTable: viewTable
+    readonly property alias viewMenu: viewMenu
+    readonly property alias viewFilter: textFieldFilterName
+    property Locality currentMilkItem
 
     function currentSourceRow() {
-        return proxy.sourceRow(view.currentIndex)
+        return proxy.sourceRow(viewTable.currentIndex)
     }
 
     height: 200
@@ -33,6 +37,7 @@ Item {
                 Layout.alignment: Qt.AlignTop
             }
             ToolBar {
+                id: viewMenu
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
@@ -71,7 +76,7 @@ Item {
             }
 
             ListView {
-                id: view
+                id: viewTable
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -83,10 +88,12 @@ Item {
                     sourceModel: milkCore.db.localities
                     enableLocalityDynamicFilter: true
                     locality.name: textFieldFilterName.text
+
                 }
 
                 onCurrentIndexChanged: {
-                    currentMilkItem = milkTable.get(currentIndex)
+                    var _item = milkTable.get(currentIndex) // fix underfined
+                    currentMilkItem = _item == null ? null : _item;
                 }
 
                 remove: Transition {
@@ -114,8 +121,8 @@ Item {
                     }
 
                     onClicked:  {
-                        view.forceActiveFocus()
-                        view.currentIndex = index
+                        viewTable.forceActiveFocus()
+                        viewTable.currentIndex = index
                     }
                 }
             }
@@ -124,6 +131,6 @@ Item {
 
     Connections {
         target: milkCore.db
-        onLocalitiesChanged: view.currentIndex = 0
+        onLocalitiesChanged: viewTable.currentIndex = 0
     }
 }

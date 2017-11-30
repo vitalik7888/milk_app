@@ -10,6 +10,7 @@ Dialog {
     modal: true
     property int row: -1
     height: 300
+    readonly property alias viewLocalities: viewLocalities
 
     onAccepted: {
         if (textFieldName.text === "") {
@@ -43,13 +44,14 @@ Dialog {
     GridLayout {
         anchors.fill: parent
         columns: 2
-        rows: 2
+        rows: 3
 
         ViewLocalities {
             id: viewLocalities
-            Layout.rowSpan: 2
+            Layout.rowSpan: 3
             Layout.fillHeight: true
             Layout.fillWidth: true
+            viewMenu.visible: false
         }
 
         SpinBox {
@@ -84,6 +86,7 @@ Dialog {
     function openUpdate() {
         errors.text = ""
         spinBoxMilkPointId.visible = true
+        viewLocalities.filter.reset()
 
         var obj = milkCore.db.milkPoints.get(row)
         if (obj == null) {
@@ -93,6 +96,7 @@ Dialog {
         spinBoxMilkPointId.value = obj.milkPointId
         textFieldName.text = obj.name
         textFieldDescription.text = obj.description
+        viewLocalities.viewTable.currentIndex = viewLocalities.proxy.findRowById(obj.locality.localityId)
 
         open()
     }

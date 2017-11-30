@@ -22,6 +22,11 @@ ApplicationWindow {
         id: milkCore
     }
 
+    Dialogs {
+        id: dialogs
+        anchors.centerIn: parent
+    }
+
     MilkMenu {
         id: milkMenu
 
@@ -31,10 +36,6 @@ ApplicationWindow {
 
     MilkShortCuts {}
 
-    Dialogs {
-        id: dialogs
-        anchors.centerIn: parent
-    }
 
     Labs10.MessageDialog {
         id: messageDialog
