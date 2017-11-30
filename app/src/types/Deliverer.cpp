@@ -112,7 +112,7 @@ void Deliverer::setLocality(Locality *locality)
         return;
 
     m_locality = locality;
-    m_data.setId(locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id());
+    m_data.setLocalityId(locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id());
     emit localityChanged(locality);
 }
 
