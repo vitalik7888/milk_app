@@ -39,16 +39,19 @@ public:
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
     virtual bool removeRows(int row, int count, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
+    Q_INVOKABLE bool append(const QVariant &data);
+    Q_INVOKABLE bool removeAll();
+    Q_INVOKABLE virtual QVariant get(const int row) = 0;
+    Q_INVOKABLE bool insert(int position, const QVariant &data);
+    Q_INVOKABLE bool remove(const int row);
+    Q_INVOKABLE virtual bool set(const int row, const QVariant &data);
+    Q_INVOKABLE QVariant getValue(const int row, const int column) const;
+    Q_INVOKABLE bool setValue(const int row, const int column, const QVariant &value, const int role = Qt::EditRole);
+
     bool getIsFetchOnRefresh() const;
     void setIsFetchOnRefresh(const bool isFetchOnRefresh);
 
 public slots:
-    bool append(const QVariant &data);
-    bool removeAll();
-    virtual QVariant get(const int row) = 0;
-    bool insert(int position, const QVariant &data);
-    bool remove(const int row);
-    virtual bool set(const int row, const QVariant &data);
     virtual void refresh();
 
 protected:

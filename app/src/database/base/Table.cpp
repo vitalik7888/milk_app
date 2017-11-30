@@ -134,6 +134,16 @@ bool Table::set(const int row, const QVariant &data)
     return isOk;
 }
 
+QVariant Table::getValue(const int row, const int column) const
+{
+    return data(index(row, column));
+}
+
+bool Table::setValue(const int row, const int column, const QVariant &value, const int role)
+{
+    return setData(index(row, column), value, role);
+}
+
 QVariant Table::data(const QModelIndex &_index, int role) const
 {
     QVariant value;

@@ -8,7 +8,6 @@
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
-using DCMP = DC::MilkPoints;
 
 
 MilkPointsSortFilterProxyModel::MilkPointsSortFilterProxyModel(QObject *parent) :
@@ -69,10 +68,10 @@ void MilkPointsSortFilterProxyModel::milkPointDisconnect()
 
 MilkPointData MilkPointsSortFilterProxyModel::getMilkPointFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
 {
-    const QModelIndex indexId = sourceModel()->index(sourceRow, DCMP::MPT_ID, sourceParent),
-            indexLocalityId = sourceModel()->index(sourceRow, DCMP::MPT_LOCALITY_ID, sourceParent),
-            indexName = sourceModel()->index(sourceRow, DCMP::MPT_NAME, sourceParent),
-            indexDescription = sourceModel()->index(sourceRow, DCMP::MPT_DESCRIPTION, sourceParent);
+    const QModelIndex indexId = sourceModel()->index(sourceRow, DC::TMP_ID, sourceParent),
+            indexLocalityId = sourceModel()->index(sourceRow, DC::TMP_LOCALITY_ID, sourceParent),
+            indexName = sourceModel()->index(sourceRow, DC::TMP_NAME, sourceParent),
+            indexDescription = sourceModel()->index(sourceRow, DC::TMP_DESCRIPTION, sourceParent);
 
     return MilkPointData(
                 sourceModel()->data(indexId).toLongLong(),

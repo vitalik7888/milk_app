@@ -10,7 +10,6 @@
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
-using DCL = DC::Localities;
 
 //--------------------------------------------------------------------------------------------------
 LocalitiesDao::LocalitiesDao(LocalitiesTable *table):
@@ -22,7 +21,7 @@ bool LocalitiesDao::insert(const QVariant &data) const
     const LocalityData locality = data.value<LocalityData>();
 
     QSqlQuery query(m_table->database());
-    query.prepare(DbUtils::getPrepInsertStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }));
+    query.prepare(DbUtils::getPrepInsertStr(DC::TL_TABLE_NAME, { DC::TL_FN_NAME, DC::TL_FN_DESCRIPTION }));
     query.addBindValue(locality.name());
     query.addBindValue(locality.description());
 
@@ -41,8 +40,8 @@ bool LocalitiesDao::update(const QVariant &data) const
 
     QSqlQuery query(m_table->database());
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getPrepUpdateStr(DCL::TABLE_NAME, { DCL::FN_NAME, DCL::FN_DESCRIPTION }))
-                  .arg(DCL::FN_ID));
+                  .arg(DbUtils::getPrepUpdateStr(DC::TL_TABLE_NAME, { DC::TL_FN_NAME, DC::TL_FN_DESCRIPTION }))
+                  .arg(DC::TL_FN_ID));
     query.addBindValue(locality.name());
     query.addBindValue(locality.description());
     query.addBindValue(locality.id());
@@ -72,7 +71,7 @@ LocalitiesTable::~LocalitiesTable()
 
 QString LocalitiesTable::tableName() const
 {
-    return DCL::TABLE_NAME;
+    return DC::TL_TABLE_NAME;
 }
 
 std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const DbConstants::milk_id localityId) const
@@ -112,8 +111,8 @@ QVariant LocalitiesTable::get(const int row)
     return QVariant::fromValue(
                 new Locality({
                                  _id,
-                                 this->data(index(row, DCL::LT_NAME)).toString(),
-                                 this->data(index(row, DCL::LT_DESCRIPTION)).toString()
+                                 this->data(index(row, DC::TL_NAME)).toString(),
+                                 this->data(index(row, DC::TL_DESCRIPTION)).toString()
                              },
                              this));
 }
@@ -125,28 +124,28 @@ bool LocalitiesTable::set(const int row, Locality *locality)
 
 QString LocalitiesTable::primaryField() const
 {
-    return DCL::FN_ID;
+    return DC::TL_FN_ID;
 }
 
 QString LocalitiesTable::getColName(const int position, const bool withTableName) const
 {
     QString columnName;
     switch (position) {
-    case DCL::LT_ID:
-        columnName = DCL::FN_ID;
+    case DC::TL_ID:
+        columnName = DC::TL_FN_ID;
         break;
-    case DCL::LT_NAME:
-        columnName = DCL::FN_NAME;
+    case DC::TL_NAME:
+        columnName = DC::TL_FN_NAME;
         break;
-    case DCL::LT_DESCRIPTION:
-        columnName = DCL::FN_DESCRIPTION;
+    case DC::TL_DESCRIPTION:
+        columnName = DC::TL_FN_DESCRIPTION;
         break;
     default:
         columnName = "";
         break;
     }
 
-    return withTableName ? QString("%1.%2").arg(DCL::TABLE_NAME).arg(columnName) : columnName;
+    return withTableName ? QString("%1.%2").arg(DC::TL_TABLE_NAME).arg(columnName) : columnName;
 }
 
 LocalitiesDao *LocalitiesTable::dao() const
@@ -157,19 +156,19 @@ LocalitiesDao *LocalitiesTable::dao() const
 LocalityData LocalitiesTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCL::FN_ID).toInt(),
-                record.value(DCL::FN_NAME).toString(),
-                record.value(DCL::FN_DESCRIPTION).toString()
+        record.value(DC::TL_FN_ID).toInt(),
+                record.value(DC::TL_FN_NAME).toString(),
+                record.value(DC::TL_FN_DESCRIPTION).toString()
     };
 }
 
 int db::LocalitiesTable::getColPosition(const QString &columnName) const
 {
-    if (columnName == DCL::FN_ID)
-        return DCL::LT_ID;
-    if (columnName == DCL::FN_NAME)
-        return DCL::LT_NAME;
-    if (columnName == DCL::FN_DESCRIPTION)
-        return DCL::LT_DESCRIPTION;
+    if (columnName == DC::TL_FN_ID)
+        return DC::TL_ID;
+    if (columnName == DC::TL_FN_NAME)
+        return DC::TL_NAME;
+    if (columnName == DC::TL_FN_DESCRIPTION)
+        return DC::TL_DESCRIPTION;
     return -1;
 }

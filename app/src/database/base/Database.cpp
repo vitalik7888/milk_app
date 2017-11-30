@@ -7,10 +7,6 @@
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
-using DCL = DC::Localities;
-using DCD = DC::Deliverers;
-using DCMP = DC::MilkPoints;
-using DCMR = DC::MilkReception;
 
 
 Database::Database(QObject *parent) :
@@ -120,10 +116,10 @@ void Database::createDb(const QString &filePath)
 
         execQuery("PRAGMA foreign_keys = off;");
         execQuery("BEGIN TRANSACTION;");
-        execQuery(DCL::CREATE_TABLE_SQL);
-        execQuery(DCMP::CREATE_TABLE_SQL);
-        execQuery(DCD::CREATE_TABLE_SQL);
-        execQuery(DCMR::CREATE_TABLE_SQL);
+        execQuery(DC::TL_CREATE_TABLE_SQL);
+        execQuery(DC::TMP_CREATE_TABLE_SQL);
+        execQuery(DC::TD_CREATE_TABLE_SQL);
+        execQuery(DC::TMR_CREATE_TABLE_SQL);
         execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_DELIV));
         execQuery(DC::CREATE_INDEX_RECEPT_DELIV_SQL);
         execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_POINT));

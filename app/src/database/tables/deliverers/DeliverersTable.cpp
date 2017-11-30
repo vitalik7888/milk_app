@@ -10,8 +10,6 @@
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
-using DCD = DC::Deliverers;
-using DCL = DC::Localities;
 
 
 DeliverersDao::DeliverersDao(DeliverersTable *table):
@@ -26,8 +24,8 @@ bool DeliverersDao::insert(const QVariant &data) const
     const auto deliverer = data.value<DelivererData>();
 
     QSqlQuery query;
-    query.prepare(DbUtils::getPrepInsertStr(DCD::TABLE_NAME,
-    { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER }));
+    query.prepare(DbUtils::getPrepInsertStr(DC::TD_TABLE_NAME,
+    { DC::TD_FN_NAME, DC::TD_FN_LOCALITY_ID, DC::TD_FN_INN, DC::TD_FN_ADDRESS, DC::TD_FN_PHONE_NUMBER }));
     query.addBindValue(deliverer.name());
     query.addBindValue(deliverer.localityId());
     query.addBindValue(deliverer.inn());
@@ -49,8 +47,8 @@ bool DeliverersDao::update(const QVariant &data) const
 
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getPrepUpdateStr(DCD::TABLE_NAME,
-    { DCD::FN_NAME, DCD::FN_LOCALITY_ID, DCD::FN_INN, DCD::FN_ADDRESS, DCD::FN_PHONE_NUMBER })).arg(DCD::FN_ID));
+                  .arg(DbUtils::getPrepUpdateStr(DC::TD_TABLE_NAME,
+    { DC::TD_FN_NAME, DC::TD_FN_LOCALITY_ID, DC::TD_FN_INN, DC::TD_FN_ADDRESS, DC::TD_FN_PHONE_NUMBER })).arg(DC::TD_FN_ID));
 
     query.addBindValue(deliverer.name());
     query.addBindValue(deliverer.localityId());
@@ -145,23 +143,23 @@ LocalitiesTable *DeliverersTable::localities() const
 
 QString DeliverersTable::tableName() const
 {
-    return DCD::TABLE_NAME;
+    return DC::TD_TABLE_NAME;
 }
 
 QVariant DeliverersTable::headerData(int section, Qt::Orientation orientation, int role) const
 {
     switch (section) {
-    case DCD::DT_ID:
+    case DC::TD_ID:
         return QVariant(tr("ID"));
-    case DCD::DT_NAME:
+    case DC::TD_NAME:
         return QVariant(tr("ФИО"));
-    case DCD::DT_LOCALITY_ID:
+    case DC::TD_LOCALITY_ID:
         return QVariant(tr("Населенный пункт"));
-    case DCD::DT_INN:
+    case DC::TD_INN:
         return QVariant(tr("ИНН"));
-    case DCD::DT_ADDRESS:
+    case DC::TD_ADDRESS:
         return QVariant(tr("Адрес"));
-    case DCD::DT_PHONE_NUMBER:
+    case DC::TD_PHONE_NUMBER:
         return QVariant(tr("Номер телефона"));
     }
 
@@ -170,7 +168,7 @@ QVariant DeliverersTable::headerData(int section, Qt::Orientation orientation, i
 
 QString DeliverersTable::primaryField() const
 {
-    return DCD::FN_ID;
+    return DC::TD_FN_ID;
 }
 
 DeliverersDao *DeliverersTable::dao() const
@@ -181,12 +179,12 @@ DeliverersDao *DeliverersTable::dao() const
 DelivererData DeliverersTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCD::FN_ID).toInt(),
-                record.value(DCD::FN_NAME).toString(),
-                record.value(DCD::FN_LOCALITY_ID).toInt(),
-                record.value(DCD::FN_INN).toLongLong(),
-                record.value(DCD::FN_ADDRESS).toString(),
-                record.value(DCD::FN_PHONE_NUMBER).toString(),
+        record.value(DC::TD_FN_ID).toInt(),
+                record.value(DC::TD_FN_NAME).toString(),
+                record.value(DC::TD_FN_LOCALITY_ID).toInt(),
+                record.value(DC::TD_FN_INN).toLongLong(),
+                record.value(DC::TD_FN_ADDRESS).toString(),
+                record.value(DC::TD_FN_PHONE_NUMBER).toString(),
     };
 }
 
@@ -194,46 +192,46 @@ QString db::DeliverersTable::getColName(const int position, const bool withTable
 {
     QString columnName;
     switch (position) {
-    case DCD::DT_ID:
-        columnName = DCD::FN_ID;
+    case DC::TD_ID:
+        columnName = DC::TD_FN_ID;
         break;
-    case DCD::DT_NAME:
-        columnName = DCD::FN_NAME;
+    case DC::TD_NAME:
+        columnName = DC::TD_FN_NAME;
         break;
-    case DCD::DT_LOCALITY_ID:
-        columnName = DCD::FN_LOCALITY_ID;
+    case DC::TD_LOCALITY_ID:
+        columnName = DC::TD_FN_LOCALITY_ID;
         break;
-    case DCD::DT_INN:
-        columnName = DCD::FN_INN;
+    case DC::TD_INN:
+        columnName = DC::TD_FN_INN;
         break;
-    case DCD::DT_ADDRESS:
-        columnName = DCD::FN_ADDRESS;
+    case DC::TD_ADDRESS:
+        columnName = DC::TD_FN_ADDRESS;
         break;
-    case DCD::DT_PHONE_NUMBER:
-        columnName = DCD::FN_PHONE_NUMBER;
+    case DC::TD_PHONE_NUMBER:
+        columnName = DC::TD_FN_PHONE_NUMBER;
         break;
     default:
         columnName = "";
         break;
     }
 
-    return withTableName ? QString("%1.%2").arg(DCD::TABLE_NAME).arg(columnName) : columnName;
+    return withTableName ? QString("%1.%2").arg(DC::TD_TABLE_NAME).arg(columnName) : columnName;
 }
 
 int db::DeliverersTable::getColPosition(const QString &columnName) const
 {
-    if (columnName == DCD::FN_ID)
-        return DCD::DT_ID;
-    if (columnName == DCD::FN_NAME)
-        return DCD::DT_NAME;
-    if (columnName == DCD::FN_LOCALITY_ID)
-        return DCD::DT_LOCALITY_ID;
-    if (columnName == DCD::FN_INN)
-        return DCD::DT_INN;
-    if (columnName == DCD::FN_ADDRESS)
-        return DCD::DT_ADDRESS;
-    if (columnName == DCD::FN_PHONE_NUMBER)
-        return DCD::DT_PHONE_NUMBER;
+    if (columnName == DC::TD_FN_ID)
+        return DC::TD_ID;
+    if (columnName == DC::TD_FN_NAME)
+        return DC::TD_NAME;
+    if (columnName == DC::TD_FN_LOCALITY_ID)
+        return DC::TD_LOCALITY_ID;
+    if (columnName == DC::TD_FN_INN)
+        return DC::TD_INN;
+    if (columnName == DC::TD_FN_ADDRESS)
+        return DC::TD_ADDRESS;
+    if (columnName == DC::TD_FN_PHONE_NUMBER)
+        return DC::TD_PHONE_NUMBER;
     return -1;
 }
 
@@ -244,13 +242,13 @@ QVariant db::DeliverersTable::get(const int row)
     if (_id < 0)
         return {};
 
-    auto locality = localities()->getLocality(data(index(row, DCD::DT_LOCALITY_ID)).toInt());
+    auto locality = localities()->getLocality(data(index(row, DC::TD_LOCALITY_ID)).toInt());
     return QVariant::fromValue(new Deliverer(
                                    _id,
-                                   data(index(row, DCD::DT_NAME)).toString(),
-                                   data(index(row, DCD::DT_INN)).toLongLong(),
-                                   data(index(row, DCD::DT_ADDRESS)).toString(),
-                                   data(index(row, DCD::DT_PHONE_NUMBER)).toString(),
+                                   data(index(row, DC::TD_NAME)).toString(),
+                                   data(index(row, DC::TD_INN)).toLongLong(),
+                                   data(index(row, DC::TD_ADDRESS)).toString(),
+                                   data(index(row, DC::TD_PHONE_NUMBER)).toString(),
                                    locality,
                                    this));
 }

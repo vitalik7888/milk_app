@@ -1,4 +1,5 @@
 #include "src/core/MilkCore.h"
+#include "DbConstants.h"
 #include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
 #include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
 #include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
@@ -23,6 +24,7 @@ void qmlRegisterDb()
 {
     const char *uri = "com.milk.db";
     qmlRegisterType<Database>(uri, 1, 0, "Database");
+    qmlRegisterUncreatableType<DbConstants>(uri, 1, 0, "DBC", "Can not create instance of the DB constants");
     qmlRegisterType<Table>();
     qmlRegisterType<LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
     qmlRegisterType<MilkPointsTable>(uri, 1, 0, "MilkPointsTable");

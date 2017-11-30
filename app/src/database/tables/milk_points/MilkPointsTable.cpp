@@ -11,8 +11,6 @@
 
 USE_DB_NAMESPACE
 using DC = DbConstants;
-using DCMP = DC::MilkPoints;
-using DCL = DC::Localities;
 
 
 MilkPointDao::MilkPointDao(MilkPointsTable *table):
@@ -25,7 +23,7 @@ bool MilkPointDao::insert(const QVariant &data) const
 
     QSqlQuery query;
     query.prepare(DbUtils::getPrepInsertStr(
-                      DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }));
+                      DC::TMP_TABLE_NAME, { DC::TMP_FN_LOCALITY_ID, DC::TMP_FN_NAME, DC::TMP_FN_DESCRIPTION }));
     query.addBindValue(milkPoint.localityId());
     query.addBindValue(milkPoint.name());
     query.addBindValue(milkPoint.description());
@@ -46,8 +44,8 @@ bool MilkPointDao::update(const QVariant &data) const
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
                   .arg(DbUtils::getPrepUpdateStr(
-                           DCMP::TABLE_NAME, { DCMP::FN_LOCALITY_ID, DCMP::FN_NAME, DCMP::FN_DESCRIPTION }))
-                  .arg(DCMP::FN_ID));
+                           DC::TMP_TABLE_NAME, { DC::TMP_FN_LOCALITY_ID, DC::TMP_FN_NAME, DC::TMP_FN_DESCRIPTION }))
+                  .arg(DC::TMP_FN_ID));
     query.addBindValue(milkPoint.localityId());
     query.addBindValue(milkPoint.name());
     query.addBindValue(milkPoint.description());
@@ -84,7 +82,7 @@ MilkPointsTable::~MilkPointsTable()
 
 QString MilkPointsTable::tableName() const
 {
-    return DCMP::TABLE_NAME;
+    return DC::TMP_TABLE_NAME;
 }
 
 std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const DbConstants::milk_id milkPointId) const
@@ -132,31 +130,31 @@ LocalitiesTable *MilkPointsTable::localities() const
 
 QString MilkPointsTable::primaryField() const
 {
-    return DCMP::FN_ID;
+    return DC::TMP_FN_ID;
 }
 
 QString MilkPointsTable::getColName(const int position, const bool withTableName) const
 {
     QString columnName;
     switch (position) {
-    case DCMP::MPT_ID:
-        columnName = DCMP::FN_ID;
+    case DC::TMP_ID:
+        columnName = DC::TMP_FN_ID;
         break;
-    case DCMP::MPT_LOCALITY_ID:
-        columnName = DCMP::FN_LOCALITY_ID;
+    case DC::TMP_LOCALITY_ID:
+        columnName = DC::TMP_FN_LOCALITY_ID;
         break;
-    case DCMP::MPT_NAME:
-        columnName = DCMP::FN_NAME;
+    case DC::TMP_NAME:
+        columnName = DC::TMP_FN_NAME;
         break;
-    case DCMP::MPT_DESCRIPTION:
-        columnName = DCMP::FN_DESCRIPTION;
+    case DC::TMP_DESCRIPTION:
+        columnName = DC::TMP_FN_DESCRIPTION;
         break;
     default:
         columnName = "";
         break;
     }
 
-    return withTableName ? QString("%1.%2").arg(DCMP::TABLE_NAME).arg(columnName) : columnName;
+    return withTableName ? QString("%1.%2").arg(DC::TMP_TABLE_NAME).arg(columnName) : columnName;
 }
 
 MilkPointDao *MilkPointsTable::dao() const
@@ -167,23 +165,23 @@ MilkPointDao *MilkPointsTable::dao() const
 MilkPointData MilkPointsTable::fromRecord(const QSqlRecord &record)
 {
     return {
-        record.value(DCMP::FN_ID).toInt(),
-                record.value(DCMP::FN_LOCALITY_ID).toInt(),
-                record.value(DCMP::FN_NAME).toString(),
-                record.value(DCMP::FN_DESCRIPTION).toString()
+        record.value(DC::TMP_FN_ID).toInt(),
+                record.value(DC::TMP_FN_LOCALITY_ID).toInt(),
+                record.value(DC::TMP_FN_NAME).toString(),
+                record.value(DC::TMP_FN_DESCRIPTION).toString()
     };
 }
 
 int db::MilkPointsTable::getColPosition(const QString &columnName) const
 {
-    if (columnName == DCMP::FN_ID)
-        return DCMP::MPT_ID;
-    if (columnName == DCMP::FN_LOCALITY_ID)
-        return DCMP::MPT_LOCALITY_ID;
-    if (columnName == DCMP::FN_NAME)
-        return DCMP::MPT_NAME;
-    if (columnName == DCMP::FN_DESCRIPTION)
-        return DCMP::MPT_DESCRIPTION;
+    if (columnName == DC::TMP_FN_ID)
+        return DC::TMP_ID;
+    if (columnName == DC::TMP_FN_LOCALITY_ID)
+        return DC::TMP_LOCALITY_ID;
+    if (columnName == DC::TMP_FN_NAME)
+        return DC::TMP_NAME;
+    if (columnName == DC::TMP_FN_DESCRIPTION)
+        return DC::TMP_DESCRIPTION;
     return -1;
 }
 
@@ -194,11 +192,11 @@ QVariant db::MilkPointsTable::get(const int row)
     if (_id < 0)
         return {};
 
-    auto locality = localities()->getLocality(data(index(row, DCMP::MPT_LOCALITY_ID)).toInt());
+    auto locality = localities()->getLocality(data(index(row, DC::TMP_LOCALITY_ID)).toInt());
     return QVariant::fromValue(new MilkPoint(
                                    _id,
-                                   data(index(row, DCMP::MPT_NAME)).toString(),
-                                   data(index(row, DCMP::MPT_DESCRIPTION)).toString(),
+                                   data(index(row, DC::TMP_NAME)).toString(),
+                                   data(index(row, DC::TMP_DESCRIPTION)).toString(),
                                    locality,
                                    this)
                                );}

@@ -8,7 +8,6 @@ using SC = SettingsConstants;
 using SCC = SettingsConstants::Column;
 using COLTYPE = SC::SettingsColumnType;
 using DBC = DbConstants;
-using DBCMR = DBC::MilkReception;
 
 
 MilkCore::MilkCore(QObject *parent) :
@@ -121,15 +120,15 @@ CalcItemModel *MilkCore::getCalcItemModel(const qlonglong delivererId, const qlo
 {
     const auto delivererWhere = delivererId <= 0 ?
                 "" : QString("%1 = %2")
-                .arg(DBCMR::FN_ID_DELIVERER)
+                .arg(DBC::TMR_FN_ID_DELIVERER)
                 .arg(delivererId);
     const auto milkPointWhere = milkPointId <= 0 ?
                 "" : QString("%1 = %2")
-                .arg((delivererWhere.isEmpty() ? "" : " AND ") + DBCMR::FN_MILK_POINT_ID)
+                .arg((delivererWhere.isEmpty() ? "" : " AND ") + DBC::TMR_FN_MILK_POINT_ID)
                 .arg(milkPointId);
     const auto dateWhere = !dateFrom.isValid() ?
                 "" : QString("%1 BETWEEN %2 AND %3")
-                .arg((milkPointWhere.isEmpty() ? "" : " AND ") + DBCMR::FN_DELIVERY_DATE)
+                .arg((milkPointWhere.isEmpty() ? "" : " AND ") + DBC::TMR_FN_DELIVERY_DATE)
                 .arg(dateFrom.toString(SC::defaultDateFormat()))
                 .arg(dateTo.toString(SC::defaultDateFormat()));
 
