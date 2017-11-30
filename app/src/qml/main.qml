@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import Qt.labs.platform 1.0 as Labs10
+import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
@@ -37,7 +37,7 @@ ApplicationWindow {
     MilkShortCuts {}
 
 
-    Labs10.MessageDialog {
+    MessageDialog {
         id: messageDialog
 
         function showInfo(infoDescription) {
@@ -59,7 +59,7 @@ ApplicationWindow {
         }
     }
 
-    Labs10.FileDialog {
+    FileDialog {
         id: fileDialogChooseDb
 
         title: qsTr("Выберите или создайте базу данных")

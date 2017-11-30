@@ -15,5 +15,7 @@
         <file>DialogRemoveMilkPoint.qml</file>
         <file>DialogRemoveLocality.qml</file>
         <file>DialogAddEditMilkPoint.qml</file>
+        <file>DialogAddEditDeliverer.qml</file>
+        <file>DialogRemoveDeliverer.qml</file>
     </qresource>
 </RCC>

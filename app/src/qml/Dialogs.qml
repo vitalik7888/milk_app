@@ -8,4 +8,13 @@ Item {
 
     property DialogRemoveMilkPoint dialogRemoveMilkPoint: DialogRemoveMilkPoint { }
     property DialogAddEditMilkPoint dialogAddEditMilkPoint: DialogAddEditMilkPoint {}
+
+    property DialogRemoveDeliverer dialogRemoveDeliverer: DialogRemoveDeliverer {
+        y: -height / 2
+        x: -width / 2
+    }
+    property DialogAddEditDeliverer dialogAddEditDeliverer: DialogAddEditDeliverer {
+        y: -height / 2
+        x: -width / 2
+    }
 }

@@ -28,6 +28,7 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
+            spacing: 4
 
             TextField {
                 id: textFieldFilterName
@@ -45,6 +46,8 @@ Item {
                     ToolButton {
                         Image {
                             source: "/img/locality/locality_add.png"
+                            width:  32
+                            height: 32
                         }
 
                         onClicked: {
@@ -55,6 +58,8 @@ Item {
                     ToolButton {
                         Image {
                             source: "/img/locality/locality_edit.png"
+                            width:  32
+                            height: 32
                         }
 
                         onClicked: {
@@ -65,6 +70,8 @@ Item {
                     ToolButton {
                         Image {
                             source: "/img/locality/locality_remove.png"
+                            width:  32
+                            height: 32
                         }
 
                         onClicked: {
