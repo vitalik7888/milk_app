@@ -74,12 +74,12 @@ MilkPointData MilkPointsSortFilterProxyModel::getMilkPointFromSourceModel(int so
                 );
 }
 
-bool MilkPointsSortFilterProxyModel::isFilterAcceptRowById(const DbConstants::milk_id id) const
+bool MilkPointsSortFilterProxyModel::isFilterAcceptRowById(const int id) const
 {
     return m_milkPoint->id() <= 0 ? true : m_milkPoint->id() == id;
 }
 
-bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByLocalityId(const DbConstants::milk_id localityId) const
+bool MilkPointsSortFilterProxyModel::isFilterAcceptRowByLocalityId(const int localityId) const
 {
     if (!m_milkPoint->locality())
         return true;

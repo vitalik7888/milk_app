@@ -63,7 +63,7 @@ LocalityData LocalitiesSortFilterProxyModel::getLocalityFromSourceModel(int sour
                 );
 }
 
-bool LocalitiesSortFilterProxyModel::isFilterAcceptRowById(const DbConstants::milk_id id) const
+bool LocalitiesSortFilterProxyModel::isFilterAcceptRowById(const int id) const
 {
     return m_locality->id() <= 0 ? true : m_locality->id() == id;
 }

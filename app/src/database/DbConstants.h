@@ -12,9 +12,6 @@
 class DbConstants {
     Q_GADGET
 public:
-    using milk_id = int;
-    using milk_inn = qlonglong;
-
     static QString dropTableIfExistsSql(const QString &tableName);
     static QString dropIndexIfExistsSql(const QString &indexName);
 

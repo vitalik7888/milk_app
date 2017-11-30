@@ -15,7 +15,7 @@ MilkReception::MilkReception(QObject *parent):
 
 }
 
-MilkReception::MilkReception(const TC::milk_id id, const QDate deliveryDate, const double priceLiter,
+MilkReception::MilkReception(const int id, const QDate deliveryDate, const double priceLiter,
                              const double liters, const double fat,
                              Deliverer *deliverer, MilkPoint *milkPoint, QObject *parent):
     QObject(parent),
@@ -42,7 +42,7 @@ MilkReception::~MilkReception()
 
 }
 
-TC::milk_id MilkReception::id() const
+int MilkReception::id() const
 {
     return m_data.id();
 }
@@ -87,7 +87,7 @@ bool MilkReception::isValid() const
     return m_data.isValid();
 }
 
-void MilkReception::setId(const TC::milk_id &id)
+void MilkReception::setId(const int id)
 {
     if (id == m_data.id())
         return;

@@ -1,7 +1,6 @@
 #ifndef TEST_MILKRECEPTION_H
 #define TEST_MILKRECEPTION_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QObject>
 
@@ -17,7 +16,7 @@ class Test_MilkReception : public QObject
 public:
     explicit Test_MilkReception(QObject *parent = nullptr);
 
-    static void compare(MilkReception *mr,const TypesConstants::milk_id id, const QDate deliveryDate,
+    static void compare(MilkReception *mr,const int id, const QDate deliveryDate,
                         const double priceLiter, const double liters, const double fat,
                         Deliverer *deliverer, MilkPoint *milkPoint);
     static void compareDefault(MilkReception *mr);

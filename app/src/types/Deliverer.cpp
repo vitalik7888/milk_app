@@ -24,8 +24,8 @@ Deliverer::Deliverer(const Deliverer &deliverer):
 
 }
 
-Deliverer::Deliverer(const TC::milk_id id, const QString &name,
-                     const TC::milk_inn inn, const QString &address,
+Deliverer::Deliverer(const int id, const QString &name,
+                     const QString &inn, const QString &address,
                      const QString &phoneNumber, Locality *locality, QObject *parent):
     QObject(parent),
     m_data(id, name, locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id(),
@@ -40,7 +40,7 @@ Deliverer::~Deliverer()
 
 }
 
-TC::milk_id Deliverer::id() const
+int Deliverer::id() const
 {
     return m_data.id();
 }
@@ -55,7 +55,7 @@ QString Deliverer::name() const
     return m_data.name();
 }
 
-TC::milk_inn Deliverer::inn() const
+QString Deliverer::inn() const
 {
     return m_data.inn();
 }
@@ -88,7 +88,7 @@ void Deliverer::setName(const QString &name)
     emit nameChanged(name);
 }
 
-void Deliverer::setInn(const TC::milk_inn &inn)
+void Deliverer::setInn(const QString &inn)
 {
     if (m_data.inn() == inn)
         return;

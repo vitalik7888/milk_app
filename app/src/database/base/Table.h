@@ -61,7 +61,7 @@ protected:
 
     bool m_isFetchOnRefresh;
 
-    DbConstants::milk_id getIdByRow(const int row) const;
+    int getIdByRow(const int row) const;
 
 signals:
     void error(const QString &error) const;

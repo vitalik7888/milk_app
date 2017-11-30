@@ -1,7 +1,6 @@
 #ifndef TEST_DELIVERER_H
 #define TEST_DELIVERER_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QObject>
 
@@ -16,9 +15,8 @@ class Test_Deliverer : public QObject
 public:
     explicit Test_Deliverer(QObject *parent = nullptr);
 
-    static void compare(Deliverer *deliverer, const TypesConstants::milk_id id,
-                        const QString &name, Locality *locality, const TypesConstants::milk_inn inn,
-                        const QString &address, const QString &phoneNumber);
+    static void compare(Deliverer *deliverer, const int id, const QString &name, Locality *locality,
+                        const QString &inn, const QString &address, const QString &phoneNumber);
     static void compareDefault(Deliverer *deliverer);
     static void compare(Deliverer *left, Deliverer *right);
 

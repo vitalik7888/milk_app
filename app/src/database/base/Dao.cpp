@@ -19,7 +19,7 @@ Dao::~Dao()
 
 }
 
-QVariant Dao::get(const DbConstants::milk_id id) const
+QVariant Dao::get(const int id) const
 {
     QSqlQuery query(m_table->database());
     query.prepare(QString("SELECT * FROM %1 WHERE %2 = ?")
@@ -66,14 +66,14 @@ bool Dao::remove(const QString &where) const
     return true;
 }
 
-bool Dao::remove(const DbConstants::milk_id id) const
+bool Dao::remove(const int id) const
 {
     return remove(QString("%1 = %2")
                   .arg(m_table->primaryField())
                   .arg(id));
 }
 
-bool Dao::updateValue(const QString &columnName, const DbConstants::milk_id id, const QVariant &value) const
+bool Dao::updateValue(const QString &columnName, const int id, const QVariant &value) const
 {
     QSqlQuery query(m_table->database());
     query.prepare(QString("UPDATE %1 SET %2 = ? WHERE %3 = ?")

@@ -1,7 +1,6 @@
 #ifndef MILKRECEPTIONDATA_H
 #define MILKRECEPTIONDATA_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QDate>
 #include <QMetaType>
@@ -11,20 +10,19 @@ class MilkReceptionData
 {
 public:
     MilkReceptionData();
-    MilkReceptionData(const TypesConstants::milk_id id, const TypesConstants::milk_id delivererId, const TypesConstants::milk_id milkPointId,
-                      const QDate &deliveryDate, const double priceLiter,
-                      const double liters, const double fat);
+    MilkReceptionData(const int id, const int delivererId, const int milkPointId,
+                      const QDate &deliveryDate, const double priceLiter, const double liters, const double fat);
     MilkReceptionData(const MilkReceptionData &data);
     ~MilkReceptionData();
 
-    TypesConstants::milk_id id() const;
-    void setId(const TypesConstants::milk_id &id);
+    int id() const;
+    void setId(const int id);
 
-    TypesConstants::milk_id delivererId() const;
-    void setDelivererId(const TypesConstants::milk_id &delivererId);
+    int delivererId() const;
+    void setDelivererId(const int delivererId);
 
-    TypesConstants::milk_id milkPointId() const;
-    void setMilkPointId(const TypesConstants::milk_id &milkPointId);
+    int milkPointId() const;
+    void setMilkPointId(const int milkPointId);
 
     QDate deliveryDate() const;
     void setDeliveryDate(const QDate &deliveryDate);
@@ -41,9 +39,9 @@ public:
     bool isValid() const;
 
 private:
-    TypesConstants::milk_id m_id;
-    TypesConstants::milk_id m_delivererId;
-    TypesConstants::milk_id m_milkPointId;
+    int m_id;
+    int m_delivererId;
+    int m_milkPointId;
     QDate   m_deliveryDate;
     double   m_priceLiter;
     double   m_liters;

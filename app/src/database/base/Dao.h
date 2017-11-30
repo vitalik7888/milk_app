@@ -15,13 +15,13 @@ public:
     Dao(Table *table);
     virtual ~Dao();
 
-    QVariant get(const DbConstants::milk_id id) const;
+    QVariant get(const int id) const;
     virtual QVariant getAll(const QString &where = {}) const;
     virtual bool insert(const QVariant &data) const = 0;
     virtual bool remove(const QString &where = "") const;
-    bool remove(const DbConstants::milk_id id) const;
+    bool remove(const int id) const;
     virtual bool update(const QVariant &data) const = 0;
-    bool updateValue(const QString &columnName, const DbConstants::milk_id id, const QVariant &value) const;
+    bool updateValue(const QString &columnName, const int id, const QVariant &value) const;
 
 protected:
     Table *m_table;

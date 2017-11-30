@@ -21,7 +21,7 @@ MilkPointData::MilkPointData(const MilkPointData &mp):
 
 }
 
-MilkPointData::MilkPointData(const TC::milk_id id, const TC::milk_id localityId, const QString &name,
+MilkPointData::MilkPointData(const int id, const int localityId, const QString &name,
                              const QString &description):
     m_id(id),
     m_localityId(localityId),
@@ -43,22 +43,22 @@ MilkPointData &MilkPointData::operator =(const MilkPointData &data)
     return *this;
 }
 
-TC::milk_id MilkPointData::id() const
+int MilkPointData::id() const
 {
     return m_id;
 }
 
-void MilkPointData::setId(const TC::milk_id &id)
+void MilkPointData::setId(const int id)
 {
     m_id = id;
 }
 
-TC::milk_id MilkPointData::localityId() const
+int MilkPointData::localityId() const
 {
     return m_localityId;
 }
 
-void MilkPointData::setLocalityId(const TC::milk_id &localityId)
+void MilkPointData::setLocalityId(const int localityId)
 {
     m_localityId = localityId;
 }

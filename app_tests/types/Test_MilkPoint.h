@@ -1,7 +1,6 @@
 #ifndef TEST_MILKPOINT_H
 #define TEST_MILKPOINT_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QObject>
 
@@ -16,7 +15,7 @@ class Test_MilkPoint : public QObject
 public:
     explicit Test_MilkPoint(QObject *parent = nullptr);
 
-    static void compare(MilkPoint *mp,const TypesConstants::milk_id id, const QString &name, const QString &description,
+    static void compare(MilkPoint *mp,const int id, const QString &name, const QString &description,
                         Locality *locality);
     static void compareDefault(MilkPoint *mp);
     static void compare(MilkPoint *left, MilkPoint *right);

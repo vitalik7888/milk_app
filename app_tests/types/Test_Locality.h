@@ -1,7 +1,6 @@
 #ifndef TEST_LOCALITY_H
 #define TEST_LOCALITY_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QObject>
 
@@ -14,7 +13,7 @@ class Test_Locality : public QObject
 public:
     explicit Test_Locality(QObject *parent = nullptr);
 
-    static void compare(Locality *locality, const TypesConstants::milk_id id,
+    static void compare(Locality *locality, const int id,
                         const QString &name, const QString &description);
     static void compareDefault(Locality *locality);
     static void compare(Locality *left, Locality *right);

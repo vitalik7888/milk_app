@@ -8,7 +8,7 @@
 USE_DB_NAMESPACE
 
 
-bool DbUtils::isAutoIncrIdIsValid(const DbConstants::milk_id id)
+bool DbUtils::isAutoIncrIdIsValid(const int id)
 {
     return id > 0;
 }
@@ -55,7 +55,7 @@ QString DbUtils::getPrepInsertStr(const QString &tableName, const QStringList &c
     return queryStr + values;
 }
 
-QString DbUtils::getStrIdsIn(Table *table, const QSet<DbConstants::milk_id> &ids)
+QString DbUtils::getStrIdsIn(Table *table, const QSet<int> &ids)
 {
     if (ids.isEmpty())
         return "";

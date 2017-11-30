@@ -34,19 +34,12 @@ public:
     QString selectAll() const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
-    std::experimental::optional<MilkReceptionData> getMilkReceptionData(const DbConstants::milk_id milkReceptionId) const;
+    std::experimental::optional<MilkReceptionData> getMilkReceptionData(const int milkReceptionId) const;
     MilkReception *getMilkReception(const int milkReceptionId);
     QList<MilkReceptionData> getMilkReceptionsData(const QString &where = QString()) const;
     Q_INVOKABLE bool insert(int index, MilkReception *milkReception);
     Q_INVOKABLE bool append(MilkReception *milkReception);
     Q_INVOKABLE bool update(MilkReception *milkReception) const;
-    bool updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const;
-    bool setIdDeliverer(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id delivererId) const;
-    bool setIdMilkPoint(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id milkPointId) const;
-    bool setDeliveryDate(const DbConstants::milk_id milkReceptionId, const QDate &deliveryDate) const;
-    bool setPriceLiter(const DbConstants::milk_id milkReceptionId, const double priceLiter) const;
-    bool setLiters(const DbConstants::milk_id milkReceptionId, const double liters) const;
-    bool setFat(const DbConstants::milk_id milkReceptionId, const double fate) const;
 
     DeliverersTable *deliverers() const;
     MilkPointsTable *milkPoints() const;

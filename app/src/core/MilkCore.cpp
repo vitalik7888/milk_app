@@ -60,10 +60,10 @@ CalculatedItem *MilkCore::getCalculations(const QString &where)
     auto root = new CalculatedItem;
     root->setDelivererName("All");
 
-    QHash<DBC::milk_id, MilkPointData> milkPointsData;
-    QHash<DBC::milk_id, CalculatedItem *> deliverersCi;
+    QHash<int, MilkPointData> milkPointsData;
+    QHash<int, CalculatedItem *> deliverersCi;
 
-    auto getMilkPoint = [this, &milkPointsData](const DBC::milk_id id) -> MilkPointData {
+    auto getMilkPoint = [this, &milkPointsData](const int id) -> MilkPointData {
         if (milkPointsData.contains(id))
             return milkPointsData[id];
         else {
@@ -76,7 +76,7 @@ CalculatedItem *MilkCore::getCalculations(const QString &where)
         return {};
     };
 
-    auto getDelivererCi = [this, &deliverersCi](const DBC::milk_id id) -> CalculatedItem* {
+    auto getDelivererCi = [this, &deliverersCi](const int id) -> CalculatedItem* {
         if (deliverersCi.contains(id))
             return deliverersCi[id];
         else {

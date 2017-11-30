@@ -1,7 +1,6 @@
 #ifndef LOCALITYDATA_H
 #define LOCALITYDATA_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QString>
 #include <QMetaType>
@@ -10,12 +9,12 @@
 class LocalityData {
 public:
     LocalityData();
-    LocalityData(const TypesConstants::milk_id id, const QString &name, const QString &description);
+    LocalityData(const int id, const QString &name, const QString &description);
     LocalityData(const LocalityData &data);
     ~LocalityData();
 
-    TypesConstants::milk_id id() const;
-    void setId(const TypesConstants::milk_id &id);
+    int id() const;
+    void setId(const int id);
 
     QString name() const;
     void setName(const QString &name);
@@ -26,7 +25,7 @@ public:
     bool isValid() const;
 
 private:
-    TypesConstants::milk_id m_id;
+    int m_id;
     QString m_name;
     QString m_description;
 };

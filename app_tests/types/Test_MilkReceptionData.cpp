@@ -1,5 +1,6 @@
 #include "Test_MilkReceptionData.h"
 
+#include <TypesConstants.h>
 #include <MilkReceptionData.h>
 // Qt
 #include <QSignalSpy>
@@ -14,10 +15,8 @@ Test_MilkReceptionData::Test_MilkReceptionData(QObject *parent) : QObject(parent
 
 }
 
-void Test_MilkReceptionData::compare(const MilkReceptionData &mrd, const TC::milk_id id,
-                                 const TC::milk_id delivererId, const TC::milk_id milkPointId,
-                                 const QDate &deliveryDate, const double priceLiter,
-                                 const double liters, const double fat)
+void Test_MilkReceptionData::compare(const MilkReceptionData &mrd, const int id, const int delivererId, const int milkPointId,
+                                 const QDate &deliveryDate, const double priceLiter, const double liters, const double fat)
 {
     QCOMPARE(mrd.id(), id);
     QCOMPARE(mrd.delivererId(), delivererId);

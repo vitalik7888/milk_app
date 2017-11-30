@@ -12,7 +12,7 @@ LocalityData::LocalityData():
 
 }
 
-LocalityData::LocalityData(const TC::milk_id id, const QString &name,
+LocalityData::LocalityData(const int id, const QString &name,
                            const QString &description):
     m_id(id),
     m_name(name),
@@ -34,12 +34,12 @@ LocalityData::~LocalityData()
 
 }
 
-TC::milk_id LocalityData::id() const
+int LocalityData::id() const
 {
     return m_id;
 }
 
-void LocalityData::setId(const TC::milk_id &id)
+void LocalityData::setId(const int id)
 {
     m_id = id;
 }

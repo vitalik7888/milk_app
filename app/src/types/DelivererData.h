@@ -1,7 +1,6 @@
 #ifndef DELIVERERDATA_H
 #define DELIVERERDATA_H
 
-#include "TypesConstants.h"
 // Qt
 #include <QString>
 #include <QMetaType>
@@ -12,21 +11,20 @@ class DelivererData
 public:
     DelivererData();
     DelivererData(const DelivererData &data);
-    DelivererData(const TypesConstants::milk_id id, const QString &name,
-                  const TypesConstants::milk_id localityId, const TypesConstants::milk_inn inn,
+    DelivererData(const int id, const QString &name, const int localityId, const QString &inn,
               const QString &address, const QString &phoneNumber);
     virtual ~DelivererData();
 
     bool isValid() const;
 
-    TypesConstants::milk_inn inn() const;
-    void setInn(const TypesConstants::milk_inn inn);
+    QString inn() const;
+    void setInn(const QString &inn);
 
-    TypesConstants::milk_id id() const;
-    void setId(const TypesConstants::milk_id &id);
+    int id() const;
+    void setId(const int id);
 
-    TypesConstants::milk_id localityId() const;
-    void setLocalityId(const TypesConstants::milk_id &localityId);
+    int localityId() const;
+    void setLocalityId(const int localityId);
 
     QString name() const;
     void setName(const QString &name);
@@ -38,9 +36,9 @@ public:
     void setPhoneNumber(const QString &phoneNumber);
 
 private:
-    TypesConstants::milk_id m_id;
-    TypesConstants::milk_id m_localityId;
-    TypesConstants::milk_inn m_inn;
+    int m_id;
+    int m_localityId;
+    QString m_inn;
     QString m_name;
     QString m_address;
     QString m_phoneNumber; // +9(999)999-99-99

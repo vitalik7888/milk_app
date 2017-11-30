@@ -17,7 +17,7 @@ class Deliverer : public QObject
     Q_PROPERTY(int delivererId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(qlonglong inn READ inn WRITE setInn NOTIFY innChanged)
+    Q_PROPERTY(QString inn READ inn WRITE setInn NOTIFY innChanged)
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
     Q_PROPERTY(QQmlListProperty<MilkReception> milkReceptions READ milkReceptions)
@@ -25,15 +25,15 @@ class Deliverer : public QObject
 public:
     Deliverer(QObject *parent = Q_NULLPTR);
     Deliverer(const Deliverer &deliverer);
-    Deliverer(const TypesConstants::milk_id id, const QString &name, const TypesConstants::milk_inn inn,
+    Deliverer(const int id, const QString &name, const QString &inn,
               const QString &address, const QString &phoneNumber,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     virtual ~Deliverer();
 
-    TypesConstants::milk_id id() const;
+    int id() const;
     Locality *locality() const;
     QString name() const;
-    TypesConstants::milk_inn inn() const;
+    QString inn() const;
     QString address() const;
     QString phoneNumber() const;
 
@@ -51,7 +51,7 @@ public slots:
     void setId(const int id);
     void setLocality(Locality *locality);
     void setName(const QString &name);
-    void setInn(const TypesConstants::milk_inn &inn);
+    void setInn(const QString &inn);
     void setAddress(const QString &address);
     void setPhoneNumber(const QString &phoneNumber);
     void reset();
@@ -60,7 +60,7 @@ signals:
     void idChanged(int delivererId);
     void localityChanged(Locality * locality);
     void nameChanged(QString name);
-    void innChanged(qlonglong inn);
+    void innChanged(QString inn);
     void addressChanged(QString address);
     void phoneNumberChanged(QString phoneNumber);
 

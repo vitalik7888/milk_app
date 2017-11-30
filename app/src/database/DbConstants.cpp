@@ -42,7 +42,7 @@ const QString DbConstants::TD_CREATE_TABLE_SQL =
             "%2 INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
             "%3 TEXT    NOT NULL,"
             "%4 INTEGER REFERENCES %8 (%9) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,"
-            "%5 INTEGER DEFAULT '0',"
+            "%5 TEXT    DEFAULT '',"
             "%6 TEXT    DEFAULT '',"
             "%7 TEXT    DEFAULT ('+7'));")
         .arg(DbConstants::TD_TABLE_NAME)

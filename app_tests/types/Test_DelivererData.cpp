@@ -1,5 +1,6 @@
 #include "Test_DelivererData.h"
 
+#include <TypesConstants.h>
 #include <DelivererData.h>
 // Qt
 #include <QSignalSpy>
@@ -14,10 +15,8 @@ Test_DelivererData::Test_DelivererData(QObject *parent) : QObject(parent)
 
 }
 
-void Test_DelivererData::compare(DelivererData *deliverer, const TC::milk_id id,
-                             const QString &name, const TC::milk_id localityId,
-                             const TC::milk_inn inn, const QString &address,
-                             const QString &phoneNumber)
+void Test_DelivererData::compare(DelivererData *deliverer, const int id, const QString &name, const int localityId,
+                             const QString &inn, const QString &address, const QString &phoneNumber)
 {
     QCOMPARE(deliverer->id(), id);
     QCOMPARE(deliverer->name(), name);
@@ -47,13 +46,13 @@ void Test_DelivererData::emptyConstructor()
 
 void Test_DelivererData::constructor()
 {
-    DelivererData dd{1, "name", 23, 164, "address", "234"};
-    compare(&dd, 1, "name", 23, 164, "address", "234");
+    DelivererData dd{1, "name", 23, "164", "address", "234"};
+    compare(&dd, 1, "name", 23, "164", "address", "234");
 }
 
 void Test_DelivererData::copyConstructor()
 {
-    DelivererData ddToCopy{1, "name", 23, 164, "address", "234"};
+    DelivererData ddToCopy{1, "name", 23, "164", "address", "234"};
     DelivererData dd(ddToCopy);
     compare(&dd, &ddToCopy);
 }
@@ -64,15 +63,15 @@ void Test_DelivererData::methods()
     dd.setId(1);
     dd.setName("name");
     dd.setLocalityId(23);
-    dd.setInn(164);
+    dd.setInn("164");
     dd.setAddress("address");
     dd.setPhoneNumber("345");
-    compare(&dd, 1, "name", 23, 164, "address", "345");
+    compare(&dd, 1, "name", 23, "164", "address", "345");
 }
 
 void Test_DelivererData::storingInQVariant()
 {
-    DelivererData ddToCopy(1, "name", 23, 164, "address", "234");
+    DelivererData ddToCopy(1, "name", 23, "164", "address", "234");
 
     QVariant variant;
     variant.setValue(ddToCopy);

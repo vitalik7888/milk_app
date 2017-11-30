@@ -66,7 +66,7 @@ void Table::setIsFetchOnRefresh(const bool isFetchOnRefresh)
     m_isFetchOnRefresh = isFetchOnRefresh;
 }
 
-DbConstants::milk_id Table::getIdByRow(const int row) const
+int Table::getIdByRow(const int row) const
 {
     bool ok = false;
     const int _id = data(index(row, 0)).toInt(&ok);
@@ -209,7 +209,7 @@ bool db::Table::removeRows(int row, int count, const QModelIndex &parent)
             isOk = m_dao->remove(_id);
     } else {
         bool ok = false;
-        QSet<DbConstants::milk_id> _ids;
+        QSet<int> _ids;
         for (int i = row; i < row + count; i++) {
             const auto _id = data(index(i, columnId, parent)).toInt(&ok);
             if (ok)

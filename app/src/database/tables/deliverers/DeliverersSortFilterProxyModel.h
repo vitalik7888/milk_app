@@ -40,12 +40,12 @@ private:
     void delivererConnect();
     void delivererDisconnect();
 
-    bool isFilterAcceptRowById(const DbConstants::milk_id id) const;
+    bool isFilterAcceptRowById(const int id) const;
     bool isFilterAcceptRowByName(const QString &name) const;
-    bool isFilterAcceptRowByInn(const DbConstants::milk_id inn) const;
+    bool isFilterAcceptRowByInn(const QString &inn) const;
     bool isFilterAcceptRowByAddress(const QString &address) const;
     bool isFilterAcceptRowByPhoneNumber(const QString &phoneNumber) const;
-    bool isFilterAcceptRowByLocalityId(const DbConstants::milk_id localityId) const;
+    bool isFilterAcceptRowByLocalityId(const int localityId) const;
     bool isFilterAcceptRowByDeliverer(const DelivererData &data) const;
 };
 

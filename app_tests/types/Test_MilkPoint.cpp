@@ -1,6 +1,7 @@
 #include "Test_Locality.h"
 #include "Test_MilkPoint.h"
 
+#include <TypesConstants.h>
 #include <Locality.h>
 #include <MilkPoint.h>
 // Qt
@@ -16,7 +17,7 @@ Test_MilkPoint::Test_MilkPoint(QObject *parent) : QObject(parent)
 
 }
 
-void Test_MilkPoint::compare(MilkPoint *mp, const TC::milk_id id, const QString &name,
+void Test_MilkPoint::compare(MilkPoint *mp, const int id, const QString &name,
                              const QString &description, Locality *locality)
 {
     QCOMPARE(mp->id(), id);
@@ -89,7 +90,7 @@ void Test_MilkPoint::reset()
 void Test_MilkPoint::signalIdChanged()
 {
     MilkPoint mp;
-    const TC::milk_id data = 15;
+    const int data = 15;
     QSignalSpy signalSpy(&mp, &MilkPoint::idChanged);
     mp.setId(data);
     mp.setId(data);

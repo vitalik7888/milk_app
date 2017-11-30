@@ -71,7 +71,7 @@ DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int so
         sourceModel()->data(indexId).toInt(),
                 sourceModel()->data(indexName).toString(),
                 sourceModel()->data(indexLocalityId).toInt(),
-                sourceModel()->data(indexInn).toLongLong(),
+                sourceModel()->data(indexInn).toString(),
                 sourceModel()->data(indexAddress).toString(),
                 sourceModel()->data(indexPhoneNumber).toString()
     };
@@ -97,7 +97,7 @@ void DeliverersSortFilterProxyModel::delivererDisconnect()
     disconnect(m_deliverer->locality(), &Locality::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const DbConstants::milk_id id) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const int id) const
 {
     return m_deliverer->id() <= 0 ? true : m_deliverer->id() == id;
 }
@@ -107,9 +107,9 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByName(const QString &name
     return m_deliverer->name().isEmpty() ? true : name.contains(m_deliverer->name());
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowByInn(const DbConstants::milk_id inn) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByInn(const QString &inn) const
 {
-    return m_deliverer->inn() == -1 ? true : m_deliverer->inn() == inn;
+    return m_deliverer->inn().isEmpty() ? true : inn.contains(m_deliverer->inn());
 }
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowByAddress(const QString &address) const
@@ -122,7 +122,7 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByPhoneNumber(const QStrin
     return m_deliverer->phoneNumber().isEmpty() ? true : phoneNumber.contains(m_deliverer->phoneNumber());
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const DbConstants::milk_id localityId) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const int localityId) const
 {
     if (!m_deliverer->locality())
         return true;

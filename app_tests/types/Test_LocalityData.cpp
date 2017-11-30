@@ -1,5 +1,6 @@
 #include "Test_LocalityData.h"
 
+#include <TypesConstants.h>
 #include <LocalityData.h>
 // Qt
 #include <QSignalSpy>
@@ -13,7 +14,7 @@ Test_LocalityData::Test_LocalityData(QObject *parent) : QObject(parent)
 
 }
 
-void Test_LocalityData::compare(const LocalityData &localityData, const TC::milk_id id,
+void Test_LocalityData::compare(const LocalityData &localityData, const int id,
                             const QString &name, const QString &description)
 {
     QCOMPARE(localityData.id(), id);

@@ -25,7 +25,7 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    std::experimental::optional<MilkPointData> getMilkPointData(const DbConstants::milk_id milkPointId) const;
+    std::experimental::optional<MilkPointData> getMilkPointData(const int milkPointId) const;
     Q_INVOKABLE MilkPoint *getMilkPoint(const int milkPointId);
     Q_INVOKABLE bool insert(int index, MilkPoint *milkPoint);
     Q_INVOKABLE bool append(MilkPoint *milkPoint);

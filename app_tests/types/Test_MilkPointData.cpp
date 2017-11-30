@@ -1,5 +1,6 @@
 #include "Test_MilkPointData.h"
 
+#include <TypesConstants.h>
 #include <MilkPointData.h>
 // Qt
 #include <QSignalSpy>
@@ -14,8 +15,7 @@ Test_MilkPointData::Test_MilkPointData(QObject *parent) : QObject(parent)
 
 }
 
-void Test_MilkPointData::compare(const MilkPointData &mpd, const TC::milk_id id,
-                             const TC::milk_id localityId, const QString &name,
+void Test_MilkPointData::compare(const MilkPointData &mpd, const int id, const int localityId, const QString &name,
                              const QString &description)
 {
     QCOMPARE(mpd.id(), id);

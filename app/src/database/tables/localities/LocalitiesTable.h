@@ -24,7 +24,7 @@ public:
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;
 
-    std::experimental::optional<LocalityData> getLocalityData(const DbConstants::milk_id localityId) const;
+    std::experimental::optional<LocalityData> getLocalityData(const int localityId) const;
     Q_INVOKABLE Locality *getLocality(const int localityId);
     Q_INVOKABLE bool insert(int position, Locality *locality);
     Q_INVOKABLE bool append(Locality *locality);

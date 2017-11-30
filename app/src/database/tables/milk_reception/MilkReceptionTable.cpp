@@ -200,7 +200,7 @@ QString MilkReceptionTable::tableName() const
     return DC::TMR_TABLE_NAME;
 }
 
-std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const DbConstants::milk_id milkReceptionId) const
+std::experimental::optional<MilkReceptionData> MilkReceptionTable::getMilkReceptionData(const int milkReceptionId) const
 {
     auto data = dao()->get(milkReceptionId);
     if (data.isNull())
@@ -259,41 +259,6 @@ bool MilkReceptionTable::append(MilkReception *milkReception)
 bool MilkReceptionTable::update(MilkReception *milkReception) const
 {
     return dao()->update(QVariant::fromValue(milkReception->data()));
-}
-
-bool MilkReceptionTable::setIdDeliverer(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id delivererId) const
-{
-    return m_dao->updateValue(DC::TMR_FN_ID, milkReceptionId, delivererId);
-}
-
-bool MilkReceptionTable::setIdMilkPoint(const DbConstants::milk_id milkReceptionId, const DbConstants::milk_id milkPointId) const
-{
-    return m_dao->updateValue(DC::TMR_FN_MILK_POINT_ID, milkReceptionId, milkPointId);
-}
-
-bool MilkReceptionTable::setDeliveryDate(const DbConstants::milk_id milkReceptionId, const QDate &deliveryDate) const
-{
-    return m_dao->updateValue(DC::TMR_FN_DELIVERY_DATE, milkReceptionId, deliveryDate);
-}
-
-bool MilkReceptionTable::setPriceLiter(const DbConstants::milk_id milkReceptionId, const double priceLiter) const
-{
-    return m_dao->updateValue(DC::TMR_FN_PRICE_LITER, milkReceptionId, priceLiter);
-}
-
-bool MilkReceptionTable::setLiters(const DbConstants::milk_id milkReceptionId, const double liters) const
-{
-    return m_dao->updateValue(DC::TMR_FN_LITERS, milkReceptionId, liters);
-}
-
-bool MilkReceptionTable::setFat(const DbConstants::milk_id milkReceptionId, const double fat) const
-{
-    return m_dao->updateValue(DC::TMR_FN_FAT, milkReceptionId, fat);
-}
-
-bool MilkReceptionTable::updatePriceLiters(const double price, const QDate &dateFrom, const QDate &dateTo) const
-{
-    return dao()->updatePriceLiter(price, dateFrom, dateTo);
 }
 
 std::tuple<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &from, const QDate &to) const

@@ -86,7 +86,7 @@ DeliverersTable::~DeliverersTable()
 
 }
 
-std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const DbConstants::milk_id delivererId) const
+std::experimental::optional<DelivererData> DeliverersTable::getDelivererData(const int delivererId) const
 {
     const auto deliverer = dao()->get(delivererId);
     if (!deliverer.isNull())
@@ -182,7 +182,7 @@ DelivererData DeliverersTable::fromRecord(const QSqlRecord &record)
         record.value(DC::TD_FN_ID).toInt(),
                 record.value(DC::TD_FN_NAME).toString(),
                 record.value(DC::TD_FN_LOCALITY_ID).toInt(),
-                record.value(DC::TD_FN_INN).toLongLong(),
+                record.value(DC::TD_FN_INN).toString(),
                 record.value(DC::TD_FN_ADDRESS).toString(),
                 record.value(DC::TD_FN_PHONE_NUMBER).toString(),
     };
@@ -246,7 +246,7 @@ QVariant db::DeliverersTable::get(const int row)
     return QVariant::fromValue(new Deliverer(
                                    _id,
                                    data(index(row, DC::TD_NAME)).toString(),
-                                   data(index(row, DC::TD_INN)).toLongLong(),
+                                   data(index(row, DC::TD_INN)).toString(),
                                    data(index(row, DC::TD_ADDRESS)).toString(),
                                    data(index(row, DC::TD_PHONE_NUMBER)).toString(),
                                    locality,

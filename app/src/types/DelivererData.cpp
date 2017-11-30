@@ -1,5 +1,6 @@
 #include "DelivererData.h"
 
+#include "TypesConstants.h"
 // Qt
 #include <QtDebug>
 
@@ -25,8 +26,8 @@ DelivererData::DelivererData(const DelivererData &data):
 
 }
 
-DelivererData::DelivererData(const TC::milk_id id, const QString &name, const TC::milk_id localityId,
-                             const TC::milk_inn inn, const QString &address, const QString &phoneNumber):
+DelivererData::DelivererData(const int id, const QString &name, const int localityId,
+                             const QString &inn, const QString &address, const QString &phoneNumber):
     m_id(id),
     m_localityId(localityId),
     m_inn(inn),
@@ -47,32 +48,32 @@ bool DelivererData::isValid() const
     return m_id > 0;
 }
 
-TC::milk_inn DelivererData::inn() const
+QString DelivererData::inn() const
 {
     return m_inn;
 }
 
-void DelivererData::setInn(const TC::milk_inn inn)
+void DelivererData::setInn(const QString &inn)
 {
     m_inn = inn;
 }
 
-TC::milk_id DelivererData::id() const
+int DelivererData::id() const
 {
     return m_id;
 }
 
-void DelivererData::setId(const TC::milk_id &id)
+void DelivererData::setId(const int id)
 {
     m_id = id;
 }
 
-TC::milk_id DelivererData::localityId() const
+int DelivererData::localityId() const
 {
     return m_localityId;
 }
 
-void DelivererData::setLocalityId(const TC::milk_id &localityId)
+void DelivererData::setLocalityId(const int localityId)
 {
     m_localityId = localityId;
 }

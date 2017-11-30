@@ -85,7 +85,7 @@ QString MilkPointsTable::tableName() const
     return DC::TMP_TABLE_NAME;
 }
 
-std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const DbConstants::milk_id milkPointId) const
+std::experimental::optional<MilkPointData> MilkPointsTable::getMilkPointData(const int milkPointId) const
 {
     auto data = dao()->get(milkPointId);
     if (data.isNull())

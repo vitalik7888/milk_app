@@ -74,7 +74,7 @@ QString LocalitiesTable::tableName() const
     return DC::TL_TABLE_NAME;
 }
 
-std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const DbConstants::milk_id localityId) const
+std::experimental::optional<LocalityData> LocalitiesTable::getLocalityData(const int localityId) const
 {
     const auto data = dao()->get(localityId);
     if (data.isNull())
