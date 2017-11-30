@@ -116,10 +116,11 @@ bool Table::append(const QVariant &data)
 bool Table::removeAll()
 {
     beginRemoveRows({}, 0, rowCount() - 1);
-
     bool isOk = m_dao->remove();
-
     endRemoveRows();
+
+    if (isOk)
+        refresh();
 
     return isOk;
 }
@@ -131,6 +132,7 @@ bool Table::set(const int row, const QVariant &data)
         emit dataChanged(index(row, 0), index(rowCount(), columnCount()), roleNames().keys().toVector());
         refresh();
     }
+
     return isOk;
 }
 
@@ -220,6 +222,9 @@ bool db::Table::removeRows(int row, int count, const QModelIndex &parent)
     }
 
     endRemoveRows();
+
+    if (isOk)
+        refresh();
 
     return isOk;
 }

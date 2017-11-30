@@ -47,9 +47,10 @@ bool DeliverersDao::update(const QVariant &data) const
 
     QSqlQuery query;
     query.prepare(QString("%1 WHERE %2 = ?")
-                  .arg(DbUtils::getPrepUpdateStr(DC::TD_TABLE_NAME,
-    { DC::TD_FN_NAME, DC::TD_FN_LOCALITY_ID, DC::TD_FN_INN, DC::TD_FN_ADDRESS, DC::TD_FN_PHONE_NUMBER })).arg(DC::TD_FN_ID));
-
+                  .arg(DbUtils::getPrepUpdateStr(DC::TD_TABLE_NAME, { DC::TD_FN_NAME, DC::TD_FN_LOCALITY_ID,
+                                                                      DC::TD_FN_INN,  DC::TD_FN_ADDRESS,
+                                                                      DC::TD_FN_PHONE_NUMBER }))
+                  .arg(DC::TD_FN_ID));
     query.addBindValue(deliverer.name());
     query.addBindValue(deliverer.localityId());
     query.addBindValue(deliverer.inn());
