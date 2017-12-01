@@ -3,6 +3,7 @@
 #include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
 #include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
 #include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
+#include <tables/milk_reception/MilkReceptionSortFilterProxyModel.h>
 // Qt
 #include <QFile>
 #include <QGuiApplication>
@@ -33,6 +34,7 @@ void qmlRegisterDb()
     qmlRegisterType<LocalitiesSortFilterProxyModel>(uri, 1, 0, "LocalitiesSortFilterProxyModel");
     qmlRegisterType<MilkPointsSortFilterProxyModel>(uri, 1, 0, "MilkPointsSortFilterProxyModel");
     qmlRegisterType<DeliverersSortFilterProxyModel>(uri, 1, 0, "DeliverersSortFilterProxyModel");
+    qmlRegisterType<MilkReceptionSortFilterProxyModel>(uri, 1, 0, "MilkReceptionSortFilterProxyModel");
 }
 
 void qmlRegisterMilkTypes()
