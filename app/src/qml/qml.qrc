@@ -1,21 +1,23 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>MilkMenu.qml</file>
+        <file>MilkShortCuts.qml</file>
         <file>DateEdit.qml</file>
+        <file>Filter.qml</file>
         <file>ViewLocalities.qml</file>
         <file>ViewDeliverers.qml</file>
+        <file>ViewMilkPoints.qml</file>
+        <file>ViewMilkReception.qml</file>
         <file>CalcPage.qml</file>
         <file>MilkReceptionsPage.qml</file>
-        <file>ViewMilkPoints.qml</file>
-        <file>MilkMenu.qml</file>
-        <file>DialogAddEditLocality.qml</file>
-        <file>MilkShortCuts.qml</file>
         <file>Dialogs.qml</file>
-        <file>Filter.qml</file>
-        <file>DialogRemoveMilkPoint.qml</file>
         <file>DialogRemoveLocality.qml</file>
-        <file>DialogAddEditMilkPoint.qml</file>
-        <file>DialogAddEditDeliverer.qml</file>
         <file>DialogRemoveDeliverer.qml</file>
+        <file>DialogRemoveMilkPoint.qml</file>
+        <file>DialogAddEditLocality.qml</file>
+        <file>DialogAddEditDeliverer.qml</file>
+        <file>DialogAddEditMilkPoint.qml</file>
+        <file>SpinBoxDecimal.qml</file>
     </qresource>
 </RCC>

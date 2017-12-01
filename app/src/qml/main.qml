@@ -95,6 +95,12 @@ ApplicationWindow {
         currentIndex: bar.currentIndex
         anchors.fill: parent
 
+        Page {
+            ViewMilkReception {
+                anchors.fill: parent
+            }
+        }
+
         MilkReceptionsPage {
             id: milkReceptionPage
         }

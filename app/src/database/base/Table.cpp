@@ -35,7 +35,7 @@ QString Table::selectAll() const
 
 bool Table::isEmpty() const
 {
-    return (rowCount() == 0);
+    return rowCount() == 0;
 }
 
 void Table::refresh()

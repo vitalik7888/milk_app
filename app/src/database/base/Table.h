@@ -31,7 +31,6 @@ public:
     virtual QString primaryField() const = 0;
 
     virtual QString selectAll() const;
-    bool isEmpty() const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
@@ -39,6 +38,7 @@ public:
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
     virtual bool removeRows(int row, int count, const QModelIndex &parent) Q_DECL_OVERRIDE;
 
+    Q_INVOKABLE bool isEmpty() const;
     Q_INVOKABLE bool append(const QVariant &data);
     Q_INVOKABLE bool removeAll();
     Q_INVOKABLE virtual QVariant get(const int row) = 0;

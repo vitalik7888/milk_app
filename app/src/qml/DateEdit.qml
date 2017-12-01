@@ -4,7 +4,7 @@ import QtQuick.Controls 1.4 as C14
 import QtQuick.Layouts 1.3
 
 Rectangle {
-    readonly property date currentDate: calendar.selectedDate
+    property alias currentDate: calendar.selectedDate
 
     height: 40
     width: 240

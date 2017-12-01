@@ -67,18 +67,9 @@ Page {
                         text: qsTr("Цена")
                     }
 
-                    SpinBox {
+                    SpinBoxDecimal {
                         id: spinBoxPrice
                         value: milkCore.settings.main.priceLiter
-                        property int decimals: 2
-
-                        textFromValue: function(value, locale) {
-                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxPrice.decimals)
-                        }
-
-                        valueFromText: function(text, locale) {
-                            return Number.fromLocaleString(locale, text) * 100
-                        }
                     }
                 }
 
@@ -101,18 +92,9 @@ Page {
                         text: qsTr("Литры")
                     }
 
-                    SpinBox {
+                    SpinBoxDecimal {
                         id: spinBoxLiters
                         value: 0
-                        property int decimals: 2
-
-                        textFromValue: function(value, locale) {
-                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxLiters.decimals)
-                        }
-
-                        valueFromText: function(text, locale) {
-                            return Number.fromLocaleString(locale, text) * 100
-                        }
                     }
 
 
@@ -120,18 +102,9 @@ Page {
                         text: qsTr("Жир")
                     }
 
-                    SpinBox {
+                    SpinBoxDecimal {
                         id: spinBoxFat
                         value: 0
-                        property int decimals: 2
-
-                        textFromValue: function(value, locale) {
-                            return Number(value / 100).toLocaleString(locale, 'f', spinBoxFat.decimals)
-                        }
-
-                        valueFromText: function(text, locale) {
-                            return Number.fromLocaleString(locale, text) * 100
-                        }
                     }
                 }
 

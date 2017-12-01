@@ -97,9 +97,8 @@ Item {
                     deliverer.name: textFieldFilterName.text
                 }
 
-                onCurrentItemChanged: {
-                    var _item = milkTable.get(currentIndex) // fix underfined
-                    currentMilkItem = _item == null ? null : _item;
+                onCurrentIndexChanged: {
+                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
                 }
 
                 remove: Transition {

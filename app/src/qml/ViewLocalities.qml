@@ -95,12 +95,10 @@ Item {
                     sourceModel: milkCore.db.localities
                     enableLocalityDynamicFilter: true
                     locality.name: textFieldFilterName.text
-
                 }
 
                 onCurrentIndexChanged: {
-                    var _item = milkTable.get(currentIndex) // fix underfined
-                    currentMilkItem = _item == null ? null : _item;
+                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
                 }
 
                 remove: Transition {
