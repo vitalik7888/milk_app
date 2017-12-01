@@ -57,7 +57,7 @@ LocalityData LocalitiesSortFilterProxyModel::getLocalityFromSourceModel(int sour
             indexDescription = sourceModel()->index(sourceRow, DC::TL_DESCRIPTION, sourceParent);
 
     return LocalityData(
-                sourceModel()->data(indexId).toLongLong(),
+                sourceModel()->data(indexId).toInt(),
                 sourceModel()->data(indexName).toString(),
                 sourceModel()->data(indexDescription).toString()
                 );
@@ -96,10 +96,10 @@ bool LocalitiesSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, con
     QVariant leftData = sourceModel()->data(sourceLeft);
     QVariant rightData = sourceModel()->data(sourceRight);
 
-    if (leftData.type() == QVariant::LongLong){
-        return leftData.toLongLong() < rightData.toLongLong();
-    } else if (leftData.type() == QVariant::String){
+    if (leftData.type() == QVariant::String){
         return leftData.toString() < rightData.toString();
+    } else if (leftData.type() == QVariant::Int){
+        return leftData.toInt() < rightData.toInt();
     }
 
     return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);

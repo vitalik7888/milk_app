@@ -67,8 +67,8 @@ MilkPointData MilkPointsSortFilterProxyModel::getMilkPointFromSourceModel(int so
             indexDescription = sourceModel()->index(sourceRow, DC::TMP_DESCRIPTION, sourceParent);
 
     return MilkPointData(
-                sourceModel()->data(indexId).toLongLong(),
-                sourceModel()->data(indexLocalityId).toLongLong(),
+                sourceModel()->data(indexId).toInt(),
+                sourceModel()->data(indexLocalityId).toInt(),
                 sourceModel()->data(indexName).toString(),
                 sourceModel()->data(indexDescription).toString()
                 );
@@ -115,8 +115,8 @@ bool MilkPointsSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, con
     QVariant leftData = sourceModel()->data(sourceLeft);
     QVariant rightData = sourceModel()->data(sourceRight);
 
-    if (leftData.type() == QVariant::LongLong){
-        return leftData.toLongLong() < rightData.toLongLong();
+    if (leftData.type() == QVariant::Int){
+        return leftData.toInt() < rightData.toInt();
     } else if (leftData.type() == QVariant::String){
         return leftData.toString() < rightData.toString();
     }
