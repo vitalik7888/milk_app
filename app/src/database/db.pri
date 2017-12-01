@@ -12,7 +12,8 @@ SOURCES += \
     $$PWD/DbUtils.cpp \
     $$PWD/base/Dao.cpp \
     $$PWD/DbConstants.cpp \
-    $$PWD/base/MilkSortFilterProxyModel.cpp
+    $$PWD/base/MilkSortFilterProxyModel.cpp \
+    $$PWD/tables/milk_reception/MilkReceptionSortFilterProxyModel.cpp
 
 HEADERS  += \
     $$PWD/base/Database.h \
@@ -31,4 +32,5 @@ HEADERS  += \
     $$PWD/tables/milk_points/MilkpointsDao.h \
     $$PWD/tables/milk_reception/MilkReceprionDao.h \
     $$PWD/DbConstants.h \
-    $$PWD/base/MilkSortFilterProxyModel.h
+    $$PWD/base/MilkSortFilterProxyModel.h \
+    $$PWD/tables/milk_reception/MilkReceptionSortFilterProxyModel.h
