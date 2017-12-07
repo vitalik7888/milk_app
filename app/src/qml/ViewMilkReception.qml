@@ -195,6 +195,42 @@ Item {
         onOpened: _spinBoxDecimal.value = milkTable.getValue(row, column)
     }
 
+    Dialog {
+        id: dialogRemoveMilkReception
+
+        title: qsTr("Удаление приёма молока")
+        modal: true
+        standardButtons: Dialog.Ok
+
+        property int row: -1
+
+        Label{
+            id: _content
+        }
+
+        onAccepted: {
+            if (row == -1) {
+                close()
+                return
+            }
+
+            if (milkTable.remove(row)) {
+                console.log(qsTr("Приём молока успешно удалён"))
+            }
+            row = -1
+        }
+
+        onOpened: {
+            var _item = milkTable.get(row)
+            if (_item == null)
+                _content.text = qsTr("Выберите приём молока")
+            else
+                _content.text = "Вы действительно желаете удалить '" + _item.deliverer.name + ": "
+                        + _item.deliveryDate.toLocaleDateString() + "'?\n"
+        }
+
+    }
+
     GroupBox {
         anchors.fill: parent
 
@@ -319,7 +355,8 @@ Item {
                                 anchors.fill: parent
                             }
                             onClicked: {
-
+                                dialogRemoveMilkReception.row = proxy.sourceRow(index)
+                                dialogRemoveMilkReception.open()
                             }
                         }
                     }

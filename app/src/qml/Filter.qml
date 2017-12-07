@@ -18,11 +18,11 @@ Popup {
     }
 
     function getDateFrom() {
-        return checkBoxFilterDate.checked ? dateEditFrom.selectedDate : null
+        return checkBoxFilterDate.checked ? dateEditFrom.currentDate : null
     }
 
     function getDateTo() {
-        return checkBoxFilterDate.checked ? dateEditFrom.selectedDate : null
+        return checkBoxFilterDate.checked ? dateEditTo.currentDate : null
     }
     height: 500
 
