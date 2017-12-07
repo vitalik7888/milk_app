@@ -251,14 +251,14 @@ bool MilkReceptionTable::insert(int index, MilkReception *milkReception)
     return isOk;
 }
 
+bool MilkReceptionTable::set(const int row, MilkReception *milkReception)
+{
+    return Table::set(row, QVariant::fromValue(milkReception->data()));
+}
+
 bool MilkReceptionTable::append(MilkReception *milkReception)
 {
     return insert(rowCount(), milkReception);
-}
-
-bool MilkReceptionTable::update(MilkReception *milkReception) const
-{
-    return dao()->update(QVariant::fromValue(milkReception->data()));
 }
 
 std::tuple<double, double> MilkReceptionTable::getMinMaxPriceLiter(const QDate &from, const QDate &to) const
@@ -405,5 +405,19 @@ MilkReceptionData MilkReceptionTable::fromRecord(const QSqlRecord &record)
 
 QVariant db::MilkReceptionTable::get(const int row)
 {
-    return QVariant::fromValue(getMilkReception(data(index(row, 0)).toInt()));
+    const auto _id = getIdByRow(row);
+    if (_id < 0)
+        return {};
+
+    return QVariant::fromValue(
+                new MilkReception(
+                    _id,
+                    getValue(row, DC::TMR_DELIVERY_DATE).toDate(),
+                    getValue(row, DC::TMR_PRICE_LITER).toDouble(),
+                    getValue(row, DC::TMR_LITERS).toDouble(),
+                    getValue(row, DC::TMR_FAT).toDouble(),
+                    deliverers()->getDeliverer(getValue(row, DC::TMR_ID_DELIVERER).toInt()),
+                    milkPoints()->getMilkPoint(getValue(row, DC::TMR_MILK_POINT_ID).toInt())
+                    ,
+                    this));
 }

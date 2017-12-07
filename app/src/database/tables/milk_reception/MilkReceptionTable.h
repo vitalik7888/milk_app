@@ -38,8 +38,10 @@ public:
     MilkReception *getMilkReception(const int milkReceptionId);
     QList<MilkReceptionData> getMilkReceptionsData(const QString &where = QString()) const;
     Q_INVOKABLE bool insert(int index, MilkReception *milkReception);
+    Q_INVOKABLE bool set(const int row, MilkReception *milkReception);
     Q_INVOKABLE bool append(MilkReception *milkReception);
-    Q_INVOKABLE bool update(MilkReception *milkReception) const;
+    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
+
 
     DeliverersTable *deliverers() const;
     MilkPointsTable *milkPoints() const;
@@ -47,7 +49,6 @@ public:
     std::tuple<double, double> getMinMaxPriceLiter(const QDate &from, const QDate &to = QDate()) const;
     Q_INVOKABLE QDate getMinDeliveryDate() const;
     Q_INVOKABLE QDate getMaxDeliveryDate() const;
-    Q_INVOKABLE virtual QVariant get(const int row) Q_DECL_OVERRIDE;
 
 private:
     DeliverersTable *m_deliverers;
