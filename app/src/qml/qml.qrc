@@ -19,5 +19,6 @@
         <file>DialogAddEditDeliverer.qml</file>
         <file>DialogAddEditMilkPoint.qml</file>
         <file>SpinBoxDecimal.qml</file>
+        <file>ViewSettings.qml</file>
     </qresource>
 </RCC>

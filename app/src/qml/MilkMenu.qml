@@ -10,8 +10,8 @@ Menu {
     }
 
     MenuItem {
-        text: qsTr("Добавить населенный пункт")
-        onTriggered: itemLocalities.dialogAddEditLocality.openInsert()
+        text: qsTr("Настройки")
+        onTriggered: viewSettings.open()
     }
 
     MenuItem {

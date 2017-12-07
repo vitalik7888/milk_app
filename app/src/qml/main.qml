@@ -36,6 +36,10 @@ ApplicationWindow {
 
     MilkShortCuts {}
 
+    ViewSettings {
+        id: viewSettings
+        x: parent.x + width / 2
+    }
 
     MessageDialog {
         id: messageDialog

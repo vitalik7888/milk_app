@@ -7,8 +7,8 @@ Item {
     }
 
     Shortcut {
-        sequence: StandardKey.New
-        onActivated: dialogs.dialogAddEditLocality.openInsert()
+        sequence: "ctrl+shift+P"
+        onActivated: viewSettings.open()
     }
 
     Shortcut {
