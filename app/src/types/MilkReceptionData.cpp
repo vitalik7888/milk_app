@@ -8,7 +8,7 @@ using TCMR = TC::MilkReception;
 
 MilkReceptionData::MilkReceptionData():
     MilkReceptionData(TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID,
-                      TCMR::DEF_DELIVERY_DATE, TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT)
+                      TCMR::DEF_DELIVERY_DATE, TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT)
 {
 
 }

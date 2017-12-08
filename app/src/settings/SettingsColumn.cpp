@@ -2,15 +2,15 @@
 
 #include "SettingsConstants.h"
 
-using SC = SettingsConstants::Column;
+using SC = SettingsConstants;
 
 
 SettingsColumn::SettingsColumn(QObject *parent):
     QObject(parent),
-    m_display(SC::DEF_DISPLAY),
-    m_type(SC::DEF_TYPE),
-    m_prec(SC::DEF_PREC),
-    m_isShow(SC::DEF_IS_SHOW)
+    m_display(SC::COL_DEF_DISPLAY),
+    m_type(SC::COL_DEF_TYPE),
+    m_prec(SC::COL_DEF_PREC),
+    m_isShow(SC::COL_DEF_IS_SHOW)
 {
 
 }
@@ -74,20 +74,20 @@ void SettingsColumn::reset()
 
 void SettingsColumn::resetDisplay()
 {
-    m_display = SC::DEF_DISPLAY;
+    m_display = SC::COL_DEF_DISPLAY;
 }
 
 void SettingsColumn::resetType()
 {
-    m_type = SC::DEF_TYPE;
+    m_type = SC::COL_DEF_TYPE;
 }
 
 void SettingsColumn::resetPrec()
 {
-    m_prec = SC::DEF_PREC;
+    m_prec = SC::COL_DEF_PREC;
 }
 
 void SettingsColumn::resetIsShow()
 {
-    m_isShow = SC::DEF_IS_SHOW;
+    m_isShow = SC::COL_DEF_IS_SHOW;
 }

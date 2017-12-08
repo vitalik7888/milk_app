@@ -11,6 +11,9 @@ class SettingsColumn;
 
 class SettingsConstants
 {
+//    Q_GADGET
+//    Q_PROPERTY(QString defaultDateFormat READ defaultDateFormat CONSTANT)
+
 public:
     static inline QString defaultDateFormat() { return "yyyy-MM-dd"; }
 
@@ -23,53 +26,40 @@ public:
 
     using SettingsColumns = QVector<SettingsColumn *>;
 
-    class Main {
-    public:
-        static const QString DEF_LAST_CHOOSEN_DB;
-        static const float DEF_PRICE_LITER;
-        static const QString DEF_FIRM_NAME;
-        static const QString DEF_MILK_INSPECTOR;
-        static const QString DEF_MILK_INSPECTOR2;
-        static const bool DEF_IS_FETCH_TABLE_ON_REFRESH;
-    };
+    static const QString M_DEF_LAST_CHOOSEN_DB;
+    static const float M_DEF_PRICE_LITER;
+    static const QString M_DEF_FIRM_NAME;
+    static const QString M_DEF_MILK_INSPECTOR;
+    static const QString M_M_DEF_MILK_INSPECTOR2;
+    static const bool M_DEF_IS_FETCH_TABLE_ON_REFRESH;
 
-    class Column {
-    public:
-        static const QString DEF_DISPLAY;
-        static const int DEF_TYPE;
-        static const int DEF_PREC;
-        static const bool DEF_IS_SHOW;
-    };
+    static const QString COL_DEF_DISPLAY;
+    static const int COL_DEF_TYPE;
+    static const int COL_DEF_PREC;
+    static const bool COL_DEF_IS_SHOW;
 
-    class Calc {
-    public:
-        static const QFont DEF_TEXT_FONT;
-        static const QColor DEF_TEXT_BACK_COLOR;
-        static const QFont DEF_DELIV_RESULT_FONT;
-        static const QColor DEF_DELIV_RESULT_COLOR;
-        static const QFont DEF_ALL_RESULT_FONT;
-        static const QColor DEF_ALL_RESULT_COLOR;
-    };
+    static const QFont C_DEF_TEXT_FONT;
+    static const QColor C_DEF_TEXT_BACK_COLOR;
+    static const QFont C_DEF_DELIV_RESULT_FONT;
+    static const QColor C_DEF_DELIV_RESULT_COLOR;
+    static const QFont C_DEF_ALL_RESULT_FONT;
+    static const QColor C_DEF_ALL_RESULT_COLOR;
 
-
-    class Print {
-    public:
-        static const QFont DEF_TEXT_FONT;
-        static const QFont DEF_CAPTION_TEXT_FONT;
-        static const QColor DEF_CAPTION_COLOR;
-        static const int DEF_TABLE_WIDTH;
-        static const int DEF_TABLE_BORDER_WIDTH;
-        static const int DEF_TABLE_BORDER_STYLE;
-        static const int DEF_CELL_SPACING;
-        static const int DEF_CELL_PADDING;
-        static const QColor DEF_TABLE_BORDER_COLOR;
-        static const QFont DEF_TABLE_HEADER_FONT;
-        static const QColor DEF_TABLE_HEADER_COLOR;
-        static const QFont DEF_TABLE_TEXT_FONT;
-        static const QColor DEF_TABLE_TEXT_COLOR;
-        static const QFont DEF_TABLE_RESULT_FONT;
-        static const QColor DEF_TABLE_RESULT_COLOR;
-    };
+    static const QFont P_DEF_TEXT_FONT;
+    static const QFont P_DEF_CAPTION_TEXT_FONT;
+    static const QColor P_DEF_CAPTION_COLOR;
+    static const int P_DEF_TABLE_WIDTH;
+    static const int P_DEF_TABLE_BORDER_WIDTH;
+    static const int P_DEF_TABLE_BORDER_STYLE;
+    static const int P_DEF_CELL_SPACING;
+    static const int P_DEF_CELL_PADDING;
+    static const QColor P_DEF_TABLE_BORDER_COLOR;
+    static const QFont P_DEF_TABLE_HEADER_FONT;
+    static const QColor P_DEF_TABLE_HEADER_COLOR;
+    static const QFont P_DEF_TABLE_TEXT_FONT;
+    static const QColor P_DEF_TABLE_TEXT_COLOR;
+    static const QFont P_DEF_TABLE_RESULT_FONT;
+    static const QColor P_DEF_TABLE_RESULT_COLOR;
 };
 
 #endif // SETTINGSCONSTANTS_H

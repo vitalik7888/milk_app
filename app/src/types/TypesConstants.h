@@ -26,7 +26,7 @@ public:
         static const int     DEF_MILK_POINT_ID;
         static const QString DEF_MILK_POINT_NAME;
         static const QDate   DEF_DELIVERY_DATE;
-        static const double  DEF_PRICE_LITER;
+        static const double  M_DEF_PRICE_LITER;
         static const double  DEF_LITERS;
         static const double  DEF_FAT;
     };

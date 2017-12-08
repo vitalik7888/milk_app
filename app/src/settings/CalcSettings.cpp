@@ -3,17 +3,16 @@
 #include "SettingsColumn.h"
 
 using SC = SettingsConstants;
-using SCC = SC::Calc;
 
 
 CalcSettings::CalcSettings(QObject *parent):
     QObject(parent),
-    m_textFont(SCC::DEF_TEXT_FONT),
-    m_textBackColor(SCC::DEF_TEXT_BACK_COLOR),
-    m_delivResultFont(SCC::DEF_DELIV_RESULT_FONT),
-    m_delivResultColor(SCC::DEF_DELIV_RESULT_COLOR),
-    m_allResultFont(SCC::DEF_ALL_RESULT_FONT),
-    m_allResultColor(SCC::DEF_ALL_RESULT_COLOR),
+    m_textFont(SC::C_DEF_TEXT_FONT),
+    m_textBackColor(SC::C_DEF_TEXT_BACK_COLOR),
+    m_delivResultFont(SC::C_DEF_DELIV_RESULT_FONT),
+    m_delivResultColor(SC::C_DEF_DELIV_RESULT_COLOR),
+    m_allResultFont(SC::C_DEF_ALL_RESULT_FONT),
+    m_allResultColor(SC::C_DEF_ALL_RESULT_COLOR),
     m_dateFormat(SC::defaultDateFormat())
 {
 
@@ -148,32 +147,32 @@ void CalcSettings::clearSettingsColumns(QQmlListProperty<SettingsColumn> *list)
 
 void CalcSettings::resetTextFont()
 {
-    m_textFont = SCC::DEF_TEXT_FONT;
+    m_textFont = SC::C_DEF_TEXT_FONT;
 }
 
 void CalcSettings::resetTextBackColor()
 {
-    m_textBackColor = SCC::DEF_TEXT_BACK_COLOR;
+    m_textBackColor = SC::C_DEF_TEXT_BACK_COLOR;
 }
 
 void CalcSettings::resetDelivResultFont()
 {
-    m_delivResultFont = SCC::DEF_DELIV_RESULT_FONT;
+    m_delivResultFont = SC::C_DEF_DELIV_RESULT_FONT;
 }
 
 void CalcSettings::resetDelivResultColor()
 {
-    m_delivResultColor = SCC::DEF_DELIV_RESULT_COLOR;
+    m_delivResultColor = SC::C_DEF_DELIV_RESULT_COLOR;
 }
 
 void CalcSettings::resetAllResultFont()
 {
-    m_allResultFont = SCC::DEF_ALL_RESULT_FONT;
+    m_allResultFont = SC::C_DEF_ALL_RESULT_FONT;
 }
 
 void CalcSettings::resetAllResultColor()
 {
-    m_allResultColor = SCC::DEF_ALL_RESULT_COLOR;
+    m_allResultColor = SC::C_DEF_ALL_RESULT_COLOR;
 }
 
 void CalcSettings::resetDateFormat()

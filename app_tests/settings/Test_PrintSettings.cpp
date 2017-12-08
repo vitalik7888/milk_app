@@ -120,7 +120,7 @@ void Test_PrintSettings::testSignalTableWidth()
 void Test_PrintSettings::testSignalTableBorderWidth()
 {
     PrintSettings ps;
-    const int data = SC::Print::DEF_TABLE_BORDER_WIDTH + 1;
+    const int data = SC::P_DEF_TABLE_BORDER_WIDTH + 1;
     QSignalSpy signalSpy(&ps, &PrintSettings::tableBorderWidthChanged);
     ps.setTableBorderWidth(data);
     ps.setTableBorderWidth(data);
@@ -130,7 +130,7 @@ void Test_PrintSettings::testSignalTableBorderWidth()
 void Test_PrintSettings::testSignalTableBorderStyle()
 {
     PrintSettings ps;
-    const int data = SC::Print::DEF_TABLE_BORDER_STYLE + 1;
+    const int data = SC::P_DEF_TABLE_BORDER_STYLE + 1;
     QSignalSpy signalSpy(&ps, &PrintSettings::tableBorderStyleChanged);
     ps.setTableBorderStyle(data);
     ps.setTableBorderStyle(data);
@@ -140,7 +140,7 @@ void Test_PrintSettings::testSignalTableBorderStyle()
 void Test_PrintSettings::testSignalCellSpacing()
 {
     PrintSettings ps;
-    const int data = SC::Print::DEF_CELL_SPACING + 1;
+    const int data = SC::P_DEF_CELL_SPACING + 1;
     QSignalSpy signalSpy(&ps, &PrintSettings::cellSpacingChanged);
     ps.setCellSpacing(data);
     ps.setCellSpacing(data);
@@ -150,7 +150,7 @@ void Test_PrintSettings::testSignalCellSpacing()
 void Test_PrintSettings::testSignalCellPadding()
 {
     PrintSettings ps;
-    const int data = SC::Print::DEF_CELL_PADDING + 1;
+    const int data = SC::P_DEF_CELL_PADDING + 1;
     QSignalSpy signalSpy(&ps, &PrintSettings::cellPaddingChanged);
     ps.setCellPadding(data);
     ps.setCellPadding(data);
@@ -263,14 +263,14 @@ void Test_PrintSettings::compare(PrintSettings *ps, const QFont &textFont,
 
 void Test_PrintSettings::compareDefault(PrintSettings *ps)
 {
-    compare(ps, SC::Print::DEF_TEXT_FONT, SC::Print::DEF_CAPTION_TEXT_FONT,
-            SC::Print::DEF_CAPTION_COLOR, SC::Print::DEF_TABLE_WIDTH,
-            SC::Print::DEF_TABLE_BORDER_WIDTH, SC::Print::DEF_TABLE_BORDER_STYLE,
-            SC::Print::DEF_CELL_SPACING, SC::Print::DEF_CELL_PADDING,
-            SC::Print::DEF_TABLE_BORDER_COLOR, SC::Print::DEF_TABLE_HEADER_FONT,
-            SC::Print::DEF_TABLE_HEADER_COLOR, SC::Print::DEF_TABLE_TEXT_FONT,
-            SC::Print::DEF_TABLE_TEXT_COLOR, SC::Print::DEF_TABLE_RESULT_FONT,
-            SC::Print::DEF_TABLE_RESULT_COLOR, {});
+    compare(ps, SC::P_DEF_TEXT_FONT, SC::P_DEF_CAPTION_TEXT_FONT,
+            SC::P_DEF_CAPTION_COLOR, SC::P_DEF_TABLE_WIDTH,
+            SC::P_DEF_TABLE_BORDER_WIDTH, SC::P_DEF_TABLE_BORDER_STYLE,
+            SC::P_DEF_CELL_SPACING, SC::P_DEF_CELL_PADDING,
+            SC::P_DEF_TABLE_BORDER_COLOR, SC::P_DEF_TABLE_HEADER_FONT,
+            SC::P_DEF_TABLE_HEADER_COLOR, SC::P_DEF_TABLE_TEXT_FONT,
+            SC::P_DEF_TABLE_TEXT_COLOR, SC::P_DEF_TABLE_RESULT_FONT,
+            SC::P_DEF_TABLE_RESULT_COLOR, {});
 }
 
 void Test_PrintSettings::compareSignal(const QSignalSpy &spy, const QVariant &value, const int count)

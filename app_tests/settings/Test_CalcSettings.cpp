@@ -8,7 +8,6 @@
 #include <SettingsColumn.h>
 
 using SC = SettingsConstants;
-using SCC = SC::Calc;
 
 
 Test_CalcSettings::Test_CalcSettings(QObject *parent) : QObject(parent)
@@ -176,8 +175,8 @@ void Test_CalcSettings::compare(CalcSettings *cs, const QFont &textFont,
 
 void Test_CalcSettings::compareDefault(CalcSettings *cs)
 {
-    compare(cs, SCC::DEF_TEXT_FONT, SCC::DEF_TEXT_BACK_COLOR,
-            SCC::DEF_DELIV_RESULT_FONT, SCC::DEF_DELIV_RESULT_COLOR,
-            SCC::DEF_ALL_RESULT_FONT, SCC::DEF_ALL_RESULT_COLOR, SC::defaultDateFormat(), {});
+    compare(cs, SC::C_DEF_TEXT_FONT, SC::C_DEF_TEXT_BACK_COLOR,
+            SC::C_DEF_DELIV_RESULT_FONT, SC::C_DEF_DELIV_RESULT_COLOR,
+            SC::C_DEF_ALL_RESULT_FONT, SC::C_DEF_ALL_RESULT_COLOR, SC::defaultDateFormat(), {});
 }
 

@@ -3,26 +3,25 @@
 #include "SettingsColumn.h"
 
 using SC = SettingsConstants;
-using SCP = SC::Print;
 
 
 PrintSettings::PrintSettings(QObject *parent) :
     QObject(parent),
-    m_textFont(SCP::DEF_TEXT_FONT),
-    m_captionTextFont(SCP::DEF_CAPTION_TEXT_FONT),
-    m_captionColor(SCP::DEF_CAPTION_COLOR),
-    m_tableWidth(SCP::DEF_TABLE_WIDTH),
-    m_tableBorderWidth(SCP::DEF_TABLE_BORDER_WIDTH),
-    m_tableBorderStyle(SCP::DEF_TABLE_BORDER_STYLE),
-    m_cellSpacing(SCP::DEF_CELL_SPACING),
-    m_cellPadding(SCP::DEF_CELL_PADDING),
-    m_tableBorderColor(SCP::DEF_TABLE_BORDER_COLOR),
-    m_tableHeaderFont(SCP::DEF_TABLE_HEADER_FONT),
-    m_tableHeaderColor(SCP::DEF_TABLE_HEADER_COLOR),
-    m_tableTextFont(SCP::DEF_TABLE_TEXT_FONT),
-    m_tableTextColor(SCP::DEF_TABLE_TEXT_COLOR),
-    m_tableResultFont(SCP::DEF_TABLE_RESULT_FONT),
-    m_tableResultColor(SCP::DEF_TABLE_RESULT_COLOR)
+    m_textFont(SC::P_DEF_TEXT_FONT),
+    m_captionTextFont(SC::P_DEF_CAPTION_TEXT_FONT),
+    m_captionColor(SC::P_DEF_CAPTION_COLOR),
+    m_tableWidth(SC::P_DEF_TABLE_WIDTH),
+    m_tableBorderWidth(SC::P_DEF_TABLE_BORDER_WIDTH),
+    m_tableBorderStyle(SC::P_DEF_TABLE_BORDER_STYLE),
+    m_cellSpacing(SC::P_DEF_CELL_SPACING),
+    m_cellPadding(SC::P_DEF_CELL_PADDING),
+    m_tableBorderColor(SC::P_DEF_TABLE_BORDER_COLOR),
+    m_tableHeaderFont(SC::P_DEF_TABLE_HEADER_FONT),
+    m_tableHeaderColor(SC::P_DEF_TABLE_HEADER_COLOR),
+    m_tableTextFont(SC::P_DEF_TABLE_TEXT_FONT),
+    m_tableTextColor(SC::P_DEF_TABLE_TEXT_COLOR),
+    m_tableResultFont(SC::P_DEF_TABLE_RESULT_FONT),
+    m_tableResultColor(SC::P_DEF_TABLE_RESULT_COLOR)
 {
 
 }
@@ -230,77 +229,77 @@ void PrintSettings::clearSettingsColumns(QQmlListProperty<SettingsColumn> *list)
 
 void PrintSettings::resetTextFont()
 {
-    m_textFont = SCP::DEF_TEXT_FONT;
+    m_textFont = SC::P_DEF_TEXT_FONT;
 }
 
 void PrintSettings::resetCaptionTextFont()
 {
-    m_captionTextFont = SCP::DEF_CAPTION_TEXT_FONT;
+    m_captionTextFont = SC::P_DEF_CAPTION_TEXT_FONT;
 }
 
 void PrintSettings::resetCaptionColor()
 {
-    m_captionColor = SCP::DEF_CAPTION_COLOR;
+    m_captionColor = SC::P_DEF_CAPTION_COLOR;
 }
 
 void PrintSettings::resetTableWidth()
 {
-    m_tableWidth = SCP::DEF_TABLE_WIDTH;
+    m_tableWidth = SC::P_DEF_TABLE_WIDTH;
 }
 
 void PrintSettings::resetTableBorderWidth()
 {
-    m_tableBorderWidth = SCP::DEF_TABLE_BORDER_WIDTH;
+    m_tableBorderWidth = SC::P_DEF_TABLE_BORDER_WIDTH;
 }
 
 void PrintSettings::resetTableBorderStyle()
 {
-    m_tableBorderStyle = SCP::DEF_TABLE_BORDER_STYLE;
+    m_tableBorderStyle = SC::P_DEF_TABLE_BORDER_STYLE;
 }
 
 void PrintSettings::resetCellSpacing()
 {
-    m_cellSpacing = SCP::DEF_CELL_SPACING;
+    m_cellSpacing = SC::P_DEF_CELL_SPACING;
 }
 
 void PrintSettings::resetCellPadding()
 {
-    m_cellPadding = SCP::DEF_CELL_PADDING;
+    m_cellPadding = SC::P_DEF_CELL_PADDING;
 }
 
 void PrintSettings::resetTableBorderColor()
 {
-    m_tableBorderColor = SCP::DEF_TABLE_BORDER_COLOR;
+    m_tableBorderColor = SC::P_DEF_TABLE_BORDER_COLOR;
 }
 
 void PrintSettings::resetTableHeaderFont()
 {
-    m_tableHeaderFont = SCP::DEF_TABLE_HEADER_FONT;
+    m_tableHeaderFont = SC::P_DEF_TABLE_HEADER_FONT;
 }
 
 void PrintSettings::resetTableHeaderColor()
 {
-    m_tableHeaderColor = SCP::DEF_TABLE_HEADER_COLOR;
+    m_tableHeaderColor = SC::P_DEF_TABLE_HEADER_COLOR;
 }
 
 void PrintSettings::resetTableTextFont()
 {
-    m_tableTextFont = SCP::DEF_TABLE_TEXT_FONT;
+    m_tableTextFont = SC::P_DEF_TABLE_TEXT_FONT;
 }
 
 void PrintSettings::resetTableTextColor()
 {
-    m_tableTextColor = SCP::DEF_TABLE_TEXT_COLOR;
+    m_tableTextColor = SC::P_DEF_TABLE_TEXT_COLOR;
 }
 
 void PrintSettings::resetTableResultFont()
 {
-    m_tableResultFont = SCP::DEF_TABLE_RESULT_FONT;
+    m_tableResultFont = SC::P_DEF_TABLE_RESULT_FONT;
 }
 
 void PrintSettings::resetTableResultColor()
 {
-    m_tableResultColor = SCP::DEF_TABLE_RESULT_COLOR;
+    m_tableResultColor = SC::P_DEF_TABLE_RESULT_COLOR;
 }
 
 void PrintSettings::resetColumns()

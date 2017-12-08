@@ -7,7 +7,6 @@
 #include <QSignalSpy>
 
 using SC = SettingsConstants;
-using SCCOL = SC::Column;
 
 
 Test_SettingsColumn::Test_SettingsColumn(QObject *parent) : QObject(parent)
@@ -59,10 +58,10 @@ void Test_SettingsColumn::compare(SettingsColumn *sc, const QString display,
 
 void Test_SettingsColumn::compareDefault(SettingsColumn *sc)
 {
-    QCOMPARE(sc->display(),  SCCOL::DEF_DISPLAY);
-    QCOMPARE(sc->type(),     SCCOL::DEF_TYPE);
-    QCOMPARE(sc->prec(),     SCCOL::DEF_PREC);
-    QCOMPARE(sc->isShow(),   SCCOL::DEF_IS_SHOW);
+    QCOMPARE(sc->display(),  SC::COL_DEF_DISPLAY);
+    QCOMPARE(sc->type(),     SC::COL_DEF_TYPE);
+    QCOMPARE(sc->prec(),     SC::COL_DEF_PREC);
+    QCOMPARE(sc->isShow(),   SC::COL_DEF_IS_SHOW);
 }
 
 void Test_SettingsColumn::testSignalDisplayChanged()
@@ -80,7 +79,7 @@ void Test_SettingsColumn::testSignalDisplayChanged()
 void Test_SettingsColumn::testSignalTypeChanged()
 {
     SettingsColumn sc;
-    const int data = SCCOL::DEF_TYPE + 1;
+    const int data = SC::COL_DEF_TYPE + 1;
     QSignalSpy signalSpy(&sc, &SettingsColumn::typeChanged);
     sc.setType(data);
     sc.setType(data);
@@ -92,7 +91,7 @@ void Test_SettingsColumn::testSignalTypeChanged()
 void Test_SettingsColumn::testSignalPrecChanged()
 {
     SettingsColumn sc;
-    const int data = SCCOL::DEF_PREC + 1;
+    const int data = SC::COL_DEF_PREC + 1;
     QSignalSpy signalSpy(&sc, &SettingsColumn::precChanged);
     sc.setPrec(data);
     sc.setPrec(data);
@@ -104,7 +103,7 @@ void Test_SettingsColumn::testSignalPrecChanged()
 void Test_SettingsColumn::testSignalIsShowChanged()
 {
     SettingsColumn sc;
-    const bool data = !SCCOL::DEF_IS_SHOW;
+    const bool data = !SC::COL_DEF_IS_SHOW;
     QSignalSpy signalSpy(&sc, &SettingsColumn::isShowChanged);
     sc.setIsShow(data);
     sc.setIsShow(data);

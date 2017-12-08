@@ -49,8 +49,6 @@ static const char *C_ALL_RES_COLOR = "allResColor";
 }
 
 using SC = SettingsConstants;
-using SCC = SettingsConstants::Column;
-using SCM = SettingsConstants::Main;
 using COLTYPE = SC::SettingsColumnType;
 
 
@@ -152,12 +150,12 @@ void Settings::readMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
 
-    main()->setLastChoosenDb(value(LAST_CHOOSEN_DB, SCM::DEF_LAST_CHOOSEN_DB).toString());
-    main()->setPriceLiter(value(PRICE, SCM::DEF_PRICE_LITER).toFloat());
-    main()->setFirmName(value(FIRM_NAME, SCM::DEF_FIRM_NAME).toString());
-    main()->setMilkInspector(value(MILK_INSPECTOR, SCM::DEF_MILK_INSPECTOR).toString());
-    main()->setMilkInspector2(value(MILK_INSPECTOR_2, SCM::DEF_MILK_INSPECTOR2).toString());
-    main()->setIsFetchTablesOnRefresh(value(FETCH_MORE, SCM::DEF_IS_FETCH_TABLE_ON_REFRESH).toBool());
+    main()->setLastChoosenDb(value(LAST_CHOOSEN_DB, SC::M_DEF_LAST_CHOOSEN_DB).toString());
+    main()->setPriceLiter(value(PRICE, SC::M_DEF_PRICE_LITER).toFloat());
+    main()->setFirmName(value(FIRM_NAME, SC::M_DEF_FIRM_NAME).toString());
+    main()->setMilkInspector(value(MILK_INSPECTOR, SC::M_DEF_MILK_INSPECTOR).toString());
+    main()->setMilkInspector2(value(MILK_INSPECTOR_2, SC::M_M_DEF_MILK_INSPECTOR2).toString());
+    main()->setIsFetchTablesOnRefresh(value(FETCH_MORE, SC::M_DEF_IS_FETCH_TABLE_ON_REFRESH).toBool());
 
     m_settings->endGroup();
 }
@@ -167,12 +165,12 @@ void Settings::readCalcSettings()
     m_settings->beginGroup(GROUP_CALC);
 
     calc()->setDateFormat(value(C_DATE_FORMAT, SC::defaultDateFormat()).toString());
-    calc()->setTextFont(readFont(C_TEXT_FONT, SC::Calc::DEF_TEXT_FONT));
-    calc()->setTextBackColor(readColor(C_TEXT_COLOR, SC::Calc::DEF_TEXT_BACK_COLOR));
-    calc()->setDelivResultFont(readFont(C_DELIV_RES_FONT, SC::Calc::DEF_DELIV_RESULT_FONT.toString()));
-    calc()->setDelivResultColor(readColor(C_DELIV_RES_COLOR, SC::Calc::DEF_DELIV_RESULT_COLOR));
-    calc()->setAllResultFont(readFont(C_ALL_RES_FONT, SC::Calc::DEF_ALL_RESULT_FONT.toString()));
-    calc()->setAllResultColor(readColor(C_ALL_RES_COLOR, SC::Calc::DEF_ALL_RESULT_COLOR));
+    calc()->setTextFont(readFont(C_TEXT_FONT, SC::C_DEF_TEXT_FONT));
+    calc()->setTextBackColor(readColor(C_TEXT_COLOR, SC::C_DEF_TEXT_BACK_COLOR));
+    calc()->setDelivResultFont(readFont(C_DELIV_RES_FONT, SC::C_DEF_DELIV_RESULT_FONT.toString()));
+    calc()->setDelivResultColor(readColor(C_DELIV_RES_COLOR, SC::C_DEF_DELIV_RESULT_COLOR));
+    calc()->setAllResultFont(readFont(C_ALL_RES_FONT, SC::C_DEF_ALL_RESULT_FONT.toString()));
+    calc()->setAllResultColor(readColor(C_ALL_RES_COLOR, SC::C_DEF_ALL_RESULT_COLOR));
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
     for (int i = 0; i < size; ++i) {
@@ -192,21 +190,21 @@ void Settings::readPrintSettings()
 {
     m_settings->beginGroup(GROUP_PRINT);
 
-    print()->setTextFont(readFont(P_TEXT_FONT, SC::Print::DEF_TEXT_FONT));
-    print()->setCaptionTextFont(readFont(P_CAPTION_FONT, SC::Print::DEF_CAPTION_TEXT_FONT));
-    print()->setCaptionColor(readColor(P_CAPTION_COLOR, SC::Print::DEF_CAPTION_COLOR));
-    print()->setTableWidth(value(PT_WIDTH, SC::Print::DEF_TABLE_WIDTH).toInt());
-    print()->setTableBorderWidth(value(PT_BORDER_WIDTH, SC::Print::DEF_TABLE_BORDER_WIDTH).toInt());
-    print()->setTableBorderStyle(value(PT_BORDER_STYLE, SC::Print::DEF_TABLE_BORDER_STYLE).toInt());
-    print()->setCellSpacing(value(PT_CELL_SPACING, SC::Print::DEF_CELL_SPACING).toInt());
-    print()->setCellPadding(value(PT_CELL_PADDING, SC::Print::DEF_CELL_PADDING).toInt());
-    print()->setTableBorderColor(readColor(PT_BORDER_COLOR, SC::Print::DEF_TABLE_BORDER_COLOR));
-    print()->setTableHeaderFont(readFont(PT_HEADER_FONT, SC::Print::DEF_TABLE_HEADER_FONT));
-    print()->setTableHeaderColor(readColor(PT_HEADER_COLOR, SC::Print::DEF_TABLE_HEADER_COLOR));
-    print()->setTableTextFont(readFont(PT_TEXT_FONT, SC::Print::DEF_TABLE_TEXT_FONT));
-    print()->setTableTextColor(readColor(PT_TEXT_COLOR, SC::Print::DEF_TABLE_TEXT_COLOR));
-    print()->setTableResultFont(readFont(PT_RESULT_FONT, SC::Print::DEF_TABLE_RESULT_FONT));
-    print()->setTableResultColor(readColor(PT_RESULT_COLOR, SC::Print::DEF_TABLE_RESULT_COLOR));
+    print()->setTextFont(readFont(P_TEXT_FONT, SC::P_DEF_TEXT_FONT));
+    print()->setCaptionTextFont(readFont(P_CAPTION_FONT, SC::P_DEF_CAPTION_TEXT_FONT));
+    print()->setCaptionColor(readColor(P_CAPTION_COLOR, SC::P_DEF_CAPTION_COLOR));
+    print()->setTableWidth(value(PT_WIDTH, SC::P_DEF_TABLE_WIDTH).toInt());
+    print()->setTableBorderWidth(value(PT_BORDER_WIDTH, SC::P_DEF_TABLE_BORDER_WIDTH).toInt());
+    print()->setTableBorderStyle(value(PT_BORDER_STYLE, SC::P_DEF_TABLE_BORDER_STYLE).toInt());
+    print()->setCellSpacing(value(PT_CELL_SPACING, SC::P_DEF_CELL_SPACING).toInt());
+    print()->setCellPadding(value(PT_CELL_PADDING, SC::P_DEF_CELL_PADDING).toInt());
+    print()->setTableBorderColor(readColor(PT_BORDER_COLOR, SC::P_DEF_TABLE_BORDER_COLOR));
+    print()->setTableHeaderFont(readFont(PT_HEADER_FONT, SC::P_DEF_TABLE_HEADER_FONT));
+    print()->setTableHeaderColor(readColor(PT_HEADER_COLOR, SC::P_DEF_TABLE_HEADER_COLOR));
+    print()->setTableTextFont(readFont(PT_TEXT_FONT, SC::P_DEF_TABLE_TEXT_FONT));
+    print()->setTableTextColor(readColor(PT_TEXT_COLOR, SC::P_DEF_TABLE_TEXT_COLOR));
+    print()->setTableResultFont(readFont(PT_RESULT_FONT, SC::P_DEF_TABLE_RESULT_FONT));
+    print()->setTableResultColor(readColor(PT_RESULT_COLOR, SC::P_DEF_TABLE_RESULT_COLOR));
 
     const auto size = m_settings->beginReadArray(COL_ARRAY);
 

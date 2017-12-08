@@ -44,7 +44,7 @@ void Test_MilkReception::compare(MilkReception *mr, const int id, const QDate de
 
 void Test_MilkReception::compareDefault(MilkReception *mr)
 {
-    compare(mr, TCMR::DEF_ID, TCMR::DEF_DELIVERY_DATE, TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS,
+    compare(mr, TCMR::DEF_ID, TCMR::DEF_DELIVERY_DATE, TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS,
             TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR);
 }
 
@@ -150,7 +150,7 @@ void Test_MilkReception::signalDeliveryDateChanged()
 void Test_MilkReception::signalPriceLiterChanged()
 {
     MilkReception mr;
-    const double data = TCMR::DEF_PRICE_LITER + 2.7;
+    const double data = TCMR::M_DEF_PRICE_LITER + 2.7;
     QSignalSpy signalSpy(&mr, &MilkReception::priceLiterChanged);
     mr.setPriceLiter(data);
     mr.setPriceLiter(data);

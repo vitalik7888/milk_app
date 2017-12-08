@@ -5,7 +5,6 @@
 #include <QDebug>
 
 using SC = SettingsConstants;
-using SCC = SettingsConstants::Column;
 using COLTYPE = SC::SettingsColumnType;
 using DBC = DbConstants;
 
@@ -19,33 +18,33 @@ MilkCore::MilkCore(QObject *parent) :
     auto print = m_settings->print();
     print->setSettingsColumns(
     {
-                    new SettingsColumn(QObject::tr("№ п/п"), COLTYPE::SerialNumber, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Ф. И. О."), COLTYPE::String, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Физ. вес"), COLTYPE::Double, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("% жир"), COLTYPE::Double, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Белок"), COLTYPE::Double, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Жироед."), COLTYPE::Double, SCC::DEF_PREC, false, print),
-                    new SettingsColumn(QObject::tr("Зачет. вес"), COLTYPE::Double, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Оплата(без премии)"), COLTYPE::Double, SCC::DEF_PREC, false, print),
-                    new SettingsColumn(QObject::tr("Премия"), COLTYPE::Double, SCC::DEF_PREC, false, print),
-                    new SettingsColumn(QObject::tr("Сумма"), COLTYPE::Double, SCC::DEF_PREC, true, print),
-                    new SettingsColumn(QObject::tr("Подпись"), COLTYPE::String, SCC::DEF_PREC, true, print)
+                    new SettingsColumn(QObject::tr("№ п/п"), COLTYPE::SerialNumber, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Ф. И. О."), COLTYPE::String, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Физ. вес"), COLTYPE::Double, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("% жир"), COLTYPE::Double, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Белок"), COLTYPE::Double, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Жироед."), COLTYPE::Double, SC::COL_DEF_PREC, false, print),
+                    new SettingsColumn(QObject::tr("Зачет. вес"), COLTYPE::Double, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Оплата(без премии)"), COLTYPE::Double, SC::COL_DEF_PREC, false, print),
+                    new SettingsColumn(QObject::tr("Премия"), COLTYPE::Double, SC::COL_DEF_PREC, false, print),
+                    new SettingsColumn(QObject::tr("Сумма"), COLTYPE::Double, SC::COL_DEF_PREC, true, print),
+                    new SettingsColumn(QObject::tr("Подпись"), COLTYPE::String, SC::COL_DEF_PREC, true, print)
                 });
     auto calc = m_settings->calc();
     calc->setSettingsColumns(
     {
-                    new SettingsColumn(QObject::tr("Ф. И. О."), COLTYPE::String, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Молокопункты"), COLTYPE::String, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Дата сдачи"), COLTYPE::Date, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Цена за литр"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Литры"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Жиры"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Белок"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Жироед."), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Зачет. вес"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Оплата(без премии)"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Премия"), COLTYPE::Double, SCC::DEF_PREC, true, calc),
-                    new SettingsColumn(QObject::tr("Сумма"), COLTYPE::Double, SCC::DEF_PREC, true, calc)
+                    new SettingsColumn(QObject::tr("Ф. И. О."), COLTYPE::String, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Молокопункты"), COLTYPE::String, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Дата сдачи"), COLTYPE::Date, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Цена за литр"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Литры"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Жиры"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Белок"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Жироед."), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Зачет. вес"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Оплата(без премии)"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Премия"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc),
+                    new SettingsColumn(QObject::tr("Сумма"), COLTYPE::Double, SC::COL_DEF_PREC, true, calc)
                 });
 }
 

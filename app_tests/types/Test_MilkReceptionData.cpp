@@ -30,7 +30,7 @@ void Test_MilkReceptionData::compare(const MilkReceptionData &mrd, const int id,
 void Test_MilkReceptionData::compareDefault(const MilkReceptionData &mrd)
 {
     compare(mrd, TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID, TCMR::DEF_DELIVERY_DATE,
-            TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT);
+            TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT);
 }
 
 void Test_MilkReceptionData::compare(const MilkReceptionData &left, const MilkReceptionData &right)

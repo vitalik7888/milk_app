@@ -10,7 +10,7 @@ using TCMR = TC::MilkReception;
 
 MilkReception::MilkReception(QObject *parent):
     MilkReception(TCMR::DEF_ID, TCMR::DEF_DELIVERY_DATE,
-                  TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR, parent)
+                  TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR, parent)
 {
 
 }
