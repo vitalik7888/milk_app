@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.2
 import com.milk.core 1.0
 import com.milk.types 1.0
@@ -27,14 +27,7 @@ ApplicationWindow {
         anchors.centerIn: parent
     }
 
-    MilkMenu {
-        id: milkMenu
-
-        x: btnMilkMenu.x
-        y: btnMilkMenu.y
-    }
-
-    MilkShortCuts {}
+    menuBar: MilkMenu { }
 
     ViewSettings {
         id: viewSettings
@@ -67,30 +60,10 @@ ApplicationWindow {
         id: fileDialogChooseDb
 
         title: qsTr("Выберите или создайте базу данных")
-        //        selectMultiple: false
+        selectMultiple: false
 
         onAccepted: {
-            milkCore.db.openDb(currentFile.toString().replace("file://", ""))
-        }
-    }
-
-    header: ToolBar {
-        RowLayout {
-            anchors.fill: parent
-
-            Label {
-                text: ""
-                elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-            }
-            ToolButton {
-                id: btnMilkMenu
-                text: qsTr("⋮")
-                onClicked: milkMenu.open()
-            }
-
+            milkCore.db.openDb(fileUrl.toString().replace("file://", ""))
         }
     }
 
@@ -99,18 +72,18 @@ ApplicationWindow {
         currentIndex: bar.currentIndex
         anchors.fill: parent
 
-        Page {
-            ViewMilkReception {
-                anchors.fill: parent
-            }
-        }
-
         MilkReceptionsPage {
             id: milkReceptionPage
         }
 
         CalcPage {
             id: calcPage
+        }
+
+        Page {
+            ViewMilkReception {
+                anchors.fill: parent
+            }
         }
     }
 
@@ -124,6 +97,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("Расчёты")
+        }
+        TabButton {
+            text: qsTr("Редакт. сдач молока")
         }
     }
 
@@ -149,6 +125,7 @@ ApplicationWindow {
 
         onDbOpened: {
             milkCore.settings.main.lastChoosenDb = milkCore.db.dbPath
+            milkCore.settings.writeMainSettings()
         }
     }
 

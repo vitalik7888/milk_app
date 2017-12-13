@@ -1,21 +1,28 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.3
 
-Menu {
-    title: "&File"
+MenuBar {
+    Menu {
+        title: "Main"
 
-    MenuItem {
-        text: qsTr("Открыть базу данных")
-        onTriggered: fileDialogChooseDb.open()
-    }
+        Action {
+            text: qsTr("Открыть базу данных")
+            shortcut: StandardKey.Open
+            onTriggered: fileDialogChooseDb.open()
+        }
 
-    MenuItem {
-        text: qsTr("Настройки")
-        onTriggered: viewSettings.open()
-    }
+        MenuSeparator {}
 
-    MenuItem {
-        text: qsTr("Quit")
-        onTriggered: Qt.quit()
+        Action {
+            text: qsTr("Настройки")
+            shortcut: "ctrl+shift+P"
+            onTriggered: viewSettings.open()
+        }
+
+        Action {
+            text: qsTr("Выход")
+            shortcut: StandardKey.Quit
+            onTriggered: Qt.quit()
+        }
     }
 }

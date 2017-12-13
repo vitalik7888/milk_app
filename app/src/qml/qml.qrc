@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MilkMenu.qml</file>
-        <file>MilkShortCuts.qml</file>
         <file>DateEdit.qml</file>
         <file>Filter.qml</file>
         <file>ViewLocalities.qml</file>
