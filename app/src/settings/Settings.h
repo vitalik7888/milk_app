@@ -52,11 +52,12 @@ private:
 
     void writeColumnToSettings(SettingsColumn *column);
 
-    void setValue(const QString &key, const QVariant &value);
-    QVariant value(const QString &key, const QVariant &defaultValue = {}) const;
-
-    QFont readFont(const QString &key, const QFont &defaultFont) const;
-    QColor readColor(const QString &key, const QColor &defaultColor) const;
+    QString getString(const QString &key, const QString &defaultValue) const;
+    bool getBool(const QString &key, const bool defaultValue) const;
+    int getInt(const QString &key, const int defaultValue) const;
+    float getFloat(const QString &key, const float defaultValue) const;
+    QFont getFont(const QString &key, const QFont &defaultFont) const;
+    QColor getColor(const QString &key, const QColor &defaultColor) const;
 };
 
 #endif // SETTINGS_H
