@@ -11,6 +11,7 @@ class CalcItemModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(QString dateFormat READ dateFormat WRITE setDateFormat)
     Q_PROPERTY(int prec READ prec WRITE setPrec)
+    Q_PROPERTY(CalculatedItem* calcItemRoot READ calcItemRoot CONSTANT)
 
 public:
     CalcItemModel(QObject *parent = Q_NULLPTR);
@@ -27,8 +28,9 @@ public:
     virtual QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
 
     QString dateFormat() const { return m_dateFormat; }
-
     int prec() const { return m_prec; }
+
+    CalculatedItem *calcItemRoot() const { return m_root->getItems().first(); }
 
 public slots:
     void setDateFormat(const QString &dateFormat);

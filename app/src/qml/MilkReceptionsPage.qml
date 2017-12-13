@@ -70,6 +70,7 @@ Page {
                     SpinBoxDecimal {
                         id: spinBoxPrice
                         value: milkCore.settings.main.priceLiter
+                        onValueChanged: milkCore.settings.main.priceLiter = spinBoxPrice.value
                     }
                 }
 

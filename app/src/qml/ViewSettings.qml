@@ -161,7 +161,7 @@ Dialog {
 
                     Label { text: qsTr("Ширина таблицы") }
                     SpinBox { id: spinBoxTableWidth; onValueChanged: enablePrintSettingsButtons(true)
-                        from: 1; to: 200 }
+                        from: 1; to: 100 }
 
                     Label { text: qsTr("Ширина рамки таблицы") }
                     SpinBox { id: spinBoxTableBorderWidth; onValueChanged: enablePrintSettingsButtons(true)

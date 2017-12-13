@@ -6,7 +6,7 @@
 #include <tables/milk_reception/MilkReceptionSortFilterProxyModel.h>
 // Qt
 #include <QFile>
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QDebug>
@@ -54,7 +54,7 @@ void qmlRegisterCalcTypes() {
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QCoreApplication::setApplicationName(Constants::appName());
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());

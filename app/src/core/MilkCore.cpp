@@ -1,8 +1,14 @@
 #include "MilkCore.h"
 
 #include <DbUtils.h>
+#include <HtmlElements.h>
+#include <HtmlTable.h>
 // Qt
 #include <QDebug>
+#include <QPrinter>
+#include <QTextDocument>
+#include <QPrintDialog>
+#include <QPrintPreviewDialog>
 
 using SC = SettingsConstants;
 using COLTYPE = SC::SettingsColumnType;
@@ -134,5 +140,132 @@ CalcItemModel *MilkCore::getCalcItemModel(const qlonglong delivererId, const qlo
     auto model = new CalcItemModel(getCalculations(delivererWhere + milkPointWhere + dateWhere), this);
     model->setDateFormat(SC::defaultDateFormat());
     return model;
+}
+
+void MilkCore::printHtml(const QString &html, bool isShowPreview)
+{
+    QPrinter printer(QPrinter::HighResolution);
+
+    auto print = [&printer, &html]() {
+        QTextDocument doc;
+        doc.setHtml(html);
+        doc.print(&printer);
+    };
+
+    if(!isShowPreview)
+    {
+        QPrintDialog dialog(&printer);
+        dialog.setWindowTitle(tr("Печать документа"));
+        if (dialog.exec() == QDialog::Accepted) {
+            print();
+        }
+    } else {
+        QPrintPreviewDialog dialog(&printer);
+        dialog.setWindowFlags(Qt::Window);
+        connect(&dialog, &QPrintPreviewDialog::paintRequested, this, print);
+        dialog.exec();
+    }
+}
+
+void MilkCore::printCalculations(CalculatedItem *calcItem, bool isShowPreview)
+{
+    auto printSet = settings()->print();
+    const auto columns = printSet->getColumns();
+
+    auto headerRow = new HtmlTableHeaderRow;
+    {
+        const auto font = printSet->tableHeaderFont();
+        const auto color = printSet->tableHeaderColor();
+        for (SettingsColumn *column : columns) {
+            if (column->isShow())
+                headerRow->addHeader(new HtmlTableHeader{
+                                         { new HtmlFont(font, color, {new HtmlContent(column->display())}), }
+                                     });
+        }
+    }
+
+    auto addStrContent = [](HtmlTableCell *cell, const QString &content,
+            const QFont &font, const QColor &color)
+    {
+        if (cell)
+            cell->addElement(new HtmlFont(font, color, {new HtmlContent(content)}));
+    };
+
+    auto addFloatContent = [&columns, &addStrContent](HtmlTableCell *cell, const int colPos,
+            const float value, const QFont &font, const QColor &color)
+    {
+        if (cell)
+            addStrContent(cell, QString::number(value, 'f', columns[colPos]->prec()), font, color);
+    };
+
+    auto createCell = [&columns](HtmlTableRow *row, const int colPos) -> HtmlTableCell*
+    {
+        if (columns[colPos]->isShow()) {
+            auto cell = new HtmlTableCell();
+            row->addCell(cell);
+            return cell;
+        }
+        return Q_NULLPTR;
+    };
+
+    int c = 0;
+    TableRows rows;
+    {
+        const auto font = printSet->tableTextFont();
+        const auto color = printSet->tableTextColor();
+        for (CalculatedItem *item : calcItem->getItems()) {
+            auto row = new HtmlTableRow;
+            addStrContent(createCell(row, 0), QString::number(++c), font, color);
+            addStrContent(createCell(row, 1), item->delivererName(), font, color);
+            addFloatContent(createCell(row, 2), 2, item->liters(), font, color);
+            addFloatContent(createCell(row, 3), 3, item->fat(), font, color);
+            addFloatContent(createCell(row, 4), 4, item->protein(), font, color);
+            addFloatContent(createCell(row, 5), 5, item->fatUnits(), font, color);
+            addFloatContent(createCell(row, 6), 6, item->rankWeight(), font, color);
+            addFloatContent(createCell(row, 7), 7, item->paymentWithOutPremium(), font, color);
+            addFloatContent(createCell(row, 8), 8, item->premiumForFat(), font, color);
+            addFloatContent(createCell(row, 9), 9, item->sum(), font, color);
+            addStrContent(createCell(row, 10), "", font, color);
+            rows.append(row);
+        }
+    }
+
+    {
+        const auto font = printSet->tableResultFont();
+        const auto color = printSet->tableResultColor();
+        auto row = new HtmlTableRow;
+        if (HtmlTableCell *cell = createCell(row, 1)) {
+            cell->addAttribute({"colspan=2"});
+            addStrContent(cell, calcItem->delivererName(), font, color);
+        }
+        addFloatContent(createCell(row, 2), 2, calcItem->liters(), font, color);
+        addFloatContent(createCell(row, 3), 3, calcItem->fat(), font, color);
+        addFloatContent(createCell(row, 4), 4, calcItem->protein(), font, color);
+        addFloatContent(createCell(row, 5), 5, calcItem->fatUnits(), font, color);
+        addFloatContent(createCell(row, 6), 6, calcItem->rankWeight(), font, color);
+        addFloatContent(createCell(row, 7), 7, calcItem->paymentWithOutPremium(), font, color);
+        addFloatContent(createCell(row, 8), 8, calcItem->premiumForFat(), font, color);
+        addFloatContent(createCell(row, 9), 9, calcItem->sum(), font, color);
+        addStrContent(createCell(row, 10), "", font, color);
+        rows.append(row);
+    }
+
+    HtmlBuilder builder;
+    builder.setTitle("Example")
+            ->addBodyElement(
+                (new HtmlTable(new HtmlTableCaption({new HtmlFont(printSet->captionTextFont(),
+                                                     printSet->captionColor(),
+                                                     {new HtmlContent("Caption")})
+                                                    }),
+    {
+                                   {QString("width=%1%").arg(printSet->tableWidth())},
+                                   {QString("border=%1").arg(printSet->tableBorderWidth())},
+                                   {QString("cellspacing=%1").arg(printSet->cellSpacing())},
+                                   {QString("cellspadding=%1").arg(printSet->cellPadding())},
+                               }))
+                ->setHeaderRow(headerRow)
+                ->setRows(rows));
+
+    printHtml(builder.toString(), isShowPreview);
 }
 

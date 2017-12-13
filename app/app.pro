@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT  += core sql printsupport qml quick
-QT  -= gui
+QT  += core sql printsupport qml quick gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,6 +18,7 @@ include(src/database/db.pri)
 include(src/types/types.pri)
 include(src/calc/calc.pri)
 include(src/settings/settings.pri)
+include(src/html_builder/html_builder.pri)
 include(src/core/core.pri)
 
 SOURCES += src/main.cpp

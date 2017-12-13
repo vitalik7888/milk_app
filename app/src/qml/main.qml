@@ -90,7 +90,7 @@ ApplicationWindow {
     footer:  TabBar {
         id: bar
         width: parent.width
-        currentIndex: 0
+        currentIndex: 1
 
         TabButton {
             text: qsTr("Сдача молока")
@@ -125,7 +125,6 @@ ApplicationWindow {
 
         onDbOpened: {
             milkCore.settings.main.lastChoosenDb = milkCore.db.dbPath
-            milkCore.settings.writeMainSettings()
         }
     }
 

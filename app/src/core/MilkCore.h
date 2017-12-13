@@ -22,12 +22,16 @@ public:
     Settings *settings() const;
     Database *database() const;
 
-    CalculatedItem *getCalculations(const QString &where = "");
+    Q_INVOKABLE CalculatedItem *getCalculations(const QString &where = "");
 
     Q_INVOKABLE CalcItemModel *getCalcItemModel(const qlonglong delivererId = -1,
                                                 const qlonglong milkPointId = -1,
                                                 const QDate &dateFrom = QDate(),
                                                 const QDate &dateTo = QDate());
+
+    Q_INVOKABLE void printHtml(const QString &html, bool isShowPreview = true);
+    Q_INVOKABLE void printCalculations(CalculatedItem *calcItem, bool isShowPreview = true);
+
 private:
     Settings *m_settings;
     Database *m_database;
