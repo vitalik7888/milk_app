@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    libraries/typeslibrary \
-    libraries/settingslibrary \
-    libraries/dblibrary \
-    libraries/calclibrary \
+    libs/typeslibrary \
+    libs/settingslibrary \
+    libs/dblibrary \
+    libs/calclibrary \
     plugins/qmltypesplugin \
     plugins/qmlsettingsplugin \
     plugins/qmldbplugin \

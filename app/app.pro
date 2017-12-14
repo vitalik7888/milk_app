@@ -46,10 +46,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/release/ -l$$var
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/debug/ -l$$var
-    else:unix: LIBS += -L$$OUT_PWD/../libraries/$$var/ -l$$var
+    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/release/ -l$$var
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/debug/ -l$$var
+    else:unix: LIBS += -L$$OUT_PWD/../libs/$$var/ -l$$var
 
-    INCLUDEPATH += $$PWD/../libraries/$$var
-    DEPENDPATH += $$PWD/../libraries/$$var
+    INCLUDEPATH += $$PWD/../libs/$$var
+    DEPENDPATH += $$PWD/../libs/$$var
 }

@@ -39,11 +39,9 @@ osx {
     QMAKE_BUNDLE_DATA += calc
 }
 
-for(var, $$list(calclibrary)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libraries/$$var/release/ -l$$var
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libraries/$$var/debug/ -l$$var
-    else:unix: LIBS += -L$$OUT_PWD/../../libraries/$$var/ -l$$var
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/calclibrary/release/ -lcalclibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/calclibrary/debug/ -lcalclibrary
+else:unix: LIBS += -L$$OUT_PWD/../../libs/calclibrary/ -lcalclibrary
 
-    INCLUDEPATH += $$PWD/../../libraries/$$var
-    DEPENDPATH += $$PWD/../../libraries/$$var
-}
+INCLUDEPATH += $$PWD/../../libs/calclibrary
+DEPENDPATH += $$PWD/../../libs/calclibrary

@@ -38,9 +38,9 @@ osx {
     QMAKE_BUNDLE_DATA += settings
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libraries/settingslibrary/release/ -lsettingslibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libraries/settingslibrary/debug/ -lsettingslibrary
-else:unix: LIBS += -L$$OUT_PWD/../../libraries/settingslibrary/ -lsettingslibrary
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/settingslibrary/release/ -lsettingslibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/settingslibrary/debug/ -lsettingslibrary
+else:unix: LIBS += -L$$OUT_PWD/../../libs/settingslibrary/ -lsettingslibrary
 
-INCLUDEPATH += $$PWD/../../libraries/settingslibrary
-DEPENDPATH += $$PWD/../../libraries/settingslibrary
+INCLUDEPATH += $$PWD/../../libs/settingslibrary
+DEPENDPATH += $$PWD/../../libs/settingslibrary

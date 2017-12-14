@@ -39,11 +39,9 @@ osx {
     QMAKE_BUNDLE_DATA += types
 }
 
-for(var, $$list(typeslibrary)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libraries/$$var/release/ -l$$var
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libraries/$$var/debug/ -l$$var
-    else:unix: LIBS += -L$$OUT_PWD/../../libraries/$$var/ -l$$var
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/typeslibrary/release/ -ltypeslibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/typeslibrary/debug/ -ltypeslibrary
+else:unix: LIBS += -L$$OUT_PWD/../../libs/typeslibrary/ -ltypeslibrary
 
-    INCLUDEPATH += $$PWD/../../libraries/$$var
-    DEPENDPATH += $$PWD/../../libraries/$$var
-}
+INCLUDEPATH += $$PWD/../../libs/typeslibrary
+DEPENDPATH += $$PWD/../../libs/typeslibrary
