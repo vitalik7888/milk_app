@@ -5,7 +5,8 @@ SUBDIRS += \
     libraries/settingslibrary \
     libraries/dblibrary \
     libraries/calclibrary \
-    plugins/qmldbplugin \
+    plugins/qmltypesplugin \
     plugins/qmlsettingsplugin \
+    plugins/qmldbplugin \
     app_tests \
     app
