@@ -19,6 +19,7 @@ void qmlRegisterSettings()
     qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
     qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
     qmlRegisterType<PrintSettings>(uri, 1, 0, "PrintSettings");
+    qmlRegisterType<SettingsColumn>(uri, 1, 0, "SettingsColumn");
 }
 
 void qmlRegisterDb()

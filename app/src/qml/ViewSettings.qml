@@ -1,5 +1,5 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.0 as Lab10
 import com.milk.core 1.0
@@ -11,7 +11,7 @@ Dialog {
     standardButtons: Dialog.Save
     modal: true
     height: 500
-    width: 500
+    width: 600
 
     onAccepted: {
         saveMainSettings()
@@ -142,10 +142,9 @@ Dialog {
                 clip: true
                 anchors.fill: parent
 
-                Grid {
+                GridLayout {
                     anchors.fill: parent
                     columns: 2
-                    spacing: 2
 
                     Label { id: labelTextFont; text: qsTr("Основной шрифт")
                         onFontChanged: enablePrintSettingsButtons(true) }
@@ -204,6 +203,55 @@ Dialog {
                     Label { id: labelTableResultColor; text: qsTr("Цвет результата таблицы")
                         onColorChanged: enablePrintSettingsButtons(true) }
                     ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelTableResultColor) }
+
+                    GroupBox {
+                        title: qsTr("Столбцы(Название, Тип, Кол-вознаков после запятой, Отображать)")
+                        Layout.columnSpan: 2
+
+
+                        Column {
+                            anchors.fill: parent
+
+                            Repeater {
+                                id: repeaterPrintColumns
+
+                                Row {
+                                    TextField {
+                                        text: modelData.display
+
+                                        onTextChanged: {
+                                            modelData.display = text
+                                            enablePrintSettingsButtons(true)
+                                        }
+                                    }
+                                    SpinBox {
+                                        value: modelData.type
+
+                                        onValueChanged: {
+                                            modelData.type = value
+                                            enablePrintSettingsButtons(true)
+                                        }
+                                    }
+                                    SpinBox {
+                                        value: modelData.prec
+
+                                        onValueChanged: {
+                                            modelData.prec = value
+                                            enablePrintSettingsButtons(true)
+                                        }
+                                    }
+                                    CheckBox {
+                                        checked: modelData.isShow
+
+                                        onCheckStateChanged: {
+                                            modelData.isShow = checkState
+                                            enablePrintSettingsButtons(true)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
             }
@@ -237,37 +285,89 @@ Dialog {
                 }
             }
 
-            Grid {
+            ScrollView {
+                clip: true
                 anchors.fill: parent
-                columns: 2
-                spacing: 2
+                GridLayout {
+                    anchors.fill: parent
+                    columns: 2
 
-                Label { id: labelCalcTextFont; text: qsTr("Основной шрифт")
-                    onFontChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcTextFont) }
+                    Label { id: labelCalcTextFont; text: qsTr("Основной шрифт")
+                        onFontChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcTextFont) }
 
-                Label { id: labelCalcTextBackColor; text: qsTr("Цвет фона")
-                    onColorChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcTextBackColor) }
+                    Label { id: labelCalcTextBackColor; text: qsTr("Цвет фона")
+                        onColorChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcTextBackColor) }
 
-                Label { id: labelCalcDelivResFont; text: qsTr("Шрифт сдатчика")
-                    onFontChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcDelivResFont) }
+                    Label { id: labelCalcDelivResFont; text: qsTr("Шрифт для сдатчика")
+                        onFontChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcDelivResFont) }
 
-                Label { id: labelCalcDelivResColor; text: qsTr("Цвет сдатчика")
-                    onColorChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcDelivResColor) }
+                    Label { id: labelCalcDelivResColor; text: qsTr("Цвет для сдатчика")
+                        onColorChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcDelivResColor) }
 
-                Label { id: labelCalcAllResFont; text: qsTr("Шрифт всех сдатчиков")
-                    onFontChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcAllResFont) }
+                    Label { id: labelCalcAllResFont; text: qsTr("Шрифт для всех сдатчиков")
+                        onFontChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseFont.openWithItem(labelCalcAllResFont) }
 
-                Label { id: labelCalcAllResColor; text: qsTr("Цвет всех сдатчиков")
-                    onColorChanged: enableCalcSettingsButtons(true) }
-                ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcAllResColor) }
+                    Label { id: labelCalcAllResColor; text: qsTr("Цвет для всех сдатчиков")
+                        onColorChanged: enableCalcSettingsButtons(true) }
+                    ToolButton { text: "..."; onClicked: dialogChooseColor.openWithItem(labelCalcAllResColor) }
 
-                Label { text: qsTr("Формат даты") }
-                TextField { id: textDateFormat; onTextChanged: enableCalcSettingsButtons(true) }
+                    Label { text: qsTr("Формат даты") }
+                    TextField { id: textDateFormat; onTextChanged: enableCalcSettingsButtons(true) }
+
+                    GroupBox {
+                        title: qsTr("Столбцы(Название, Тип, Кол-вознаков после запятой, Отображать)")
+                        Layout.columnSpan: 2
+
+
+                        Column {
+                            anchors.fill: parent
+
+                            Repeater {
+                                id: repeaterCalcColumns
+
+                                Row {
+                                    TextField {
+                                        text: modelData.display
+
+                                        onTextChanged: {
+                                            modelData.display = text
+                                            enableCalcSettingsButtons(true)
+                                        }
+                                    }
+                                    SpinBox {
+                                        value: modelData.type
+
+                                        onValueChanged: {
+                                            modelData.type = value
+                                            enableCalcSettingsButtons(true)
+                                        }
+                                    }
+                                    SpinBox {
+                                        value: modelData.prec
+
+                                        onValueChanged: {
+                                            modelData.prec = value
+                                            enableCalcSettingsButtons(true)
+                                        }
+                                    }
+                                    CheckBox {
+                                        checked: modelData.isShow
+
+                                        onCheckStateChanged: {
+                                            modelData.isShow = checkState
+                                            enableCalcSettingsButtons(true)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -333,6 +433,7 @@ Dialog {
         milkCore.settings.print.tableTextColor = labelTableTextColor.color
         milkCore.settings.print.tableResultFont = labelTableResultFont.font
         milkCore.settings.print.tableResultColor = labelTableResultColor.color
+        milkCore.settings.writePrintSettings()
         enablePrintSettingsButtons(false)
     }
 
@@ -352,6 +453,7 @@ Dialog {
         labelTableTextColor.color = milkCore.settings.print.tableTextColor
         labelTableResultFont.font = milkCore.settings.print.tableResultFont
         labelTableResultColor.color = milkCore.settings.print.tableResultColor
+        repeaterPrintColumns.model = milkCore.settings.print.columns
     }
 
     function enablePrintSettingsButtons(_enable) {
@@ -380,6 +482,7 @@ Dialog {
         milkCore.settings.calc.allResultFont = labelCalcAllResFont.font
         milkCore.settings.calc.allResultColor = labelCalcAllResColor.color
         milkCore.settings.calc.dateFormat = textDateFormat.text
+        milkCore.settings.writeCalcSettings()
         enablePrintSettingsButtons(false)
     }
 
@@ -391,6 +494,7 @@ Dialog {
         labelCalcAllResFont.font = milkCore.settings.calc.allResultFont
         labelCalcAllResColor.color = milkCore.settings.calc.allResultColor
         textDateFormat.text = milkCore.settings.calc.dateFormat
+        repeaterCalcColumns.model = milkCore.settings.calc.columns
     }
 
     function enableCalcSettingsButtons(_enable) {

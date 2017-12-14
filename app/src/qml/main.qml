@@ -138,6 +138,6 @@ ApplicationWindow {
     }
 
     Component.onDestruction: {
-        milkCore.settings.writeSettings()
+//        milkCore.settings.writeSettings()
     }
 }
