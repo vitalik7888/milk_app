@@ -8,7 +8,7 @@ DB_BEGIN_NAMESPACE
 class MilkReceptionTable;
 
 
-class MilkReceptionDao: public Dao {
+class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public Dao {
     enum class MinMax {
         Min,
         Max,

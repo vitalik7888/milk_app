@@ -15,7 +15,7 @@
 DB_BEGIN_NAMESPACE
 
 
-class Database : public QObject
+class DBLIBRARYSHARED_EXPORT Database : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(LocalitiesTable *localities READ localities NOTIFY localitiesChanged)

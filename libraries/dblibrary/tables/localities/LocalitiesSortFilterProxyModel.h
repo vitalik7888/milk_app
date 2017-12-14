@@ -8,7 +8,7 @@
 
 DB_BEGIN_NAMESPACE
 
-class LocalitiesSortFilterProxyModel : public MilkSortFilterProxyModel
+class DBLIBRARYSHARED_EXPORT LocalitiesSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Locality* locality READ locality CONSTANT RESET resetLocality)

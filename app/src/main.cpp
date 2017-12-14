@@ -1,8 +1,8 @@
 #include "src/core/MilkCore.h"
 #include "DbConstants.h"
-#include "src/database/tables/localities/LocalitiesSortFilterProxyModel.h"
-#include "src/database/tables/milk_points/MilkPointsSortFilterProxyModel.h"
-#include "src/database/tables/deliverers/DeliverersSortFilterProxyModel.h"
+#include "tables/localities/LocalitiesSortFilterProxyModel.h"
+#include "tables/milk_points/MilkPointsSortFilterProxyModel.h"
+#include "tables/deliverers/DeliverersSortFilterProxyModel.h"
 #include <tables/milk_reception/MilkReceptionSortFilterProxyModel.h>
 // Qt
 #include <QFile>
@@ -11,16 +11,6 @@
 #include <QQmlContext>
 #include <QDebug>
 
-
-//void qmlRegisterSettings()
-//{
-//    const char *uri = "com.milk.settings";
-//    qmlRegisterType<Settings>(uri, 1, 0, "Settings");
-//    qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
-//    qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
-//    qmlRegisterType<PrintSettings>(uri, 1, 0, "PrintSettings");
-//    qmlRegisterType<SettingsColumn>(uri, 1, 0, "SettingsColumn");
-//}
 
 void qmlRegisterDb()
 {
@@ -60,9 +50,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
-//    QScopedPointer<MilkCore> milkCore(new MilkCore);
     QQmlApplicationEngine engine;
-//    qmlRegisterSettings();
 #ifdef Q_OS_OSX
     engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
 #endif

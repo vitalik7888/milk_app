@@ -14,7 +14,7 @@ DB_BEGIN_NAMESPACE
     class MilkPointsTable;
 
 
-class MilkReceptionTable : public Table
+class DBLIBRARYSHARED_EXPORT MilkReceptionTable : public Table
 {
     Q_OBJECT
     Q_PROPERTY(DeliverersTable* deliverers READ deliverers CONSTANT)

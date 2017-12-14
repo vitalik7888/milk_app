@@ -6,7 +6,7 @@
 
 DB_BEGIN_NAMESPACE
 
-class MilkReceptionSortFilterProxyModel : public MilkSortFilterProxyModel
+class DBLIBRARYSHARED_EXPORT MilkReceptionSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(int milkReceptionId READ milkReceptionId WRITE setMilkReceptionId NOTIFY milkReceptionIdChanged)

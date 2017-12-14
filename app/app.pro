@@ -14,7 +14,6 @@ TEMPLATE = app
 
 CONFIG += c++14
 
-include(src/database/db.pri)
 include(src/html_builder/html_builder.pri)
 include(src/core/core.pri)
 
@@ -46,7 +45,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-for(var, $$list(settingslibrary typeslibrary calclibrary)) {
+for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary)) {
     win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/release/ -l$$var
     else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/debug/ -l$$var
     else:unix: LIBS += -L$$OUT_PWD/../libraries/$$var/ -l$$var

@@ -7,7 +7,7 @@
 DB_BEGIN_NAMESPACE
 
 
-class DeliverersSortFilterProxyModel : public MilkSortFilterProxyModel
+class DBLIBRARYSHARED_EXPORT DeliverersSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(Deliverer* deliverer READ deliverer CONSTANT RESET resetFilter)

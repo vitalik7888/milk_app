@@ -1,6 +1,7 @@
 #ifndef DBUTILS_H
 #define DBUTILS_H
 
+#include "dblibrary_global.h"
 #include "DbConstants.h"
 
 class QStringList;
@@ -11,7 +12,7 @@ class Table;
 DB_END_NAMESPACE
 
 
-class DbUtils
+class DBLIBRARYSHARED_EXPORT DbUtils
 {
 public:
     static bool isAutoIncrIdIsValid(const int id);

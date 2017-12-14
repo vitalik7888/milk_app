@@ -10,7 +10,7 @@ DB_BEGIN_NAMESPACE
 class LocalitiesTable;
 class DeliverersDao;
 
-class DeliverersTable : public Table
+class DBLIBRARYSHARED_EXPORT DeliverersTable : public Table
 {
     Q_OBJECT
     Q_PROPERTY(LocalitiesTable* localities READ localities CONSTANT)

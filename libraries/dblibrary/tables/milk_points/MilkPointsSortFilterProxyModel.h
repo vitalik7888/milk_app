@@ -8,7 +8,7 @@
 
 DB_BEGIN_NAMESPACE
 
-class MilkPointsSortFilterProxyModel : public MilkSortFilterProxyModel
+class DBLIBRARYSHARED_EXPORT MilkPointsSortFilterProxyModel : public MilkSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(MilkPoint* milkPoint READ milkPoint CONSTANT RESET resetMilkPoint)

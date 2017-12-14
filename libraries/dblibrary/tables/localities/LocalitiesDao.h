@@ -8,7 +8,7 @@ DB_BEGIN_NAMESPACE
 class LocalitiesTable;
 
 
-class LocalitiesDao: public Dao {
+class DBLIBRARYSHARED_EXPORT LocalitiesDao: public Dao {
 public:
     LocalitiesDao(LocalitiesTable *table);
 

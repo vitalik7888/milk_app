@@ -12,7 +12,7 @@
 DB_BEGIN_NAMESPACE
     class Dao;
 
-class Table : public QSqlQueryModel
+class DBLIBRARYSHARED_EXPORT Table : public QSqlQueryModel
 {
     Q_OBJECT
     Q_PROPERTY(QString tableName READ tableName CONSTANT)

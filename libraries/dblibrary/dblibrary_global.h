@@ -1,0 +1,12 @@
+#ifndef DBLIBRARY_GLOBAL_H
+#define DBLIBRARY_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(DBLIBRARY_LIBRARY)
+#  define DBLIBRARYSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define DBLIBRARYSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // DBLIBRARY_GLOBAL_H

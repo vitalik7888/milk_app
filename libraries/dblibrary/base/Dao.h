@@ -9,7 +9,7 @@ Q_DECLARE_METATYPE(QSqlRecord)
 
 DB_BEGIN_NAMESPACE
 
-class Dao
+class DBLIBRARYSHARED_EXPORT Dao
 {
 public:
     Dao(Table *table);

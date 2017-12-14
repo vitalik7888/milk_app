@@ -7,7 +7,7 @@
 
 DB_BEGIN_NAMESPACE
 
-class MilkSortFilterProxyModel : public QSortFilterProxyModel
+class DBLIBRARYSHARED_EXPORT MilkSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:

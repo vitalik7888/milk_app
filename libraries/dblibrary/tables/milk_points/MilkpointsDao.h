@@ -8,7 +8,7 @@ DB_BEGIN_NAMESPACE
 class MilkPointsTable;
 
 
-class MilkPointDao: public Dao {
+class DBLIBRARYSHARED_EXPORT MilkPointDao: public Dao {
 public:
     MilkPointDao(MilkPointsTable *table);
 

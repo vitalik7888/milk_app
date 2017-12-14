@@ -5,8 +5,6 @@ CONFIG += c++14 qt warn_on depend_includepath testcase
 
 TEMPLATE = app
 
-include(../app/src/database/db.pri)
-
 SOURCES += \ 
     main.cpp \
     settings/Test_MainSettings.cpp \
@@ -44,7 +42,7 @@ HEADERS += \
     types/Test_MilkPointData.h \
     calc/Test_CalculatedItemData.h
 
-for(var, $$list(settingslibrary typeslibrary calclibrary)) {
+for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary)) {
     win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/release/ -l$$var
     else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/debug/ -l$$var
     else:unix: LIBS += -L$$OUT_PWD/../libraries/$$var/ -l$$var

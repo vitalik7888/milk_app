@@ -8,7 +8,7 @@ DB_BEGIN_NAMESPACE
 class DeliverersTable;
 
 
-class DeliverersDao: public Dao {
+class DBLIBRARYSHARED_EXPORT DeliverersDao: public Dao {
 public:
     explicit DeliverersDao(DeliverersTable *table);
 

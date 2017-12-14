@@ -1,6 +1,8 @@
 #ifndef DBCONSTANTS_H
 #define DBCONSTANTS_H
 
+#include "dblibrary_global.h"
+// Qt
 #include <QObject>
 
 #define DB_NAMESPACE db
@@ -9,7 +11,7 @@
 #define DB_END_NAMESPACE }
 
 
-class DbConstants {
+class DBLIBRARYSHARED_EXPORT DbConstants {
     Q_GADGET
 public:
     static QString dropTableIfExistsSql(const QString &tableName);

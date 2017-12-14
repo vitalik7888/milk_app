@@ -10,7 +10,7 @@ DB_BEGIN_NAMESPACE
     class MilkPointDao;
     class LocalitiesTable;
 
-class MilkPointsTable: public Table
+class DBLIBRARYSHARED_EXPORT MilkPointsTable: public Table
 {
     Q_OBJECT
     Q_PROPERTY(LocalitiesTable* localities READ localities CONSTANT)

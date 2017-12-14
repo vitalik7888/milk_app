@@ -10,7 +10,7 @@
 DB_BEGIN_NAMESPACE
     class LocalitiesDao;
 
-class LocalitiesTable : public Table
+class DBLIBRARYSHARED_EXPORT LocalitiesTable : public Table
 {
     Q_OBJECT
 
