@@ -8,5 +8,6 @@ SUBDIRS += \
     plugins/qmltypesplugin \
     plugins/qmlsettingsplugin \
     plugins/qmldbplugin \
+    plugins/qmlcalcplugin \
     app_tests \
     app

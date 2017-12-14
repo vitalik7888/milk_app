@@ -1,0 +1,2 @@
+module com.milk.calc
+plugin qmlcalcplugin

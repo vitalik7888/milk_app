@@ -1,5 +1,4 @@
 #include "src/core/MilkCore.h"
-#include "DbConstants.h"
 // Qt
 #include <QFile>
 #include <QApplication>
@@ -7,12 +6,6 @@
 #include <QQmlContext>
 #include <QDebug>
 
-
-void qmlRegisterCalcTypes() {
-    const char *uri = "com.milk.calc";
-    qmlRegisterType<CalculatedItem>(uri, 1, 0, "CalculatedItem");
-    qmlRegisterType<CalcItemModel>(uri, 1, 0, "CalcItemModel");
-}
 
 int main(int argc, char *argv[])
 {
@@ -25,7 +18,6 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_OSX
     engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
 #endif
-    qmlRegisterCalcTypes();
     qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
