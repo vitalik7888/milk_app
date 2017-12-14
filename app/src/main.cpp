@@ -1,8 +1,5 @@
 #include "src/core/MilkCore.h"
 #include "DbConstants.h"
-#include "tables/localities/LocalitiesSortFilterProxyModel.h"
-#include "tables/milk_points/MilkPointsSortFilterProxyModel.h"
-#include "tables/deliverers/DeliverersSortFilterProxyModel.h"
 #include <tables/milk_reception/MilkReceptionSortFilterProxyModel.h>
 // Qt
 #include <QFile>
@@ -11,22 +8,6 @@
 #include <QQmlContext>
 #include <QDebug>
 
-
-void qmlRegisterDb()
-{
-    const char *uri = "com.milk.db";
-    qmlRegisterType<Database>(uri, 1, 0, "Database");
-    qmlRegisterUncreatableType<DbConstants>(uri, 1, 0, "DBC", "Can not create instance of the DB constants");
-    qmlRegisterType<Table>();
-    qmlRegisterType<LocalitiesTable>(uri, 1, 0, "LocalitiesTable");
-    qmlRegisterType<MilkPointsTable>(uri, 1, 0, "MilkPointsTable");
-    qmlRegisterType<DeliverersTable>(uri, 1, 0, "DeliverersTable");
-    qmlRegisterType<MilkReceptionTable>(uri, 1, 0, "MilkReceptionTable");
-    qmlRegisterType<LocalitiesSortFilterProxyModel>(uri, 1, 0, "LocalitiesSortFilterProxyModel");
-    qmlRegisterType<MilkPointsSortFilterProxyModel>(uri, 1, 0, "MilkPointsSortFilterProxyModel");
-    qmlRegisterType<DeliverersSortFilterProxyModel>(uri, 1, 0, "DeliverersSortFilterProxyModel");
-    qmlRegisterType<MilkReceptionSortFilterProxyModel>(uri, 1, 0, "MilkReceptionSortFilterProxyModel");
-}
 
 void qmlRegisterMilkTypes()
 {
@@ -54,7 +35,6 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_OSX
     engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
 #endif
-    qmlRegisterDb();
     qmlRegisterMilkTypes();
     qmlRegisterCalcTypes();
     qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
