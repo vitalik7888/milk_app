@@ -11,7 +11,7 @@ class MilkReception;
 using DelivererMilkReceptions = QList<MilkReception *>;
 
 
-class Deliverer : public QObject
+class TYPESLIBRARYSHARED_EXPORT Deliverer : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int delivererId READ id WRITE setId NOTIFY idChanged)

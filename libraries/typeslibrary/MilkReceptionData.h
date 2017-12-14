@@ -1,12 +1,13 @@
 #ifndef MILKRECEPTIONDATA_H
 #define MILKRECEPTIONDATA_H
 
+#include "typeslibrary_global.h"
 // Qt
 #include <QDate>
 #include <QMetaType>
 
 
-class MilkReceptionData
+class TYPESLIBRARYSHARED_EXPORT MilkReceptionData
 {
 public:
     MilkReceptionData();

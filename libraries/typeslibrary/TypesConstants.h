@@ -1,11 +1,13 @@
 #ifndef TYPESCONSTANTS_H
 #define TYPESCONSTANTS_H
 
+#include "typeslibrary_global.h"
+// Qt
 #include <QDate>
 #include <QString>
 
 
-class TypesConstants
+class TYPESLIBRARYSHARED_EXPORT TypesConstants
 {
 public:
     class Deliverers {

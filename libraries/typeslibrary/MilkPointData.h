@@ -1,12 +1,13 @@
 #ifndef MILKPOINTDATA_H
 #define MILKPOINTDATA_H
 
+#include "typeslibrary_global.h"
 // Qt
 #include <QString>
 #include <QMetaType>
 
 
-class MilkPointData
+class TYPESLIBRARYSHARED_EXPORT MilkPointData
 {
 public:
     MilkPointData();

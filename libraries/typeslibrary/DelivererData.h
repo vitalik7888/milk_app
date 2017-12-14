@@ -1,12 +1,13 @@
 #ifndef DELIVERERDATA_H
 #define DELIVERERDATA_H
 
+#include "typeslibrary_global.h"
 // Qt
 #include <QString>
 #include <QMetaType>
 
 
-class DelivererData
+class TYPESLIBRARYSHARED_EXPORT DelivererData
 {
 public:
     DelivererData();

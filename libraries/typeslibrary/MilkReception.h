@@ -9,7 +9,7 @@
 class MilkPoint;
 class Deliverer;
 
-class MilkReception : public QObject
+class TYPESLIBRARYSHARED_EXPORT MilkReception : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int milkReceptionId READ id WRITE setId NOTIFY idChanged)

@@ -1,6 +1,7 @@
 #ifndef MILKPOINT_H
 #define MILKPOINT_H
 
+#include "typeslibrary_global.h"
 #include "MilkPointData.h"
 // Qt
 #include <QObject>
@@ -8,7 +9,7 @@
 class Locality;
 
 
-class MilkPoint : public QObject
+class TYPESLIBRARYSHARED_EXPORT MilkPoint : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int milkPointId READ id WRITE setId NOTIFY idChanged)

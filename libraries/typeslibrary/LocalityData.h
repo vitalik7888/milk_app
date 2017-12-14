@@ -1,12 +1,13 @@
 #ifndef LOCALITYDATA_H
 #define LOCALITYDATA_H
 
+#include "typeslibrary_global.h"
 // Qt
 #include <QString>
 #include <QMetaType>
 
 
-class LocalityData {
+class TYPESLIBRARYSHARED_EXPORT LocalityData {
 public:
     LocalityData();
     LocalityData(const int id, const QString &name, const QString &description);

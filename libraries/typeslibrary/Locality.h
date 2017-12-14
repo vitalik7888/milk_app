@@ -5,7 +5,7 @@
 // Qt
 #include <QObject>
 
-class Locality : public QObject
+class TYPESLIBRARYSHARED_EXPORT Locality : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int localityId READ id WRITE setId NOTIFY idChanged)
