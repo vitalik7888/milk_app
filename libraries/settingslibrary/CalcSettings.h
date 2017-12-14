@@ -11,7 +11,7 @@
 class SettingsColumn;
 
 
-class CalcSettings : public QObject {
+class SETTINGSLIBRARYSHARED_EXPORT CalcSettings : public QObject {
     Q_OBJECT
     Q_PROPERTY(QFont textFont READ textFont WRITE setTextFont NOTIFY textFontChanged RESET resetTextFont)
     Q_PROPERTY(QColor textBackColor READ textBackColor WRITE setTextBackColor NOTIFY textBackColorChanged RESET resetTextBackColor)

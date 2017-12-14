@@ -1,10 +1,12 @@
 #ifndef SETTINGSCOLUMN_H
 #define SETTINGSCOLUMN_H
 
+#include "settingslibrary_global.h"
+// Qt
 #include <QObject>
 
 
-class SettingsColumn : public QObject {
+class SETTINGSLIBRARYSHARED_EXPORT SettingsColumn : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString display READ display WRITE setDisplay NOTIFY displayChanged RESET resetDisplay)
     Q_PROPERTY(int type READ type WRITE setType NOTIFY typeChanged RESET resetType)

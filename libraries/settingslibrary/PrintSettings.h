@@ -11,7 +11,7 @@
 class SettingsColumn;
 
 
-class PrintSettings : public QObject {
+class SETTINGSLIBRARYSHARED_EXPORT PrintSettings : public QObject {
     Q_OBJECT
     Q_PROPERTY(QFont textFont READ textFont WRITE setTextFont NOTIFY textFontChanged RESET resetTextFont)
     Q_PROPERTY(QFont captionTextFont READ captionTextFont WRITE setCaptionTextFont NOTIFY captionTextFontChanged RESET resetCaptionTextFont)

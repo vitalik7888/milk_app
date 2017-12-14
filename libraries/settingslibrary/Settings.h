@@ -9,7 +9,7 @@
 #include <QSettings>
 
 
-class Settings : public QObject
+class SETTINGSLIBRARYSHARED_EXPORT Settings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(MainSettings *main READ main CONSTANT RESET resetMain)

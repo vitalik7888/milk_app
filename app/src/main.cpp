@@ -12,15 +12,15 @@
 #include <QDebug>
 
 
-void qmlRegisterSettings()
-{
-    const char *uri = "com.milk.settings";
-    qmlRegisterType<Settings>(uri, 1, 0, "Settings");
-    qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
-    qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
-    qmlRegisterType<PrintSettings>(uri, 1, 0, "PrintSettings");
-    qmlRegisterType<SettingsColumn>(uri, 1, 0, "SettingsColumn");
-}
+//void qmlRegisterSettings()
+//{
+//    const char *uri = "com.milk.settings";
+//    qmlRegisterType<Settings>(uri, 1, 0, "Settings");
+//    qmlRegisterType<MainSettings>(uri, 1, 0, "MainSettings");
+//    qmlRegisterType<CalcSettings>(uri, 1, 0, "CalcSettings");
+//    qmlRegisterType<PrintSettings>(uri, 1, 0, "PrintSettings");
+//    qmlRegisterType<SettingsColumn>(uri, 1, 0, "SettingsColumn");
+//}
 
 void qmlRegisterDb()
 {
@@ -62,7 +62,10 @@ int main(int argc, char *argv[])
 
 //    QScopedPointer<MilkCore> milkCore(new MilkCore);
     QQmlApplicationEngine engine;
-    qmlRegisterSettings();
+//    qmlRegisterSettings();
+#ifdef Q_OS_OSX
+    engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
+#endif
     qmlRegisterDb();
     qmlRegisterMilkTypes();
     qmlRegisterCalcTypes();

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT  += core sql printsupport qml quick gui
+QT  += sql printsupport qml quick gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,7 +17,6 @@ CONFIG += c++14
 include(src/database/db.pri)
 include(src/types/types.pri)
 include(src/calc/calc.pri)
-include(src/settings/settings.pri)
 include(src/html_builder/html_builder.pri)
 include(src/core/core.pri)
 
@@ -28,7 +27,7 @@ RESOURCES += \
     src/qml/qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+QML_IMPORT_PATH = com/milk
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
@@ -48,3 +47,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+for(var, $$list(settingslibrary)) {
+    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/release/ -l$$var
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/debug/ -l$$var
+    else:unix: LIBS += -L$$OUT_PWD/../libraries/$$var/ -l$$var
+
+    INCLUDEPATH += $$PWD/../libraries/$$var
+    DEPENDPATH += $$PWD/../libraries/$$var
+}

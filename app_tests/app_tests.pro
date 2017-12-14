@@ -1,11 +1,10 @@
-QT += core sql qml quick testlib
+QT += sql qml quick testlib
 QT  -= gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++14 qt warn_on depend_includepath testcase
 
 TEMPLATE = app
 
-include(../app/src/settings/settings.pri)
 include(../app/src/types/types.pri)
 include(../app/src/calc/calc.pri)
 include(../app/src/database/db.pri)
@@ -46,3 +45,12 @@ HEADERS += \
     types/Test_MilkReceptionData.h \
     types/Test_MilkPointData.h \
     calc/Test_CalculatedItemData.h
+
+for(var, $$list(settingslibrary)) {
+    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/release/ -l$$var
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libraries/$$var/debug/ -l$$var
+    else:unix: LIBS += -L$$OUT_PWD/../libraries/$$var/ -l$$var
+
+    INCLUDEPATH += $$PWD/../libraries/$$var
+    DEPENDPATH += $$PWD/../libraries/$$var
+}

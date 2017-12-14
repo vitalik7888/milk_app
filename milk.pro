@@ -1,5 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    app \
-    app_tests
+    libraries/settingslibrary \
+    plugins/qmlsettingsplugin \
+    app_tests \
+    app

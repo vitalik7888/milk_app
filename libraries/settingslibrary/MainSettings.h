@@ -1,10 +1,12 @@
 #ifndef MAINSETTINGS_H
 #define MAINSETTINGS_H
 
+#include "settingslibrary_global.h"
+// Qt
 #include <QObject>
 
 
-class MainSettings : public QObject
+class SETTINGSLIBRARYSHARED_EXPORT MainSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString lastChoosenDb READ lastChoosenDb WRITE setLastChoosenDb NOTIFY lastChoosenDbChanged RESET resetLastChoosenDb)

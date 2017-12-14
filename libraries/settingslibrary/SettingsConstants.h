@@ -1,6 +1,8 @@
 #ifndef SETTINGSCONSTANTS_H
 #define SETTINGSCONSTANTS_H
 
+#include "settingslibrary_global.h"
+// Qt
 #include <QColor>
 #include <QFont>
 #include <QString>
@@ -9,7 +11,7 @@
 class SettingsColumn;
 
 
-class SettingsConstants
+class SETTINGSLIBRARYSHARED_EXPORT SettingsConstants
 {
 //    Q_GADGET
 //    Q_PROPERTY(QString defaultDateFormat READ defaultDateFormat CONSTANT)
