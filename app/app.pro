@@ -14,7 +14,7 @@ TEMPLATE = app
 
 CONFIG += c++14
 
-include(src/html_builder/html_builder.pri)
+include(src/interfaces/interfaces.pri)
 include(src/core/core.pri)
 
 SOURCES += src/main.cpp
@@ -45,7 +45,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary)) {
+for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary htmlbuilderlibrary)) {
     win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/release/ -l$$var
     else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/debug/ -l$$var
     else:unix: LIBS += -L$$OUT_PWD/../libs/$$var/ -l$$var

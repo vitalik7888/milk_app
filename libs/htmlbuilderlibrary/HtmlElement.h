@@ -8,7 +8,7 @@ class HtmlElement;
 using HtmlElements = QList<BaseHtmlElement *>;
 
 
-class HtmlElement : public BaseHtmlElement
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlElement : public BaseHtmlElement
 {
 public:
     HtmlElement(const HtmlAttributes &attributes = {}, const HtmlElements &children = {});

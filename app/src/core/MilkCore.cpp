@@ -1,7 +1,7 @@
 #include "MilkCore.h"
 
 #include <DbUtils.h>
-#include <HtmlElements.h>
+#include <HtmlBuilder.h>
 #include <HtmlTable.h>
 // Qt
 #include <QDebug>

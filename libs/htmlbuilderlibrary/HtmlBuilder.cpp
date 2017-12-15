@@ -1,21 +1,9 @@
-#include "HtmlElements.h"
+#include "HtmlBuilder.h"
 
-#include "HtmlUtils.h"
 // Qt
-#include <QColor>
-#include <QFont>
+#include <QtGui/QColor>
+#include <QtGui/QFont>
 
-
-HtmlContent::HtmlContent(const QString &content):
-    BaseHtmlElement(),
-    m_content(content)
-{
-}
-
-// body
-QString HtmlBody::toString() const {
-    return HtmlUtils::toTag(tagName(), this);
-}
 
 HtmlBuilder *HtmlBuilder::setStyle(const QString &style)
 {

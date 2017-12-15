@@ -1,10 +1,12 @@
 #ifndef HTMLATTRIBUTE_H
 #define HTMLATTRIBUTE_H
 
+#include "htmlbuilderlibrary_global.h"
+// Qt
 #include <QString>
 
 
-class HtmlAttribute
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlAttribute
 {
 public:
     HtmlAttribute(const QString &attr);

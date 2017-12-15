@@ -4,7 +4,7 @@
 #include "HtmlElement.h"
 
 // header cell
-class HtmlTableHeader : public HtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTableHeader : public HtmlElement {
 public:
     HtmlTableHeader(const HtmlElements &children = {}): HtmlElement(children) {  }
     QString tagName() const Q_DECL_OVERRIDE { return "th"; }
@@ -13,7 +13,7 @@ public:
 // header row
 using TableHeaders = QList<HtmlTableHeader *>;
 
-class HtmlTableHeaderRow : public BaseHtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTableHeaderRow : public BaseHtmlElement {
 public:
     HtmlTableHeaderRow(const TableHeaders &headers = {}, const HtmlAttributes &attributes = {});
     ~HtmlTableHeaderRow();
@@ -29,7 +29,7 @@ private:
 };
 
 // cell
-class HtmlTableCell : public HtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTableCell : public HtmlElement {
 public:
     HtmlTableCell(const HtmlElements &children = {}) : HtmlElement(children) {}
     virtual QString tagName() const Q_DECL_OVERRIDE { return "td"; }
@@ -38,7 +38,7 @@ public:
 // row
 using TableCells = QList<HtmlTableCell *>;
 
-class HtmlTableRow : public BaseHtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTableRow : public BaseHtmlElement {
 public:
     HtmlTableRow(const TableCells &cells = {}, const HtmlAttributes &attributes = {});
     ~HtmlTableRow();
@@ -54,7 +54,7 @@ private:
 };
 
 // caption
-class HtmlTableCaption : public HtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTableCaption : public HtmlElement {
 public:
     HtmlTableCaption(const HtmlElements &children = {}) : HtmlElement(children) {}
     QString tagName() const Q_DECL_OVERRIDE { return "caption"; }
@@ -63,7 +63,7 @@ public:
 // table
 using TableRows = QList<HtmlTableRow *>;
 
-class HtmlTable : public HtmlElement {
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlTable : public HtmlElement {
 public:
     HtmlTable(HtmlTableCaption *caption = Q_NULLPTR, const HtmlAttributes &attributes = {});
     ~HtmlTable();

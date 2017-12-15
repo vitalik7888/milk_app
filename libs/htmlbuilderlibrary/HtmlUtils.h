@@ -1,13 +1,15 @@
 #ifndef HTMLUTILS_H
 #define HTMLUTILS_H
 
+#include "htmlbuilderlibrary_global.h"
+// Qt
 #include <QString>
 
 class BaseHtmlElement;
 class HtmlElement;
 
 
-class HtmlUtils
+class HTMLBUILDERLIBRARYSHARED_EXPORT HtmlUtils
 {
 public:
     static QString getElementsString(const HtmlElement *element);

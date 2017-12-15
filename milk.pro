@@ -5,6 +5,7 @@ SUBDIRS += \
     libs/settingslibrary \
     libs/dblibrary \
     libs/calclibrary \
+    libs/htmlbuilderlibrary \
     plugins/qmltypesplugin \
     plugins/qmlsettingsplugin \
     plugins/qmldbplugin \

@@ -8,7 +8,7 @@
 using HtmlAttributes = QList<HtmlAttribute>;
 
 
-class BaseHtmlElement
+class HTMLBUILDERLIBRARYSHARED_EXPORT BaseHtmlElement
 {
 public:
     BaseHtmlElement(const HtmlAttributes &attributes = {});
