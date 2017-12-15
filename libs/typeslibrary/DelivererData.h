@@ -12,23 +12,28 @@ class TYPESLIBRARYSHARED_EXPORT DelivererData
 public:
     DelivererData();
     DelivererData(const DelivererData &data);
-    DelivererData(const int id, const QString &name, const int localityId, const QString &inn,
-              const QString &address, const QString &phoneNumber);
+    DelivererData(const int id, const QString &firstName, const QString &lastName, const int localityId,
+                  const QString &inn, const QString &address, const QString &phoneNumber);
     virtual ~DelivererData();
 
     bool isValid() const;
 
-    QString inn() const;
-    void setInn(const QString &inn);
-
     int id() const;
     void setId(const int id);
 
+    QString firstName() const;
+    void setFirstName(const QString &firstName);
+
+    QString lastName() const;
+    void setLastName(const QString &lastName);
+
+    QString fullName() const;
+
+    QString inn() const;
+    void setInn(const QString &inn);
+
     int localityId() const;
     void setLocalityId(const int localityId);
-
-    QString name() const;
-    void setName(const QString &name);
 
     QString address() const;
     void setAddress(const QString &address);
@@ -40,7 +45,8 @@ private:
     int m_id;
     int m_localityId;
     QString m_inn;
-    QString m_name;
+    QString m_firstName;
+    QString m_lastName;
     QString m_address;
     QString m_phoneNumber; // +9(999)999-99-99
 };

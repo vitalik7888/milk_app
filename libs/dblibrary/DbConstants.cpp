@@ -8,7 +8,8 @@ const QString DbConstants::INDEX_RECEPT_POINT = "receptPointIndex";
 
 const QString DbConstants::TD_TABLE_NAME = "deliverers";
 const QString DbConstants::TD_FN_ID = "id";
-const QString DbConstants::TD_FN_NAME = "name";
+const QString DbConstants::TD_FN_FIRST_NAME = "first_name";
+const QString DbConstants::TD_FN_LAST_NAME = "last_name";
 const QString DbConstants::TD_FN_LOCALITY_ID = "locality_id";
 const QString DbConstants::TD_FN_INN = "inn";
 const QString DbConstants::TD_FN_ADDRESS = "address";
@@ -28,7 +29,8 @@ const QString DbConstants::TMP_FN_DESCRIPTION = "description";
 const QString DbConstants::TMR_TABLE_NAME = "milk_reception";
 const QString DbConstants::TMR_FN_ID = "id";
 const QString DbConstants::TMR_FN_ID_DELIVERER = "id_deliverer";
-const QString DbConstants::TMR_FN_DELIVERER_NAME = "deliverer_name";
+const QString DbConstants::TMR_FN_DELIVERER_FNAME = "deliv_first_name";
+const QString DbConstants::TMR_FN_DELIVERER_LNAME = "deliv_last_name";
 const QString DbConstants::TMR_FN_MILK_POINT_ID = "milk_point_id";
 const QString DbConstants::TMR_FN_MILK_POINT_NAME = "milk_point_name";
 const QString DbConstants::TMR_FN_DELIVERY_DATE = "delivery_date";
@@ -40,14 +42,16 @@ const QString DbConstants::TD_CREATE_TABLE_SQL =
         QString(
             "CREATE TABLE %1 ("
             "%2 INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-            "%3 TEXT    NOT NULL,"
-            "%4 INTEGER REFERENCES %8 (%9) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,"
-            "%5 TEXT    DEFAULT '',"
+            "%3 TEXT    DEFAULT '',"
+            "%4 TEXT    NOT NULL,"
+            "%5 INTEGER REFERENCES %9 (%10) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,"
             "%6 TEXT    DEFAULT '',"
-            "%7 TEXT    DEFAULT ('+7'));")
+            "%7 TEXT    DEFAULT '',"
+            "%8 TEXT    DEFAULT ('+7'));")
         .arg(DbConstants::TD_TABLE_NAME)
         .arg(DbConstants::TD_FN_ID)
-        .arg(DbConstants::TD_FN_NAME)
+        .arg(DbConstants::TD_FN_FIRST_NAME)
+        .arg(DbConstants::TD_FN_LAST_NAME)
         .arg(DbConstants::TD_FN_LOCALITY_ID)
         .arg(DbConstants::TD_FN_INN)
         .arg(DbConstants::TD_FN_ADDRESS)

@@ -287,7 +287,8 @@ QString MilkReceptionTable::selectAll() const
     {
                                                   getColName(DC::TMR_ID, true),
                                                   getColName(DC::TMR_ID_DELIVERER, true),
-                                                  m_deliverers->getColName(DC::TD_NAME, true) + " AS " + DC::TMR_FN_DELIVERER_NAME,
+                                                  m_deliverers->getColName(DC::TD_FIRST_NAME, true) + " AS " + DC::TMR_FN_DELIVERER_FNAME,
+                                                  m_deliverers->getColName(DC::TD_LAST_NAME, true) + " AS " + DC::TMR_FN_DELIVERER_LNAME,
                                                   getColName(DC::TMR_MILK_POINT_ID, true),
                                                   m_milkPoints->getColName(DC::TMP_NAME, true) + " AS " + DC::TMR_FN_MILK_POINT_NAME,
                                                   getColName(DC::TMR_DELIVERY_DATE, true),
@@ -337,8 +338,11 @@ QString MilkReceptionTable::getColName(const int position, const bool withTableN
     case DC::TMR_ID_DELIVERER:
         columnName = DC::TMR_FN_ID_DELIVERER;
         break;
-    case DC::TMR_DELIVERER_NAME:
-        columnName = DC::TMR_FN_DELIVERER_NAME;
+    case DC::TMR_DELIVERER_FNAME:
+        columnName = DC::TMR_FN_DELIVERER_FNAME;
+        break;
+    case DC::TMR_DELIVERER_LNAME:
+        columnName = DC::TMR_FN_DELIVERER_LNAME;
         break;
     case DC::TMR_MILK_POINT_ID:
         columnName = DC::TMR_FN_MILK_POINT_ID;
@@ -372,8 +376,10 @@ int db::MilkReceptionTable::getColPosition(const QString &columnName) const
         return DC::TMR_ID;
     if (columnName == DC::TMR_FN_ID_DELIVERER)
         return DC::TMR_ID_DELIVERER;
-    if (columnName == DC::TMR_FN_DELIVERER_NAME)
-        return DC::TMR_DELIVERER_NAME;
+    if (columnName == DC::TMR_FN_DELIVERER_FNAME)
+        return DC::TMR_DELIVERER_FNAME;
+    if (columnName == DC::TMR_FN_DELIVERER_LNAME)
+        return DC::TMR_DELIVERER_LNAME;
     if (columnName == DC::TMR_FN_MILK_POINT_ID)
         return DC::TMR_MILK_POINT_ID;
     if (columnName == DC::TMR_FN_MILK_POINT_NAME)

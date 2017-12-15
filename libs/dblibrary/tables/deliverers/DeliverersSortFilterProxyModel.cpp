@@ -61,7 +61,8 @@ bool DeliverersSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, con
 DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
 {
     const QModelIndex indexId = sourceModel()->index(sourceRow, DC::TD_ID, sourceParent),
-            indexName = sourceModel()->index(sourceRow, DC::TD_NAME, sourceParent),
+            indexFirstName = sourceModel()->index(sourceRow, DC::TD_FIRST_NAME, sourceParent),
+            indexLastName = sourceModel()->index(sourceRow, DC::TD_LAST_NAME, sourceParent),
             indexInn = sourceModel()->index(sourceRow, DC::TD_INN, sourceParent),
             indexAddress = sourceModel()->index(sourceRow, DC::TD_ADDRESS, sourceParent),
             indexLocalityId = sourceModel()->index(sourceRow, DC::TD_LOCALITY_ID, sourceParent),
@@ -69,7 +70,8 @@ DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int so
 
     return {
         sourceModel()->data(indexId).toInt(),
-                sourceModel()->data(indexName).toString(),
+                sourceModel()->data(indexFirstName).toString(),
+                sourceModel()->data(indexLastName).toString(),
                 sourceModel()->data(indexLocalityId).toInt(),
                 sourceModel()->data(indexInn).toString(),
                 sourceModel()->data(indexAddress).toString(),
@@ -80,7 +82,8 @@ DelivererData DeliverersSortFilterProxyModel::getDelivererFromSourceModel(int so
 void DeliverersSortFilterProxyModel::delivererConnect()
 {
     connect(m_deliverer, &Deliverer::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
-    connect(m_deliverer, &Deliverer::nameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    connect(m_deliverer, &Deliverer::firstNameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    connect(m_deliverer, &Deliverer::lastNameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     connect(m_deliverer, &Deliverer::innChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     connect(m_deliverer, &Deliverer::addressChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     connect(m_deliverer, &Deliverer::phoneNumberChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
@@ -90,7 +93,8 @@ void DeliverersSortFilterProxyModel::delivererConnect()
 void DeliverersSortFilterProxyModel::delivererDisconnect()
 {
     disconnect(m_deliverer, &Deliverer::idChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
-    disconnect(m_deliverer, &Deliverer::nameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    disconnect(m_deliverer, &Deliverer::firstNameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
+    disconnect(m_deliverer, &Deliverer::lastNameChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_deliverer, &Deliverer::innChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_deliverer, &Deliverer::addressChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
     disconnect(m_deliverer, &Deliverer::phoneNumberChanged, this, &DeliverersSortFilterProxyModel::invalidateTheFilter);
@@ -102,9 +106,14 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowById(const int id) const
     return m_deliverer->id() <= 0 ? true : m_deliverer->id() == id;
 }
 
-bool DeliverersSortFilterProxyModel::isFilterAcceptRowByName(const QString &name) const
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByFName(const QString &name) const
 {
-    return m_deliverer->name().isEmpty() ? true : name.contains(m_deliverer->name());
+    return m_deliverer->firstName().isEmpty() ? true : name.contains(m_deliverer->firstName());
+}
+
+bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLName(const QString &name) const
+{
+    return m_deliverer->lastName().isEmpty() ? true : name.contains(m_deliverer->lastName());
 }
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowByInn(const QString &inn) const
@@ -132,9 +141,10 @@ bool DeliverersSortFilterProxyModel::isFilterAcceptRowByLocalityId(const int loc
 
 bool DeliverersSortFilterProxyModel::isFilterAcceptRowByDeliverer(const DelivererData &data) const
 {
-    return isFilterAcceptRowById(data.id()) && isFilterAcceptRowByName(data.name()) &&
-            isFilterAcceptRowByInn(data.inn()) && isFilterAcceptRowByAddress(data.address()) &&
-            isFilterAcceptRowByPhoneNumber(data.phoneNumber()) && isFilterAcceptRowByLocalityId(data.localityId());
+    return isFilterAcceptRowById(data.id()) && isFilterAcceptRowByFName(data.firstName()) &&
+            isFilterAcceptRowByLName(data.lastName()) && isFilterAcceptRowByInn(data.inn()) &&
+            isFilterAcceptRowByAddress(data.address()) && isFilterAcceptRowByPhoneNumber(data.phoneNumber()) &&
+            isFilterAcceptRowByLocalityId(data.localityId());
 }
 
 void DeliverersSortFilterProxyModel::invalidateTheFilter()

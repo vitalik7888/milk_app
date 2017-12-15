@@ -295,7 +295,7 @@ Item {
                             text: f_id
                         }
                         ToolButton {
-                            text: f_deliverer_name
+                            text: f_deliv_first_name + ' ' + f_deliv_last_name
                             onClicked: {
                                 dialogChooseDeliverer.delivererRow = proxy.sourceRow(index)
                                 dialogChooseDeliverer.open()

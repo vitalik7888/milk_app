@@ -13,7 +13,8 @@ public:
     class Deliverers {
     public:
         static const int     DEF_ID;
-        static const QString DEF_NAME;
+        static const QString DEF_FIRST_NAME;
+        static const QString DEF_LAST_NAME;
         static const int     DEF_LOCALITY_ID;
         static const QString DEF_INN;
         static const QString DEF_ADDRESS;

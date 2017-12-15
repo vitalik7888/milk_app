@@ -9,7 +9,7 @@ using TCD = TC::Deliverers;
 
 
 Deliverer::Deliverer(QObject *parent):
-    Deliverer(TCD::DEF_ID, TCD::DEF_NAME, TCD::DEF_INN, TCD::DEF_ADDRESS,
+    Deliverer(TCD::DEF_ID, TCD::DEF_FIRST_NAME, TCD::DEF_LAST_NAME, TCD::DEF_INN, TCD::DEF_ADDRESS,
               TCD::DEF_PHONE_NUMBER, Q_NULLPTR, parent)
 {
 
@@ -24,11 +24,11 @@ Deliverer::Deliverer(const Deliverer &deliverer):
 
 }
 
-Deliverer::Deliverer(const int id, const QString &name,
+Deliverer::Deliverer(const int id, const QString &firstName, const QString &lastName,
                      const QString &inn, const QString &address,
                      const QString &phoneNumber, Locality *locality, QObject *parent):
     QObject(parent),
-    m_data(id, name, locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id(),
+    m_data(id, firstName, lastName, locality == Q_NULLPTR ? TCD::DEF_LOCALITY_ID : locality->id(),
            inn, address, phoneNumber),
     m_locality(locality)
 {
@@ -50,9 +50,14 @@ Locality *Deliverer::locality() const
     return m_locality;
 }
 
-QString Deliverer::name() const
+QString Deliverer::firstName() const
 {
-    return m_data.name();
+    return m_data.firstName();
+}
+
+QString Deliverer::lastName() const
+{
+    return m_data.lastName();
 }
 
 QString Deliverer::inn() const
@@ -79,13 +84,22 @@ void Deliverer::setId(const int id)
     emit idChanged(m_data.id());
 }
 
-void Deliverer::setName(const QString &name)
+void Deliverer::setFirstName(const QString &name)
 {
-    if (m_data.name() == name)
+    if (m_data.firstName() == name)
         return;
 
-    m_data.setName(name);
-    emit nameChanged(name);
+    m_data.setFirstName(name);
+    emit firstNameChanged(name);
+}
+
+void Deliverer::setLastName(const QString &name)
+{
+    if (m_data.lastName() == name)
+        return;
+
+    m_data.setLastName(name);
+    emit lastNameChanged(name);
 }
 
 void Deliverer::setInn(const QString &inn)

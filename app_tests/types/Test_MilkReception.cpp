@@ -27,7 +27,7 @@ void Test_MilkReception::compare(MilkReception *mr, const int id, const QDate de
     QCOMPARE(mr->id(), id);
     QCOMPARE(mr->deliverer(), deliverer);
     if (deliverer) {
-        Test_Deliverer::compare(mr->deliverer(), deliverer->id(), deliverer->name(),
+        Test_Deliverer::compare(mr->deliverer(), deliverer->id(), deliverer->firstName(), deliverer->lastName(),
                                 deliverer->locality(), deliverer->inn(), deliverer->address(),
                                 deliverer->phoneNumber());
     }
@@ -62,7 +62,7 @@ void Test_MilkReception::emptyConstructor()
 
 void Test_MilkReception::constructor()
 {
-    Deliverer d(1, "name", "23", "address", "234");
+    Deliverer d(1, "fname", "lname", "23", "address", "234");
     MilkPoint mp(42, "n", "d");
 
     MilkReception mr(22, QDate(), 5.6, 112, 3.7, &d, &mp);
@@ -73,7 +73,7 @@ void Test_MilkReception::constructor()
 void Test_MilkReception::copyConstructor()
 {
     MilkReception mrToCopy(22, QDate(), 5.6, 112, 3.7,
-                     new Deliverer(1, "name", "23", "address", "234"),
+                     new Deliverer(1, "fname", "lname", "23", "address", "234"),
                      new MilkPoint(42, "n", "d"));
     MilkReception mr(mrToCopy);
     compare(&mr, &mrToCopy);
@@ -81,7 +81,7 @@ void Test_MilkReception::copyConstructor()
 
 void Test_MilkReception::methods()
 {
-    Deliverer d(1, "name", "23", "address", "234");
+    Deliverer d(1, "fname", "lname", "23", "address", "234");
     MilkPoint mp(42, "n", "d");
 
     MilkReception mr;
@@ -98,7 +98,7 @@ void Test_MilkReception::methods()
 
 void Test_MilkReception::reset()
 {
-    Deliverer d(1, "name", "23", "address", "234");
+    Deliverer d(1, "fname", "lname", "23", "address", "234");
     MilkPoint mp(42, "n", "d");
 
     MilkReception mr;
@@ -116,7 +116,7 @@ void Test_MilkReception::reset()
 
 void Test_MilkReception::storingInQVariant()
 {
-    Deliverer d(1, "name", "23", "address", "234");
+    Deliverer d(1, "fname", "lname", "23", "address", "234");
     MilkPoint mp(42, "n", "d");
     MilkReception mr(22, QDate(), 5.6, 112, 3.7, &d, &mp);
     auto milkReception = QVariant::fromValue(mr).value<MilkReception>();
@@ -185,7 +185,7 @@ void Test_MilkReception::signalFatChanged()
 
 void Test_MilkReception::signalDelivererChanged()
 {
-    Deliverer data(1, "name", "23", "address", "234");
+    Deliverer data(1, "fname", "lname", "23", "address", "234");
 
     MilkReception mr;
     QSignalSpy signalSpy(&mr, &MilkReception::delivererChanged);

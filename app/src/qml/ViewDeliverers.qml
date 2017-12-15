@@ -12,7 +12,7 @@ Item {
     property alias filter: proxy.deliverer
     readonly property alias viewTable: viewTable
     readonly property alias viewMenu: viewMenu
-    readonly property alias viewFilter: textFieldFilterName
+    readonly property alias viewFilter: textFieldFilterLastName
     property Deliverer currentMilkItem
 
     function currentSourceRow() {
@@ -30,7 +30,7 @@ Item {
             spacing: 4
 
             TextField {
-                id: textFieldFilterName
+                id: textFieldFilterLastName
                 placeholderText: qsTr("Фильтр")
                 height: 40
                 Layout.fillWidth: true
@@ -94,7 +94,7 @@ Item {
                     id: proxy
                     enableDelivererDynamicFilter: true
                     sourceModel: milkCore.db.deliverers
-                    deliverer.name: textFieldFilterName.text
+                    deliverer.lastName: textFieldFilterLastName.text
                 }
 
                 onCurrentIndexChanged: {
@@ -111,7 +111,7 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    text: f_name
+                    text: f_first_name + " " + f_last_name
                     width: parent.width
 
                     contentItem: Text {

@@ -8,7 +8,8 @@ using TCMR = TC::MilkReception;
 
 
 const int           TCD::DEF_ID = -1;
-const QString       TCD::DEF_NAME = {};
+const QString       TCD::DEF_FIRST_NAME = {};
+const QString       TCD::DEF_LAST_NAME = {};
 const int           TCD::DEF_LOCALITY_ID = -1;
 const QString       TCD::DEF_INN = "";
 const QString       TCD::DEF_ADDRESS = {};

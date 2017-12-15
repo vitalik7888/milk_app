@@ -13,9 +13,8 @@ class Test_DelivererData : public QObject
 public:
     explicit Test_DelivererData(QObject *parent = nullptr);
 
-    static void compare(DelivererData *deliverer, const int id,
-                        const QString &name, const int localityId, const QString &inn,
-                        const QString &address, const QString &phoneNumber);
+    static void compare(DelivererData *deliverer, const int id, const QString &firstName, const QString &lastName,
+                        const int localityId, const QString &inn, const QString &address, const QString &phoneNumber);
     static void compareDefault(DelivererData *deliverer);
     static void compare(DelivererData *left, DelivererData *right);
 

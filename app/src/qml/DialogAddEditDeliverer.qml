@@ -30,7 +30,8 @@ Dialog {
     Deliverer {
         id: _deliverer
         delivererId: spinBoxDelivererId.value
-        name: textFieldName.text
+        firstName: textFieldFirstName.text
+        lastName: textFieldLastName.text
         inn: textFieldInn.text
         locality: viewLocalities.currentMilkItem
         address: textFieldAddress.text
@@ -58,10 +59,17 @@ Dialog {
         }
 
         TextField {
-            id: textFieldName
+            id: textFieldFirstName
             Layout.fillWidth: true
             height: 80
-            placeholderText: qsTr("Фио")
+            placeholderText: qsTr("Имя")
+            font.capitalization: Font.Capitalize
+        }
+        TextField {
+            id: textFieldLastName
+            Layout.fillWidth: true
+            height: 80
+            placeholderText: qsTr("Фамилия")
             font.capitalization: Font.Capitalize
         }
         TextField {
@@ -114,7 +122,8 @@ Dialog {
     function openInsert() {
         errors.text = ""
         spinBoxDelivererId.value = -1
-        textFieldName.text = ""
+        textFieldFirstName.text = ""
+        textFieldLastName.text = ""
         textFieldAddress.text = ""
         spinBoxDelivererId.visible = false
 
@@ -122,8 +131,8 @@ Dialog {
     }
 
     function check() {
-        if (_deliverer.name === "") {
-            errors.text = qsTr("Заполните фио")
+        if (_deliverer.lastName === "") {
+            errors.text = qsTr("Заполните фамилию")
             return false
         }
         if (_deliverer.locality == null) {

@@ -22,7 +22,8 @@ public:
 
     enum DeliverersTableColumns {
         TD_ID = 0,
-        TD_NAME,
+        TD_FIRST_NAME,
+        TD_LAST_NAME,
         TD_LOCALITY_ID,
         TD_INN,
         TD_ADDRESS,
@@ -31,7 +32,8 @@ public:
     Q_ENUM(DeliverersTableColumns)
     static const QString TD_TABLE_NAME;
     static const QString TD_FN_ID;
-    static const QString TD_FN_NAME;
+    static const QString TD_FN_FIRST_NAME;
+    static const QString TD_FN_LAST_NAME;
     static const QString TD_FN_LOCALITY_ID;
     static const QString TD_FN_INN;
     static const QString TD_FN_ADDRESS;
@@ -41,7 +43,8 @@ public:
     enum ReceptionMilkTableColumns {
         TMR_ID = 0,
         TMR_ID_DELIVERER,
-        TMR_DELIVERER_NAME,
+        TMR_DELIVERER_FNAME,
+        TMR_DELIVERER_LNAME,
         TMR_MILK_POINT_ID,
         TMR_MILK_POINT_NAME,
         TMR_DELIVERY_DATE,
@@ -53,7 +56,8 @@ public:
     static const QString TMR_TABLE_NAME;
     static const QString TMR_FN_ID;
     static const QString TMR_FN_ID_DELIVERER;
-    static const QString TMR_FN_DELIVERER_NAME;
+    static const QString TMR_FN_DELIVERER_FNAME;
+    static const QString TMR_FN_DELIVERER_LNAME;
     static const QString TMR_FN_MILK_POINT_ID;
     static const QString TMR_FN_MILK_POINT_NAME;
     static const QString TMR_FN_DELIVERY_DATE;

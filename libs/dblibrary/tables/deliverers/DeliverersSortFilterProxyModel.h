@@ -41,7 +41,8 @@ private:
     void delivererDisconnect();
 
     bool isFilterAcceptRowById(const int id) const;
-    bool isFilterAcceptRowByName(const QString &name) const;
+    bool isFilterAcceptRowByFName(const QString &name) const;
+    bool isFilterAcceptRowByLName(const QString &name) const;
     bool isFilterAcceptRowByInn(const QString &inn) const;
     bool isFilterAcceptRowByAddress(const QString &address) const;
     bool isFilterAcceptRowByPhoneNumber(const QString &phoneNumber) const;

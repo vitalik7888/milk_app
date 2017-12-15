@@ -22,6 +22,7 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
+    virtual QString selectAll() const Q_DECL_OVERRIDE;
     QString tableName() const Q_DECL_OVERRIDE;
     int getColPosition(const QString &columnName) const Q_DECL_OVERRIDE;
     QString getColName(const int position, const bool withTableName = false) const Q_DECL_OVERRIDE;

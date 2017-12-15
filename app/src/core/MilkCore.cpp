@@ -90,7 +90,7 @@ CalculatedItem *MilkCore::getCalculations(const QString &where)
                 const auto delivererData = delivererOptional.value();
 
                 auto delivererCi = new CalculatedItem;
-                delivererCi->setDelivererName(delivererData.name());
+                delivererCi->setDelivererName(delivererData.fullName());
 
                 deliverersCi.insert(id, delivererCi);
                 return delivererCi;

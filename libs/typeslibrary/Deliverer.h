@@ -16,7 +16,8 @@ class TYPESLIBRARYSHARED_EXPORT Deliverer : public QObject
     Q_OBJECT
     Q_PROPERTY(int delivererId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QString inn READ inn WRITE setInn NOTIFY innChanged)
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
@@ -25,14 +26,15 @@ class TYPESLIBRARYSHARED_EXPORT Deliverer : public QObject
 public:
     Deliverer(QObject *parent = Q_NULLPTR);
     Deliverer(const Deliverer &deliverer);
-    Deliverer(const int id, const QString &name, const QString &inn,
+    Deliverer(const int id, const QString &firstName, const QString &lastName, const QString &inn,
               const QString &address, const QString &phoneNumber,
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     virtual ~Deliverer();
 
     int id() const;
     Locality *locality() const;
-    QString name() const;
+    QString firstName() const;
+    QString lastName() const;
     QString inn() const;
     QString address() const;
     QString phoneNumber() const;
@@ -50,7 +52,8 @@ public:
 public slots:
     void setId(const int id);
     void setLocality(Locality *locality);
-    void setName(const QString &name);
+    void setFirstName(const QString &firstName);
+    void setLastName(const QString &lastName);
     void setInn(const QString &inn);
     void setAddress(const QString &address);
     void setPhoneNumber(const QString &phoneNumber);
@@ -59,7 +62,8 @@ public slots:
 signals:
     void idChanged(int delivererId);
     void localityChanged(Locality * locality);
-    void nameChanged(QString name);
+    void firstNameChanged(QString name);
+    void lastNameChanged(QString name);
     void innChanged(QString inn);
     void addressChanged(QString address);
     void phoneNumberChanged(QString phoneNumber);
