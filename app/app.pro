@@ -14,17 +14,25 @@ TEMPLATE = app
 
 CONFIG += c++14
 
-include(src/interfaces/interfaces.pri)
-include(src/core/core.pri)
+include(include/interfaces.pri)
 
-SOURCES += src/main.cpp
+HEADERS += \
+    include/Constants.h \
+    include/DbExporter.h \
+    include/MilkCore.h \
+    include/MilkPlugins.h
+
+SOURCES += src/main.cpp \
+    src/DbExporter.cpp \
+    src/MilkCore.cpp \
+    src/MilkPlugins.cpp
 
 RESOURCES += \
     res.qrc \
-    src/qml/qml.qrc
+    qml/qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = com/milk
+QML2_IMPORT_PATH = com/milk
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
@@ -45,11 +53,11 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-for(var, $$list(settingslibrary typeslibrary calclibrary dblibrary htmlbuilderlibrary)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/release/ -l$$var
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/$$var/debug/ -l$$var
-    else:unix: LIBS += -L$$OUT_PWD/../libs/$$var/ -l$$var
+for(var, $$list(settings types calc db htmlbuilder)) {
+    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/$${var}/release/ -l$${var}library
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/$${var}/debug/ -l$${var}library
+    else:unix: LIBS += -L$$OUT_PWD/../libs/$${var}/ -l$${var}library
 
-    INCLUDEPATH += $$PWD/../libs/$$var
-    DEPENDPATH += $$PWD/../libs/$$var
+    INCLUDEPATH += $$PWD/../libs/$${var}/include
+    DEPENDPATH += $$PWD/../libs/$${var}
 }

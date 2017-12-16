@@ -1,4 +1,4 @@
-#include "src/core/MilkCore.h"
+#include "MilkCore.h"
 // Qt
 #include <QFile>
 #include <QApplication>
@@ -21,15 +21,15 @@ void milkMessageOutput(QtMsgType type, const QMessageLogContext &context, const 
         fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
         break;
     case QtWarningMsg:
-        logStream << "WARNING: " << localMsg.constData();
+        logStream << "WARNING: " << localMsg.constData() << "\n";
         fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
         break;
     case QtCriticalMsg:
-        logStream << "CRITICAL: " << localMsg.constData();
+        logStream << "CRITICAL: " << localMsg.constData() << "\n";
         fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
         break;
     case QtFatalMsg:
-        logStream << "FATAL: " << localMsg.constData();
+        logStream << "FATAL: " << localMsg.constData() << "\n";
         fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
         abort();
     }
@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
     engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
 #endif
     qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
+    qmlRegisterType<MilkPlugins>("com.milk.plugins", 1, 0, "MilkPlugins");
+    qmlRegisterType<DbExporter>("com.milk.plugins", 1, 0, "DbExporter");
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
