@@ -10,8 +10,8 @@ TARGET = dblibrary
 TEMPLATE = lib
 
 DEFINES += DBLIBRARY_LIBRARY
-
 CONFIG += c++14
+DESTDIR = ../../app/libs
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -47,11 +47,12 @@ unix {
     INSTALLS += target
 }
 
+LIBS_PATH = $$OUT_PWD/$$DESTDIR
 for(var, $$list(settings types)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../$${var}/release/ -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../$${var}/debug/ -l$${var}library
-    else:unix: LIBS += -L$$OUT_PWD/../$${var}/ -l$${var}library
+    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
+    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
 
-    INCLUDEPATH += $$PWD/../$${var}
+    INCLUDEPATH += $$PWD/../$${var}/include
     DEPENDPATH += $$PWD/../$${var}
 }

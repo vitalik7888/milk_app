@@ -26,10 +26,11 @@ SOURCES += \
 
 include(include/headers.pri)
 
+LIBS_PATH = $$OUT_PWD/../app/libs
 for(var, $$list(settings types calc db htmlbuilder)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/$${var}/release/ -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/$${var}/debug/ -l$${var}library
-    else:unix: LIBS += -L$$OUT_PWD/../libs/$${var}/ -l$${var}library
+    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
+    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
 
     INCLUDEPATH += $$PWD/../libs/$${var}/include
     DEPENDPATH += $$PWD/../libs/$${var}

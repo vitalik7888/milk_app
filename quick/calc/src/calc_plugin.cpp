@@ -1,6 +1,6 @@
 #include "calc_plugin.h"
 
-#include <include/CalcItemModel.h>
+#include "CalcItemModel.h"
 // Qt
 #include <qqml.h>
 

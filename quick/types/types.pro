@@ -38,9 +38,10 @@ unix {
     INSTALLS += target qmldir
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/types/release/ -ltypeslibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/types/debug/ -ltypeslibrary
-else:unix: LIBS += -L$$OUT_PWD/../../libs/types/ -ltypeslibrary
+LIBS_PATH = $$OUT_PWD/../../app/libs
+win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -ltypeslibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -ltypeslibrary
+else:unix: LIBS += -L$$LIBS_PATH/ -ltypeslibrary
 
 INCLUDEPATH += $$PWD/../../libs/types/include
 DEPENDPATH += $$PWD/../../libs/types

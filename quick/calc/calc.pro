@@ -36,11 +36,12 @@ unix {
     INSTALLS += target qmldir
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/calc/release/ -lcalclibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/calc/debug/ -lcalclibrary
-else:unix: LIBS += -L$$OUT_PWD/../../libs/calc/ -lcalclibrary
+LIBS_PATH = $$OUT_PWD/../../app/libs
+win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -lcalclibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -lcalclibrary
+else:unix: LIBS += -L$$LIBS_PATH/ -lcalclibrary
 
-INCLUDEPATH += $$PWD/../../libs/calc
+INCLUDEPATH += $$PWD/../../libs/calc/include
 DEPENDPATH += $$PWD/../../libs/calc
 
 CONFIG += install_ok  # Do not cargo-cult this!

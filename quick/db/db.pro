@@ -40,13 +40,12 @@ unix {
 
 CONFIG += install_ok  # Do not cargo-cult this!
 
+LIBS_PATH = $$OUT_PWD/../../app/libs
 for(var, $$list(db types)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/$${var}/release/ -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/$${var}/debug/ -l$${var}library
-    else:unix: LIBS += -L$$OUT_PWD/../../libs/$${var}/ -l$${var}library
+    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH -l$${var}library
+    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH -l$${var}library
+    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
 
     INCLUDEPATH += $$PWD/../../libs/$${var}/include
     DEPENDPATH += $$PWD/../../libs/$${var}
 }
-
-CONFIG += install_ok  # Do not cargo-cult this!

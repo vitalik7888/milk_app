@@ -5,7 +5,7 @@ CONFIG += plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = com.milk.settings
-DESTDIR = $$OUT_PWD/../../app/$$replace(uri, \., $$QMAKE_DIR_SEP)
+DESTDIR = ../../app/$$replace(uri, \., $$QMAKE_DIR_SEP)
 
 # Input
 SOURCES += \
@@ -36,9 +36,10 @@ unix {
     INSTALLS += target qmldir
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../libs/settings/release/ -lsettingslibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../libs/settings/debug/ -lsettingslibrary
-else:unix: LIBS += -L$$OUT_PWD/../../libs/settings/ -lsettingslibrary
+LIBS_PATH = $$OUT_PWD/../../app/libs
+win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -lsettingslibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -lsettingslibrary
+else:unix: LIBS += -L$$LIBS_PATH/ -lsettingslibrary
 
 INCLUDEPATH += $$PWD/../../libs/settings/include
 DEPENDPATH += $$PWD/../../libs/settings

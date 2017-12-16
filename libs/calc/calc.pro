@@ -11,6 +11,7 @@ TARGET = calclibrary
 TEMPLATE = lib
 
 DEFINES += CALCLIBRARY_LIBRARY
+DESTDIR = ../../app/libs
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
