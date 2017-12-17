@@ -1,0 +1,7 @@
+win32:CONFIG(release, debug|release): LIBS += -L$$MILK_LIBS_DEST_PATH/ -lcalclibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$MILK_LIBS_DEST_PATH/ -lcalclibrary
+else:unix: LIBS += -L$$MILK_LIBS_DEST_PATH/ -lcalclibrary
+
+INCLUDEPATH += $$MILK_LIBS_PATH/calc/include
+DEPENDPATH += $$MILK_LIBS_PATH/calc/
+

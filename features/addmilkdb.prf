@@ -1,0 +1,6 @@
+win32:CONFIG(release, debug|release): LIBS += -L$$MILK_LIBS_DEST_PATH/ -ldblibrary
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$MILK_LIBS_DEST_PATH/ -ldblibrary
+else:unix: LIBS += -L$$MILK_LIBS_DEST_PATH/ -ldblibrary
+
+INCLUDEPATH += $$MILK_LIBS_PATH/db/include
+DEPENDPATH += $$MILK_LIBS_PATH/db/

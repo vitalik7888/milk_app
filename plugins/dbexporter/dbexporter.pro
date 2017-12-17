@@ -10,7 +10,7 @@ TARGET = dbexporterplugin
 TEMPLATE = lib
 CONFIG += plugin
 
-DESTDIR = ../../app/plugins
+DESTDIR = $$MILK_PLUGS_DEST_PATH
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

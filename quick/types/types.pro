@@ -1,11 +1,11 @@
 TEMPLATE = lib
 TARGET = milktypesplugin
 QT += qml quick
-CONFIG += plugin c++14
+CONFIG += plugin c++14 link_prl addmilktypes
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = com.milk.types
-DESTDIR = ../../app/$$replace(uri, \., $$QMAKE_DIR_SEP)
+DESTDIR = $$MILK_QUICK_DEST_PATH/$$replace(uri, \., $$QMAKE_DIR_SEP)
 
 # Input
 include(include/headers.pri)
@@ -37,13 +37,5 @@ unix {
     target.path = $$installPath
     INSTALLS += target qmldir
 }
-
-LIBS_PATH = $$OUT_PWD/../../app/libs
-win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -ltypeslibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -ltypeslibrary
-else:unix: LIBS += -L$$LIBS_PATH/ -ltypeslibrary
-
-INCLUDEPATH += $$PWD/../../libs/types/include
-DEPENDPATH += $$PWD/../../libs/types
 
 CONFIG += install_ok  # Do not cargo-cult this!

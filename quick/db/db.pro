@@ -1,10 +1,10 @@
 TEMPLATE = lib
 TARGET = milkdbplugin
 QT += qml quick sql
-CONFIG += plugin c++14
+CONFIG += plugin c++14 link_prl addmilkdb addmilktypes
 
 uri = com.milk.db
-DESTDIR = $$OUT_PWD/../../app/$$replace(uri, \., $$QMAKE_DIR_SEP)
+DESTDIR = $$MILK_QUICK_DEST_PATH/$$replace(uri, \., $$QMAKE_DIR_SEP)
 TARGET = $$qtLibraryTarget($$TARGET)
 
 # Input
@@ -40,12 +40,3 @@ unix {
 
 CONFIG += install_ok  # Do not cargo-cult this!
 
-LIBS_PATH = $$OUT_PWD/../../app/libs
-for(var, $$list(db types)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH -l$${var}library
-    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
-
-    INCLUDEPATH += $$PWD/../../libs/$${var}/include
-    DEPENDPATH += $$PWD/../../libs/$${var}
-}

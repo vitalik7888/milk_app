@@ -9,9 +9,10 @@ QT += qml
 
 TARGET = typeslibrary
 TEMPLATE = lib
+CONFIG += create_prl
 
 DEFINES += TYPESLIBRARY_LIBRARY
-DESTDIR = ../../app/libs
+DESTDIR = $$MILK_LIBS_DEST_PATH
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

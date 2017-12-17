@@ -8,9 +8,10 @@ QT += gui qml
 
 TARGET = settingslibrary
 TEMPLATE = lib
+CONFIG += create_prl
 
 DEFINES += SETTINGSLIBRARY_LIBRARY
-DESTDIR = ../../app/libs
+DESTDIR = $$MILK_LIBS_DEST_PATH
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the

@@ -11,4 +11,3 @@ HEADERS  += \
     $$PWD/MilkReceptionData.h \
     $$PWD/TypesConstants.h \
     $$PWD/typeslibrary_global.h
- 

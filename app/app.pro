@@ -11,8 +11,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = milk
 TEMPLATE = app
 #RC_ICONS = cow.png
+DESTDIR = $$MILK_APP_DEST_PATH
 
 CONFIG += c++14
+CONFIG += addmilksettings addmilktypes addmilkcalc addmilkdb addmilkhtmlbuilder
 
 include(include/interfaces.pri)
 
@@ -52,13 +54,3 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-LIBS_PATH = $$OUT_PWD/libs
-for(var, $$list(settings types calc db htmlbuilder)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
-    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
-
-    INCLUDEPATH += $$PWD/../libs/$${var}/include
-    DEPENDPATH += $$PWD/../libs/$${var}
-}

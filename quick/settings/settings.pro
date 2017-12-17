@@ -1,11 +1,11 @@
 TEMPLATE = lib
 TARGET = milksettingsplugin
 QT += qml quick
-CONFIG += plugin c++11
+CONFIG += plugin c++11 link_prl addmilksettings
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = com.milk.settings
-DESTDIR = ../../app/$$replace(uri, \., $$QMAKE_DIR_SEP)
+DESTDIR = $$MILK_QUICK_DEST_PATH/$$replace(uri, \., $$QMAKE_DIR_SEP)
 
 # Input
 SOURCES += \
@@ -35,13 +35,5 @@ unix {
     target.path = $$installPath
     INSTALLS += target qmldir
 }
-
-LIBS_PATH = $$OUT_PWD/../../app/libs
-win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -lsettingslibrary
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -lsettingslibrary
-else:unix: LIBS += -L$$LIBS_PATH/ -lsettingslibrary
-
-INCLUDEPATH += $$PWD/../../libs/settings/include
-DEPENDPATH += $$PWD/../../libs/settings
 
 CONFIG += install_ok  # Do not cargo-cult this!
