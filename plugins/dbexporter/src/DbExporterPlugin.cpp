@@ -1,11 +1,13 @@
 #include "DbExporterPlugin.h"
 
 #include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlField>
 #include <QSqlError>
 #include <QFile>
 #include <QJsonDocument>
-#include <QDebug>
 #include <QJsonArray>
+#include <QDebug>
 
 
 #if QT_VERSION < 0x050000
@@ -18,41 +20,20 @@ void DbExporterPlugin::setDb(const QSqlDatabase &db)
     m_db = db;
 }
 
-
 bool DbExporterPlugin::dump() const
 {
     QFile file(m_filePath);
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Error opening file '" + m_filePath +"' for db export";
         return false;
     }
 
-    QJsonObject objRoot;
+    if (m_type == "json")
+        return toJson(file);
+    if (m_type == "csv")
+        return toCsv(file);
 
-    for (const auto &table : m_tables) {
-        QSqlQuery query("SELECT * FROM " + table);
-        if (!query.exec()) {
-            qWarning() << QString("Exporting table '%1' error: %2").arg(table).arg(query.lastError().text());
-            return false;
-        }
-
-        QJsonArray array;
-
-        QMapIterator<QString, QVariant> i(query.boundValues());
-        while (i.hasNext()) {
-            i.next();
-
-            QJsonObject obj;
-            obj[i.key().toUtf8().data()] = i.value().toString().toUtf8().data();
-            array.append(obj);
-        }
-        objRoot[table] = array;
-    }
-
-    QJsonDocument doc(objRoot);
-    file.write(doc.toJson());
-
-    return true;
+    return false;
 }
 
 void DbExporterPlugin::setType(const QString &type)
@@ -67,7 +48,7 @@ QString DbExporterPlugin::type() const
 
 QStringList DbExporterPlugin::types() const
 {
-    return {"json"/*, "html", "doc"*/};
+    return {"csv", "json"/*, "html"*/};
 }
 
 QString DbExporterPlugin::filePath() const
@@ -88,4 +69,67 @@ QStringList DbExporterPlugin::tables() const
 void DbExporterPlugin::setTables(const QStringList &tables)
 {
     m_tables = tables;
+}
+
+bool DbExporterPlugin::toJson(QFile &file) const
+{
+    QJsonObject objRoot;
+
+    for (const auto &table : m_tables) {
+        QSqlQuery query("SELECT * FROM " + table);
+        if (!query.exec()) {
+            qWarning() << QString("Exporting table '%1' error: %2").arg(table).arg(query.lastError().text());
+            return false;
+        }
+
+        QJsonArray array;
+
+        while (query.next())
+        {
+            QJsonObject obj;
+
+            const auto record = query.record();
+            for (int i = 0; i < record.count(); ++i)
+            {
+                const auto field = record.field(i);
+                obj[field.name()] = field.value().toString();
+            }
+            array.append(obj);
+        }
+        objRoot[table] = array;
+    }
+
+    QJsonDocument doc(objRoot);
+
+    file.write(doc.toJson());
+
+    return true;
+}
+
+bool DbExporterPlugin::toCsv(QFile &file) const
+{
+    QTextStream out(&file);
+
+    for (const auto &table : m_tables) {
+        QSqlQuery query("SELECT * FROM " + table);
+        if (!query.exec()) {
+            qWarning() << QString("Exporting table '%1' error: %2").arg(table).arg(query.lastError().text());
+            return false;
+        }
+
+        while (query.next())
+        {
+            QString row;
+            const auto record = query.record();
+            for (int i = 0; i < record.count(); ++i)
+            {
+                const auto field = record.field(i);
+                row.append(field.value().toString() + ",");
+            }
+
+            out << row.replace(row.length() - 1, 1, "\n");
+        }
+    }
+
+    return true;
 }

@@ -1,8 +1,11 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
-import com.milk.plugins 1.0
 import QtQuick.Dialogs 1.0
+import com.milk.core 1.0
+import com.milk.types 1.0
+import com.milk.db 1.0
+import com.milk.plugins 1.0
 
 Popup {
     id: popup
@@ -18,22 +21,32 @@ Popup {
             text: qsTr("Экспорт бд")
         }
 
-        ListView {
-            id: viewTables
+        GroupBox {
+            title: qsTr("Таблицы")
+            height: 160
             width: parent.width
-            height: 100
 
-            model: milkCore.db.tables
+            ListView {
+                id: viewTables
+                anchors.fill: parent
 
-            delegate: ItemDelegate {
-                width: parent.width
+                model: ListModel {
 
-                Row {
-                    Label {
-                        text: "item"
-                    }
-                    CheckBox {
-                        checked: true
+                }
+
+                delegate: ItemDelegate {
+                    width: parent.width
+                    height: 30
+
+                    Row {
+                        Label {
+                            text: tableName
+
+                        }
+                        CheckBox {
+                            checked: isChoosen
+                            onCheckedChanged: isChoosen = checked
+                        }
                     }
                 }
             }
@@ -75,6 +88,12 @@ Popup {
 
                 milkCore.plugins.dbExporter.filePath = textFieldFilePath.text
                 milkCore.plugins.dbExporter.type = comboBoxMode.currentText
+                for (var i = 0; i < viewTables.count; ++i) {
+                    var tableItem = viewTables.model.get(i)
+                    if (tableItem.isChoosen)
+                        milkCore.plugins.dbExporter.tables.push(tableItem.tableName)
+                }
+
                 milkCore.plugins.dbExporter.dump()
             }
         }
@@ -88,6 +107,12 @@ Popup {
         folder: shortcuts.home
         onAccepted: {
             textFieldFilePath.text = fileDialog.fileUrl
+        }
+    }
+
+    Component.onCompleted:  {
+        for (var i = 0; i < milkCore.db.tables.length; ++i) {
+            viewTables.model.append({tableName: milkCore.db.tables[i].tableName, isChoosen: true})
         }
     }
 }

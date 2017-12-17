@@ -5,6 +5,8 @@
 // Qt
 #include <QObject>
 
+class QFile;
+
 
 class DbExporterPlugin : public QObject, public IDbExporter
 {
@@ -32,7 +34,10 @@ private:
     QSqlDatabase m_db;
     QString m_type;
     QString m_filePath;
-    QStringList m_tables;
+    QList<QString> m_tables;
+
+    bool toJson(QFile &file) const;
+    bool toCsv( QFile &file) const;
 };
 
 #endif // SQLITE3DBUTILSPLUGIN_H
