@@ -19,10 +19,6 @@ ApplicationWindow {
     minimumWidth: 800
     minimumHeight: 480
 
-    MilkCore {
-        id: milkCore
-    }
-
     Dialogs {
         id: dialogs
         anchors.centerIn: parent
@@ -32,8 +28,6 @@ ApplicationWindow {
 
     ViewDbExporter {
         id: viewDbExporter
-        x: parent.x + width / 2
-        y: parent.y + height / 2
     }
 
     ViewSettings {

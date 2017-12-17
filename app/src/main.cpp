@@ -50,13 +50,17 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
+    qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
+    qmlRegisterType<MilkPlugins>("com.milk.plugins", 1, 0, "MilkPlugins");
+    qmlRegisterType<DbExporter>("com.milk.plugins", 1, 0, "DbExporter");
+
+    MilkCore core;
+
     QQmlApplicationEngine engine;
 #ifdef Q_OS_OSX
     engine->addImportPath(app.applicationDirPath() + "/../PlugIns");
 #endif
-    qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
-    qmlRegisterType<MilkPlugins>("com.milk.plugins", 1, 0, "MilkPlugins");
-    qmlRegisterType<DbExporter>("com.milk.plugins", 1, 0, "DbExporter");
+    engine.rootContext()->setContextProperty("milkCore", &core);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
