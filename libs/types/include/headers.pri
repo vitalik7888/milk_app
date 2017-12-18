@@ -1,8 +1,11 @@
 INCLUDEPATH += $$PWD
 
 HEADERS  += \
-    $$PWD/Deliverer.h \
+    $$PWD/typeslibrary_global.h \
+    $$PWD/IMilkBaseType.h \
+    $$PWD/IDeliverer.h \
     $$PWD/DelivererData.h \
+    $$PWD/Deliverer.h \
     $$PWD/Locality.h \
     $$PWD/LocalityData.h \
     $$PWD/MilkPoint.h \
@@ -10,4 +13,4 @@ HEADERS  += \
     $$PWD/MilkReception.h \
     $$PWD/MilkReceptionData.h \
     $$PWD/TypesConstants.h \
-    $$PWD/typeslibrary_global.h
+    $$PWD/ILocality.h

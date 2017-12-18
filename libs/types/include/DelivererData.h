@@ -1,13 +1,13 @@
 #ifndef DELIVERERDATA_H
 #define DELIVERERDATA_H
 
-#include "typeslibrary_global.h"
+#include "IDeliverer.h"
 // Qt
 #include <QString>
 #include <QMetaType>
 
 
-class TYPESLIBRARYSHARED_EXPORT DelivererData
+class TYPESLIBRARYSHARED_EXPORT DelivererData : public IDeliverer
 {
 public:
     DelivererData();
@@ -16,30 +16,30 @@ public:
                   const QString &inn, const QString &address, const QString &phoneNumber);
     virtual ~DelivererData();
 
-    bool isValid() const;
+    bool isValid() const Q_DECL_OVERRIDE;
 
-    int id() const;
-    void setId(const int id);
+    int id() const Q_DECL_OVERRIDE;
+    void setId(const int id) Q_DECL_OVERRIDE;
 
-    QString firstName() const;
-    void setFirstName(const QString &firstName);
+    QString firstName() const Q_DECL_OVERRIDE;
+    void setFirstName(const QString &firstName) Q_DECL_OVERRIDE;
 
-    QString lastName() const;
-    void setLastName(const QString &lastName);
+    QString lastName() const Q_DECL_OVERRIDE;
+    void setLastName(const QString &lastName) Q_DECL_OVERRIDE;
 
-    QString fullName() const;
+    QString fullName() const Q_DECL_OVERRIDE;
 
-    QString inn() const;
-    void setInn(const QString &inn);
+    QString inn() const Q_DECL_OVERRIDE;
+    void setInn(const QString &inn) Q_DECL_OVERRIDE;
 
-    int localityId() const;
-    void setLocalityId(const int localityId);
+    int localityId() const Q_DECL_OVERRIDE;
+    void setLocalityId(const int localityId) Q_DECL_OVERRIDE;
 
-    QString address() const;
-    void setAddress(const QString &address);
+    QString address() const Q_DECL_OVERRIDE;
+    void setAddress(const QString &address) Q_DECL_OVERRIDE;
 
-    QString phoneNumber() const;
-    void setPhoneNumber(const QString &phoneNumber);
+    QString phoneNumber() const Q_DECL_OVERRIDE;
+    void setPhoneNumber(const QString &phoneNumber) Q_DECL_OVERRIDE;
 
 private:
     int m_id;

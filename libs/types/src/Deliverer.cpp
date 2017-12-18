@@ -60,6 +60,11 @@ QString Deliverer::lastName() const
     return m_data.lastName();
 }
 
+QString Deliverer::fullName() const
+{
+    return m_data.fullName();
+}
+
 QString Deliverer::inn() const
 {
     return m_data.inn();
@@ -91,6 +96,7 @@ void Deliverer::setFirstName(const QString &name)
 
     m_data.setFirstName(name);
     emit firstNameChanged(name);
+    emit fullNameChanged(fullName());
 }
 
 void Deliverer::setLastName(const QString &name)
@@ -100,6 +106,7 @@ void Deliverer::setLastName(const QString &name)
 
     m_data.setLastName(name);
     emit lastNameChanged(name);
+    emit fullNameChanged(fullName());
 }
 
 void Deliverer::setInn(const QString &inn)
@@ -154,7 +161,7 @@ bool Deliverer::isHasMilkReceptions() const
 
 bool Deliverer::isValid() const
 {
-    return m_data.isValid();
+    return m_data.isValid()/* && locality()->isValid()*/;
 }
 
 DelivererData Deliverer::data() const
@@ -214,4 +221,14 @@ MilkReception *Deliverer::milkReception(QQmlListProperty<MilkReception> *list, i
 void Deliverer::clearMilkReceptions(QQmlListProperty<MilkReception> *list)
 {
     reinterpret_cast< Deliverer* >(list->data)->clearMilkReceptions();
+}
+
+int Deliverer::localityId() const
+{
+    return m_data.localityId();
+}
+
+void Deliverer::setLocalityId(const int localityId)
+{
+    m_data.setLocalityId(localityId);
 }
