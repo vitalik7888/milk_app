@@ -14,15 +14,15 @@ void milkMessageOutput(QtMsgType type, const QMessageLogContext &context, const 
     QByteArray localMsg = msg.toLocal8Bit();
     switch (type) {
     case QtDebugMsg:
-        fprintf(stderr, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stderr, "Debug: %s\n", localMsg.constData());
         break;
     case QtInfoMsg:
         logStream << "INFO: " << localMsg.constData();
-        fprintf(stderr, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stderr, "Info: %s\n", localMsg.constData());
         break;
     case QtWarningMsg:
         logStream << "WARNING: " << localMsg.constData() << "\n";
-        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stderr, "Warning: %s\n", localMsg.constData());
         break;
     case QtCriticalMsg:
         logStream << "CRITICAL: " << localMsg.constData() << "\n";
