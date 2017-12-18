@@ -1,7 +1,6 @@
 #ifndef MILKPOINT_H
 #define MILKPOINT_H
 
-#include "typeslibrary_global.h"
 #include "MilkPointData.h"
 // Qt
 #include <QObject>
@@ -9,7 +8,7 @@
 class Locality;
 
 
-class TYPESLIBRARYSHARED_EXPORT MilkPoint : public QObject
+class TYPESLIBRARYSHARED_EXPORT MilkPoint : public QObject, public IMilkPoint
 {
     Q_OBJECT
     Q_PROPERTY(int milkPointId READ id WRITE setId NOTIFY idChanged)
@@ -22,14 +21,13 @@ public:
               Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkPoint(const MilkPoint &milkPoint);
     MilkPoint(QObject *parent = Q_NULLPTR);
-    virtual ~MilkPoint();
 
-    int id() const;
+    int id() const Q_DECL_OVERRIDE;
     Locality *locality() const;
-    QString name() const;
-    QString description() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
 
-    Q_INVOKABLE bool isValid() const;
+    Q_INVOKABLE bool isValid() const Q_DECL_OVERRIDE;
 
     MilkPointData data() const;
 
@@ -49,6 +47,9 @@ signals:
 private:
     MilkPointData m_data;
     Locality *m_locality;
+
+    virtual int localityId() const Q_DECL_OVERRIDE;
+    virtual void setLocalityId(const int localityId) Q_DECL_OVERRIDE;
 };
 
 Q_DECLARE_METATYPE(MilkPoint)

@@ -28,10 +28,6 @@ MilkPoint::MilkPoint(QObject *parent):
 
 }
 
-MilkPoint::~MilkPoint() {
-
-}
-
 int MilkPoint::id() const
 {
     return m_data.id();
@@ -92,7 +88,7 @@ void MilkPoint::reset()
 
 bool MilkPoint::isValid() const
 {
-    return m_data.isValid();
+    return m_data.isValid() && locality() ? locality()->isValid() : false;
 }
 
 void MilkPoint::setLocality(Locality *locality)
@@ -105,3 +101,12 @@ void MilkPoint::setLocality(Locality *locality)
     emit localityChanged(m_locality);
 }
 
+int MilkPoint::localityId() const
+{
+    return m_data.localityId();
+}
+
+void MilkPoint::setLocalityId(const int localityId)
+{
+    return m_data.setLocalityId(localityId);
+}

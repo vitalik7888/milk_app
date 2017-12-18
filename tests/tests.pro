@@ -2,6 +2,7 @@ QT += sql qml quick testlib
 QT  -= gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++14 qt warn_on depend_includepath testcase
+CONFIG += addmilksettings addmilktypes addmilkcalc addmilkdb addmilkhtmlbuilder
 
 TEMPLATE = app
 
@@ -25,13 +26,3 @@ SOURCES += \
     src/calc/Test_CalculatedItemData.cpp
 
 include(include/headers.pri)
-
-LIBS_PATH = $$OUT_PWD/../app/libs
-for(var, $$list(settings types calc db htmlbuilder)) {
-    win32:CONFIG(release, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
-    else:win32:CONFIG(debug, debug|release): LIBS += -L$$LIBS_PATH/ -l$${var}library
-    else:unix: LIBS += -L$$LIBS_PATH/ -l$${var}library
-
-    INCLUDEPATH += $$PWD/../libs/$${var}/include
-    DEPENDPATH += $$PWD/../libs/$${var}
-}
