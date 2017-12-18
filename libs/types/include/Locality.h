@@ -5,7 +5,8 @@
 // Qt
 #include <QObject>
 
-class TYPESLIBRARYSHARED_EXPORT Locality : public QObject
+
+class TYPESLIBRARYSHARED_EXPORT Locality : public QObject, public ILocality
 {
     Q_OBJECT
     Q_PROPERTY(int localityId READ id WRITE setId NOTIFY idChanged)
@@ -16,11 +17,12 @@ public:
     Locality(const LocalityData &data, QObject *parent = Q_NULLPTR);
     Locality(const Locality &locality);
     Locality(QObject *parent = Q_NULLPTR);
-    virtual ~Locality();
 
-    int id() const;
-    QString name() const;
-    QString description() const;
+    int id() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
+    QString description() const Q_DECL_OVERRIDE;
+    virtual bool isValid() const Q_DECL_OVERRIDE;
+
     LocalityData data() const;
 
 public slots:

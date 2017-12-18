@@ -22,11 +22,6 @@ Locality::Locality(const Locality &locality):
 
 }
 
-Locality::~Locality()
-{
-
-}
-
 int Locality::id() const
 {
     return m_data.id();
@@ -77,4 +72,9 @@ void Locality::setDescription(const QString &description)
 void Locality::reset()
 {
     m_data = {};
+}
+
+bool Locality::isValid() const
+{
+    return m_data.isValid();
 }

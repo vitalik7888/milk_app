@@ -1,29 +1,30 @@
 #ifndef LOCALITYDATA_H
 #define LOCALITYDATA_H
 
-#include "typeslibrary_global.h"
+#include "ILocality.h"
 // Qt
 #include <QString>
 #include <QMetaType>
 
 
-class TYPESLIBRARYSHARED_EXPORT LocalityData {
+class TYPESLIBRARYSHARED_EXPORT LocalityData : public ILocality
+{
 public:
     LocalityData();
     LocalityData(const int id, const QString &name, const QString &description);
     LocalityData(const LocalityData &data);
     ~LocalityData();
 
-    int id() const;
-    void setId(const int id);
+    int id() const Q_DECL_OVERRIDE;
+    void setId(const int id) Q_DECL_OVERRIDE;
 
-    QString name() const;
-    void setName(const QString &name);
+    QString name() const Q_DECL_OVERRIDE;
+    void setName(const QString &name) Q_DECL_OVERRIDE;
 
-    QString description() const;
-    void setDescription(const QString &description);
+    QString description() const Q_DECL_OVERRIDE;
+    void setDescription(const QString &description) Q_DECL_OVERRIDE;
 
-    bool isValid() const;
+    bool isValid() const Q_DECL_OVERRIDE;
 
 private:
     int m_id;

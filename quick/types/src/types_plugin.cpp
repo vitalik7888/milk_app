@@ -12,9 +12,10 @@ void TypesPlugin::registerTypes(const char *uri)
 {
     // @uri com.milk.types
     qmlRegisterInterface<IMilkBaseType>("IMilkBaseType");
-    qmlRegisterInterface<IDeliverer>("IDeliverer");
+    qmlRegisterInterface<ILocality>("ILocality");
     qmlRegisterType<Locality>(uri, 1, 0, "Locality");
     qmlRegisterType<MilkPoint>(uri, 1, 0, "MilkPoint");
+    qmlRegisterInterface<IDeliverer>("IDeliverer");
     qmlRegisterType<Deliverer>(uri, 1, 0, "Deliverer");
     qmlRegisterType<MilkReception>(uri, 1, 0, "MilkReception");
 }

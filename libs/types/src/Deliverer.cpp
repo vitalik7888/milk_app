@@ -161,7 +161,7 @@ bool Deliverer::isHasMilkReceptions() const
 
 bool Deliverer::isValid() const
 {
-    return m_data.isValid()/* && locality()->isValid()*/;
+    return m_data.isValid() && locality()->isValid();
 }
 
 DelivererData Deliverer::data() const
