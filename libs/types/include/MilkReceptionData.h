@@ -1,52 +1,50 @@
 #ifndef MILKRECEPTIONDATA_H
 #define MILKRECEPTIONDATA_H
 
-#include "typeslibrary_global.h"
+#include "IMilkReception.h"
 // Qt
-#include <QDate>
 #include <QMetaType>
 
 
-class TYPESLIBRARYSHARED_EXPORT MilkReceptionData
+class TYPESLIBRARYSHARED_EXPORT MilkReceptionData : public IMilkReception
 {
 public:
     MilkReceptionData();
     MilkReceptionData(const int id, const int delivererId, const int milkPointId,
                       const QDate &deliveryDate, const double priceLiter, const double liters, const double fat);
     MilkReceptionData(const MilkReceptionData &data);
-    ~MilkReceptionData();
 
-    int id() const;
-    void setId(const int id);
+    int id() const Q_DECL_OVERRIDE;
+    void setId(const int id) Q_DECL_OVERRIDE;
 
-    int delivererId() const;
-    void setDelivererId(const int delivererId);
+    int delivererId() const Q_DECL_OVERRIDE;
+    void setDelivererId(const int delivererId) Q_DECL_OVERRIDE;
 
-    int milkPointId() const;
-    void setMilkPointId(const int milkPointId);
+    int milkPointId() const Q_DECL_OVERRIDE;
+    void setMilkPointId(const int milkPointId) Q_DECL_OVERRIDE;
 
-    QDate deliveryDate() const;
-    void setDeliveryDate(const QDate &deliveryDate);
+    QDate deliveryDate() const Q_DECL_OVERRIDE;
+    void setDeliveryDate(const QDate &deliveryDate) Q_DECL_OVERRIDE;
 
-    double priceLiter() const;
-    void setPriceLiter(double priceLiter);
+    double priceLiter() const Q_DECL_OVERRIDE;
+    void setPriceLiter(double priceLiter) Q_DECL_OVERRIDE;
 
-    double liters() const;
-    void setLiters(double liters);
+    double liters() const Q_DECL_OVERRIDE;
+    void setLiters(double liters) Q_DECL_OVERRIDE;
 
-    double fat() const;
-    void setFat(double fat);
+    double fat() const Q_DECL_OVERRIDE;
+    void setFat(double fat) Q_DECL_OVERRIDE;
 
-    bool isValid() const;
+    bool isValid() const Q_DECL_OVERRIDE;
 
 private:
     int m_id;
     int m_delivererId;
     int m_milkPointId;
-    QDate   m_deliveryDate;
-    double   m_priceLiter;
-    double   m_liters;
-    double   m_fat;
+    QDate  m_deliveryDate;
+    double m_priceLiter;
+    double m_liters;
+    double m_fat;
 };
 
 Q_DECLARE_METATYPE(MilkReceptionData)

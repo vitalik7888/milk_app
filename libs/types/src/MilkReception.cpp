@@ -37,11 +37,6 @@ MilkReception::MilkReception(const MilkReception &mr):
 
 }
 
-MilkReception::~MilkReception()
-{
-
-}
-
 int MilkReception::id() const
 {
     return m_data.id();
@@ -84,7 +79,8 @@ MilkReceptionData MilkReception::data() const
 
 bool MilkReception::isValid() const
 {
-    return m_data.isValid();
+    return m_data.isValid() && (deliverer() ? deliverer()->isValid() : false)
+            && (milkPoint() ? milkPoint()->isValid() : false);
 }
 
 void MilkReception::setId(const int id)
@@ -160,4 +156,25 @@ void MilkReception::setFat(double fat)
 
     m_data.setFat(fat);
     emit fatChanged(fat);
+}
+
+
+int MilkReception::delivererId() const
+{
+    return m_data.delivererId();
+}
+
+void MilkReception::setDelivererId(const int delivererId)
+{
+    m_data.setDelivererId(delivererId);
+}
+
+int MilkReception::milkPointId() const
+{
+    return m_data.milkPointId();
+}
+
+void MilkReception::setMilkPointId(const int milkPointId)
+{
+    m_data.setMilkPointId(milkPointId);
 }

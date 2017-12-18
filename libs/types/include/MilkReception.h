@@ -9,7 +9,7 @@
 class MilkPoint;
 class Deliverer;
 
-class TYPESLIBRARYSHARED_EXPORT MilkReception : public QObject
+class TYPESLIBRARYSHARED_EXPORT MilkReception : public QObject, public IMilkReception
 {
     Q_OBJECT
     Q_PROPERTY(int milkReceptionId READ id WRITE setId NOTIFY idChanged)
@@ -26,18 +26,16 @@ public:
                   MilkPoint *milkPoint = Q_NULLPTR, QObject *parent = Q_NULLPTR);
     MilkReception(const MilkReception &mr);
     MilkReception(QObject *parent = Q_NULLPTR);
-    virtual ~MilkReception();
 
-    int id() const;
-    QDate deliveryDate() const;
-    double priceLiter() const;
-    double liters() const;
-    double fat() const;
+    int id() const Q_DECL_OVERRIDE;
+    QDate deliveryDate() const Q_DECL_OVERRIDE;
+    double priceLiter() const Q_DECL_OVERRIDE;
+    double liters() const Q_DECL_OVERRIDE;
+    double fat() const Q_DECL_OVERRIDE;
     Deliverer *deliverer() const;
     MilkPoint *milkPoint() const;
     MilkReceptionData data() const;
-
-    Q_INVOKABLE bool isValid() const;
+    Q_INVOKABLE bool isValid() const Q_DECL_OVERRIDE;
 
 public slots:
     void setId(const int id);
@@ -62,6 +60,11 @@ private:
     MilkReceptionData m_data;
     Deliverer *m_deliverer;
     MilkPoint *m_milkPoint;
+
+    virtual int delivererId() const Q_DECL_OVERRIDE;
+    virtual void setDelivererId(const int delivererId) Q_DECL_OVERRIDE;
+    virtual int milkPointId() const Q_DECL_OVERRIDE;
+    virtual void setMilkPointId(const int milkPointId) Q_DECL_OVERRIDE;
 };
 
 Q_DECLARE_METATYPE(MilkReception)

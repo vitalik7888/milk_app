@@ -18,6 +18,7 @@ void TypesPlugin::registerTypes(const char *uri)
     qmlRegisterType<MilkPoint>(uri, 1, 0, "MilkPoint");
     qmlRegisterInterface<IDeliverer>("IDeliverer");
     qmlRegisterType<Deliverer>(uri, 1, 0, "Deliverer");
+    qmlRegisterInterface<IMilkReception>("IMilkReception");
     qmlRegisterType<MilkReception>(uri, 1, 0, "MilkReception");
 }
 

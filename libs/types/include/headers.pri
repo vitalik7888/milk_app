@@ -14,4 +14,5 @@ HEADERS  += \
     $$PWD/MilkReceptionData.h \
     $$PWD/TypesConstants.h \
     $$PWD/ILocality.h \
-    $$PWD/IMilkPoint.h
+    $$PWD/IMilkPoint.h \
+    $$PWD/IMilkReception.h

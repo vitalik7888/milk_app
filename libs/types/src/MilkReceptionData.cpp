@@ -39,11 +39,6 @@ MilkReceptionData::MilkReceptionData(const MilkReceptionData &data):
 
 }
 
-MilkReceptionData::~MilkReceptionData()
-{
-
-}
-
 int MilkReceptionData::id() const
 {
     return m_id;
