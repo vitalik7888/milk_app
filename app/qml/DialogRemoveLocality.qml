@@ -2,39 +2,43 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import com.milk.core 1.0
 import com.milk.db 1.0
-import com.milk.types 1.0
 
 Dialog {
     title: qsTr("Удаление населённого пункта")
     modal: true
     standardButtons: Dialog.Ok
+    property alias milkId: _item.milkId
 
-    property int row: -1
+    DbLocality {
+        id: _item
+        model: milkCore.db.localities
+
+        onMilkIdChanged: _item.loadData(milkId)
+    }
 
     Label{
         id: _content
     }
 
     onAccepted: {
-        if (row == -1) {
+        if (_item.milkId === -1) {
+            console.log("Locality is null")
             close()
             return
         }
 
-        if (milkCore.db.localities.remove(row)) {
+        if (_item.remove()) {
             console.log(qsTr("Населенный пункт успешно удалён"))
-            milkCore.db.deliverers.refresh()
-            milkCore.db.milkPoints.refresh()
         }
-        row = -1
+
+        _item.reset()
     }
 
     onOpened: {
-        var _locality = milkCore.db.localities.get(row)
-        if (_locality == null)
+        if (_item.milkId === -1)
             _content.text = qsTr("Выберите населённый пункт")
         else
-            _content.text = "Вы действительно желаете удалить '" + _locality.name + "'?\n" +
+            _content.text = "Вы действительно желаете удалить '" + _item.name + "'?\n" +
                     "Будут также удалены молокопункты и сдачи молока в этом населённом пункте."
     }
 }

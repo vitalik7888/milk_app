@@ -1,14 +1,16 @@
-#ifndef MILKRECEPRIONDAO_H
-#define MILKRECEPRIONDAO_H
+#ifndef MILK_RECEPRION_DAO_H_
+#define MILK_RECEPRION_DAO_H_
 
-#include "Dao.h"
+#include "DaoSql.h"
+// Qt
+#include <QSqlQuery>
 
 DB_BEGIN_NAMESPACE
 
-class MilkReceptionTable;
+class MilkReceptionModel;
 
 
-class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public Dao {
+class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public DaoSql {
     enum class MinMax {
         Min,
         Max,
@@ -16,22 +18,29 @@ class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public Dao {
     };
 
 public:
-    MilkReceptionDao(MilkReceptionTable *table);
+    MilkReceptionDao(QObject *parent = Q_NULLPTR);
 
-    bool insert(const QVariant &data) const;
-    bool update(const QVariant &data) const;
+    QString getCreateTableStr() const Q_DECL_OVERRIDE;
 
-    bool updatePriceLiter(const double price, const QDate &dateFrom, const QDate &dateTo) const;
-    double getMinPriceLiter(const QDate &from, const QDate &to) const;
-    double getMaxPriceLiter(const QDate &from, const QDate &to) const;
-    std::tuple<double, double> getMinMaxPriceLiter(const QDate &from, const QDate &to) const;
+    bool updatePriceLiter(const double price, const QDate &dateFrom, const QDate &dateTo);
+    double getMinPriceLiter(const QDate &from, const QDate &to);
+    double getMaxPriceLiter(const QDate &from, const QDate &to);
+    std::tuple<double, double> getMinMaxPriceLiter(const QDate &from, const QDate &to);
 
-    QDate getMinDeliveryDate() const;
-    QDate getMaxDeliveryDate() const;
+    QDate getMinDeliveryDate();
+    QDate getMaxDeliveryDate();
 
 private:
-    QSqlQuery getMinAndOrMaxPriceLiter(const QDate &from, const QDate &to, const MinMax minMax) const;
-    QDate getMinMaxDeliveryDate(bool isMin) const;
+    QString _tableName() const Q_DECL_OVERRIDE;
+    QString _primaryFieldName() const Q_DECL_OVERRIDE;
+    QStringList _fieldsNames() const Q_DECL_OVERRIDE;
+
+    virtual DaoItem fromRecord(const QSqlRecord &record) Q_DECL_OVERRIDE;
+    bool _insert(MilkBaseItem *item) Q_DECL_OVERRIDE;
+    bool _update(const MilkBaseItem *item) Q_DECL_OVERRIDE;
+
+    QSqlQuery getMinAndOrMaxPriceLiter(const QDate &from, const QDate &to, const MinMax minMax);
+    QDate getMinMaxDeliveryDate(bool isMin);
 };
 
 DB_END_NAMESPACE

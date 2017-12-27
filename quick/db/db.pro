@@ -1,17 +1,17 @@
 TEMPLATE = lib
 TARGET = milkdbplugin
 QT += qml quick sql
-CONFIG += plugin c++14 link_prl addmilkdb addmilktypes
+CONFIG += plugin c++14 addmilktypes addmilkdb
 
 uri = com.milk.db
 DESTDIR = $$MILK_QUICK_DEST_PATH/$$replace(uri, \., $$QMAKE_DIR_SEP)
 TARGET = $$qtLibraryTarget($$TARGET)
 
 # Input
-SOURCES += \
-    src/qmldb_plugin.cpp
-
 include(include/headers.pri)
+
+SOURCES += \
+    src/db_plugin.cpp
 
 OTHER_FILES += qmldir
 DISTFILES = qmldir

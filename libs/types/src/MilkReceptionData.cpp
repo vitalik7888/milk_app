@@ -7,16 +7,16 @@ using TCMR = TC::MilkReception;
 
 
 MilkReceptionData::MilkReceptionData():
-    MilkReceptionData(TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID,
-                      TCMR::DEF_DELIVERY_DATE, TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT)
+    MilkReceptionData(TC::DEFAULT_ID, TC::DEFAULT_ID, TC::DEFAULT_ID, TCMR::DEF_DELIVERY_DATE,
+                      TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT)
 {
 
 }
 
-MilkReceptionData::MilkReceptionData(const int id, const int delivererId,
-                                     const int milkPointId, const QDate &deliveryDate,
+MilkReceptionData::MilkReceptionData(const MILK_ID id, const MILK_ID delivererId,
+                                     const MILK_ID milkPointId, const QDate &deliveryDate,
                                      const double priceLiter, const double liters, const double fat):
-    m_id(id),
+    m_milkId(id),
     m_delivererId(delivererId),
     m_milkPointId(milkPointId),
     m_deliveryDate(deliveryDate),
@@ -28,7 +28,8 @@ MilkReceptionData::MilkReceptionData(const int id, const int delivererId,
 }
 
 MilkReceptionData::MilkReceptionData(const MilkReceptionData &data):
-    m_id(data.id()),
+    QSharedData(data),
+    m_milkId(data.milkId()),
     m_delivererId(data.delivererId()),
     m_milkPointId(data.milkPointId()),
     m_deliveryDate(data.deliveryDate()),
@@ -39,39 +40,19 @@ MilkReceptionData::MilkReceptionData(const MilkReceptionData &data):
 
 }
 
-int MilkReceptionData::id() const
+void MilkReceptionData::setMilkId(const MILK_ID milkId)
 {
-    return m_id;
+    m_milkId = milkId;
 }
 
-void MilkReceptionData::setId(const int id)
+void MilkReceptionData::setDelivererId(const MILK_ID delivererId)
 {
-    m_id = id;
+    m_delivererId = delivererId;
 }
 
-int MilkReceptionData::delivererId() const
+void MilkReceptionData::setMilkPointId(const MILK_ID milkPointId)
 {
-    return m_delivererId;
-}
-
-void MilkReceptionData::setDelivererId(const int deliverer)
-{
-    m_delivererId = deliverer;
-}
-
-int MilkReceptionData::milkPointId() const
-{
-    return m_milkPointId;
-}
-
-void MilkReceptionData::setMilkPointId(const int milkPoint)
-{
-    m_milkPointId = milkPoint;
-}
-
-QDate MilkReceptionData::deliveryDate() const
-{
-    return m_deliveryDate;
+    m_milkPointId = milkPointId;
 }
 
 void MilkReceptionData::setDeliveryDate(const QDate &deliveryDate)
@@ -79,29 +60,14 @@ void MilkReceptionData::setDeliveryDate(const QDate &deliveryDate)
     m_deliveryDate = deliveryDate;
 }
 
-double MilkReceptionData::priceLiter() const
-{
-    return m_priceLiter;
-}
-
 void MilkReceptionData::setPriceLiter(double priceLiter)
 {
     m_priceLiter = priceLiter;
 }
 
-double MilkReceptionData::liters() const
-{
-    return m_liters;
-}
-
 void MilkReceptionData::setLiters(double liters)
 {
     m_liters = liters;
-}
-
-double MilkReceptionData::fat() const
-{
-    return m_fat;
 }
 
 void MilkReceptionData::setFat(double fat)
@@ -111,5 +77,19 @@ void MilkReceptionData::setFat(double fat)
 
 bool MilkReceptionData::isValid() const
 {
-    return m_id > 0;
+    return MilkBaseItem::isValid() && m_delivererId > TC::DEFAULT_ID &&
+            m_milkPointId > TC::DEFAULT_ID && m_liters > TCMR::DEF_LITERS &&
+            m_fat > TCMR::DEF_FAT && m_priceLiter > TCMR::DEF_PRICE_LITER;
+}
+
+void MilkReceptionData::reset()
+{
+    MilkBaseItem::reset();
+    m_delivererId = TC::DEFAULT_ID;
+    m_milkPointId = TC::DEFAULT_ID;
+    m_deliveryDate = TCMR::DEF_DELIVERY_DATE;
+    m_priceLiter = TCMR::DEF_PRICE_LITER;
+    m_liters = TCMR::DEF_LITERS;
+    m_fat = TCMR::DEF_FAT;
+
 }

@@ -6,6 +6,8 @@
 #include "Settings.h"
 #include "CalcItemModel.h"
 #include "MilkPlugins.h"
+#include <DbMilkPoint.h>
+#include <DbMilkReception.h>
 
 USE_DB_NAMESPACE
 
@@ -26,8 +28,8 @@ public:
 
     Q_INVOKABLE CalculatedItem *getCalculations(const QString &where = "");
 
-    Q_INVOKABLE CalcItemModel *getCalcItemModel(const qlonglong delivererId = -1,
-                                                const qlonglong milkPointId = -1,
+    Q_INVOKABLE CalcItemModel *getCalcItemModel(const MILK_ID delivererId = -1,
+                                                const MILK_ID milkPointId = -1,
                                                 const QDate &dateFrom = QDate(),
                                                 const QDate &dateTo = QDate());
 

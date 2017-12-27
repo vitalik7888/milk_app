@@ -1,19 +1,29 @@
-#ifndef LOCALITIESDAO_H
-#define LOCALITIESDAO_H
+#ifndef LOCALITIES_DAO_H
+#define LOCALITIES_DAO_H
 
-#include "Dao.h"
+#include "DaoSql.h"
 
 DB_BEGIN_NAMESPACE
 
-class LocalitiesTable;
+class LocalitiesModel;
 
 
-class DBLIBRARYSHARED_EXPORT LocalitiesDao: public Dao {
+class DBLIBRARYSHARED_EXPORT LocalitiesDao: public DaoSql {
 public:
-    LocalitiesDao(LocalitiesTable *table);
+    LocalitiesDao(QObject *parent = Q_NULLPTR);
 
-    virtual bool insert(const QVariant &variant) const Q_DECL_OVERRIDE;
-    virtual bool update(const QVariant &variant) const Q_DECL_OVERRIDE;
+    QString getCreateTableStr() const Q_DECL_OVERRIDE;
+
+private:
+    DaoItem fromRecord(const QSqlRecord &record);
+
+private:
+    QString _tableName() const Q_DECL_OVERRIDE;
+    QString _primaryFieldName() const Q_DECL_OVERRIDE;
+    QStringList _fieldsNames() const Q_DECL_OVERRIDE;
+
+    bool _insert(MilkBaseItem *item) Q_DECL_OVERRIDE;
+    bool _update(const MilkBaseItem *item) Q_DECL_OVERRIDE;
 };
 
 DB_END_NAMESPACE

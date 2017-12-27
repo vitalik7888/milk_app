@@ -105,8 +105,8 @@ const QString DbConstants::TMR_CREATE_TABLE_SQL =
         .arg(DbConstants::TMR_FN_FAT)
         .arg(DbConstants::TD_TABLE_NAME)
         .arg(DbConstants::TD_FN_ID)
-        .arg(DbConstants::TL_TABLE_NAME)
-        .arg(DbConstants::TL_FN_ID);
+        .arg(DbConstants::TMP_TABLE_NAME)
+        .arg(DbConstants::TMP_FN_ID);
 
 const QString DbConstants::CREATE_INDEX_RECEPT_DELIV_SQL =
         QString("CREATE INDEX %1 ON %2 ( %3, %4 );")

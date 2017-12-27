@@ -2,10 +2,10 @@
 #define DATABASE_H
 
 #include "DbConstants.h"
-#include "LocalitiesTable.h"
-#include "DeliverersTable.h"
-#include "MilkPointsTable.h"
-#include "MilkReceptionTable.h"
+#include "LocalitiesModel.h"
+#include "DeliverersModel.h"
+#include "MilkPointsModel.h"
+#include "MilkReceptionModel.h"
 // Qt
 #include <QtSql/QSqlDatabase>
 #include <QSqlError>
@@ -17,12 +17,12 @@ DB_BEGIN_NAMESPACE
 class DBLIBRARYSHARED_EXPORT Database : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(LocalitiesTable *localities READ localities NOTIFY localitiesChanged)
-    Q_PROPERTY(DeliverersTable *deliverers READ deliverers NOTIFY deliverersChanged)
-    Q_PROPERTY(MilkPointsTable *milkPoints READ milkPoints NOTIFY milkPointsChanged)
-    Q_PROPERTY(MilkReceptionTable *milkReception READ milkReception NOTIFY milkReceptionChanged)
+    Q_PROPERTY(LocalitiesModel *localities READ localities NOTIFY localitiesChanged)
+    Q_PROPERTY(DeliverersModel *deliverers READ deliverers NOTIFY deliverersChanged)
+    Q_PROPERTY(MilkPointsModel *milkPoints READ milkPoints NOTIFY milkPointsChanged)
+    Q_PROPERTY(MilkReceptionModel *milkReception READ milkReception NOTIFY milkReceptionChanged)
     Q_PROPERTY(QString dbPath READ dbPath NOTIFY dbPathChanged)
-    Q_PROPERTY(QQmlListProperty<Table> tables READ tables)
+    Q_PROPERTY(QQmlListProperty<MilkModel> models READ _models)
 
 public:
     explicit Database(QObject *parent = nullptr);
@@ -32,13 +32,13 @@ public:
     Q_INVOKABLE QSqlError lastError() const;
     Q_INVOKABLE QString choosenDatabase() const;
 
-    QQmlListProperty<Table> tables();
-    LocalitiesTable *localities() const;
-    DeliverersTable *deliverers() const;
-    MilkPointsTable *milkPoints() const;
-    MilkReceptionTable *milkReception() const;
-    int tablesCount() const;
-    Q_INVOKABLE bool isTablesCreated() const;
+    QQmlListProperty<MilkModel> _models();
+    LocalitiesModel *localities() const;
+    DeliverersModel *deliverers() const;
+    MilkPointsModel *milkPoints() const;
+    MilkReceptionModel *milkReception() const;
+    int modelsCount() const;
+    Q_INVOKABLE bool isModelsCreated() const;
 
     QString dbPath() const { return m_dbPath; }
 
@@ -46,36 +46,42 @@ public:
 
 signals:
     void dbOpened();
-    void localitiesChanged(LocalitiesTable * localities);
-    void deliverersChanged(DeliverersTable * deliverers);
-    void milkPointsChanged(MilkPointsTable * milkPoints);
-    void milkReceptionChanged(MilkReceptionTable * milkReception);
-    void tablesChanged(QQmlListProperty<Table> tables);
+    void localitiesChanged(LocalitiesModel * localities);
+    void deliverersChanged(DeliverersModel * deliverers);
+    void milkPointsChanged(MilkPointsModel * milkPoints);
+    void milkReceptionChanged(MilkReceptionModel * milkReception);
+    void modelsChanged(QQmlListProperty<MilkModel> _models);
     void dbPathChanged(QString dbPath);
 
 private:
     QSqlDatabase m_db;
     QString m_dbPath;
-    QList<Table *> m_tables;
-    LocalitiesTable *m_localities;
-    DeliverersTable *m_deliverers;
-    MilkPointsTable *m_milkPoints;
-    MilkReceptionTable *m_milkReception;
+    QList<MilkModel *> m_models;
+    LocalitiesModel *m_localities;
+    DeliverersModel *m_deliverers;
+    MilkPointsModel *m_milkPoints;
+    MilkReceptionModel *m_milkReception;
+    std::unique_ptr<DaoSql> m_localitiesDao;
+    std::unique_ptr<DaoSql> m_deliverersDao;
+    std::unique_ptr<DaoSql> m_milkPointsDao;
+    std::unique_ptr<DaoSql> m_milkReceptionDao;
 
     void createDb(const QString &filePath);
 
-    void removeTables();
-    void createTables();
-    void refreshTables();
+    void createDaos();
 
-    void appendTable(Table *table);
-    void clearTables();
-    Table *getTable(const int position) const;
+    void removeModels();
+    void createModels();
+    void refreshModels();
 
-    static void _appendTable(QQmlListProperty<Table> *list, Table *table);
-    static int _tablesCount(QQmlListProperty<Table> *list);
-    static Table *_getTable(QQmlListProperty<Table> *list, int position);
-    static void _removeTables(QQmlListProperty<Table> *list);
+    void appendModel(MilkModel *table);
+    void clearModels();
+    MilkModel *getModel(const int position) const;
+
+    static void _appendModel(QQmlListProperty<MilkModel> *list, MilkModel *table);
+    static int _modelsCount(QQmlListProperty<MilkModel> *list);
+    static MilkModel *_getModel(QQmlListProperty<MilkModel> *list, int position);
+    static void _removeModels(QQmlListProperty<MilkModel> *list);
 
     void _error(const QString &errorDescription) const;
 };

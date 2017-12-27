@@ -1,5 +1,8 @@
 #include "LocalitiesSortFilterProxyModel.h"
 
+#include <Locality.h>
+#include <MilkModel.h>
+
 USE_DB_NAMESPACE
 using DC = DbConstants;
 
@@ -7,100 +10,78 @@ using DC = DbConstants;
 LocalitiesSortFilterProxyModel::LocalitiesSortFilterProxyModel(QObject *parent):
     MilkSortFilterProxyModel(parent)
 {
-    m_locality = new Locality();
+    m_filterMilkData = std::make_unique<Locality>();
 }
 
-void LocalitiesSortFilterProxyModel::invalidateTheFilter()
+QString LocalitiesSortFilterProxyModel::name() const
 {
+    return filter()->name();
+}
+
+void LocalitiesSortFilterProxyModel::setName(const QString &name)
+{
+    if (this->name() == name)
+        return;
+
+    filter()->setName(name);
+    emit nameChanged(name);
     invalidateFilter();
 }
 
-void LocalitiesSortFilterProxyModel::resetLocality()
+QString LocalitiesSortFilterProxyModel::description()
 {
-    if (m_isLocalityDynamicFilterEnabled) localityDisconnect();
-
-    m_locality->reset();
-
-    if (m_isLocalityDynamicFilterEnabled) localityConnect();
-
-    invalidateTheFilter();
+    return filter()->description();
 }
 
-void LocalitiesSortFilterProxyModel::setLocalityDynamicFilter(bool isEnable)
+void LocalitiesSortFilterProxyModel::setDescription(const QString &description)
 {
-    if (m_isLocalityDynamicFilterEnabled == isEnable)
+    if (this->description() == description)
         return;
 
-    m_isLocalityDynamicFilterEnabled = isEnable;
-    m_isLocalityDynamicFilterEnabled ? localityConnect() : localityDisconnect();
-    emit localityDynamicFilterChanged(m_isLocalityDynamicFilterEnabled);
+    filter()->setDescription(description);
+    emit descriptionChanged(description);
+    invalidateFilter();
 }
 
-void LocalitiesSortFilterProxyModel::localityConnect()
+bool LocalitiesSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    connect(m_locality, &Locality::idChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-    connect(m_locality, &Locality::nameChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-    connect(m_locality, &Locality::descriptionChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-}
+    Q_UNUSED(sourceParent)
+    const auto model = qobject_cast<const MilkModel *>(sourceModel());
+    const auto sourceItem = static_cast<const Locality &>(*model->getItemByIndex(sourceRow));
+    const auto item = static_cast<const Locality &>(*m_filterMilkData.get());
 
-void LocalitiesSortFilterProxyModel::localityDisconnect()
-{
-    disconnect(m_locality, &Locality::idChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-    disconnect(m_locality, &Locality::nameChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-    disconnect(m_locality, &Locality::descriptionChanged, this, &LocalitiesSortFilterProxyModel::invalidateTheFilter);
-}
-
-LocalityData LocalitiesSortFilterProxyModel::getLocalityFromSourceModel(int sourceRow, const QModelIndex &sourceParent) const
-{
-    const QModelIndex indexId = sourceModel()->index(sourceRow, DC::TL_ID, sourceParent),
-            indexName = sourceModel()->index(sourceRow, DC::TL_NAME, sourceParent),
-            indexDescription = sourceModel()->index(sourceRow, DC::TL_DESCRIPTION, sourceParent);
-
-    return LocalityData(
-                sourceModel()->data(indexId).toInt(),
-                sourceModel()->data(indexName).toString(),
-                sourceModel()->data(indexDescription).toString()
-                );
-}
-
-bool LocalitiesSortFilterProxyModel::isFilterAcceptRowById(const int id) const
-{
-    return m_locality->id() <= 0 ? true : m_locality->id() == id;
-}
-
-bool LocalitiesSortFilterProxyModel::isFilterAcceptRowByName(const QString &name) const
-{
-    return m_locality->name().isEmpty() ? true : name.contains(m_locality->name());
-}
-
-bool LocalitiesSortFilterProxyModel::isFilterAcceptRowByDescription(const QString &description) const
-{
-    return m_locality->description().isEmpty() ? true : description.contains(m_locality->description());
-}
-
-bool LocalitiesSortFilterProxyModel::isFilterAcceptRowByLocality(const LocalityData &data) const
-{
-    return isFilterAcceptRowById(data.id()) && isFilterAcceptRowByName(data.name())
-            && isFilterAcceptRowByDescription(data.description());
-}
-
-bool LocalitiesSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
-{
-    const auto data = getLocalityFromSourceModel(source_row, source_parent);
-
-    return isFilterAcceptRowByLocality(data);
+    return isFilterAcceptRowById(item.milkId(), sourceItem.milkId()) &&
+            isFilterAcceptRowByString(item.name(), sourceItem.name()) &&
+            isFilterAcceptRowByString(item.description(), sourceItem.description());
 }
 
 bool LocalitiesSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
 {
-    QVariant leftData = sourceModel()->data(sourceLeft);
-    QVariant rightData = sourceModel()->data(sourceRight);
+    const auto model = qobject_cast<const MilkModel *>(sourceModel());
+    const auto leftItem = static_cast<const Locality *>(model->getItemByIndex(sourceLeft.row()));
+    const auto rightItem = static_cast<const Locality *>(model->getItemByIndex(sourceRight.row()));
 
-    if (leftData.type() == QVariant::String){
-        return leftData.toString() < rightData.toString();
-    } else if (leftData.type() == QVariant::Int){
-        return leftData.toInt() < rightData.toInt();
+    const auto column = sourceLeft.column();
+    switch(column) {
+    case DC::TL_ID:
+        return leftItem->milkId() < rightItem->milkId();
+    case DC::TL_NAME:
+        return leftItem->name() < rightItem->name();
+    case DC::TL_DESCRIPTION:
+        return leftItem->description() < rightItem->description();
     }
 
-    return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
+    return base::lessThan(sourceLeft, sourceRight);
+}
+
+Locality *LocalitiesSortFilterProxyModel::filter() const
+{
+    return static_cast<Locality *>(m_filterMilkData.get());
+}
+
+void LocalitiesSortFilterProxyModel::resetFilter()
+{
+    base::resetFilter();
+    emit nameChanged(name());
+    emit descriptionChanged(description());
 }

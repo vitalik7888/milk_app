@@ -1,8 +1,8 @@
 #include "types/Test_Deliverer.h"
 
 #include <TypesConstants.h>
-#include <Deliverer.h>
-#include "Locality.h"
+#include <DelivererData.h>
+#include "LocalityData.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>

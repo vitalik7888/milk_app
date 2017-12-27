@@ -27,20 +27,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(include/headers.pri)
 
 SOURCES += \
-    src/Dao.cpp \
     src/Database.cpp \
     src/DbConstants.cpp \
     src/DbUtils.cpp \
     src/DeliverersSortFilterProxyModel.cpp \
-    src/DeliverersTable.cpp \
     src/LocalitiesSortFilterProxyModel.cpp \
-    src/LocalitiesTable.cpp \
     src/MilkPointsSortFilterProxyModel.cpp \
-    src/MilkPointsTable.cpp \
     src/MilkReceptionSortFilterProxyModel.cpp \
-    src/MilkReceptionTable.cpp \
     src/MilkSortFilterProxyModel.cpp \
-    src/Table.cpp
+    src/DbLocality.cpp \
+    src/MilkBaseDbObject.cpp \
+    src/DbMilkPoint.cpp \
+    src/DbDeliverer.cpp \
+    src/DbMilkReception.cpp \
+    src/MilkModel.cpp \
+    src/LocalitiesModel.cpp \
+    src/DeliverersModel.cpp \
+    src/MilkPointsModel.cpp \
+    src/MilkReceptionModel.cpp \
+    src/DaoSql.cpp
 
 unix {
     target.path = /usr/lib

@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    types \
+#    types \
     settings \
     db \
     calc

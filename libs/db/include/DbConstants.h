@@ -1,5 +1,5 @@
-#ifndef DBCONSTANTS_H
-#define DBCONSTANTS_H
+#ifndef DB_CONSTANTS_H
+#define DB_CONSTANTS_H
 
 #include "dblibrary_global.h"
 // Qt
@@ -30,6 +30,18 @@ public:
         TD_PHONE_NUMBER
     };
     Q_ENUM(DeliverersTableColumns)
+    enum class DeliverersRoles {
+        MilkIdRole = Qt::UserRole + 1,
+        DM_FirstNameRole,
+        DM_LastNameRole,
+        DM_FullNameRole,
+        DM_InnRole,
+        DM_LocalityIdRole,
+        DM_LocalityNameRole,
+        DM_AddressRole,
+        DM_PhoneNumberRole
+    };
+    Q_ENUM(DeliverersRoles)
     static const QString TD_TABLE_NAME;
     static const QString TD_FN_ID;
     static const QString TD_FN_FIRST_NAME;
@@ -53,6 +65,18 @@ public:
         TMR_FAT
     };
     Q_ENUM(ReceptionMilkTableColumns)
+    enum class MilkReceptionRoles {
+        MilkIdRole = Qt::UserRole + 1,
+        MR_DelivererIdRole,
+        MR_DelivererFullNameRole,
+        MR_MilkPointIdRole,
+        MR_MilkPointNameRole,
+        MR_DeliveryDateRole,
+        MR_PriceLiterRole,
+        MR_LitersRole,
+        MR_FatRole
+    };
+    Q_ENUM(MilkReceptionRoles)
     static const QString TMR_TABLE_NAME;
     static const QString TMR_FN_ID;
     static const QString TMR_FN_ID_DELIVERER;
@@ -72,6 +96,12 @@ public:
         TL_DESCRIPTION
     };
     Q_ENUM(LocalityTableColumns)
+    enum class LocalitiesRoles {
+        MilkIdRole = Qt::UserRole + 1,
+        NameRole,
+        DescriptionRole,
+    };
+    Q_ENUM(LocalitiesRoles)
     static const QString TL_TABLE_NAME;
     static const QString TL_FN_ID;
     static const QString TL_FN_NAME;
@@ -85,6 +115,14 @@ public:
         TMP_DESCRIPTION
     };
     Q_ENUM(MilkPointsTableColumns)
+    enum class MilkPointRoles {
+        MilkIdRole = Qt::UserRole + 1,
+        MP_NameRole,
+        MP_DescriptionRole,
+        MP_LocalityIdRole,
+        MP_LocalityNameRole,
+    };
+    Q_ENUM(MilkPointRoles)
     static const QString TMP_TABLE_NAME;
     static const QString TMP_FN_ID;
     static const QString TMP_FN_LOCALITY_ID;

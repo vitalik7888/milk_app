@@ -3,7 +3,6 @@ import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.0 as Lab10
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.settings 1.0
 
 Dialog {

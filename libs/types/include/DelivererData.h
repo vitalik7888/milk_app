@@ -1,58 +1,57 @@
-#ifndef DELIVERERDATA_H
-#define DELIVERERDATA_H
+#ifndef _DELIVERER_DATA_H
+#define _DELIVERER_DATA_H
 
-#include "IDeliverer.h"
+#include "MilkBaseItem.h"
 // Qt
-#include <QString>
+#include <QSharedData>
 #include <QMetaType>
 
-
-class TYPESLIBRARYSHARED_EXPORT DelivererData : public IDeliverer
+class TYPESLIBRARYSHARED_EXPORT DelivererData : public MilkBaseItem, public QSharedData
 {
 public:
     DelivererData();
-    DelivererData(const DelivererData &data);
-    DelivererData(const int id, const QString &firstName, const QString &lastName, const int localityId,
-                  const QString &inn, const QString &address, const QString &phoneNumber);
-    virtual ~DelivererData();
+    DelivererData(const DelivererData &other);
+    DelivererData(const MILK_ID id, const QString &firstName, const QString &lastName,
+                  const MILK_ID localityId, const QString &inn, const QString &address,
+                  const QString &phoneNumber);
 
     bool isValid() const Q_DECL_OVERRIDE;
+    void reset() Q_DECL_OVERRIDE;
 
-    int id() const Q_DECL_OVERRIDE;
-    void setId(const int id) Q_DECL_OVERRIDE;
+    MILK_ID milkId() const Q_DECL_OVERRIDE { return m_milkId; }
+    void setMilkId(const MILK_ID id) Q_DECL_OVERRIDE;
 
-    QString firstName() const Q_DECL_OVERRIDE;
-    void setFirstName(const QString &firstName) Q_DECL_OVERRIDE;
+    QString firstName() const { return m_firstName; }
+    void setFirstName(const QString &firstName);
 
-    QString lastName() const Q_DECL_OVERRIDE;
-    void setLastName(const QString &lastName) Q_DECL_OVERRIDE;
+    QString lastName() const { return m_lastName; }
+    void setLastName(const QString &lastName);
+    QString fullName() const;
 
-    QString fullName() const Q_DECL_OVERRIDE;
+    QString inn() const { return m_inn; }
+    void setInn(const QString &inn);
 
-    QString inn() const Q_DECL_OVERRIDE;
-    void setInn(const QString &inn) Q_DECL_OVERRIDE;
+    MILK_ID localityId() const { return m_localityId; }
+    void setLocalityId(const MILK_ID localityId);
 
-    int localityId() const Q_DECL_OVERRIDE;
-    void setLocalityId(const int localityId) Q_DECL_OVERRIDE;
+    QString address() const { return m_address; }
+    void setAddress(const QString &address);
 
-    QString address() const Q_DECL_OVERRIDE;
-    void setAddress(const QString &address) Q_DECL_OVERRIDE;
-
-    QString phoneNumber() const Q_DECL_OVERRIDE;
-    void setPhoneNumber(const QString &phoneNumber) Q_DECL_OVERRIDE;
+    QString phoneNumber() const { return m_phoneNumber; }
+    void setPhoneNumber(const QString &phoneNumber);
 
 private:
-    int m_id;
-    int m_localityId;
+    MILK_ID m_milkId;
+    MILK_ID m_localityId;
     QString m_inn;
     QString m_firstName;
     QString m_lastName;
     QString m_address;
-    QString m_phoneNumber; // +9(999)999-99-99
+    QString m_phoneNumber;
 };
-
-Q_DECLARE_METATYPE(DelivererData)
 
 QDebug operator<<(QDebug dbg, const DelivererData &data);
 
-#endif // DELIVERERDATA_H
+Q_DECLARE_METATYPE(DelivererData)
+
+#endif // DELIVERER_H

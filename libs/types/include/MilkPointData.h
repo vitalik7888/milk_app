@@ -1,33 +1,37 @@
-#ifndef MILKPOINTDATA_H
-#define MILKPOINTDATA_H
+#ifndef MILKPOINT_DATA_H_
+#define MILKPOINT_DATA_H_
 
-#include "IMilkPoint.h"
+#include "MilkBaseItem.h"
 // Qt
-#include <QString>
+#include <QSharedData>
 #include <QMetaType>
 
-
-class TYPESLIBRARYSHARED_EXPORT MilkPointData : public IMilkPoint
+class TYPESLIBRARYSHARED_EXPORT MilkPointData : public MilkBaseItem, public QSharedData
 {
 public:
     MilkPointData();
     MilkPointData(const MilkPointData &mp);
-    MilkPointData(const int id, const int localityId, const QString &name, const QString &description);
+    MilkPointData(const MILK_ID id, const MILK_ID localityId, const QString &name, const QString &description);
     MilkPointData &operator =(const MilkPointData &data);
 
-    virtual int id() const Q_DECL_OVERRIDE;
-    virtual void setId(const int id) Q_DECL_OVERRIDE;
-    virtual QString name() const Q_DECL_OVERRIDE;
-    virtual void setName(const QString &name) Q_DECL_OVERRIDE;
-    virtual QString description() const Q_DECL_OVERRIDE;
-    virtual void setDescription(const QString &description) Q_DECL_OVERRIDE;
-    virtual int localityId() const Q_DECL_OVERRIDE;
-    virtual void setLocalityId(const int localityId) Q_DECL_OVERRIDE;
+    MILK_ID milkId() const Q_DECL_OVERRIDE { return m_milkId; }
+    void setMilkId(const MILK_ID milkId) Q_DECL_OVERRIDE;
+
+    MILK_ID localityId() const { return m_localityId; }
+    void setLocalityId(const MILK_ID localityId);
+
+    QString name() const { return m_name; }
+    void setName(const QString &name);
+
+    QString description() const { return m_description; }
+    void setDescription(const QString &description);
+
     virtual bool isValid() const Q_DECL_OVERRIDE;
+    virtual void reset() Q_DECL_OVERRIDE;
 
 private:
-    int m_id;
-    int m_localityId;
+    MILK_ID m_milkId;
+    MILK_ID m_localityId;
     QString m_name;
     QString m_description;
 };

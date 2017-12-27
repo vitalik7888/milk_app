@@ -2,8 +2,8 @@
 
 #include "types/Test_Locality.h"
 #include <TypesConstants.h>
-#include <Locality.h>
-#include <MilkPoint.h>
+#include <LocalityData.h>
+#include <MilkPointData.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

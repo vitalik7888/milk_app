@@ -2,15 +2,13 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import com.milk.core 1.0
-import com.milk.types 1.0
+import com.milk.db 1.0
 
 Dialog {
     id: root
     standardButtons: Dialog.Save | Dialog.Cancel
     modal: true
-    property int row: -1
     height: 400
-    readonly property alias viewLocalities: viewLocalities
 
     onAccepted: {
         if (!check()) {
@@ -18,22 +16,21 @@ Dialog {
             return
         }
 
-        if (_deliverer.delivererId === -1) {
-            if (milkCore.db.deliverers.append(_deliverer))
+        if (_item.milkId === -1) {
+            if (_item.append())
                 console.log(qsTr("Сдатчик успешно добавлен"))
         } else {
-            if (milkCore.db.deliverers.set(row, _deliverer))
+            if (_item.save())
                 console.log(qsTr("Сдатчик успешно сохранён"))
         }
     }
 
-    Deliverer {
-        id: _deliverer
-        delivererId: spinBoxDelivererId.value
+    DbDeliverer {
+        id: _item
+        model: milkCore.db.deliverers
         firstName: textFieldFirstName.text
         lastName: textFieldLastName.text
         inn: textFieldInn.text
-        locality: viewLocalities.currentMilkItem
         address: textFieldAddress.text
         phoneNumber: textFieldPhoneNumber.text
     }
@@ -41,7 +38,6 @@ Dialog {
     GridLayout {
         anchors.fill: parent
         columns: 2
-        rows: 6
 
         ViewLocalities {
             id: viewLocalities
@@ -49,17 +45,13 @@ Dialog {
             Layout.fillHeight: true
             Layout.fillWidth: true
             viewMenu.visible: false
-        }
 
-        SpinBox {
-            id: spinBoxDelivererId
-            enabled: false
-            from: -1
-            to: 9999
+            onCurrentMilkIdChanged: _item.locality.loadData(viewLocalities.currentMilkId)
         }
 
         TextField {
             id: textFieldFirstName
+            text: _item.firstName
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Имя")
@@ -67,6 +59,7 @@ Dialog {
         }
         TextField {
             id: textFieldLastName
+            text: _item.lastName
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Фамилия")
@@ -74,6 +67,7 @@ Dialog {
         }
         TextField {
             id: textFieldInn
+            text: _item.inn
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Инн")
@@ -81,6 +75,7 @@ Dialog {
         }
         TextField {
             id: textFieldAddress
+            text: _item.address
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Адрес")
@@ -88,58 +83,47 @@ Dialog {
         }
         TextField {
             id: textFieldPhoneNumber
+            text: _item.phoneNumber
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Номер телефона")
             font.capitalization: Font.Capitalize
         }
         Label {
-            id: errors
+            id: _errors
             color: "red"
         }
     }
 
-    function openUpdate() {
-        errors.text = ""
-        spinBoxDelivererId.visible = true
-        viewLocalities.filter.reset()
-
-        var obj = milkCore.db.deliverers.get(row)
-        if (obj == null) {
-            close()
-            return
-        }
-        spinBoxDelivererId.value = obj.delivererId
-        textFieldName.text = obj.name
-        textFieldAddress.text = obj.address
-        textFieldInn.text = obj.inn
-        textFieldPhoneNumber.text = obj.phoneNumber
-        viewLocalities.viewTable.currentIndex = viewLocalities.proxy.findRowById(obj.locality.localityId)
+    function openUpdate(_milkId) {
+        viewLocalities.proxy.resetFilter()
+        _item.loadData(_milkId)
+        viewLocalities.viewModel.currentIndex = _item.model.getPositionById(_item.locality.milkId)
 
         open()
     }
 
     function openInsert() {
-        errors.text = ""
-        spinBoxDelivererId.value = -1
-        textFieldFirstName.text = ""
-        textFieldLastName.text = ""
-        textFieldAddress.text = ""
-        spinBoxDelivererId.visible = false
+        _item.reset()
+        viewLocalities.viewModel.currentIndex = -1
 
         open()
     }
 
+    onClosed: _errors.text = ""
+
     function check() {
-        if (_deliverer.lastName === "") {
-            errors.text = qsTr("Заполните фамилию")
-            return false
-        }
-        if (_deliverer.locality == null) {
-            errors.text = qsTr("Выберите населённый пункт")
+        if (_item.lastName === "") {
+            _errors.text = qsTr("Заполните фамилию")
             return false
         }
 
+        if (_item.locality.milkId === -1) {
+            _errors.text = qsTr("Выберите населённый пункт")
+            return false
+        }
+
+        _errors.text = ""
         return true
     }
 }

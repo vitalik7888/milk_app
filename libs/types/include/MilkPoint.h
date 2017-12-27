@@ -1,55 +1,39 @@
-#ifndef MILKPOINT_H
-#define MILKPOINT_H
+#ifndef _MILKPOINT_H_
+#define _MILKPOINT_H_
 
 #include "MilkPointData.h"
 // Qt
-#include <QObject>
+#include <QSharedDataPointer>
 
 class Locality;
 
 
-class TYPESLIBRARYSHARED_EXPORT MilkPoint : public QObject, public IMilkPoint
+class TYPESLIBRARYSHARED_EXPORT MilkPoint : public MilkBaseItem
 {
-    Q_OBJECT
-    Q_PROPERTY(int milkPointId READ id WRITE setId NOTIFY idChanged)
-    Q_PROPERTY(Locality *locality READ locality WRITE setLocality NOTIFY localityChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-
 public:
-    MilkPoint(const int id, const QString &name, const QString &description,
-              Locality *locality = Q_NULLPTR, QObject *parent = Q_NULLPTR);
-    MilkPoint(const MilkPoint &milkPoint);
-    MilkPoint(QObject *parent = Q_NULLPTR);
+    MilkPoint();
+    MilkPoint(const MILK_ID id, const QString &name, const QString &description,
+              const Locality *locality = Q_NULLPTR);
+    MilkPoint(const MilkPoint &other);
 
-    int id() const Q_DECL_OVERRIDE;
-    Locality *locality() const;
-    QString name() const Q_DECL_OVERRIDE;
-    QString description() const Q_DECL_OVERRIDE;
+    MILK_ID milkId() const Q_DECL_OVERRIDE { return m_data->milkId(); }
+    void setMilkId(const MILK_ID milkId) Q_DECL_OVERRIDE;
 
-    Q_INVOKABLE bool isValid() const Q_DECL_OVERRIDE;
+    const Locality *locality() const { return m_locality; }
+    void setLocality(const Locality *locality);
 
-    MilkPointData data() const;
-
-public slots:
-    void setId(const int id);
-    void setLocality(Locality * locality);
+    QString name() const { return m_data->name(); }
     void setName(const QString &name);
-    void setDescription(const QString &description);
-    void reset();
 
-signals:
-    void idChanged(int milkPointId);
-    void localityChanged(Locality * locality);
-    void nameChanged(QString name);
-    void descriptionChanged(QString description);
+    QString description() const { return m_data->description(); }
+    void setDescription(const QString &description);
+
+    virtual bool isValid() const Q_DECL_OVERRIDE;
+    virtual void reset() Q_DECL_OVERRIDE;
 
 private:
-    MilkPointData m_data;
-    Locality *m_locality;
-
-    virtual int localityId() const Q_DECL_OVERRIDE;
-    virtual void setLocalityId(const int localityId) Q_DECL_OVERRIDE;
+    QSharedDataPointer<MilkPointData> m_data;
+    const Locality *m_locality;
 };
 
 Q_DECLARE_METATYPE(MilkPoint)

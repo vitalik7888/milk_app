@@ -8,9 +8,9 @@
 #include "settings/Test_PrintSettings.h"
 #include "settings/Test_Settings.h"
 // types
-#include <Deliverer.h>
-#include <Locality.h>
-#include <MilkPoint.h>
+#include <DelivererData.h>
+#include <LocalityData.h>
+#include <MilkPointData.h>
 #include "types/Test_DelivererData.h"
 #include "types/Test_Deliverer.h"
 #include "types/Test_LocalityData.h"

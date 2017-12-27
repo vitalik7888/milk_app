@@ -1,7 +1,7 @@
 #include "types/Test_Locality.h"
 
 #include <TypesConstants.h>
-#include "Locality.h"
+#include "LocalityData.h"
 // Qt
 #include <QSignalSpy>
 #include <QTest>

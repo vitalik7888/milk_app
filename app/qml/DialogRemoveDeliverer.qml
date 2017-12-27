@@ -2,37 +2,44 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import com.milk.core 1.0
 import com.milk.db 1.0
-import com.milk.types 1.0
 
 Dialog {
     title: qsTr("Удаление сдатчика")
     modal: true
     standardButtons: Dialog.Ok
 
-    property int row: -1
+    property alias milkId: _item.milkId
+
+    DbDeliverer {
+        id: _item
+        model: milkCore.db.deliverers
+
+        onMilkIdChanged: _item.loadData(milkId)
+    }
 
     Label{
         id: _content
     }
 
     onAccepted: {
-        if (row == -1) {
+        if (_item.milkId === -1) {
+            console.log("Deliverer is null")
             close()
             return
         }
 
-        if (milkCore.db.deliverers.remove(row)) {
+        if (_item.remove()) {
             console.log(qsTr("Сдатчик успешно удалён"))
         }
-        row = -1
+
+        _item.reset()
     }
 
     onOpened: {
-        var _item = milkCore.db.deliverers.get(row)
-        if (_item == null)
+        if (_item.milkId === -1)
             _content.text = qsTr("Выберите сдатчика")
         else
-            _content.text = "Вы действительно желаете удалить '" + _item.name + "'?\n" +
+            _content.text = "Вы действительно желаете удалить '" + _item.fullName + "'?\n" +
                     "Будут также удалены сдачи молока, произведённые этим сдатчиком."
     }
 }

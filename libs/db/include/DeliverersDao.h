@@ -1,19 +1,28 @@
-#ifndef DELIVERERSDAO_H
-#define DELIVERERSDAO_H
+#ifndef DELIVERERS_DAO_H
+#define DELIVERERS_DAO_H
 
-#include "Dao.h"
+#include "DaoSql.h"
 
 DB_BEGIN_NAMESPACE
+    class DeliverersModel;
 
-class DeliverersTable;
 
-
-class DBLIBRARYSHARED_EXPORT DeliverersDao: public Dao {
+class DBLIBRARYSHARED_EXPORT DeliverersDao: public DaoSql {
 public:
-    explicit DeliverersDao(DeliverersTable *table);
+    explicit DeliverersDao(QObject *parent = Q_NULLPTR);
 
-    virtual bool insert(const QVariant &data) const Q_DECL_OVERRIDE;
-    virtual bool update(const QVariant &data) const Q_DECL_OVERRIDE;
+    QString getCreateTableStr() const Q_DECL_OVERRIDE;
+
+protected:
+    virtual DaoItem fromRecord(const QSqlRecord &record) Q_DECL_OVERRIDE;
+
+private:
+    QString _tableName() const Q_DECL_OVERRIDE;
+    QString _primaryFieldName() const Q_DECL_OVERRIDE;
+    QStringList _fieldsNames() const Q_DECL_OVERRIDE;
+
+    bool _insert(MilkBaseItem *item);
+    bool _update(const MilkBaseItem *data);
 };
 
 DB_END_NAMESPACE

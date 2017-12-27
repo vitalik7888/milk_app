@@ -1,23 +1,21 @@
 import QtQuick 2.9
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as C14
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
 
 Item {
-    readonly property alias milkTable: proxy.sourceModel
-    readonly property alias proxy: proxy
-    readonly property alias viewTable: viewTable
-    property MilkReception currentMilkItem
-
-    function currentSourceRow() {
-        return proxy.sourceRow(viewTable.currentIndex)
-    }
-
     height: 200
     width: 160
+
+    readonly property alias milkTable: proxy.sourceModel
+    readonly property alias proxy: proxy
+    readonly property alias viewModel: viewModel
+    readonly property alias viewMenu: viewMenu
+    readonly property DbMilkReception currentMilkItem: DbMilkReception {
+        model: milkCore.db.milkReception
+    }
 
     Filter {
         id: filter
@@ -36,7 +34,6 @@ Item {
         width: 300
         height: 400
         standardButtons: Dialog.Ok | Dialog.Cancel
-        property int delivererRow: -1
 
         ColumnLayout {
             anchors.fill: parent
@@ -57,31 +54,31 @@ Item {
             }
         }
 
+        onOpened: {
+            _viewDeliverers.proxy.resetFilter()
+            _viewDeliverers.viewModel.currentIndex = currentMilkItem.deliverer.getPositionInModel()
+        }
+
         onAccepted: {
             if (!check()) {
                 open()
                 return
             }
-            if (milkTable.setValue(delivererRow, DBC.TMR_ID_DELIVERER, _viewDeliverers.currentMilkItem.delivererId)) {
+
+            currentMilkItem.deliverer.loadData(_viewDeliverers.currentMilkId)
+            if (currentMilkItem.saveDelivererId()) {
                 console.log("Deliverer in milk reception changed")
             }
         }
-        onClosed: {
-            milkPointRow = -1
-            _errorDelivererLabel.text = ""
-        }
 
         function check() {
-            if (_viewDeliverers.currentMilkItem == null)
+            if (_viewDeliverers.currentMilkId === -1)
             {
                 _errorDelivererLabel.text = qsTr("Выберите сдатчика")
                 return false
             }
-            if (delivererRow <= 0) {
-                console.log(qsTr("Передана неверная строка"))
-                return false
-            }
 
+            _errorDelivererLabel.text = ""
             return true
         }
     }
@@ -92,30 +89,30 @@ Item {
         width: 300
         height: 400
         standardButtons: Dialog.Ok | Dialog.Cancel
-        property int milkPointRow: -1
+
+        onOpened: {
+            _viewMilkPoints.proxy.resetFilter()
+            _viewLocalities.viewModel.currentIndex = currentMilkItem.milkPoint.locality.getPositionInModel()
+            _viewMilkPoints.viewModel.currentIndex = currentMilkItem.milkPoint.getPositionInModel()
+        }
 
         onAccepted: {
             if (!check()) {
                 open()
                 return
             }
-            if (milkTable.setValue(milkPointRow, DBC.TMR_MILK_POINT_ID, _viewMilkPoints.currentMilkItem.milkPointId)) {
+            currentMilkItem.milkPoint.loadData(_viewMilkPoints.currentMilkId)
+            if (currentMilkItem.saveMilkPointId()) {
                 console.log("MilkPoint in milk reception changed")
             }
-        }
-        onClosed: {
-            milkPointRow = -1
+
             _errorMilkPointsLabel.text = ""
         }
 
         function check() {
-            if (_viewMilkPoints.currentMilkItem == null)
+            if (_viewMilkPoints.currentMilkId === -1)
             {
                 _errorMilkPointsLabel.text = qsTr("Выберите молокопункт")
-                return false
-            }
-            if (milkPointRow <= 0) {
-                console.log(qsTr("Передана неверная строка"))
                 return false
             }
 
@@ -138,7 +135,7 @@ Item {
                 viewMenu.visible: false
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                filter.locality.localityId : _viewLocalities.filter.localityId
+                proxy.localityId : _viewLocalities.currentMilkId
             }
 
             Label {
@@ -158,7 +155,6 @@ Item {
         width: 400
         height: 400
         standardButtons: Dialog.Ok | Dialog.Cancel
-        property int milkItemRow: -1
 
         C14.Calendar {
             id: _calendar
@@ -166,33 +162,62 @@ Item {
         }
 
         onAccepted: {
-            if (milkTable.setValue(milkItemRow, DBC.TMR_DELIVERY_DATE, _calendar.selectedDate)) {
+            currentMilkItem.setDeliveryDate(_calendar.selectedDate)
+            if (currentMilkItem.saveDeliveryDate()) {
                 console.log("Delivery date in milk reception has been changed")
             }
         }
 
-        onOpened: _calendar.selectedDate = milkTable.getValue(milkItemRow, DBC.TMR_DELIVERY_DATE)
+        onOpened: _calendar.selectedDate = currentMilkItem.deliveryDate
     }
 
     Dialog {
         id: dialogChangeDouble
         standardButtons: Dialog.Ok | Dialog.Cancel
-        property int row: -1
-        property int column: -1
+        property int role: -1
+        property alias value: _spinBoxDecimal.value
 
-        SpinBoxDecimal {
-            id: _spinBoxDecimal
-            width: 100
-            height: 60
+        ColumnLayout {
             anchors.fill: parent
+
+            SpinBoxDecimal {
+                id: _spinBoxDecimal
+                Layout.alignment: Qt.AlignTop
+                anchors.centerIn: parent
+            }
+            Label {
+                id: _errors
+                Layout.alignment: Qt.AlignBottom
+                color: "red"
+            }
         }
 
         onAccepted: {
-            if (milkTable.setValue(row, column, _spinBoxDecimal.value))
+            if (!check()) {
+                open()
+                return
+            }
+
+            if (currentMilkItem.saveValue(value, role))
                 console.log("Double value in milk reception has been changed")
+
+            role = -1
+            _spinBoxDecimal.value = 0.0
+            _errors = ""
         }
 
-        onOpened: _spinBoxDecimal.value = milkTable.getValue(row, column)
+        function check() {
+            if (role < 0) {
+                console.log(qsTr("Role is invalid"))
+                return false
+            }
+            if (value <= 0.0) {
+                _errors.text = qsTr("Значение должно быть > 0")
+                return false
+            }
+
+            return true;
+        }
     }
 
     Dialog {
@@ -202,31 +227,27 @@ Item {
         modal: true
         standardButtons: Dialog.Ok
 
-        property int row: -1
-
         Label{
             id: _content
         }
 
         onAccepted: {
-            if (row == -1) {
+            if (currentMilkItem.milkId === -1) {
                 close()
                 return
             }
 
-            if (milkTable.remove(row)) {
+            if (currentMilkItem.remove()) {
                 console.log(qsTr("Приём молока успешно удалён"))
             }
-            row = -1
         }
 
         onOpened: {
-            var _item = milkTable.get(row)
-            if (_item == null)
+            if (currentMilkItem.milkId === -1)
                 _content.text = qsTr("Выберите приём молока")
             else
-                _content.text = "Вы действительно желаете удалить '" + _item.deliverer.name + ": "
-                        + _item.deliveryDate.toLocaleDateString() + "'?\n"
+                _content.text = "Вы действительно желаете удалить '" +
+                        currentMilkItem.deliveryDate.toLocaleDateString() + "'?\n"
         }
 
     }
@@ -255,7 +276,7 @@ Item {
             }
 
             ListView {
-                id: viewTable
+                id: viewModel
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -268,7 +289,10 @@ Item {
                 }
 
                 onCurrentIndexChanged: {
-                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
+                    if (currentItem != null)
+                        currentMilkItem.loadData(currentItem._milkId)
+                    else
+                        currentMilkItem.reset()
                 }
 
                 remove: Transition {
@@ -281,67 +305,66 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
+                    property int _milkId: model.milkId
                     width: parent.width
 
                     onClicked:  {
-                        viewTable.forceActiveFocus()
-                        viewTable.currentIndex = index
+                        viewModel.forceActiveFocus()
+                        viewModel.currentIndex = index
                     }
 
                     RowLayout {
                         spacing: 4
 
                         Label {
-                            text: f_id
+                            text: model.milkId
                         }
+
                         ToolButton {
-                            text: f_deliv_first_name + ' ' + f_deliv_last_name
+                            text: model.delivererFullName
                             onClicked: {
-                                dialogChooseDeliverer.delivererRow = proxy.sourceRow(index)
                                 dialogChooseDeliverer.open()
                             }
                         }
                         ToolButton {
-                            text: f_milk_point_name
+                            text: model.milkPointName
                             onClicked: {
-                                dialogChooseMilkPoint.milkPointRow = proxy.sourceRow(index)
                                 dialogChooseMilkPoint.open()
                             }
                         }
                         ToolButton {
-                            text: f_delivery_date
+                            text: deliveryDate
                             onClicked: {
-                                dialogChooseDate.milkItemRow = proxy.sourceRow(index)
                                 dialogChooseDate.open()
                             }
                         }
                         ToolButton {
-                            text: f_price_liter
+                            text: priceLiter
 
                             onClicked: {
                                 dialogChangeDouble.title = qsTr("Изменение цены")
-                                dialogChangeDouble.row = proxy.sourceRow(index)
-                                dialogChangeDouble.column = DBC.TMR_PRICE_LITER
+                                dialogChangeDouble.value = currentMilkItem.priceLiter
+                                dialogChangeDouble.role = DBC.MR_PriceLiterRole
                                 dialogChangeDouble.open()
                             }
                         }
                         ToolButton {
-                            text: f_liters
+                            text: liters
 
                             onClicked: {
                                 dialogChangeDouble.title = qsTr("Изменение литража")
-                                dialogChangeDouble.row = proxy.sourceRow(index)
-                                dialogChangeDouble.column = DBC.TMR_LITERS
+                                dialogChangeDouble.value = currentMilkItem.liters
+                                dialogChangeDouble.role = DBC.MR_LitersRole
                                 dialogChangeDouble.open()
                             }
                         }
                         ToolButton {
-                            text: f_fat
+                            text: fat
 
                             onClicked: {
                                 dialogChangeDouble.title = qsTr("Изменение жирности")
-                                dialogChangeDouble.row = proxy.sourceRow(index)
-                                dialogChangeDouble.column = DBC.TMR_FAT
+                                dialogChangeDouble.value = currentMilkItem.fat
+                                dialogChangeDouble.role = DBC.MR_FatRole
                                 dialogChangeDouble.open()
                             }
                         }
@@ -355,7 +378,7 @@ Item {
                                 anchors.fill: parent
                             }
                             onClicked: {
-                                dialogRemoveMilkReception.row = proxy.sourceRow(index)
+                                viewModel.currentIndex = index
                                 dialogRemoveMilkReception.open()
                             }
                         }
@@ -368,6 +391,6 @@ Item {
 
     Connections {
         target: milkCore.db
-        onMilkReceptionChanged: viewTable.currentIndex = 0
+        onMilkReceptionChanged: viewModel.currentIndex = 0
     }
 }

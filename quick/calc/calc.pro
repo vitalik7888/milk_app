@@ -1,7 +1,7 @@
 TEMPLATE = lib
 TARGET = milkcalcplugin
 QT += qml quick
-CONFIG += plugin c++14 link_prl addmilkcalc
+CONFIG += plugin c++14 link_prl addmilkcalc addmilktypes
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = com.milk.calc

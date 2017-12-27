@@ -36,7 +36,7 @@ RESOURCES += \
 OTHER_FILES += milk.sh
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML2_IMPORT_PATH = com/milk
+QML2_IMPORT_PATH = com/milk/
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =

@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     libs \
-    plugins \
     quick \
-    tests \
+    plugins \
+#    tests \
     app
 
 OTHER_FILES += .qmake.conf \

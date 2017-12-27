@@ -1,114 +1,120 @@
 #include "MilkReceptionSortFilterProxyModel.h"
 
+#include <MilkModel.h>
+#include <MilkReception.h>
+#include <Deliverer.h>
+#include <MilkPoint.h>
+#include <TypesConstants.h>
+
 USE_DB_NAMESPACE
 
-using DBC = DbConstants;
+using DC = DbConstants;
+using TC = TypesConstants;
 
 
 MilkReceptionSortFilterProxyModel::MilkReceptionSortFilterProxyModel(QObject *parent) :
     MilkSortFilterProxyModel(parent)
 {
-
+    m_filterMilkData = std::make_unique<MilkReceptionData>();
 }
 
-void MilkReceptionSortFilterProxyModel::setMilkPointId(int milkPointId)
+MILK_ID MilkReceptionSortFilterProxyModel::delivererId() const
 {
-    if (m_milkPointId == milkPointId)
+    return filter()->delivererId();
+}
+
+MILK_ID MilkReceptionSortFilterProxyModel::milkPointId() const
+{
+    return filter()->milkPointId();
+}
+
+QDate MilkReceptionSortFilterProxyModel::minimumDate() const
+{
+    return m_minDate;
+}
+
+QDate MilkReceptionSortFilterProxyModel::maximumDate() const
+{
+    return m_maxDate;
+}
+
+bool MilkReceptionSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    Q_UNUSED(sourceParent)
+    const auto model = qobject_cast<const MilkModel *>(sourceModel());
+    const auto sourceItem = static_cast<const MilkReception *>(model->getItemByIndex(sourceRow));
+    const auto milkReception = static_cast<const MilkReceptionData *>(m_filterMilkData.get());
+
+    return isFilterAcceptRowById(milkReception->milkId(), sourceItem->milkId()) &&
+            isFilterAcceptRowById(milkReception->delivererId(),
+                                  sourceItem->deliverer() ? sourceItem->deliverer()->milkId() : TC::DEFAULT_ID) &&
+            isFilterAcceptRowById(milkReception->milkPointId(),
+                                  sourceItem->milkPoint() ? sourceItem->milkPoint()->milkId() : TC::DEFAULT_ID) &&
+            isFilterAcceptRowByDateInRange(sourceItem->deliveryDate(), m_minDate, m_maxDate);
+}
+
+bool MilkReceptionSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
+{
+    const auto leftData = sourceModel()->data(sourceLeft);
+    const auto rightData = sourceModel()->data(sourceRight);
+
+    if (leftData.type() == QVariant::String) {
+        return leftData.toString() < rightData.toString();
+    } else if (leftData.type() == QVariant::Int) {
+        return leftData.toInt() < rightData.toInt();
+    } else if (leftData.type() == QVariant::Date) {
+        return leftData.toDate() < rightData.toDate();
+    }
+
+    return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
+}
+
+MilkReceptionData *MilkReceptionSortFilterProxyModel::filter() const
+{
+    return static_cast<MilkReceptionData *>(m_filterMilkData.get());
+}
+
+void MilkReceptionSortFilterProxyModel::resetFilter()
+{
+    base::resetFilter();
+    emit delivererIdChanged(delivererId());
+    emit milkPointIdChanged(milkPointId());
+}
+
+void MilkReceptionSortFilterProxyModel::setMilkPointId(const MILK_ID milkPointId)
+{
+    if (this->milkPointId() == milkPointId)
         return;
 
-    m_milkPointId = milkPointId;
-    emit milkPointIdChanged(m_milkPointId);
+    filter()->setMilkPointId(milkPointId);
+    emit milkPointIdChanged(milkPointId);
     invalidateFilter();
 }
 
-void MilkReceptionSortFilterProxyModel::setMilkReceptionId(int milkReceptionId)
+void MilkReceptionSortFilterProxyModel::setDelivererId(const MILK_ID delivererId)
 {
-    if (m_milkReceptionId == milkReceptionId)
+    if (this->delivererId() == delivererId)
         return;
 
-    m_milkReceptionId = milkReceptionId;
-    emit milkReceptionIdChanged(m_milkReceptionId);
-    invalidateFilter();
-}
-
-void MilkReceptionSortFilterProxyModel::setDelivererId(int delivererId)
-{
-    if (m_delivererId == delivererId)
-        return;
-
-    m_delivererId = delivererId;
-    emit delivererIdChanged(m_delivererId);
+    filter()->setDelivererId(delivererId);
+    emit delivererIdChanged(delivererId);
     invalidateFilter();
 }
 
 void MilkReceptionSortFilterProxyModel::setMinimumDate(const QDate &date)
 {
+    if (m_minDate == date)
+        return;
+
     m_minDate = date;
     invalidateFilter();
 }
 
 void MilkReceptionSortFilterProxyModel::setMaximumDate(const QDate &date)
 {
+    if (m_maxDate == date)
+        return;
+
     m_maxDate = date;
     invalidateFilter();
-}
-
-void MilkReceptionSortFilterProxyModel::reset()
-{
-    setMilkReceptionId(-1);
-    setDelivererId(-1);
-    setMilkPointId(-1);
-    setMinimumDate(QDate());
-    setMaximumDate(QDate());
-}
-
-bool MilkReceptionSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
-{
-    const QModelIndex indexId = sourceModel()->index(sourceRow, DBC::TMR_ID, sourceParent),
-            indexDelivererId = sourceModel()->index(sourceRow,  DBC::TMR_ID_DELIVERER, sourceParent),
-            indexMilkPointId = sourceModel()->index(sourceRow,  DBC::TMR_MILK_POINT_ID, sourceParent),
-            indexDate = sourceModel()->index(sourceRow, DBC::TMR_DELIVERY_DATE, sourceParent);
-
-    return isFilterAcceptRowById(sourceModel()->data(indexId).toInt()) &&
-            isFilterAcceptRowByDelivererId(sourceModel()->data(indexDelivererId).toInt()) &&
-            isFilterAcceptRowByMilkPointId(sourceModel()->data(indexMilkPointId).toInt()) &&
-            dateInRange(sourceModel()->data(indexDate).toDate());
-}
-
-bool MilkReceptionSortFilterProxyModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
-{
-    QVariant leftData = sourceModel()->data(sourceLeft);
-    QVariant rightData = sourceModel()->data(sourceRight);
-
-    if (leftData.type() == QVariant::String){
-        return leftData.toString() < rightData.toString();
-    } else if (leftData.type() == QVariant::Int){
-        return leftData.toInt() < rightData.toInt();
-    } else if (leftData.type() == QVariant::Date){
-        return leftData.toDate() < rightData.toDate();
-    } else if (leftData.type() == QVariant::Double){
-        return leftData.toDouble() < rightData.toDouble();
-    }
-
-    return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
-}
-
-bool MilkReceptionSortFilterProxyModel::isFilterAcceptRowById(const int id) const
-{
-    return m_milkReceptionId <= 0 ? true : m_milkReceptionId == id;
-}
-
-bool MilkReceptionSortFilterProxyModel::isFilterAcceptRowByDelivererId(const int delivererId) const
-{
-    return m_delivererId <= 0 ? true : m_delivererId == delivererId;
-}
-
-bool MilkReceptionSortFilterProxyModel::isFilterAcceptRowByMilkPointId(const int milkPointId) const
-{
-    return m_milkPointId <= 0 ? true : m_milkPointId == milkPointId;
-}
-
-bool MilkReceptionSortFilterProxyModel::dateInRange(const QDate &date) const
-{
-    return (!m_minDate.isValid() || date > m_minDate) && (!m_maxDate.isValid() || date < m_maxDate);
 }

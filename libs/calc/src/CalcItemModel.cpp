@@ -12,7 +12,7 @@ CalcItemModel::CalcItemModel(QObject *parent):
 CalcItemModel::CalcItemModel(CalculatedItem *calcItem, QObject *parent):
     CalcItemModel(parent)
 {
-    calcItem->setParent(m_root);
+    calcItem->setCalcParent(m_root);
     m_root->addItem(calcItem);
 }
 
@@ -28,7 +28,7 @@ QModelIndex CalcItemModel::index(int row, int column, const QModelIndex &parent)
 
     CalculatedItem *parentItem = !parent.isValid() ?
                 m_root :
-                static_cast<CalculatedItem*>(parent.internalPointer());
+                static_cast<CalculatedItem *>(parent.internalPointer());
 
     CalculatedItem *childItem = parentItem->item(row);
     return childItem ? createIndex(row, column, childItem) : QModelIndex();
@@ -40,7 +40,7 @@ QModelIndex CalcItemModel::parent(const QModelIndex &child) const
         return QModelIndex();
 
     auto childItem = static_cast<CalculatedItem *>(child.internalPointer());
-    auto parentItem = childItem->parent();
+    auto parentItem = childItem->calcParent();
 
     if (parentItem == m_root)
         return QModelIndex();

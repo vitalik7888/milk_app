@@ -1,112 +1,58 @@
 #include "MilkPoint.h"
 
-#include "Locality.h"
+#include <Locality.h>
 #include "TypesConstants.h"
 
 using TC = TypesConstants;
-using TCMP = TC::MilkPoints;
 
 
-MilkPoint::MilkPoint(const int id, const QString &name, const QString &description,
-                     Locality *locality, QObject *parent):
-    QObject(parent),
-    m_data{id, locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id(), name, description},
+MilkPoint::MilkPoint()
+{
+    m_data = new MilkPointData();
+    m_locality = Q_NULLPTR;
+}
+
+MilkPoint::MilkPoint(const MILK_ID id, const QString &name, const QString &description,
+                     const Locality *locality):
     m_locality(locality)
 {
+    m_data = new MilkPointData(id, m_locality ? m_locality->milkId() : TC::DEFAULT_ID, name, description);
 }
 
-MilkPoint::MilkPoint(const MilkPoint &milkPoint):
-    QObject(milkPoint.parent()),
-    m_data(milkPoint.data()),
-    m_locality(milkPoint.locality())
+MilkPoint::MilkPoint(const MilkPoint &other):
+    m_data(other.m_data),
+    m_locality(other.m_locality)
 {
 
 }
 
-MilkPoint::MilkPoint(QObject *parent):
-    MilkPoint(TCMP::DEF_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION, Q_NULLPTR, parent) {
-
+void MilkPoint::setMilkId(const MILK_ID milkId)
+{
+    m_data->setMilkId(milkId);
 }
 
-int MilkPoint::id() const
+void MilkPoint::setLocality(const Locality *locality)
 {
-    return m_data.id();
-}
-
-Locality *MilkPoint::locality() const
-{
-    return m_locality;
-}
-
-QString MilkPoint::name() const
-{
-    return m_data.name();
-}
-
-QString MilkPoint::description() const
-{
-    return m_data.description();
-}
-
-MilkPointData MilkPoint::data() const
-{
-    return m_data;
-}
-
-void MilkPoint::setId(const int id)
-{
-    if (id == m_data.id())
-        return;
-
-    m_data.setId(id);
-    emit idChanged(id);
+    m_locality = locality;
+    m_data->setLocalityId(m_locality ? m_locality->milkId() : TC::DEFAULT_ID);
 }
 
 void MilkPoint::setName(const QString &name)
 {
-    if (m_data.name() == name)
-        return;
-
-    m_data.setName(name);
-    emit nameChanged(name);
+    m_data->setName(name);
 }
 
 void MilkPoint::setDescription(const QString &description)
 {
-    if (m_data.description() == description)
-        return;
-
-    m_data.setDescription(description);
-    emit descriptionChanged(description);
-}
-
-void MilkPoint::reset()
-{
-    m_data = {};
-    m_locality = Q_NULLPTR;
+    m_data->setDescription(description);
 }
 
 bool MilkPoint::isValid() const
 {
-    return m_data.isValid() && locality() ? locality()->isValid() : false;
+    return m_data->isValid();
 }
 
-void MilkPoint::setLocality(Locality *locality)
+void MilkPoint::reset()
 {
-    if (m_locality == locality)
-        return;
-
-    m_locality = locality;
-    m_data.setLocalityId(locality == Q_NULLPTR ? TCMP::DEF_LOCALITY_ID : locality->id());
-    emit localityChanged(m_locality);
-}
-
-int MilkPoint::localityId() const
-{
-    return m_data.localityId();
-}
-
-void MilkPoint::setLocalityId(const int localityId)
-{
-    return m_data.setLocalityId(localityId);
+    m_data->reset();
 }

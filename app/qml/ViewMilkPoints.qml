@@ -3,23 +3,18 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
 
 Item {
-    readonly property alias milkTable: proxy.sourceModel
-    property alias filter: proxy.milkPoint
-    readonly property alias viewTable: viewTable
-    readonly property alias viewMenu: viewMenu
-    readonly property alias viewFilter: textFieldFilterName
-    property MilkPoint currentMilkItem
-
-    function currentSourceRow() {
-        return proxy.sourceRow(viewTable.currentIndex)
-    }
-
     height: 200
     width: 160
+
+    readonly property alias milkTable: proxy.sourceModel
+    readonly property alias proxy: proxy
+    readonly property alias viewModel: viewModel
+    readonly property alias viewMenu: viewMenu
+    readonly property alias viewFilter: textFieldFilterName
+    property int currentMilkId: viewModel.currentItem._milkId
 
     GroupBox {
         anchors.fill: parent
@@ -49,7 +44,6 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditMilkPoint.row = currentSourceRow()
                             dialogs.dialogAddEditMilkPoint.openInsert()
                         }
                     }
@@ -61,8 +55,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditMilkPoint.row = currentSourceRow()
-                            dialogs.dialogAddEditMilkPoint.openUpdate()
+                            dialogs.dialogAddEditMilkPoint.openUpdate(currentMilkId)
                         }
                     }
                     ToolButton {
@@ -73,7 +66,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogRemoveMilkPoint.row = currentSourceRow()
+                            dialogs.dialogRemoveMilkPoint.milkId = currentMilkId
                             dialogs.dialogRemoveMilkPoint.open()
                         }
                     }
@@ -81,7 +74,7 @@ Item {
             }
 
             ListView {
-                id: viewTable
+                id: viewModel
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignCenter
@@ -89,12 +82,7 @@ Item {
                 model: MilkPointsSortFilterProxyModel {
                     id: proxy
                     sourceModel: milkCore.db.milkPoints
-                    enableMilkPointDynamicFilter: true
-                    milkPoint.name: textFieldFilterName.text
-                }
-
-                onCurrentIndexChanged: {
-                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
+                    name: textFieldFilterName.text
                 }
 
                 remove: Transition {
@@ -107,7 +95,8 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    text: f_name
+                    text: model.name
+                    readonly property int _milkId: model.milkId
                     width: parent.width
 
                     contentItem: Text {
@@ -122,8 +111,8 @@ Item {
                     }
 
                     onClicked:  {
-                        viewTable.forceActiveFocus()
-                        viewTable.currentIndex = index
+                        viewModel.forceActiveFocus()
+                        viewModel.currentIndex = index
                     }
                 }
             }
@@ -132,6 +121,6 @@ Item {
 
     Connections {
         target: milkCore.db
-        onMilkPointsChanged: viewTable.currentIndex = 0
+        onMilkPointsChanged: viewModel.currentIndex = 0
     }
 }

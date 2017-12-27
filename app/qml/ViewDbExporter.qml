@@ -3,7 +3,6 @@ import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.0
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
 import com.milk.plugins 1.0
 
@@ -111,8 +110,8 @@ Popup {
     }
 
     Component.onCompleted:  {
-        for (var i = 0; i < milkCore.db.tables.length; ++i) {
-            viewTables.model.append({tableName: milkCore.db.tables[i].tableName, isChoosen: true})
-        }
+//        for (var i = 0; i < milkCore.db.tables.length; ++i) {
+//            viewTables.model.append({tableName: milkCore.db.tables[i].tableName, isChoosen: true})
+//        }
     }
 }

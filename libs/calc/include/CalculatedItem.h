@@ -7,18 +7,20 @@
 #include <QList>
 #include <QQmlListProperty>
 
+class MilkReception;
+
 
 class CALCLIBRARYSHARED_EXPORT CalculatedItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(CalculatedItem* parent READ parent WRITE setParent NOTIFY parentChanged)
-    Q_PROPERTY(QString delivererName READ delivererName WRITE setDelivererName NOTIFY delivererNameChanged)
-    Q_PROPERTY(QDate deliveryDate READ deliveryDate WRITE setDeliveryDate NOTIFY deliveryDateChanged)
-    Q_PROPERTY(QString milkPointName READ milkPointName WRITE setMilkPointName NOTIFY milkPointNameChanged)
+    Q_PROPERTY(CalculatedItem* calcParent READ calcParent WRITE setCalcParent NOTIFY parentChanged)
     Q_PROPERTY(QQmlListProperty<CalculatedItem> items READ items)
+    Q_PROPERTY(QString delivererFullName READ delivererFullName CONSTANT)
+    Q_PROPERTY(QString milkPointName READ milkPointName CONSTANT)
+    Q_PROPERTY(QDate deliveryDate READ deliveryDate CONSTANT)
     Q_PROPERTY(double liters READ liters NOTIFY litersChanged)
     Q_PROPERTY(double fat READ fat NOTIFY fatChanged)
-    Q_PROPERTY(double price READ price NOTIFY priceChanged)
+    Q_PROPERTY(double priceForLiter READ priceForLiter NOTIFY priceForLiterChanged)
     Q_PROPERTY(double protein READ protein NOTIFY proteinChanged)
     Q_PROPERTY(double fatUnits READ fatUnits NOTIFY fatUnitsChanged)
     Q_PROPERTY(double rankWeight READ rankWeight NOTIFY rankWeightChanged)
@@ -45,15 +47,13 @@ public:
 
     using Items = QList<CalculatedItem *>;
 
-    CalculatedItem(const double liters, const double fat, const double priceForLiter,
-                   CalculatedItem *parent = Q_NULLPTR, QObject *objectParent = Q_NULLPTR);
-    CalculatedItem(QObject *parent = Q_NULLPTR);
+    CalculatedItem(const QString &delivererName, const QString &milkPointName, const QDate &deliveryDate,
+                   const double liters, const double fat, const double price,
+                   CalculatedItem *calcParent = Q_NULLPTR, QObject *objectParent = Q_NULLPTR);
+    CalculatedItem(QObject *objectParent = Q_NULLPTR);
     ~CalculatedItem();
 
-    CalculatedItem *parent() const { return m_parent; }
-    QString delivererName() const { return m_delivererName; }
-    QDate deliveryDate() const { return m_deliveryDate; }
-    QString milkPointName() const { return m_milkPointName; }
+    CalculatedItem *calcParent() const { return m_parent; }
 
     QQmlListProperty<CalculatedItem> items();
     Items getItems() const { return m_items; }
@@ -72,29 +72,27 @@ public:
     CalculatedItemData itemData() const { return m_itemData; }
     double liters() const { return m_itemData.liters(); }
     double fat() const { return m_itemData.fat(); }
-    double price() const { return m_itemData.priceForLiter(); }
     double protein() const { return m_itemData.protein(); }
+    double priceForLiter() const { return m_itemData.priceForLiter(); }
     double fatUnits() const { return m_itemData.fatUnits(); }
     double rankWeight() const { return m_itemData.rankWeight(); }
     double paymentWithOutPremium() const { return m_itemData.paymentWithOutPremium(); }
     double premiumForFat() const { return m_itemData.premiumForFat(); }
     double sum() const { return m_itemData.sum(); }
 
+    QString delivererFullName() const { return m_delivererFullName; }
+    QString milkPointName() const { return m_milkPointName; }
+    QDate deliveryDate() const { return m_deliveryDate; }
+
 public slots:
-    void setParent(CalculatedItem *parent);
-    void setDelivererName(const QString &name);
-    void setDeliveryDate(const QDate &deliveryDate);
-    void setMilkPointName(const QString &milkPointName);
+    void setCalcParent(CalculatedItem *calcParent);
 
 signals:
-    void parentChanged(CalculatedItem *parent);
-    void delivererNameChanged(QString delivererName);
-    void deliveryDateChanged(QDate deliveryDate);
-    void milkPointNameChanged(QString milkPointName);
-    void litersChanged(double liters);
-    void fatChanged(double fat);
-    void priceChanged(double price);
+    void parentChanged(CalculatedItem *calcParent);
     void proteinChanged(double protein);
+    void litersChanged(double liters);
+    void priceForLiterChanged(double priceForLiter);
+    void fatChanged(double fat);
     void fatUnitsChanged(double fatUnits);
     void rankWeightChanged(double rankWeight);
     void paymentWithOutPremiumChanged(double paymentWithOutPremium);
@@ -103,9 +101,9 @@ signals:
 
 private:
     CalculatedItem *m_parent;
-    QString m_delivererName;
-    QDate m_deliveryDate;
+    QString m_delivererFullName;
     QString m_milkPointName;
+    QDate m_deliveryDate;
     CalculatedItemData m_itemData;
     Items m_items;
 

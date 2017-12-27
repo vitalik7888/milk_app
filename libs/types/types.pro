@@ -9,7 +9,6 @@ QT += qml
 
 TARGET = typeslibrary
 TEMPLATE = lib
-CONFIG += create_prl
 
 DEFINES += TYPESLIBRARY_LIBRARY
 DESTDIR = $$MILK_LIBS_DEST_PATH
@@ -28,15 +27,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(include/headers.pri)
 
 SOURCES += \
-    src/Deliverer.cpp \
-    src/DelivererData.cpp \
-    src/Locality.cpp \
+    src/TypesConstants.cpp \
     src/LocalityData.cpp \
-    src/MilkPoint.cpp \
+    src/DelivererData.cpp \
     src/MilkPointData.cpp \
-    src/MilkReception.cpp \
     src/MilkReceptionData.cpp \
-    src/TypesConstants.cpp
+    src/Locality.cpp \
+    src/Deliverer.cpp \
+    src/MilkPoint.cpp \
+    src/MilkReception.cpp
 
 unix {
     target.path = /usr/lib

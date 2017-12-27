@@ -9,7 +9,7 @@ QT += qml
 
 TARGET = calclibrary
 TEMPLATE = lib
-CONFIG += create_prl
+CONFIG += create_prl addmilkdb addmilktypes
 
 DEFINES += CALCLIBRARY_LIBRARY
 DESTDIR = $$MILK_LIBS_DEST_PATH

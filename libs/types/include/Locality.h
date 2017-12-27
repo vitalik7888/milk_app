@@ -1,43 +1,30 @@
-#ifndef LOCALITY_H
-#define LOCALITY_H
+#ifndef _LOCALITY_H_
+#define _LOCALITY_H_
 
 #include "LocalityData.h"
-// Qt
-#include <QObject>
 
 
-class TYPESLIBRARYSHARED_EXPORT Locality : public QObject, public ILocality
+class TYPESLIBRARYSHARED_EXPORT Locality : public MilkBaseItem
 {
-    Q_OBJECT
-    Q_PROPERTY(int localityId READ id WRITE setId NOTIFY idChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-
 public:
-    Locality(const LocalityData &data, QObject *parent = Q_NULLPTR);
-    Locality(const Locality &locality);
-    Locality(QObject *parent = Q_NULLPTR);
+    Locality();
+    Locality(const MILK_ID id, const QString &name, const QString &description);
+    Locality(const Locality &other);
 
-    int id() const Q_DECL_OVERRIDE;
-    QString name() const Q_DECL_OVERRIDE;
-    QString description() const Q_DECL_OVERRIDE;
-    virtual bool isValid() const Q_DECL_OVERRIDE;
+    MILK_ID milkId() const Q_DECL_OVERRIDE { return m_data->milkId(); }
+    void setMilkId(const MILK_ID id) Q_DECL_OVERRIDE;
 
-    LocalityData data() const;
-
-public slots:
-    void setId(const int id);
+    QString name() const { return m_data->name(); }
     void setName(const QString &name);
-    void setDescription(const QString &description);
-    void reset();
 
-signals:
-    void idChanged(int localityId);
-    void nameChanged(QString name);
-    void descriptionChanged(QString description);
+    QString description() const { return m_data->description(); }
+    void setDescription(const QString &description);
+
+    bool isValid() const Q_DECL_OVERRIDE { return m_data->isValid(); }
+    void reset() Q_DECL_OVERRIDE { m_data->reset(); }
 
 private:
-    LocalityData m_data;
+    QSharedDataPointer<LocalityData> m_data;
 };
 
 Q_DECLARE_METATYPE(Locality)

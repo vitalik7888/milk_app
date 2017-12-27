@@ -1,6 +1,6 @@
 #include "DbUtils.h"
 
-#include "Table.h"
+#include "MilkModel.h"
 // Qt
 #include <QSet>
 #include <QStringList>
@@ -55,18 +55,18 @@ QString DbUtils::getPrepInsertStr(const QString &tableName, const QStringList &c
     return queryStr + values;
 }
 
-QString DbUtils::getStrIdsIn(Table *table, const QSet<int> &ids)
-{
-    if (ids.isEmpty())
-        return "";
+//QString DbUtils::getStrIdsIn(MilkModel *table, const QSet<int> &ids)
+//{
+//    if (ids.isEmpty())
+//        return "";
 
-    QString deliverersIn;
-    if (!ids.isEmpty()) {
-        deliverersIn = table->primaryField() + " IN (";
-        for (const auto _id : ids)
-            deliverersIn.append(QString("%1, ").arg(_id));
-        deliverersIn.replace(deliverersIn.size() - 2, 2, ")");
-    }
+//    QString deliverersIn;
+//    if (!ids.isEmpty()) {
+//        deliverersIn = table->primaryFieldName() + " IN (";
+//        for (const auto _id : ids)
+//            deliverersIn.append(QString("%1, ").arg(_id));
+//        deliverersIn.replace(deliverersIn.size() - 2, 2, ")");
+//    }
 
-    return deliverersIn;
-}
+//    return deliverersIn;
+//}

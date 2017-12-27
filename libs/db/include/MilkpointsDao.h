@@ -1,19 +1,28 @@
-#ifndef MILKPOINTDAO_H
-#define MILKPOINTDAO_H
+#ifndef MILK_POINT_DAO_H
+#define MILK_POINT_DAO_H
 
-#include "Dao.h"
+#include "DaoSql.h"
 
 DB_BEGIN_NAMESPACE
 
-class MilkPointsTable;
+class MilkPointsModel;
 
 
-class DBLIBRARYSHARED_EXPORT MilkPointDao: public Dao {
+class DBLIBRARYSHARED_EXPORT MilkPointDao: public DaoSql {
 public:
-    MilkPointDao(MilkPointsTable *table);
+    MilkPointDao(QObject *parent = Q_NULLPTR);
 
-    virtual bool insert(const QVariant &data) const Q_DECL_OVERRIDE;
-    virtual bool update(const QVariant &data) const Q_DECL_OVERRIDE;
+    QString getCreateTableStr() const Q_DECL_OVERRIDE;
+
+private:
+    QString _tableName() const Q_DECL_OVERRIDE;
+    QString _primaryFieldName() const Q_DECL_OVERRIDE;
+    QStringList _fieldsNames() const Q_DECL_OVERRIDE;
+
+
+    virtual DaoItem fromRecord(const QSqlRecord &record) Q_DECL_OVERRIDE;
+    virtual bool _insert(MilkBaseItem *item) Q_DECL_OVERRIDE;
+    virtual bool _update(const MilkBaseItem *item) Q_DECL_OVERRIDE;
 };
 
 DB_END_NAMESPACE

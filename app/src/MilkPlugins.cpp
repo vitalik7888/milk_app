@@ -34,7 +34,7 @@ void MilkPlugins::load()
             auto dbExporter = qobject_cast<IDbExporter *>(plugin);
             if (dbExporter) {
                 m_dbExporter->setDbExporter(dbExporter);
-                qInfo() << "Loaded sqlite3 db utils plugin";
+                qInfo() << "Loaded db utils plugin";
             }
         }
     }

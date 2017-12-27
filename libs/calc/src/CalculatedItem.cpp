@@ -1,24 +1,31 @@
 #include "CalculatedItem.h"
 
+#include <MilkReception.h>
+#include <Deliverer.h>
+#include <MilkPoint.h>
 
-CalculatedItem::CalculatedItem(const double liters, const double fat, const double priceForLiter,
+
+CalculatedItem::CalculatedItem(const QString &delivererName, const QString &milkPointName, const QDate &deliveryDate,
+                               const double liters, const double fat, const double price,
                                CalculatedItem *parent, QObject *objectParent):
     QObject(objectParent),
     m_parent(parent),
-    m_itemData(liters, fat, priceForLiter)
+    m_delivererFullName(delivererName),
+    m_milkPointName(milkPointName),
+    m_deliveryDate(deliveryDate),
+    m_itemData(liters, fat, price)
 {
 }
 
-CalculatedItem::CalculatedItem(QObject *parent):
-    QObject(parent),
-    m_parent(Q_NULLPTR)
+CalculatedItem::CalculatedItem(QObject *objectParent):
+    CalculatedItem({}, {}, {}, .0, .0, .0, Q_NULLPTR, objectParent)
 {
 
 }
 
 CalculatedItem::~CalculatedItem()
 {
-    qDeleteAll<Items>(m_items);
+    qDeleteAll(m_items.begin(), m_items.end());
     m_items.clear();
 }
 
@@ -28,40 +35,13 @@ void CalculatedItem::setItems(const Items &calcItems)
     addData(m_items);
 }
 
-void CalculatedItem::setParent(CalculatedItem *parent)
+void CalculatedItem::setCalcParent(CalculatedItem *parent)
 {
     if (m_parent == parent)
         return;
 
     m_parent = parent;
     emit parentChanged(m_parent);
-}
-
-void CalculatedItem::setDelivererName(const QString &delivererName)
-{
-    if (m_delivererName == delivererName)
-        return;
-
-    m_delivererName = delivererName;
-    emit delivererNameChanged(m_delivererName);
-}
-
-void CalculatedItem::setDeliveryDate(const QDate &deliveryDate)
-{
-    if (m_deliveryDate == deliveryDate)
-        return;
-
-    m_deliveryDate = deliveryDate;
-    emit deliveryDateChanged(m_deliveryDate);
-}
-
-void CalculatedItem::setMilkPointName(const QString &milkPointName)
-{
-    if (m_milkPointName == milkPointName)
-        return;
-
-    m_milkPointName = milkPointName;
-    emit milkPointNameChanged(m_milkPointName);
 }
 
 CalculatedItem *CalculatedItem::item(const int position) const
@@ -83,9 +63,9 @@ void CalculatedItem::clearItems()
 QVariant CalculatedItem::data(const Columns column) const
 {
     switch (column) {
-    case Columns::Name: return QVariant::fromValue(m_delivererName);
-    case Columns::Date: return QVariant::fromValue(m_deliveryDate);
-    case Columns::MilkPointName: return QVariant::fromValue(m_milkPointName);
+    case Columns::Name: return QVariant::fromValue(delivererFullName());
+    case Columns::Date: return QVariant::fromValue(deliveryDate());
+    case Columns::MilkPointName: return QVariant::fromValue(milkPointName());
     case Columns::Price: return QVariant::fromValue(m_itemData.priceForLiter());
     case Columns::Liters: return QVariant::fromValue(m_itemData.liters());
     case Columns::Fat: return QVariant::fromValue(m_itemData.fat());
@@ -149,7 +129,7 @@ void CalculatedItem::checkItemsData(const CalculatedItemData &beforeData, const 
     if (beforeData.fat() < afterData.fat())
         emit fatChanged(afterData.fat());
     if (beforeData.priceForLiter() < afterData.priceForLiter())
-        emit priceChanged(afterData.priceForLiter());
+        emit priceForLiterChanged(afterData.priceForLiter());
     if (beforeData.protein() < afterData.protein())
         emit proteinChanged(afterData.protein());
     if (beforeData.fatUnits() < afterData.fatUnits())

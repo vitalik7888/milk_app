@@ -3,24 +3,18 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
 
 Item {
-    readonly property alias milkTable: proxy.sourceModel
-    readonly property alias proxy: proxy
-    property alias filter: proxy.deliverer
-    readonly property alias viewTable: viewTable
-    readonly property alias viewMenu: viewMenu
-    readonly property alias viewFilter: textFieldFilterLastName
-    property Deliverer currentMilkItem
-
-    function currentSourceRow() {
-        return proxy.sourceRow(viewTable.currentIndex)
-    }
-
     height: 200
     width: 160
+
+    readonly property alias milkTable: proxy.sourceModel
+    readonly property alias proxy: proxy
+    readonly property alias viewModel: viewModel
+    readonly property alias viewMenu: viewMenu
+    readonly property alias viewFilter: textFieldFilterLastName
+    property int currentMilkId: viewModel.currentItem._milkId // make readonly from outer
 
     GroupBox {
         anchors.fill: parent
@@ -39,6 +33,7 @@ Item {
 
             ToolBar {
                 id: viewMenu
+                height: 40
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
@@ -51,7 +46,6 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditDeliverer.row = currentSourceRow()
                             dialogs.dialogAddEditDeliverer.openInsert()
                         }
                     }
@@ -63,8 +57,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditDeliverer.row = currentSourceRow()
-                            dialogs.dialogAddEditDeliverer.openUpdate()
+                            dialogs.dialogAddEditDeliverer.openUpdate(currentMilkId)
                         }
                     }
                     ToolButton {
@@ -75,7 +68,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogRemoveDeliverer.row = currentSourceRow()
+                            dialogs.dialogRemoveDeliverer.milkId = currentMilkId
                             dialogs.dialogRemoveDeliverer.open()
                         }
                     }
@@ -83,7 +76,7 @@ Item {
             }
 
             ListView {
-                id: viewTable
+                id: viewModel
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -92,13 +85,8 @@ Item {
 
                 model: DeliverersSortFilterProxyModel {
                     id: proxy
-                    enableDelivererDynamicFilter: true
                     sourceModel: milkCore.db.deliverers
-                    deliverer.lastName: textFieldFilterLastName.text
-                }
-
-                onCurrentIndexChanged: {
-                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
+                    lastName: textFieldFilterLastName.text
                 }
 
                 remove: Transition {
@@ -111,7 +99,8 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    text: f_first_name + " " + f_last_name
+                    text: model.fullName
+                    readonly property int _milkId: model.milkId
                     width: parent.width
 
                     contentItem: Text {
@@ -126,8 +115,8 @@ Item {
                     }
 
                     onClicked:  {
-                        viewTable.forceActiveFocus()
-                        viewTable.currentIndex = index
+                        viewModel.forceActiveFocus()
+                        viewModel.currentIndex = index
                     }
                 }
 
@@ -137,6 +126,6 @@ Item {
 
     Connections {
         target: milkCore.db
-        onDeliverersChanged: viewTable.currentIndex = 0
+        onDeliverersChanged: viewModel.currentIndex = 0
     }
 }

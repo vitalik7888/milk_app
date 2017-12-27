@@ -1,33 +1,54 @@
 #include "MilkSortFilterProxyModel.h"
 
-#include "Table.h"
+#include "MilkModel.h"
 // Qt
+#include <QDate>
 #include <QDebug>
 
 USE_DB_NAMESPACE
-using DC = DbConstants;
+    using DC = DbConstants;
 
 
 MilkSortFilterProxyModel::MilkSortFilterProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent)
+    QSortFilterProxyModel(parent),
+    m_filterMilkData(Q_NULLPTR)
 {
 
 }
 
-int MilkSortFilterProxyModel::sourceRow(const int row) const
+MILK_ID MilkSortFilterProxyModel::milkId() const
 {
-    Table *table = qobject_cast<Table *>(sourceModel());
-    return mapToSource(index(row, table->getColPosition(table->primaryField()))).row();
+    return m_filterMilkData->milkId();
 }
 
-int MilkSortFilterProxyModel::findRowById(const int id) const
+void MilkSortFilterProxyModel::setMilkId(const MILK_ID id)
 {
-    Table *table = qobject_cast<Table *>(sourceModel());
+    if (milkId() == id)
+        return;
 
-    for (int row = 0; row < rowCount(); ++row) {
-        if (data(index(row, table->getColPosition(table->primaryField()))) == id)
-            return row;
-    }
+    m_filterMilkData->setMilkId(id);
+    emit milkIdChanged(id);
+    invalidateFilter();
+}
 
-    return -1;
+void MilkSortFilterProxyModel::resetFilter()
+{
+    m_filterMilkData->reset();
+    emit milkIdChanged(milkId());
+}
+
+bool MilkSortFilterProxyModel::isFilterAcceptRowById(const MILK_ID left, const MILK_ID right) const
+{
+    return left <= 0 ? true : left == right;
+}
+
+bool MilkSortFilterProxyModel::isFilterAcceptRowByString(const QString &left, const QString &right) const
+{
+    return left.isEmpty() ? true : right.contains(left);
+}
+
+bool MilkSortFilterProxyModel::isFilterAcceptRowByDateInRange(const QDate &date, const QDate &minDate,
+                                                              const QDate &maxDate) const
+{
+    return (!minDate.isValid() || date > minDate) && (!maxDate.isValid() || date < maxDate);
 }

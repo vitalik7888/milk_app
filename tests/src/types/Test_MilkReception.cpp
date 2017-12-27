@@ -3,10 +3,10 @@
 #include "types/Test_Deliverer.h"
 #include "types/Test_MilkPoint.h"
 #include <TypesConstants.h>
-#include <MilkReception.h>
-#include <Locality.h>
-#include <MilkPoint.h>
-#include <Deliverer.h>
+#include <MilkReceptionData.h>
+#include <LocalityData.h>
+#include <MilkPointData.h>
+#include <DelivererData.h>
 // Qt
 #include <QSignalSpy>
 #include <QTest>

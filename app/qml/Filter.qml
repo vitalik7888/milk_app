@@ -2,6 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 import com.milk.core 1.0
+import com.milk.db 1.0
 
 Popup {
     id: popup
@@ -10,11 +11,11 @@ Popup {
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
 
     function getDelivererId() {
-        return checkBoxFilterDeliverer.checked ? viewDeliverers.currentMilkItem.delivererId : -1
+        return checkBoxFilterDeliverer.checked ? viewDeliverers.currentMilkId : -1
     }
 
     function getMilkPointId() {
-        return checkBoxFilterMilkPoint.checked ? viewMilkPoints.currentMilkItem.milkPointId : -1
+        return checkBoxFilterMilkPoint.checked ? viewMilkPoints.currentMilkId : -1
     }
 
     function getDateFrom() {
@@ -75,7 +76,7 @@ Popup {
                 anchors.fill: parent
                 enabled: checkBoxFilterMilkPoint.checked
 
-                filter.locality.localityId: viewLocalities.currentMilkItem.localityId
+                proxy.localityId: viewLocalities.currentMilkId
             }
         }
 
@@ -95,7 +96,7 @@ Popup {
                 anchors.fill: parent
                 enabled: checkBoxFilterDeliverer.checked
 
-                filter.locality.localityId: viewLocalities.currentMilkItem.localityId
+                proxy.localityId: viewLocalities.currentMilkId
             }
         }
 

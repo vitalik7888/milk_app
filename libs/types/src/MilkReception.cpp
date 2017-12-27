@@ -5,176 +5,77 @@
 #include "TypesConstants.h"
 
 using TC = TypesConstants;
-using TCMR = TC::MilkReception;
 
 
-MilkReception::MilkReception(QObject *parent):
-    MilkReception(TCMR::DEF_ID, TCMR::DEF_DELIVERY_DATE,
-                  TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT, Q_NULLPTR, Q_NULLPTR, parent)
+MilkReception::MilkReception():
+    m_deliverer(Q_NULLPTR),
+    m_milkPoint(Q_NULLPTR)
 {
-
+    m_data = new MilkReceptionData();
 }
 
-MilkReception::MilkReception(const int id, const QDate deliveryDate, const double priceLiter,
+MilkReception::MilkReception(const MILK_ID id, const QDate &deliveryDate, const double priceLiter,
                              const double liters, const double fat,
-                             Deliverer *deliverer, MilkPoint *milkPoint, QObject *parent):
-    QObject(parent),
-    m_data(id, deliverer == Q_NULLPTR ? TCMR::DEF_ID_DELIVERER : deliverer->id(),
-               milkPoint == Q_NULLPTR ? TCMR::DEF_MILK_POINT_ID : milkPoint->id(),
-           deliveryDate, priceLiter, liters, fat),
+                             const Deliverer *deliverer, const MilkPoint *milkPoint):
     m_deliverer(deliverer),
     m_milkPoint(milkPoint)
 {
-
+    m_data = new MilkReceptionData(id, m_deliverer ? deliverer->milkId() : TC::DEFAULT_ID,
+                                   m_milkPoint ? m_milkPoint->milkId() : TC::DEFAULT_ID,
+                                   deliveryDate, priceLiter, liters, fat);
 }
 
-MilkReception::MilkReception(const MilkReception &mr):
-    QObject(mr.parent()),
-    m_data(mr.data()),
-    m_deliverer(mr.deliverer()),
-    m_milkPoint(mr.milkPoint())
+MilkReception::MilkReception(const MilkReception &other):
+    m_data(other.m_data),
+    m_deliverer(other.deliverer()),
+    m_milkPoint(other.milkPoint())
 {
 
 }
 
-int MilkReception::id() const
+void MilkReception::setMilkId(const MILK_ID milkId)
 {
-    return m_data.id();
+    m_data->setMilkId(milkId);
 }
 
-QDate MilkReception::deliveryDate() const
+void MilkReception::setDeliverer(const Deliverer *deliverer)
 {
-    return m_data.deliveryDate();
-}
-
-double MilkReception::priceLiter() const
-{
-    return m_data.priceLiter();
-}
-
-double MilkReception::liters() const
-{
-    return m_data.liters();
-}
-
-double MilkReception::fat() const
-{
-    return m_data.fat();
-}
-
-Deliverer *MilkReception::deliverer() const
-{
-    return m_deliverer;
-}
-
-MilkPoint *MilkReception::milkPoint() const
-{
-    return m_milkPoint;
-}
-
-MilkReceptionData MilkReception::data() const
-{
-    return m_data;
-}
-
-bool MilkReception::isValid() const
-{
-    return m_data.isValid() && (deliverer() ? deliverer()->isValid() : false)
-            && (milkPoint() ? milkPoint()->isValid() : false);
-}
-
-void MilkReception::setId(const int id)
-{
-    if (id == m_data.id())
-        return;
-
-    m_data.setId(id);
-    emit idChanged(id);
-}
-
-void MilkReception::setDeliverer(Deliverer *deliverer)
-{
-    if (m_deliverer == deliverer)
-        return;
-
     m_deliverer = deliverer;
-    m_data.setDelivererId(deliverer == Q_NULLPTR ? TCMR::DEF_ID_DELIVERER: deliverer->id());
-    emit delivererChanged(deliverer);
+    m_data->setDelivererId(m_deliverer ? m_deliverer->milkId() : TC::DEFAULT_ID);
 }
 
-void MilkReception::setMilkPoint(MilkPoint *milkPoint)
+void MilkReception::setMilkPoint(const MilkPoint *milkPoint)
 {
-    if (m_milkPoint == milkPoint)
-        return;
-
     m_milkPoint = milkPoint;
-    m_data.setMilkPointId(milkPoint == Q_NULLPTR ? TCMR::DEF_MILK_POINT_ID : milkPoint->id());
-    emit milkPointChanged(milkPoint);
-}
-
-void MilkReception::reset()
-{
-    m_data = {};
-    m_milkPoint = Q_NULLPTR;
-    m_deliverer = Q_NULLPTR;
+    m_data->setMilkPointId(m_milkPoint ? m_milkPoint->milkId() : TC::DEFAULT_ID);
 }
 
 void MilkReception::setDeliveryDate(const QDate &deliveryDate)
 {
-    if (m_data.deliveryDate() == deliveryDate)
-        return;
-
-    m_data.setDeliveryDate(deliveryDate);
-    emit deliveryDateChanged(m_data.deliveryDate());
+    m_data->setDeliveryDate(deliveryDate);
 }
 
 void MilkReception::setPriceLiter(double priceLiter)
 {
-//    qWarning("Floating point comparison needs context sanity check");
-    if (qFuzzyCompare(m_data.priceLiter(), priceLiter))
-        return;
-
-    m_data.setPriceLiter(priceLiter);
-    emit priceLiterChanged(priceLiter);
+    m_data->setPriceLiter(priceLiter);
 }
 
 void MilkReception::setLiters(double liters)
 {
-//    qWarning("Floating point comparison needs context sanity check");
-    if (qFuzzyCompare(m_data.liters(), liters))
-        return;
-
-    m_data.setLiters(liters);
-    emit litersChanged(liters);
+    m_data->setLiters(liters);
 }
 
 void MilkReception::setFat(double fat)
 {
-//    qWarning("Floating point comparison needs context sanity check");
-    if (qFuzzyCompare(m_data.fat(), fat))
-        return;
-
-    m_data.setFat(fat);
-    emit fatChanged(fat);
+    m_data->setFat(fat);
 }
 
-
-int MilkReception::delivererId() const
+bool MilkReception::isValid() const
 {
-    return m_data.delivererId();
+    return m_data->isValid();
 }
 
-void MilkReception::setDelivererId(const int delivererId)
+void MilkReception::reset()
 {
-    m_data.setDelivererId(delivererId);
-}
-
-int MilkReception::milkPointId() const
-{
-    return m_data.milkPointId();
-}
-
-void MilkReception::setMilkPointId(const int milkPointId)
-{
-    m_data.setMilkPointId(milkPointId);
+    m_data->reset();
 }

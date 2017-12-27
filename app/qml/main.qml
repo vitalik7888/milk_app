@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.2
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.settings 1.0
 import com.milk.db 1.0
 import com.milk.plugins 1.0
@@ -91,7 +90,7 @@ ApplicationWindow {
     footer:  TabBar {
         id: bar
         width: parent.width
-        currentIndex: 1
+        currentIndex: 0
 
         TabButton {
             text: qsTr("Сдача молока")

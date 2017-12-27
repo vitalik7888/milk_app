@@ -3,25 +3,18 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
-import com.milk.settings 1.0
 
 Item {
-    readonly property alias milkTable: proxy.sourceModel
-    readonly property alias proxy: proxy
-    property alias filter: proxy.locality
-    readonly property alias viewTable: viewTable
-    readonly property alias viewMenu: viewMenu
-    readonly property alias viewFilter: textFieldFilterName
-    property Locality currentMilkItem
-
-    function currentSourceRow() {
-        return proxy.sourceRow(viewTable.currentIndex)
-    }
-
     height: 200
     width: 160
+
+    readonly property alias milkTable: proxy.sourceModel
+    readonly property alias proxy: proxy
+    readonly property alias viewModel: viewModel
+    readonly property alias viewMenu: viewMenu
+    readonly property alias viewFilter: textFieldFilterName
+    readonly property int currentMilkId: viewModel.currentItem._milkId
 
     GroupBox {
         anchors.fill: parent
@@ -39,6 +32,7 @@ Item {
             }
             ToolBar {
                 id: viewMenu
+                height: 40
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
 
@@ -51,7 +45,6 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditLocality.row = currentSourceRow()
                             dialogs.dialogAddEditLocality.openInsert()
                         }
                     }
@@ -63,8 +56,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogAddEditLocality.row = currentSourceRow()
-                            dialogs.dialogAddEditLocality.openUpdate()
+                            dialogs.dialogAddEditLocality.openUpdate(currentMilkId)
                         }
                     }
                     ToolButton {
@@ -75,7 +67,7 @@ Item {
                         }
 
                         onClicked: {
-                            dialogs.dialogRemoveLocality.row = currentSourceRow()
+                            dialogs.dialogRemoveLocality.milkId = currentMilkId
                             dialogs.dialogRemoveLocality.open()
                         }
                     }
@@ -83,7 +75,7 @@ Item {
             }
 
             ListView {
-                id: viewTable
+                id: viewModel
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -93,12 +85,7 @@ Item {
                 model: LocalitiesSortFilterProxyModel {
                     id: proxy
                     sourceModel: milkCore.db.localities
-                    enableLocalityDynamicFilter: true
-                    locality.name: textFieldFilterName.text
-                }
-
-                onCurrentIndexChanged: {
-                    currentMilkItem = currentItem == null ? null : milkTable.get(currentIndex)
+                    name: textFieldFilterName.text
                 }
 
                 remove: Transition {
@@ -111,7 +98,8 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    text: f_name
+                    text: name
+                    property int _milkId: milkId
                     width: parent.width
 
                     contentItem: Text {
@@ -126,8 +114,8 @@ Item {
                     }
 
                     onClicked:  {
-                        viewTable.forceActiveFocus()
-                        viewTable.currentIndex = index
+                        viewModel.forceActiveFocus()
+                        viewModel.currentIndex = index
                     }
                 }
             }
@@ -136,6 +124,6 @@ Item {
 
     Connections {
         target: milkCore.db
-        onLocalitiesChanged: viewTable.currentIndex = 0
+        onLocalitiesChanged: viewModel.currentIndex = 0
     }
 }

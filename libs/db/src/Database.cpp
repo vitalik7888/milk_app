@@ -1,5 +1,9 @@
 #include "Database.h"
 
+#include "LocalitiesDao.h"
+#include "MilkpointsDao.h"
+#include "DeliverersDao.h"
+#include "MilkReceprionDao.h"
 // Qt
 #include <QFile>
 #include <QSqlQuery>
@@ -17,12 +21,12 @@ Database::Database(QObject *parent) :
     m_milkPoints(Q_NULLPTR),
     m_milkReception(Q_NULLPTR)
 {
-    setObjectName("Database");
+    createDaos();
 }
 
 Database::~Database()
 {
-    removeTables();
+    removeModels();
 }
 
 bool Database::openDb(const QString &dbPath)
@@ -46,8 +50,8 @@ bool Database::openDb(const QString &dbPath)
         if (!query.exec())
             qWarning() << "Не удалось включить поддержку внешнего ключа";
 
-        removeTables();
-        createTables();
+        removeModels();
+        createModels();
 
         emit dbOpened();
 
@@ -67,39 +71,39 @@ QString Database::choosenDatabase() const
     return m_db.databaseName();
 }
 
-LocalitiesTable *Database::localities() const
+LocalitiesModel *Database::localities() const
 {
     return m_localities;
 }
 
-DeliverersTable *Database::deliverers() const
+DeliverersModel *Database::deliverers() const
 {
     return m_deliverers;
 }
 
-MilkPointsTable *Database::milkPoints() const
+MilkPointsModel *Database::milkPoints() const
 {
     return m_milkPoints;
 }
 
-MilkReceptionTable *Database::milkReception() const
+MilkReceptionModel *Database::milkReception() const
 {
     return m_milkReception;
 }
 
-int Database::tablesCount() const
+int Database::modelsCount() const
 {
-    return m_tables.size();
+    return m_models.size();
 }
 
-QQmlListProperty<Table> Database::tables()
+QQmlListProperty<MilkModel> Database::_models()
 {
-    return QQmlListProperty<Table>(this, this, &Database::_tablesCount, &Database::_getTable);
+    return QQmlListProperty<MilkModel>(this, this, &Database::_modelsCount, &Database::_getModel);
 }
 
-bool Database::isTablesCreated() const
+bool Database::isModelsCreated() const
 {
-    return !m_tables.isEmpty();
+    return !m_models.isEmpty();
 }
 
 QSqlDatabase Database::getSqlDb() const
@@ -121,10 +125,10 @@ void Database::createDb(const QString &filePath)
 
         execQuery("PRAGMA foreign_keys = off;");
         execQuery("BEGIN TRANSACTION;");
-        execQuery(DC::TL_CREATE_TABLE_SQL);
-        execQuery(DC::TMP_CREATE_TABLE_SQL);
-        execQuery(DC::TD_CREATE_TABLE_SQL);
-        execQuery(DC::TMR_CREATE_TABLE_SQL);
+        m_localitiesDao->createTable();
+        m_milkPointsDao->createTable();
+        m_deliverersDao->createTable();
+        m_milkReceptionDao->createTable();
         execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_DELIV));
         execQuery(DC::CREATE_INDEX_RECEPT_DELIV_SQL);
         execQuery(DC::dropIndexIfExistsSql(DC::INDEX_RECEPT_POINT));
@@ -138,33 +142,51 @@ void Database::createDb(const QString &filePath)
     }
 }
 
-void Database::removeTables()
+void Database::createDaos()
 {
-    if (!isTablesCreated())
+    m_localitiesDao.reset(new LocalitiesDao());
+    m_deliverersDao.reset(new DeliverersDao());
+    m_milkPointsDao.reset(new MilkPointDao());
+    m_milkReceptionDao.reset(new MilkReceptionDao());
+    m_localitiesDao->setDb(m_db);
+    m_deliverersDao->setDb(m_db);
+    m_milkPointsDao->setDb(m_db);
+    m_milkReceptionDao->setDb(m_db);
+}
+
+void Database::removeModels()
+{
+    if (!isModelsCreated())
         return;
 
     qInfo() << "Removing tables...";
 
-    for (Table *table : m_tables)
+    for (MilkModel *table : m_models)
         table->deleteLater();
-    m_tables.clear();
+    m_models.clear();
 
     qInfo() << "tables removed";
 }
 
-void Database::createTables()
+void Database::createModels()
 {
-    if (!m_tables.isEmpty())
+    if (!m_models.isEmpty())
         return;
 
     qInfo() << "Creating tables...";
 
-    m_localities = new LocalitiesTable(m_db, this);
-    m_deliverers = new DeliverersTable(m_localities, m_db, this);
-    m_milkPoints = new MilkPointsTable(m_localities, m_db, this);
-    m_milkReception = new MilkReceptionTable(m_deliverers, m_milkPoints, m_db, this);
+    m_localities = new LocalitiesModel(this);
+    m_localities->setDao(m_localitiesDao.get());
+    m_deliverers = new DeliverersModel(m_localities, this);
+    m_deliverers->setDao(m_deliverersDao.get());
+    m_milkPoints = new MilkPointsModel(m_localities, this);
+    m_milkPoints->setDao(m_milkPointsDao.get());
+    m_milkReception = new MilkReceptionModel(m_deliverers, m_milkPoints, this);
+    m_milkReception->setDao(m_milkReceptionDao.get());
 
-    m_tables.append({m_localities, m_deliverers, m_milkPoints, m_milkReception});
+    m_models.append({m_localities, m_deliverers, m_milkPoints, m_milkReception});
+
+    refreshModels();
 
     emit localitiesChanged(m_localities);
     emit deliverersChanged(m_deliverers);
@@ -174,37 +196,38 @@ void Database::createTables()
     qInfo() << "tables created";
 }
 
-void Database::clearTables()
+void Database::clearModels()
 {
-    for (auto table: m_tables) {
-        table->clear();
-        qInfo().nospace() << "clear table " << table->tableName();
+    qInfo() << "Clear models";
+
+    for (auto model: m_models) {
+        model->clear();
     }
 }
 
-Table *Database::getTable(const int position) const
+MilkModel *Database::getModel(const int position) const
 {
-    return m_tables[position];
+    return m_models[position];
 }
 
-void Database::_appendTable(QQmlListProperty<Table> *list, Table *table)
+void Database::_appendModel(QQmlListProperty<MilkModel> *list, MilkModel *table)
 {
-    reinterpret_cast< Database* >(list->data)->appendTable(table);
+    reinterpret_cast< Database* >(list->data)->appendModel(table);
 }
 
-int Database::_tablesCount(QQmlListProperty<Table> *list)
+int Database::_modelsCount(QQmlListProperty<MilkModel> *list)
 {
-    return reinterpret_cast< Database* >(list->data)->tablesCount();
+    return reinterpret_cast< Database* >(list->data)->modelsCount();
 }
 
-Table *Database::_getTable(QQmlListProperty<Table> *list, int position)
+MilkModel *Database::_getModel(QQmlListProperty<MilkModel> *list, int position)
 {
-    return reinterpret_cast< Database* >(list->data)->getTable(position);
+    return reinterpret_cast< Database* >(list->data)->getModel(position);
 }
 
-void Database::_removeTables(QQmlListProperty<Table> *list)
+void Database::_removeModels(QQmlListProperty<MilkModel> *list)
 {
-    reinterpret_cast< Database* >(list->data)->removeTables();
+    reinterpret_cast< Database* >(list->data)->removeModels();
 }
 
 void Database::_error(const QString &errorDescription) const
@@ -212,16 +235,16 @@ void Database::_error(const QString &errorDescription) const
     qWarning() << errorDescription;
 }
 
-void Database::refreshTables()
+void Database::refreshModels()
 {
-    for (auto table: m_tables) {
-        table->refresh();
-        qInfo().nospace() << "refresh table " << table->tableName();
+    for (auto model: m_models) {
+        model->refresh();
     }
+    qInfo() << "Models are refreshed";
 }
 
-void Database::appendTable(Table *table)
+void Database::appendModel(MilkModel *table)
 {
-    m_tables.append(table);
+    m_models.append(table);
 }
 

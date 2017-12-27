@@ -1,14 +1,13 @@
 #ifndef DBUTILS_H
 #define DBUTILS_H
 
-#include "dblibrary_global.h"
 #include "DbConstants.h"
 
 class QStringList;
 template<class T>
 class QSet;
 DB_BEGIN_NAMESPACE
-class Table;
+class MilkModel;
 DB_END_NAMESPACE
 
 
@@ -21,7 +20,7 @@ public:
     static QString getPrepUpdateStr(const QString &tableName, const QStringList &columns);
     static QString getPrepInsertStr(const QString &tableName, const QStringList &columns);
 
-    static QString getStrIdsIn(DB_NAMESPACE::Table *table, const QSet<int> &ids);
+//    static QString getStrIdsIn(DB_NAMESPACE::MilkModel *table, const QSet<int> &ids);
 };
 
 #endif // DBUTILS_H

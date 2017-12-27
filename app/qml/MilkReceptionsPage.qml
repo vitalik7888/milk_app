@@ -3,19 +3,23 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls 1.4 as C14
 import QtQuick.Layouts 1.3
 import com.milk.core 1.0
-import com.milk.types 1.0
 import com.milk.db 1.0
 
 Page {
-    MilkReception {
+    DbMilkReception {
         id: curentMilkReception
+
+        model: milkCore.db.milkReception
 
         deliveryDate: calendarMilkReception.selectedDate
         priceLiter: spinBoxPrice.value
         liters:  spinBoxLiters.value
         fat: spinBoxFat.value
-        deliverer: viewDeliverers.currentMilkItem
-        milkPoint: viewMilkPoints.currentMilkItem
+
+        Component.onCompleted: {
+            deliverer.loadData(viewDeliverers.currentMilkId)
+            milkPoint.loadData(viewMilkPoints.currentMilkId)
+        }
     }
 
     RowLayout {
@@ -37,7 +41,9 @@ Page {
             Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            filter.locality.localityId: viewLocalities.currentMilkItem.localityId
+            proxy.localityId: viewLocalities.currentMilkId
+
+            onCurrentMilkIdChanged: curentMilkReception.deliverer.loadData(viewDeliverers.currentMilkId)
         }
 
         ViewMilkPoints {
@@ -47,7 +53,9 @@ Page {
             Layout.fillWidth: true
             Layout.minimumWidth: 100
 
-            filter.locality.localityId: viewLocalities.currentMilkItem.localityId
+            proxy.localityId: viewLocalities.currentMilkId
+
+            onCurrentMilkIdChanged: curentMilkReception.milkPoint.loadData(viewMilkPoints.currentMilkId)
         }
 
         GroupBox {
@@ -83,7 +91,6 @@ Page {
 
                     C14.Calendar {
                         id: calendarMilkReception
-
                     }
                 }
                 Row {
@@ -119,16 +126,16 @@ Page {
                     onClicked: {
                         if (spinBoxPrice.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
-                        } else if (viewDeliverers.currentMilkItem === null) {
-                            messageDialog.showInfo(qsTr("Выберите сдатчика"))
-                        } else if (viewMilkPoints.currentMilkItem === null) {
-                            messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else if (spinBoxLiters.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите количество литров"))
                         } else if (spinBoxFat.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите жиры"))
+                        } else if (curentMilkReception.deliverer.milkId === -1) {
+                            messageDialog.showInfo(qsTr("Выберите сдатчика"))
+                        } else if (curentMilkReception.milkPoint.milkId === -1) {
+                            messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else {
-                            if (milkCore.db.milkReception.append(curentMilkReception)) {
+                            if (curentMilkReception.append()) {
                                 spinBoxLiters.value = 0.0
                                 spinBoxFat.value = 0.0
                             }

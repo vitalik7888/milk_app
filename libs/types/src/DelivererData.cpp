@@ -5,31 +5,33 @@
 #include <QtDebug>
 
 using TC = TypesConstants;
-using TCD = TC::Deliverers;
 
 
 DelivererData::DelivererData():
-    DelivererData(TCD::DEF_ID, TCD::DEF_FIRST_NAME, TCD::DEF_LAST_NAME, TCD::DEF_LOCALITY_ID,
-                  TCD::DEF_INN, TCD::DEF_ADDRESS, TCD::DEF_PHONE_NUMBER)
+    DelivererData(TC::DEFAULT_ID, TC::Deliverers::DEF_FIRST_NAME, TC::Deliverers::DEF_LAST_NAME,
+                  TC::DEFAULT_ID, TC::Deliverers::DEF_INN,
+                  TC::Deliverers::DEF_ADDRESS, TC::Deliverers::DEF_PHONE_NUMBER)
 {
 
 }
 
-DelivererData::DelivererData(const DelivererData &data):
-    m_id(data.id()),
-    m_localityId(data.localityId()),
-    m_inn(data.inn()),
-    m_firstName(data.firstName()),
-    m_lastName(data.lastName()),
-    m_address(data.address()),
-    m_phoneNumber(data.phoneNumber())
+DelivererData::DelivererData(const DelivererData &other):
+    QSharedData(other),
+    m_milkId(other.milkId()),
+    m_localityId(other.localityId()),
+    m_inn(other.inn()),
+    m_firstName(other.firstName()),
+    m_lastName(other.lastName()),
+    m_address(other.address()),
+    m_phoneNumber(other.phoneNumber())
 {
 
 }
 
-DelivererData::DelivererData(const int id, const QString &firstName, const QString &lastName, const int localityId,
-                             const QString &inn, const QString &address, const QString &phoneNumber):
-    m_id(id),
+DelivererData::DelivererData(const MILK_ID id, const QString &firstName, const QString &lastName,
+                             const MILK_ID localityId, const QString &inn, const QString &address,
+                             const QString &phoneNumber):
+    m_milkId(id),
     m_localityId(localityId),
     m_inn(inn),
     m_firstName(firstName),
@@ -40,19 +42,20 @@ DelivererData::DelivererData(const int id, const QString &firstName, const QStri
 
 }
 
-DelivererData::~DelivererData()
-{
-
-}
-
 bool DelivererData::isValid() const
 {
-    return m_id > 0;
+    return MilkBaseItem::isValid() && m_localityId > 0;
 }
 
-QString DelivererData::inn() const
+void DelivererData::reset()
 {
-    return m_inn;
+    MilkBaseItem::reset();
+    m_localityId = TC::DEFAULT_ID;
+    m_inn = TC::Deliverers::DEF_INN;
+    m_firstName = TC::Deliverers::DEF_FIRST_NAME;
+    m_lastName = TC::Deliverers::DEF_LAST_NAME;
+    m_address = TC::Deliverers::DEF_ADDRESS;
+    m_phoneNumber = TC::Deliverers::DEF_PHONE_NUMBER;
 }
 
 void DelivererData::setInn(const QString &inn)
@@ -60,29 +63,14 @@ void DelivererData::setInn(const QString &inn)
     m_inn = inn;
 }
 
-int DelivererData::id() const
+void DelivererData::setMilkId(const MILK_ID id)
 {
-    return m_id;
+    m_milkId = id;
 }
 
-void DelivererData::setId(const int id)
-{
-    m_id = id;
-}
-
-int DelivererData::localityId() const
-{
-    return m_localityId;
-}
-
-void DelivererData::setLocalityId(const int localityId)
+void DelivererData::setLocalityId(const MILK_ID localityId)
 {
     m_localityId = localityId;
-}
-
-QString DelivererData::address() const
-{
-    return m_address;
 }
 
 void DelivererData::setAddress(const QString &address)
@@ -90,29 +78,14 @@ void DelivererData::setAddress(const QString &address)
     m_address = address;
 }
 
-QString DelivererData::phoneNumber() const
-{
-    return m_phoneNumber;
-}
-
 void DelivererData::setPhoneNumber(const QString &phoneNumber)
 {
     m_phoneNumber = phoneNumber;
 }
 
-QString DelivererData::firstName() const
-{
-    return m_firstName;
-}
-
 void DelivererData::setFirstName(const QString &firstName)
 {
     m_firstName = firstName;
-}
-
-QString DelivererData::lastName() const
-{
-    return m_lastName;
 }
 
 void DelivererData::setLastName(const QString &lastName)
@@ -122,17 +95,17 @@ void DelivererData::setLastName(const QString &lastName)
 
 QString DelivererData::fullName() const
 {
-    QString firstName, lastName;
-    if (m_firstName.length() == 1)
+    QString firstName = m_firstName.trimmed(), lastName;
+    if (firstName.length() == 1)
         firstName.append('.');
-    lastName = firstName.isEmpty() ? m_lastName : " " + m_lastName;
+    lastName = firstName.isEmpty() ? m_lastName.trimmed() : " " + m_lastName.trimmed();
 
     return firstName + lastName;
 }
 
 QDebug operator<<(QDebug dbg, const DelivererData &data)
 {
-    dbg << "DelivererData(" << data.id() << ")"
+    dbg << "DelivererData(" << data.milkId() << ")"
         << "first name:" << data.firstName()
         << "last name:" << data.lastName()
         << "address:" << data.address()

@@ -3,6 +3,11 @@
 #include <DbUtils.h>
 #include <HtmlBuilder.h>
 #include <HtmlTable.h>
+#include "MilkReceprionDao.h"
+#include <MilkReception.h>
+#include <Deliverer.h>
+#include <MilkPoint.h>
+#include <TypesConstants.h>
 // Qt
 #include <QPrinter>
 #include <QPrintDialog>
@@ -13,6 +18,7 @@
 using SC = SettingsConstants;
 using COLTYPE = SC::SettingsColumnType;
 using DBC = DbConstants;
+using TC = TypesConstants;
 
 
 MilkCore::MilkCore(QObject *parent) :
@@ -69,65 +75,35 @@ Database *MilkCore::database() const { return m_database; }
 
 CalculatedItem *MilkCore::getCalculations(const QString &where)
 {
-    auto root = new CalculatedItem;
-    root->setDelivererName("All");
+    CalculatedItem *root = new CalculatedItem(tr("Итого"), {}, {}, .0, .0, .0, Q_NULLPTR, this);
 
-    QHash<int, MilkPointData> milkPointsData;
-    QHash<int, CalculatedItem *> deliverersCi;
+    QHash<MILK_ID, CalculatedItem*> calcItems;
+    const auto mrIds = database()->milkReception()->dao()->getIds(where);
+    const auto milkReceptions = database()->milkReception()->getItemsByIds(mrIds);
+    for (auto item : milkReceptions)
+    {
+        const auto mr = static_cast<const MilkReception *>(item);
 
-    auto getMilkPoint = [this, &milkPointsData](const int id) -> MilkPointData {
-        if (milkPointsData.contains(id))
-            return milkPointsData[id];
-        else {
-            const auto mpdOptional = database()->milkPoints()->getMilkPointData(id);
-            if (mpdOptional) {
-                milkPointsData.insert(id, mpdOptional.value());
-                return mpdOptional.value();
-            }
+        const MILK_ID delivererId = mr->deliverer() ? mr->deliverer()->milkId() : TC::DEFAULT_ID;
+        if (calcItems.contains(delivererId)) {
+            auto parent = calcItems[delivererId];
+            parent->addItem(new CalculatedItem("", mr->milkPoint() ? mr->milkPoint()->name() : "",
+                                               mr->deliveryDate(), mr->liters(), mr->fat(),
+                                               mr->priceLiter(), parent, root));
+        } else {
+            auto calcItem = new CalculatedItem(mr->deliverer() ? mr->deliverer()->fullName() : "", "",
+                                               {}, .0, .0, .0, root, root);
+            calcItems.insert(delivererId, calcItem);
         }
-        return {};
-    };
-
-    auto getDelivererCi = [this, &deliverersCi](const int id) -> CalculatedItem* {
-        if (deliverersCi.contains(id))
-            return deliverersCi[id];
-        else {
-            const auto delivererOptional = database()->deliverers()->getDelivererData(id);
-            if (delivererOptional) {
-                const auto delivererData = delivererOptional.value();
-
-                auto delivererCi = new CalculatedItem;
-                delivererCi->setDelivererName(delivererData.fullName());
-
-                deliverersCi.insert(id, delivererCi);
-                return delivererCi;
-            }
-        }
-
-        return Q_NULLPTR;
-    };
-
-    const auto milkReceptions = database()->milkReception()->getMilkReceptionsData(where);
-    for (const auto mr : milkReceptions) {
-        auto delivererCi = getDelivererCi(mr.delivererId());
-
-        const auto milkPointData = getMilkPoint(mr.milkPointId());
-
-        auto milkReceptionCalcItem = new CalculatedItem(mr.liters(), mr.fat(), mr.priceLiter(), delivererCi);
-        milkReceptionCalcItem->setDeliveryDate(mr.deliveryDate());
-        milkReceptionCalcItem->setMilkPointName(milkPointData.name());
-
-        delivererCi->addItem(milkReceptionCalcItem);
     }
-    for (auto item : deliverersCi) {
-        item->setParent(root);
+
+    for (auto item : calcItems.values())
         root->addItem(item);
-    }
 
     return root;
 }
 
-CalcItemModel *MilkCore::getCalcItemModel(const qlonglong delivererId, const qlonglong milkPointId,
+CalcItemModel *MilkCore::getCalcItemModel(const MILK_ID delivererId, const MILK_ID milkPointId,
                                           const QDate &dateFrom, const QDate &dateTo)
 {
     const auto delivererWhere = delivererId <= 0 ?
@@ -144,7 +120,9 @@ CalcItemModel *MilkCore::getCalcItemModel(const qlonglong delivererId, const qlo
                 .arg(dateFrom.toString(SC::defaultDateFormat()))
                 .arg(dateTo.toString(SC::defaultDateFormat()));
 
-    auto model = new CalcItemModel(getCalculations(delivererWhere + milkPointWhere + dateWhere), this);
+    auto calcItem = getCalculations(delivererWhere + milkPointWhere + dateWhere);
+    auto model = new CalcItemModel(calcItem, this);
+    calcItem->setParent(model);
     model->setDateFormat(SC::defaultDateFormat());
     return model;
 }
@@ -223,7 +201,7 @@ void MilkCore::printCalculations(CalculatedItem *calcItem, bool isShowPreview)
         for (CalculatedItem *item : calcItem->getItems()) {
             auto row = new HtmlTableRow;
             addStrContent(createCell(row, 0), QString::number(++c), font, color);
-            addStrContent(createCell(row, 1), item->delivererName(), font, color);
+            addStrContent(createCell(row, 1), item->delivererFullName(), font, color);
             addFloatContent(createCell(row, 2), 2, item->liters(), font, color);
             addFloatContent(createCell(row, 3), 3, item->fat(), font, color);
             addFloatContent(createCell(row, 4), 4, item->protein(), font, color);
@@ -243,7 +221,7 @@ void MilkCore::printCalculations(CalculatedItem *calcItem, bool isShowPreview)
         auto row = new HtmlTableRow;
         if (HtmlTableCell *cell = createCell(row, 1)) {
             cell->addAttribute({"colspan=2"});
-            addStrContent(cell, calcItem->delivererName(), font, color);
+            addStrContent(cell, calcItem->delivererFullName(), font, color);
         }
         addFloatContent(createCell(row, 2), 2, calcItem->liters(), font, color);
         addFloatContent(createCell(row, 3), 3, calcItem->fat(), font, color);

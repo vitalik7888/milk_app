@@ -2,41 +2,32 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import com.milk.core 1.0
-import com.milk.types 1.0
+import com.milk.db 1.0
 
 Dialog {
     id: root
-    standardButtons: Dialog.Save | Dialog.Cancel
     modal: true
-    property int row: -1
     height: 300
-    readonly property alias viewLocalities: viewLocalities
+    standardButtons: Dialog.Save | Dialog.Cancel
 
     onAccepted: {
-        if (textFieldName.text === "") {
-            errors.text = qsTr("Заполните название")
-            open()
-            return
-        }
-        if (_milkPoint.locality === null) {
-            errors.text = qsTr("Выберите населённый пункт")
+        if (!check()) {
             open()
             return
         }
 
-        if (_milkPoint.milkPointId === -1) {
-            if (milkCore.db.milkPoints.append(_milkPoint))
+        if (_item.milkId === -1) {
+            if (_item.append())
                 console.log(qsTr("Молокопункт успешно добавлен"))
         } else {
-            if (milkCore.db.milkPoints.set(row, _milkPoint))
+            if (_item.save())
                 console.log(qsTr("Молокопункт успешно сохранён"))
         }
     }
 
-    MilkPoint {
-        id: _milkPoint
-        milkPointId: spinBoxMilkPointId.value
-        locality: viewLocalities.currentMilkItem
+    DbMilkPoint {
+        id: _item
+        model: milkCore.db.milkPoints
         name: textFieldName.text
         description: textFieldDescription.text
     }
@@ -52,18 +43,13 @@ Dialog {
             Layout.fillHeight: true
             Layout.fillWidth: true
             viewMenu.visible: false
-        }
 
-        SpinBox {
-            id: spinBoxMilkPointId
-            enabled: false
-            from: -1
-            to: 9999
-
+            onCurrentMilkIdChanged: _item.locality.loadData(viewLocalities.currentMilkId)
         }
 
         TextField {
             id: textFieldName
+            text: _item.name
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Название")
@@ -72,6 +58,7 @@ Dialog {
 
         TextField {
             id: textFieldDescription
+            text: _item.description
             Layout.fillWidth: true
             height: 80
             placeholderText: qsTr("Описание")
@@ -83,31 +70,33 @@ Dialog {
         }
     }
 
-    function openUpdate() {
-        errors.text = ""
-        spinBoxMilkPointId.visible = true
-        viewLocalities.filter.reset()
-
-        var obj = milkCore.db.milkPoints.get(row)
-        if (obj == null) {
-            close()
-            return
-        }
-        spinBoxMilkPointId.value = obj.milkPointId
-        textFieldName.text = obj.name
-        textFieldDescription.text = obj.description
-        viewLocalities.viewTable.currentIndex = viewLocalities.proxy.findRowById(obj.locality.localityId)
+    function openUpdate(_milkId) {
+        viewLocalities.proxy.resetFilter()
+        _item.loadData(_milkId)
+        viewLocalities.viewModel.currentIndex = _item.model.getPositionById(_item.locality.milkId)
 
         open()
     }
 
     function openInsert() {
-        errors.text = ""
-        spinBoxMilkPointId.value = -1
-        textFieldName.text = ""
-        textFieldDescription.text = ""
-        spinBoxMilkPointId.visible = false
+        _item.reset()
+        viewLocalities.viewModel.currentIndex = -1
 
         open()
+    }
+
+    function check()
+    {
+        if (textFieldName.text === "") {
+            errors.text = qsTr("Заполните название")
+            return false
+        }
+        if (_item.locality.milkId === -1) {
+            errors.text = qsTr("Выберите населённый пункт")
+            return false
+        }
+
+        errors.text = ""
+        return true
     }
 }

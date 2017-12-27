@@ -1,5 +1,5 @@
 INCLUDEPATH += $$PWD
 
 HEADERS  += \
-    $$PWD/qmldb_plugin.h
+    $$PWD/db_plugin.h
  

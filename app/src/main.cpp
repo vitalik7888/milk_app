@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(Constants::organization());
     QCoreApplication::setApplicationVersion(Constants::getCurrentVersion().toString());
 
+    qRegisterMetaType<MILK_ID>("MILK_ID");
+    qmlRegisterInterface<MilkBaseItem>("MilkBaseItem");
     qmlRegisterType<MilkCore>("com.milk.core", 1, 0, "MilkCore");
     qmlRegisterType<MilkPlugins>("com.milk.plugins", 1, 0, "MilkPlugins");
     qmlRegisterType<DbExporter>("com.milk.plugins", 1, 0, "DbExporter");
