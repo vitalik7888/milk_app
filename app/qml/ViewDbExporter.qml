@@ -30,7 +30,10 @@ Popup {
                 anchors.fill: parent
 
                 model: ListModel {
-
+                    ListElement { tableName: "localities"; isChoosen: true }
+                    ListElement { tableName: "deliverers"; isChoosen: true }
+                    ListElement { tableName: "milk_points"; isChoosen: true }
+                    ListElement { tableName: "milk_reception"; isChoosen: true }
                 }
 
                 delegate: ItemDelegate {
@@ -39,12 +42,11 @@ Popup {
 
                     Row {
                         Label {
-                            text: tableName
-
+                            text: model.tableName
                         }
                         CheckBox {
-                            checked: isChoosen
-                            onCheckedChanged: isChoosen = checked
+                            checked: model.isChoosen
+                            onCheckedChanged: model.isChoosen = checked
                         }
                     }
                 }
@@ -93,7 +95,8 @@ Popup {
                         milkCore.plugins.dbExporter.tables.push(tableItem.tableName)
                 }
 
-                milkCore.plugins.dbExporter.dump()
+                if (milkCore.plugins.dbExporter.dump())
+                    messageDialog.showInfo("Exported")
             }
         }
     }
@@ -110,8 +113,7 @@ Popup {
     }
 
     Component.onCompleted:  {
-//        for (var i = 0; i < milkCore.db.tables.length; ++i) {
-//            viewTables.model.append({tableName: milkCore.db.tables[i].tableName, isChoosen: true})
-//        }
+//        for (var i = 0; i < milkCore.db.models.length; ++i)
+//            viewTables.model.append({tableName: milkCore.db.models[i].dao.tableName, isChoosen: true})
     }
 }

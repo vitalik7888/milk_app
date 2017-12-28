@@ -1,7 +1,6 @@
 #ifndef MILKPOINTS_MODEL_H
 #define MILKPOINTS_MODEL_H
 
-#include "MilkModel.h"
 #include "MilkPointData.h"
 #include "LocalitiesModel.h"
 

@@ -22,9 +22,9 @@ void DbPlugin::registerTypes(const char *uri)
 {
     // @uri com.milk.db
     qmlRegisterUncreatableType<DbConstants>(uri, 1, 0, "DBC", "Can not create instance of the DB constants");
-    qmlRegisterInterface<DaoSql>("DaoSql");
-    qmlRegisterInterface<MilkModel>("MilkModel");
-    qmlRegisterInterface<MilkBaseDbObject>("MilkBaseDbObject");
+    qmlRegisterUncreatableType<DaoSql>(uri, 1, 0, "DaoSql", "Can not create instance of the sql dao");
+    qmlRegisterUncreatableType<MilkModel>(uri, 1, 0, "MilkModel", "Can not create instance of the MilkModel");
+    qmlRegisterUncreatableType<MilkBaseDbObject>(uri, 1, 0, "MilkBaseDbObject", "Can not create instance of the MilkBaseDbObject");
     qmlRegisterType<LocalitiesDao>(uri, 1, 0, "LocalitiesDao");
     qmlRegisterType<DeliverersDao>(uri, 1, 0, "DeliverersDao");
     qmlRegisterType<MilkPointDao>(uri, 1, 0, "MilkPointDao");

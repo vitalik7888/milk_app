@@ -10,7 +10,10 @@ DB_BEGIN_NAMESPACE
 class MilkReceptionModel;
 
 
-class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public DaoSql {
+class DBLIBRARYSHARED_EXPORT MilkReceptionDao: public DaoSql
+{
+    Q_OBJECT
+
     enum class MinMax {
         Min,
         Max,

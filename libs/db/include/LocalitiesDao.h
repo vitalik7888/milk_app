@@ -8,7 +8,9 @@ DB_BEGIN_NAMESPACE
 class LocalitiesModel;
 
 
-class DBLIBRARYSHARED_EXPORT LocalitiesDao: public DaoSql {
+class DBLIBRARYSHARED_EXPORT LocalitiesDao: public DaoSql
+{
+    Q_OBJECT
 public:
     LocalitiesDao(QObject *parent = Q_NULLPTR);
 

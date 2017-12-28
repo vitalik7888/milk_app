@@ -1,6 +1,6 @@
 #include "MilkModel.h"
 
-#include "DaoSql.h"
+//#include "DaoSql.h"
 // Qt
 #include <QDebug>
 
@@ -9,6 +9,11 @@ USE_DB_NAMESPACE
 
 MilkModel::MilkModel(QObject *parent):
     QAbstractListModel(parent)
+{
+
+}
+
+MilkModel::~MilkModel()
 {
 
 }

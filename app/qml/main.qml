@@ -104,28 +104,26 @@ ApplicationWindow {
     }
 
     Connections {
-        target: milkCore.db.deliverers.dao
-        onError: messageDialog.showError(error)
-    }
-    Connections {
-        target: milkCore.db.localities.dao
-        onError: messageDialog.showError(error)
-    }
-    Connections {
-        target: milkCore.db.milkPoints.dao
-        onError: messageDialog.showError(error)
-    }
-    Connections {
-        target: milkCore.db.milkReception.dao
-        onError: messageDialog.showError(error)
-    }
-
-    Connections {
         target: milkCore.db
-
         onDbOpened: {
             milkCore.settings.main.lastChoosenDb = milkCore.db.dbPath
         }
+    }
+    Connections {
+        target: milkCore.db.deliverers.dao
+        onSqlError: messageDialog.showError(errorDescription)
+    }
+    Connections {
+        target: milkCore.db.localities.dao
+        onSqlError: messageDialog.showError(errorDescription)
+    }
+    Connections {
+        target: milkCore.db.milkPoints.dao
+        onSqlError: messageDialog.showError(errorDescription)
+    }
+    Connections {
+        target: milkCore.db.milkReception.dao
+        onSqlError: messageDialog.showError(errorDescription)
     }
 
     Component.onCompleted: {

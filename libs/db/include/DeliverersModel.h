@@ -1,7 +1,6 @@
 #ifndef DELIVERERS_MODEL_H
 #define DELIVERERS_MODEL_H
 
-#include "MilkModel.h"
 #include "DelivererData.h"
 #include "LocalitiesModel.h"
 

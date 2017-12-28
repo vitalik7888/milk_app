@@ -1,10 +1,9 @@
 #ifndef MILKRECEPTION_MODEL_H
 #define MILKRECEPTION_MODEL_H
 
-#include "MilkModel.h"
-#include "MilkReceptionData.h"
 #include "DeliverersModel.h"
 #include "MilkPointsModel.h"
+#include "MilkReceptionData.h"
 // Qt
 #include <QDate>
 

@@ -17,6 +17,10 @@ using DaoItems = std::unique_ptr<std::vector<DaoItem>>;
 class DBLIBRARYSHARED_EXPORT DaoSql : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString tableName READ tableName CONSTANT)
+    Q_PROPERTY(QStringList fieldsNames READ fieldsNames CONSTANT)
+    Q_PROPERTY(QString primaryFieldName READ primaryFieldName CONSTANT)
+
 public:
     DaoSql(QObject *parent = Q_NULLPTR);
     virtual ~DaoSql();
@@ -40,7 +44,7 @@ public:
     bool updateValue(const int fieldPosition, const MILK_ID id, const QVariant &value);
 
 signals:
-    void error(const QString &errorDescription);
+    void sqlError(const QString &errorDescription);
 
 protected:
     QSqlDatabase m_db;

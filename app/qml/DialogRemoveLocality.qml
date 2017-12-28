@@ -29,6 +29,9 @@ Dialog {
 
         if (_item.remove()) {
             console.log(qsTr("Населенный пункт успешно удалён"))
+            milkCore.db.milkPoints.refresh()
+            milkCore.db.deliverers.refresh()
+            milkCore.db.milkReception.refresh()
         }
 
         _item.reset()

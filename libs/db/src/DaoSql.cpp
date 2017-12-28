@@ -92,7 +92,7 @@ bool DaoSql::createTable()
 void DaoSql::_error(const QString &error_description)
 {
     qWarning() << error_description;
-    emit error(error_description);
+    emit sqlError(error_description);
 }
 
 QList<MILK_ID> DaoSql::getIds(const QString &where, const QString &orderBy)

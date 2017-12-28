@@ -1,5 +1,5 @@
-#ifndef LOCALITY_MODEL_H
-#define LOCALITY_MODEL_H
+#ifndef LOCALITIES_MODEL_H
+#define LOCALITIES_MODEL_H
 
 #include "DbConstants.h"
 #include "MilkModel.h"
@@ -27,4 +27,4 @@ protected:
 
 DB_END_NAMESPACE
 
-#endif // LOCALITY_TABLE_H
+#endif

@@ -30,6 +30,7 @@ Dialog {
 
         if (_item.remove()) {
             console.log(qsTr("Молокопункт успешно удалён"))
+            milkCore.db.milkReception.refresh()
         }
 
         _item.reset()

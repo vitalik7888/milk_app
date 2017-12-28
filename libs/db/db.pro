@@ -4,13 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += qml sql
+QT       += qml quick sql
 
 TARGET = dblibrary
 TEMPLATE = lib
 
 DEFINES += DBLIBRARY_LIBRARY
-CONFIG += c++14 create_prl addmilktypes addmilksettings
+CONFIG += c++14 addmilktypes addmilksettings
 DESTDIR = $$MILK_LIBS_DEST_PATH
 
 # The following define makes your compiler emit warnings if you use

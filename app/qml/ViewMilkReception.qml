@@ -203,7 +203,7 @@ Item {
 
             role = -1
             _spinBoxDecimal.value = 0.0
-            _errors = ""
+            _errors.text = ""
         }
 
         function check() {

@@ -1,9 +1,9 @@
 #include "Database.h"
 
-#include "LocalitiesDao.h"
-#include "MilkpointsDao.h"
-#include "DeliverersDao.h"
-#include "MilkReceprionDao.h"
+//#include "LocalitiesDao.h"
+//#include "MilkpointsDao.h"
+//#include "DeliverersDao.h"
+//#include "MilkReceprionDao.h"
 // Qt
 #include <QFile>
 #include <QSqlQuery>

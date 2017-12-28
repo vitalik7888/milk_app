@@ -4,11 +4,11 @@
 #include "DbConstants.h"
 #include <MilkBaseItem.h>
 #include <memory>
+#include "DaoSql.h"
 // Qt
 #include <QAbstractListModel>
 
 DB_BEGIN_NAMESPACE
-class DaoSql;
 
 template<typename T>
 class DBLIBRARYSHARED_EXPORT Repository
@@ -73,17 +73,20 @@ private:
     std::unique_ptr<std::vector<std::unique_ptr<T>>> m_items;
 };
 
+
 class DBLIBRARYSHARED_EXPORT MilkModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(DaoSql* dao READ dao WRITE setDao NOTIFY daoChanged)
+
 public:
     MilkModel(QObject *parent = Q_NULLPTR);
+    virtual ~MilkModel();
 
     void setDao(DaoSql *dao);
     DaoSql *dao() const;
 
-    int rowCount(const QModelIndex &parent = {}) const Q_DECL_OVERRIDE;
+    Q_INVOKABLE int rowCount(const QModelIndex &parent = {}) const Q_DECL_OVERRIDE;
     bool removeRows(int row, int count, const QModelIndex &parent = {}) Q_DECL_OVERRIDE;
 
 
@@ -114,5 +117,5 @@ protected:
 
 DB_END_NAMESPACE
 
-#endif // MILK_TABLE
+#endif
 

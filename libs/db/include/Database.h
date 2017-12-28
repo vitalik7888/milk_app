@@ -1,11 +1,11 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef _DATABASE_H
+#define _DATABASE_H
 
-#include "DbConstants.h"
-#include "LocalitiesModel.h"
-#include "DeliverersModel.h"
-#include "MilkPointsModel.h"
 #include "MilkReceptionModel.h"
+#include "LocalitiesDao.h"
+#include "DeliverersDao.h"
+#include "MilkpointsDao.h"
+#include "MilkReceprionDao.h"
 // Qt
 #include <QtSql/QSqlDatabase>
 #include <QSqlError>
@@ -17,10 +17,10 @@ DB_BEGIN_NAMESPACE
 class DBLIBRARYSHARED_EXPORT Database : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(LocalitiesModel *localities READ localities NOTIFY localitiesChanged)
-    Q_PROPERTY(DeliverersModel *deliverers READ deliverers NOTIFY deliverersChanged)
-    Q_PROPERTY(MilkPointsModel *milkPoints READ milkPoints NOTIFY milkPointsChanged)
-    Q_PROPERTY(MilkReceptionModel *milkReception READ milkReception NOTIFY milkReceptionChanged)
+    Q_PROPERTY(LocalitiesModel* localities READ localities NOTIFY localitiesChanged)
+    Q_PROPERTY(DeliverersModel* deliverers READ deliverers NOTIFY deliverersChanged)
+    Q_PROPERTY(MilkPointsModel* milkPoints READ milkPoints NOTIFY milkPointsChanged)
+    Q_PROPERTY(MilkReceptionModel* milkReception READ milkReception NOTIFY milkReceptionChanged)
     Q_PROPERTY(QString dbPath READ dbPath NOTIFY dbPathChanged)
     Q_PROPERTY(QQmlListProperty<MilkModel> models READ _models)
 
@@ -32,11 +32,11 @@ public:
     Q_INVOKABLE QSqlError lastError() const;
     Q_INVOKABLE QString choosenDatabase() const;
 
-    QQmlListProperty<MilkModel> _models();
     LocalitiesModel *localities() const;
     DeliverersModel *deliverers() const;
     MilkPointsModel *milkPoints() const;
     MilkReceptionModel *milkReception() const;
+    QQmlListProperty<MilkModel> _models();
     int modelsCount() const;
     Q_INVOKABLE bool isModelsCreated() const;
 

@@ -8,7 +8,9 @@ DB_BEGIN_NAMESPACE
 class MilkPointsModel;
 
 
-class DBLIBRARYSHARED_EXPORT MilkPointDao: public DaoSql {
+class DBLIBRARYSHARED_EXPORT MilkPointDao: public DaoSql
+{
+    Q_OBJECT
 public:
     MilkPointDao(QObject *parent = Q_NULLPTR);
 

@@ -7,7 +7,9 @@ DB_BEGIN_NAMESPACE
     class DeliverersModel;
 
 
-class DBLIBRARYSHARED_EXPORT DeliverersDao: public DaoSql {
+class DBLIBRARYSHARED_EXPORT DeliverersDao: public DaoSql
+{
+    Q_OBJECT
 public:
     explicit DeliverersDao(QObject *parent = Q_NULLPTR);
 
