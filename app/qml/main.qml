@@ -104,19 +104,19 @@ ApplicationWindow {
     }
 
     Connections {
-        target: milkCore.db.deliverers
+        target: milkCore.db.deliverers.dao
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkCore.db.localities
+        target: milkCore.db.localities.dao
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkCore.db.milkPoints
+        target: milkCore.db.milkPoints.dao
         onError: messageDialog.showError(error)
     }
     Connections {
-        target: milkCore.db.milkReception
+        target: milkCore.db.milkReception.dao
         onError: messageDialog.showError(error)
     }
 

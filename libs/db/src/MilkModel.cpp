@@ -15,7 +15,11 @@ MilkModel::MilkModel(QObject *parent):
 
 void MilkModel::setDao(DaoSql *dao)
 {
+    if (m_dao == dao)
+        return;
+
     m_dao = dao;
+    emit daoChanged(m_dao);
 }
 
 DaoSql *MilkModel::dao() const

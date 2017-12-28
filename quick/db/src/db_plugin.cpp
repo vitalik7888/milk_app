@@ -8,6 +8,10 @@
 #include <MilkPointsSortFilterProxyModel.h>
 #include <DeliverersSortFilterProxyModel.h>
 #include <MilkReceptionSortFilterProxyModel.h>
+#include "LocalitiesDao.h"
+#include "DeliverersDao.h"
+#include "MilkpointsDao.h"
+#include "MilkReceprionDao.h"
 // Qt
 #include <qqml.h>
 
@@ -18,9 +22,13 @@ void DbPlugin::registerTypes(const char *uri)
 {
     // @uri com.milk.db
     qmlRegisterUncreatableType<DbConstants>(uri, 1, 0, "DBC", "Can not create instance of the DB constants");
-//    qmlRegisterInterface<Dao>("Dao");
+    qmlRegisterInterface<DaoSql>("DaoSql");
     qmlRegisterInterface<MilkModel>("MilkModel");
     qmlRegisterInterface<MilkBaseDbObject>("MilkBaseDbObject");
+    qmlRegisterType<LocalitiesDao>(uri, 1, 0, "LocalitiesDao");
+    qmlRegisterType<DeliverersDao>(uri, 1, 0, "DeliverersDao");
+    qmlRegisterType<MilkPointDao>(uri, 1, 0, "MilkPointDao");
+    qmlRegisterType<MilkReceptionDao>(uri, 1, 0, "MilkReceptionDao");
     qmlRegisterType<DbLocality>(uri, 1, 0, "DbLocality");
     qmlRegisterType<DbMilkPoint>(uri, 1, 0, "DbMilkPoint");
     qmlRegisterType<DbDeliverer>(uri, 1, 0, "DbDeliverer");

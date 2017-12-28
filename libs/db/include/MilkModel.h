@@ -76,6 +76,7 @@ private:
 class DBLIBRARYSHARED_EXPORT MilkModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(DaoSql* dao READ dao WRITE setDao NOTIFY daoChanged)
 public:
     MilkModel(QObject *parent = Q_NULLPTR);
 
@@ -101,6 +102,7 @@ public slots:
 signals:
     void beginRefresh();
     void endRefresh();
+    void daoChanged(DaoSql *dao);
 
 protected:
     DaoSql *m_dao;
