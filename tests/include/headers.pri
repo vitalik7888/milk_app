@@ -18,5 +18,6 @@ HEADERS  += \
     $$PWD/types/Test_MilkReceptionData.h \
     $$PWD/db/Test_LocalitiesTable.h \
     $$PWD/db/Test_LocalitiesDao.h \
-    $$PWD/db/DbTests.h
+    $$PWD/db/DbTests.h \
+    $$PWD/db/Test_DbLocality.h
  

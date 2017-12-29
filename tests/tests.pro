@@ -25,6 +25,7 @@ SOURCES += \
     src/calc/Test_CalculatedItemData.cpp \
     src/db/Test_LocalitiesTable.cpp \
     src/db/Test_LocalitiesDao.cpp \
-    src/db/DbTests.cpp
+    src/db/DbTests.cpp \
+    src/db/Test_DbLocality.cpp
 
 include(include/headers.pri)

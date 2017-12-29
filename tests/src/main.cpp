@@ -25,6 +25,7 @@
 // db
 #include "db/Test_LocalitiesDao.h"
 #include "db/Test_LocalitiesTable.h"
+#include "db/Test_DbLocality.h"
 
 
 using Tests = QList<QObject *>;
@@ -62,7 +63,8 @@ void addCalcTests(Tests &tests, QObject *parent) {
 void addDbTests(Tests &tests, QObject *parent) {
     tests.append({
                      new Test_LocalitiesDao(parent),
-                     new Test_LocalitiesModel(parent)
+                     new Test_LocalitiesModel(parent),
+                     new Test_DbLocality(parent)
                  });
 }
 
@@ -74,11 +76,12 @@ int main(int argc, char *argv[])
     qMetaTypeId<Locality>();
     qMetaTypeId<Deliverer>();
     qMetaTypeId<MilkPoint>();
+    qRegisterMetaType<MILK_ID>("MILK_ID");
 
     QList<QObject *> tests;
-//    addSettingsTests(tests, &app);
-//    addTypesTests(tests, &app);
-//    addCalcTests(tests, &app);
+    addSettingsTests(tests, &app);
+    addTypesTests(tests, &app);
+    addCalcTests(tests, &app);
     addDbTests(tests, &app);
 
     int status = 0;
