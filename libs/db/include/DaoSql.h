@@ -35,9 +35,8 @@ public:
 
     bool createTable();
 
-    QList<MILK_ID> getIds(const QString &where, const QString &orderBy = {});
+    QList<MILK_ID> getIds(const QString &where = {}, const QString &orderBy = {});
     DaoItems get(const QString &where = {}, const QString &orderBy = {});
-    bool removeById(const MILK_ID id);
     bool remove(const QString &where = {});
     bool insert(MilkBaseItem *data);
     bool update(const MilkBaseItem *data);

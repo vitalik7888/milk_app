@@ -26,11 +26,6 @@ DaoItems DaoSql::get(const QString &where, const QString &orderBy)
     return fromRecords(getRecords(where, orderBy));
 }
 
-bool DaoSql::removeById(const MILK_ID id)
-{
-    return remove(QString("%1 = %2").arg(primaryFieldName()).arg(id));
-}
-
 bool DaoSql::remove(const QString &where)
 {
     QSqlQuery query(m_db);

@@ -18,11 +18,13 @@ SOURCES += \
     src/types/Test_MilkPoint.cpp \
     src/types/Test_MilkReception.cpp \
     src/calc/Test_CalcUtils.cpp \
-    src/db/Test_LocalitiesTable.cpp \
     src/types/Test_DelivererData.cpp \
     src/types/Test_LocalityData.cpp \
     src/types/Test_MilkReceptionData.cpp \
     src/types/Test_MilkPointData.cpp \
-    src/calc/Test_CalculatedItemData.cpp
+    src/calc/Test_CalculatedItemData.cpp \
+    src/db/Test_LocalitiesTable.cpp \
+    src/db/Test_LocalitiesDao.cpp \
+    src/db/DbTests.cpp
 
 include(include/headers.pri)

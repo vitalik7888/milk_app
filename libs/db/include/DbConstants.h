@@ -6,7 +6,7 @@
 #include <QObject>
 
 #define DB_NAMESPACE db
-#define USE_DB_NAMESPACE using namespace ::DB_NAMESPACE;
+#define USE_DB_NAMESPACE using namespace DB_NAMESPACE;
 #define DB_BEGIN_NAMESPACE namespace DB_NAMESPACE {
 #define DB_END_NAMESPACE }
 

@@ -128,7 +128,7 @@ bool db::MilkModel::removeRows(int row, int count, const QModelIndex &parent)
     beginRemoveRows(parent, row, row + count - 1);
     for (int i = row; i < (row + count); ++i) {
         const MilkBaseItem& item = *m_repository.get(i);
-        m_dao->removeById(item.milkId());
+        m_dao->remove(QString("%1 = %2").arg(m_dao->primaryFieldName()).arg(item.milkId()));
     }
     m_repository.remove(row, count);
     endRemoveRows();

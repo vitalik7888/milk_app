@@ -23,6 +23,7 @@
 #include "calc/Test_CalcUtils.h"
 #include "calc/Test_CalculatedItemData.h"
 // db
+#include "db/Test_LocalitiesDao.h"
 #include "db/Test_LocalitiesTable.h"
 
 
@@ -60,6 +61,7 @@ void addCalcTests(Tests &tests, QObject *parent) {
 
 void addDbTests(Tests &tests, QObject *parent) {
     tests.append({
+                     new Test_LocalitiesDao(parent),
                      new Test_LocalitiesTable(parent)
                  });
 }
