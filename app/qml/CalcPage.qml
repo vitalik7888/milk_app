@@ -13,13 +13,6 @@ Page {
         RowLayout {
             anchors.fill: parent
 
-            Label {
-                text: "Filter"
-                elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-            }
             ToolButton {
                 id: btnMilkMenu
                 text: "Filter"

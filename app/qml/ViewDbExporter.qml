@@ -30,10 +30,10 @@ Popup {
                 anchors.fill: parent
 
                 model: ListModel {
-                    ListElement { tableName: "localities"; isChoosen: true }
-                    ListElement { tableName: "deliverers"; isChoosen: true }
-                    ListElement { tableName: "milk_points"; isChoosen: true }
-                    ListElement { tableName: "milk_reception"; isChoosen: true }
+                    ListElement { tableName: "Населённые пункты"; isChoosen: true }
+                    ListElement { tableName: "Сдатчики"; isChoosen: true }
+                    ListElement { tableName: "Молокопункты"; isChoosen: true }
+                    ListElement { tableName: "Сдачи молока"; isChoosen: true }
                 }
 
                 delegate: ItemDelegate {
@@ -41,6 +41,7 @@ Popup {
                     height: 30
 
                     Row {
+                        anchors.fill: parent
                         Label {
                             text: model.tableName
                         }
