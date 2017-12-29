@@ -15,11 +15,11 @@ Test_DelivererData::Test_DelivererData(QObject *parent) : QObject(parent)
 
 }
 
-void Test_DelivererData::compare(DelivererData *deliverer, const int id,
+void Test_DelivererData::compare(const DelivererData *deliverer, const int id,
                                  const QString &firstName, const QString &lastName, const int localityId,
                              const QString &inn, const QString &address, const QString &phoneNumber)
 {
-    QCOMPARE(deliverer->id(), id);
+    QCOMPARE(deliverer->milkId(), id);
     QCOMPARE(deliverer->firstName(), firstName);
     QCOMPARE(deliverer->lastName(), lastName);
     QCOMPARE(deliverer->localityId(), localityId);
@@ -28,15 +28,15 @@ void Test_DelivererData::compare(DelivererData *deliverer, const int id,
     QCOMPARE(deliverer->phoneNumber(), phoneNumber);
 }
 
-void Test_DelivererData::compareDefault(DelivererData *deliverer)
+void Test_DelivererData::compareDefault(const DelivererData *deliverer)
 {
-    compare(deliverer, TCD::DEF_ID, TCD::DEF_FIRST_NAME, TCD::DEF_LAST_NAME, TCD::DEF_LOCALITY_ID,
+    compare(deliverer, TC::DEFAULT_ID, TCD::DEF_FIRST_NAME, TCD::DEF_LAST_NAME, TC::DEFAULT_ID,
             TCD::DEF_INN, TCD::DEF_ADDRESS, TCD::DEF_PHONE_NUMBER);
 }
 
-void Test_DelivererData::compare(DelivererData *left, DelivererData *right)
+void Test_DelivererData::compare(const DelivererData *left, const DelivererData *right)
 {
-    compare(left, right->id(), right->firstName(), right->firstName(), right->localityId(),
+    compare(left, right->milkId(), right->firstName(), right->lastName(), right->localityId(),
             right->inn(), right->address(), right->phoneNumber());
 }
 
@@ -62,7 +62,7 @@ void Test_DelivererData::copyConstructor()
 void Test_DelivererData::methods()
 {
     DelivererData dd;
-    dd.setId(1);
+    dd.setMilkId(1);
     dd.setFirstName("fname");
     dd.setLastName("lname");
     dd.setLocalityId(23);

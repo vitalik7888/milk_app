@@ -15,10 +15,11 @@ class Test_Deliverer : public QObject
 public:
     explicit Test_Deliverer(QObject *parent = nullptr);
 
-    static void compare(Deliverer *deliverer, const int id, const QString &firstName, const QString &lastName,
-                        Locality *locality, const QString &inn, const QString &address, const QString &phoneNumber);
-    static void compareDefault(Deliverer *deliverer);
-    static void compare(Deliverer *left, Deliverer *right);
+    static void compare(const Deliverer *deliverer, const int id, const QString &firstName,
+                        const QString &lastName, const Locality *locality, const QString &inn,
+                        const QString &address, const QString &phoneNumber);
+    static void compareDefault(const Deliverer *deliverer);
+    static void compare(const Deliverer *left, const Deliverer *right);
 
 private slots:
     void emptyConstructor();
@@ -27,13 +28,6 @@ private slots:
     void methods();
     void storingInQVariant();
     void reset();
-    void signalIdChanged();
-    void signalLocalityChanged();
-    void signalFirstNameChanged();
-    void signalLastNameChanged();
-    void signalInnChanged();
-    void signalAddressChanged();
-    void signalPhoneNumberChanged();
 };
 
 #endif // TEST_DELIVERER_H

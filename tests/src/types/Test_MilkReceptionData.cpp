@@ -18,7 +18,7 @@ Test_MilkReceptionData::Test_MilkReceptionData(QObject *parent) : QObject(parent
 void Test_MilkReceptionData::compare(const MilkReceptionData &mrd, const int id, const int delivererId, const int milkPointId,
                                  const QDate &deliveryDate, const double priceLiter, const double liters, const double fat)
 {
-    QCOMPARE(mrd.id(), id);
+    QCOMPARE(mrd.milkId(), id);
     QCOMPARE(mrd.delivererId(), delivererId);
     QCOMPARE(mrd.milkPointId(), milkPointId);
     QCOMPARE(mrd.deliveryDate(), deliveryDate);
@@ -29,13 +29,13 @@ void Test_MilkReceptionData::compare(const MilkReceptionData &mrd, const int id,
 
 void Test_MilkReceptionData::compareDefault(const MilkReceptionData &mrd)
 {
-    compare(mrd, TCMR::DEF_ID, TCMR::DEF_ID_DELIVERER, TCMR::DEF_MILK_POINT_ID, TCMR::DEF_DELIVERY_DATE,
-            TCMR::M_DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT);
+    compare(mrd, TC::DEFAULT_ID, TC::DEFAULT_ID, TC::DEFAULT_ID, TCMR::DEF_DELIVERY_DATE,
+            TCMR::DEF_PRICE_LITER, TCMR::DEF_LITERS, TCMR::DEF_FAT);
 }
 
 void Test_MilkReceptionData::compare(const MilkReceptionData &left, const MilkReceptionData &right)
 {
-    compare(left, right.id(), right.delivererId(), right.milkPointId(),
+    compare(left, right.milkId(), right.delivererId(), right.milkPointId(),
             right.deliveryDate(), right.priceLiter(), right.liters(), right.fat());
 }
 
@@ -61,7 +61,7 @@ void Test_MilkReceptionData::copyConstructor()
 void Test_MilkReceptionData::methods()
 {
     MilkReceptionData mrd;
-    mrd.setId(22);
+    mrd.setMilkId(22);
     mrd.setDelivererId(2);
     mrd.setMilkPointId(1);
     mrd.setDeliveryDate(QDate());

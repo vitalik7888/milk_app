@@ -17,19 +17,19 @@ Test_LocalityData::Test_LocalityData(QObject *parent) : QObject(parent)
 void Test_LocalityData::compare(const LocalityData &localityData, const int id,
                             const QString &name, const QString &description)
 {
-    QCOMPARE(localityData.id(), id);
+    QCOMPARE(localityData.milkId(), id);
     QCOMPARE(localityData.name(), name);
     QCOMPARE(localityData.description(), description);
 }
 
 void Test_LocalityData::compareDefault(const LocalityData &localityData)
 {
-    compare(localityData, TC::Localities::DEF_ID, TC::Localities::DEF_NAME, TC::Localities::DEF_DESCRIPTION);
+    compare(localityData, TC::DEFAULT_ID, TC::Localities::DEF_NAME, TC::Localities::DEF_DESCRIPTION);
 }
 
 void Test_LocalityData::compare(const LocalityData &left, const LocalityData &right)
 {
-    compare(left, right.id(), right.name(), right.description());
+    compare(left, right.milkId(), right.name(), right.description());
 }
 
 void Test_LocalityData::emptyConstructor()
@@ -54,7 +54,7 @@ void Test_LocalityData::copyConstructor()
 void Test_LocalityData::methods()
 {
     LocalityData ld;
-    ld.setId(123);
+    ld.setMilkId(123);
     ld.setName("dd");
     ld.setDescription("fff");
     compare(ld, 123, "dd", "fff");

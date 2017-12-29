@@ -8,9 +8,9 @@
 #include "settings/Test_PrintSettings.h"
 #include "settings/Test_Settings.h"
 // types
-#include <DelivererData.h>
-#include <LocalityData.h>
-#include <MilkPointData.h>
+#include <Deliverer.h>
+#include <Locality.h>
+#include <MilkPoint.h>
 #include "types/Test_DelivererData.h"
 #include "types/Test_Deliverer.h"
 #include "types/Test_LocalityData.h"
@@ -69,9 +69,9 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     app.setAttribute(Qt::AA_Use96Dpi, true);
 
-    qRegisterMetaType<Locality *>();
-    qRegisterMetaType<Deliverer *>();
-    qRegisterMetaType<MilkPoint *>();
+    qMetaTypeId<Locality>();
+    qMetaTypeId<Deliverer>();
+    qMetaTypeId<MilkPoint>();
 
     QList<QObject *> tests;
     addSettingsTests(tests, &app);

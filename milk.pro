@@ -4,7 +4,7 @@ SUBDIRS += \
     libs \
     quick \
     plugins \
-#    tests \
+    tests \
     app
 
 OTHER_FILES += .qmake.conf \

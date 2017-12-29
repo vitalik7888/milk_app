@@ -18,7 +18,7 @@ Test_MilkPointData::Test_MilkPointData(QObject *parent) : QObject(parent)
 void Test_MilkPointData::compare(const MilkPointData &mpd, const int id, const int localityId, const QString &name,
                              const QString &description)
 {
-    QCOMPARE(mpd.id(), id);
+    QCOMPARE(mpd.milkId(), id);
     QCOMPARE(mpd.localityId(), localityId);
     QCOMPARE(mpd.name(), name);
     QCOMPARE(mpd.description(), description);
@@ -26,12 +26,12 @@ void Test_MilkPointData::compare(const MilkPointData &mpd, const int id, const i
 
 void Test_MilkPointData::compareDefault(const MilkPointData &mpd)
 {
-    compare(mpd, TCMP::DEF_ID, TCMP::DEF_LOCALITY_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION);
+    compare(mpd, TC::DEFAULT_ID, TC::DEFAULT_ID, TCMP::DEF_NAME, TCMP::DEF_DESCRIPTION);
 }
 
 void Test_MilkPointData::compare(const MilkPointData &left, const MilkPointData &right)
 {
-    compare(left, right.id(), right.localityId(), right.name(), right.description());
+    compare(left, right.milkId(), right.localityId(), right.name(), right.description());
 }
 
 void Test_MilkPointData::emptyConstructor()
@@ -55,7 +55,7 @@ void Test_MilkPointData::copyConstructor()
 void Test_MilkPointData::methods()
 {
     MilkPointData mpd;
-    mpd.setId(42);
+    mpd.setMilkId(42);
     mpd.setLocalityId(1);
     mpd.setName("n");
     mpd.setDescription("d");

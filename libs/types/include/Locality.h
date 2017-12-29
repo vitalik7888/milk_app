@@ -29,4 +29,4 @@ private:
 
 Q_DECLARE_METATYPE(Locality)
 
-#endif // LOCALITY_H
+#endif

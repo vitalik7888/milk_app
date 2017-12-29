@@ -13,10 +13,9 @@ class Test_Locality : public QObject
 public:
     explicit Test_Locality(QObject *parent = nullptr);
 
-    static void compare(Locality *locality, const int id,
-                        const QString &name, const QString &description);
-    static void compareDefault(Locality *locality);
-    static void compare(Locality *left, Locality *right);
+    static void compare(const Locality *locality, const int id, const QString &name, const QString &description);
+    static void compareDefault(const Locality *locality);
+    static void compare(const Locality *left, const Locality *right);
 
 private slots:
     void emptyConstructor();
@@ -25,9 +24,6 @@ private slots:
     void methods();
     void reset();
     void storingInQVariant();
-    void signalIdChanged();
-    void signalNameChanged();
-    void signalDescriptionChanged();
 };
 
 #endif // TEST_LOCALITY_H
