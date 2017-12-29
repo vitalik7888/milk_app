@@ -8,7 +8,18 @@ MenuBar {
         Action {
             text: qsTr("Открыть базу данных")
             shortcut: StandardKey.Open
-            onTriggered: fileDialogChooseDb.open()
+            onTriggered: {
+                fileDialogChooseDb.selectExisting = true
+                fileDialogChooseDb.open()
+            }
+        }
+        Action {
+            text: qsTr("Создать базу данных")
+            shortcut: StandardKey.Open
+            onTriggered: {
+                fileDialogChooseDb.selectExisting = false
+                fileDialogChooseDb.open()
+            }
         }
 
         Action {

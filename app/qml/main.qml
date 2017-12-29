@@ -59,7 +59,7 @@ ApplicationWindow {
     FileDialog {
         id: fileDialogChooseDb
 
-        title: qsTr("Выберите или создайте базу данных")
+        title: qsTr("Укажите базу данных")
         selectMultiple: false
 
         onAccepted: {
@@ -136,6 +136,6 @@ ApplicationWindow {
     }
 
     Component.onDestruction: {
-//        milkCore.settings.writeSettings()
+        milkCore.settings.writeSettings()
     }
 }
