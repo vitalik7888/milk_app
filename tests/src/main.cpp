@@ -62,7 +62,7 @@ void addCalcTests(Tests &tests, QObject *parent) {
 void addDbTests(Tests &tests, QObject *parent) {
     tests.append({
                      new Test_LocalitiesDao(parent),
-                     new Test_LocalitiesTable(parent)
+                     new Test_LocalitiesModel(parent)
                  });
 }
 
@@ -76,9 +76,9 @@ int main(int argc, char *argv[])
     qMetaTypeId<MilkPoint>();
 
     QList<QObject *> tests;
-    addSettingsTests(tests, &app);
-    addTypesTests(tests, &app);
-    addCalcTests(tests, &app);
+//    addSettingsTests(tests, &app);
+//    addTypesTests(tests, &app);
+//    addCalcTests(tests, &app);
     addDbTests(tests, &app);
 
     int status = 0;
