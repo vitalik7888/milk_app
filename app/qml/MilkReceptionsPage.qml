@@ -8,18 +8,7 @@ import com.milk.db 1.0
 Page {
     DbMilkReception {
         id: curentMilkReception
-
         model: milkCore.db.milkReception
-
-        deliveryDate: calendarMilkReception.selectedDate
-        priceLiter: spinBoxPrice.value
-        liters:  spinBoxLiters.value
-        fat: spinBoxFat.value
-
-        Component.onCompleted: {
-            deliverer.loadData(viewDeliverers.currentMilkId)
-            milkPoint.loadData(viewMilkPoints.currentMilkId)
-        }
     }
 
     RowLayout {
@@ -42,8 +31,6 @@ Page {
             Layout.minimumWidth: 100
 
             proxy.localityId: viewLocalities.currentMilkId
-
-            onCurrentMilkIdChanged: curentMilkReception.deliverer.loadData(viewDeliverers.currentMilkId)
         }
 
         ViewMilkPoints {
@@ -54,8 +41,6 @@ Page {
             Layout.minimumWidth: 100
 
             proxy.localityId: viewLocalities.currentMilkId
-
-            onCurrentMilkIdChanged: curentMilkReception.milkPoint.loadData(viewMilkPoints.currentMilkId)
         }
 
         GroupBox {
@@ -102,7 +87,7 @@ Page {
 
                     SpinBoxDecimal {
                         id: spinBoxLiters
-                        value: 0
+                        value: 0.0
                     }
 
 
@@ -112,7 +97,7 @@ Page {
 
                     SpinBoxDecimal {
                         id: spinBoxFat
-                        value: 0
+                        value: 0.0
                     }
                 }
 
@@ -128,16 +113,27 @@ Page {
                             messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
                         } else if (spinBoxLiters.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите количество литров"))
+                        } else if (calendarMilkReception.selectedDate === null) {
+                            messageDialog.showInfo(qsTr("Выберите дату"))
                         } else if (spinBoxFat.value <= 0) {
                             messageDialog.showInfo(qsTr("Укажите жиры"))
-                        } else if (curentMilkReception.deliverer.milkId === -1) {
+                        } else if (viewDeliverers.currentMilkId <= 0) {
                             messageDialog.showInfo(qsTr("Выберите сдатчика"))
-                        } else if (curentMilkReception.milkPoint.milkId === -1) {
+                        } else if (viewMilkPoints.currentMilkId <= 0) {
                             messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else {
+                            curentMilkReception.deliverer.loadData(viewDeliverers.currentMilkId)
+                            curentMilkReception.milkPoint.loadData(viewMilkPoints.currentMilkId)
+                            curentMilkReception.deliveryDate = calendarMilkReception.selectedDate
+                            curentMilkReception.priceLiter = milkCore.settings.main.priceLiter
+                            curentMilkReception.liters =  spinBoxLiters.value
+                            curentMilkReception.fat = spinBoxFat.value
+
                             if (curentMilkReception.append()) {
+                                console.log("MilkReception was added")
                                 spinBoxLiters.value = 0.0
                                 spinBoxFat.value = 0.0
+                                curentMilkReception.reset()
                             }
                         }
                     }

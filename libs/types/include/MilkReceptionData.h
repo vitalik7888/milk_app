@@ -30,13 +30,13 @@ public:
     void setDeliveryDate(const QDate &deliveryDate);
 
     double priceLiter() const { return m_priceLiter; }
-    void setPriceLiter(double priceLiter);
+    void setPriceLiter(const double priceLiter);
 
     double liters() const { return m_liters; }
-    void setLiters(double liters);
+    void setLiters(const double liters);
 
     double fat() const { return m_fat; }
-    void setFat(double fat);
+    void setFat(const double fat);
 
     virtual bool isValid() const Q_DECL_OVERRIDE;
     virtual void reset() Q_DECL_OVERRIDE;

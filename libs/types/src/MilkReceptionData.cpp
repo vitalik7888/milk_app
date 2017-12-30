@@ -60,17 +60,17 @@ void MilkReceptionData::setDeliveryDate(const QDate &deliveryDate)
     m_deliveryDate = deliveryDate;
 }
 
-void MilkReceptionData::setPriceLiter(double priceLiter)
+void MilkReceptionData::setPriceLiter(const double priceLiter)
 {
     m_priceLiter = priceLiter;
 }
 
-void MilkReceptionData::setLiters(double liters)
+void MilkReceptionData::setLiters(const double liters)
 {
     m_liters = liters;
 }
 
-void MilkReceptionData::setFat(double fat)
+void MilkReceptionData::setFat(const double fat)
 {
     m_fat = fat;
 }
@@ -91,5 +91,4 @@ void MilkReceptionData::reset()
     m_priceLiter = TCMR::DEF_PRICE_LITER;
     m_liters = TCMR::DEF_LITERS;
     m_fat = TCMR::DEF_FAT;
-
 }

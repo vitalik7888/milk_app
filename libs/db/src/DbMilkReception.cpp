@@ -53,24 +53,41 @@ double DbMilkReception::fat() const
     return milkReception()->fat();
 }
 
-void DbMilkReception::setDeliveryDate(const QDate &deliveryDate)
+void DbMilkReception::setDeliveryDate(const QDate &_deliveryDate)
 {
-    milkReception()->setDeliveryDate(deliveryDate);
+    if (this->deliveryDate() == _deliveryDate)
+        return;
+
+    milkReception()->setDeliveryDate(_deliveryDate);
+    emit deliveryDateChanged(this->deliveryDate());
 }
 
 void DbMilkReception::setPriceLiter(const double priceLiter)
 {
+    if (this->priceLiter() == priceLiter)
+        return;
+
     milkReception()->setPriceLiter(priceLiter);
+    emit priceLiterChanged(priceLiter);
 }
 
 void DbMilkReception::setLiters(const double liters)
 {
+
+    if (this->liters() == liters)
+        return;
+
     milkReception()->setLiters(liters);
+    emit litersChanged(this->liters());
 }
 
 void DbMilkReception::setFat(const double fat)
 {
+    if (this->fat() == fat)
+        return;
+
     milkReception()->setFat(fat);
+    emit fatChanged(this->fat());
 }
 
 bool DbMilkReception::saveDelivererId()

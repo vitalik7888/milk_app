@@ -35,7 +35,7 @@ void MilkBaseDbObject::setModel(MilkModel *table)
         return;
 
     m_model = table;
-    m_item->reset();
+    reset();
     emit modelChanged(m_model);
 }
 

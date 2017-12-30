@@ -14,7 +14,7 @@ Item {
     readonly property alias viewModel: viewModel
     readonly property alias viewMenu: viewMenu
     readonly property alias viewFilter: textFieldFilterName
-    readonly property int currentMilkId: viewModel.currentItem._milkId
+    property int currentMilkId: viewModel.currentItem._milkId
 
     GroupBox {
         anchors.fill: parent
@@ -98,8 +98,8 @@ Item {
                 highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
                 delegate: ItemDelegate {
-                    text: name
-                    property int _milkId: milkId
+                    text: model.name
+                    property int _milkId: model.milkId
                     width: parent.width
 
                     contentItem: Text {
@@ -122,8 +122,8 @@ Item {
         }
     }
 
-    Connections {
-        target: milkCore.db
-        onLocalitiesChanged: viewModel.currentIndex = 0
-    }
+//    Connections {
+//        target: milkCore.db
+//        onLocalitiesChanged: viewModel.currentIndex = 0
+//    }
 }
