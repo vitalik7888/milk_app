@@ -110,17 +110,17 @@ Page {
 
                     onClicked: {
                         if (spinBoxPrice.value <= 0) {
-                            messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
+                            dialogs.messageDialog.showInfo(qsTr("Укажите цену за литр молока"))
                         } else if (spinBoxLiters.value <= 0) {
-                            messageDialog.showInfo(qsTr("Укажите количество литров"))
+                            dialogs.messageDialog.showInfo(qsTr("Укажите количество литров"))
                         } else if (calendarMilkReception.selectedDate === null) {
-                            messageDialog.showInfo(qsTr("Выберите дату"))
+                            dialogs.messageDialog.showInfo(qsTr("Выберите дату"))
                         } else if (spinBoxFat.value <= 0) {
-                            messageDialog.showInfo(qsTr("Укажите жиры"))
+                            dialogs.messageDialog.showInfo(qsTr("Укажите жиры"))
                         } else if (viewDeliverers.currentMilkId <= 0) {
-                            messageDialog.showInfo(qsTr("Выберите сдатчика"))
+                            dialogs.messageDialog.showInfo(qsTr("Выберите сдатчика"))
                         } else if (viewMilkPoints.currentMilkId <= 0) {
-                            messageDialog.showInfo(qsTr("Выберите молокопункт"))
+                            dialogs.messageDialog.showInfo(qsTr("Выберите молокопункт"))
                         } else {
                             curentMilkReception.deliverer.loadData(viewDeliverers.currentMilkId)
                             curentMilkReception.milkPoint.loadData(viewMilkPoints.currentMilkId)

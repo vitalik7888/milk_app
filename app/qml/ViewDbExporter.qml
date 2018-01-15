@@ -97,7 +97,7 @@ Popup {
                 }
 
                 if (milkCore.plugins.dbExporter.dump())
-                    messageDialog.showInfo("Exported")
+                    dialogs.messageDialog.showInfo("Exported")
             }
         }
     }

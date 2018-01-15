@@ -1,5 +1,4 @@
 import QtQuick 2.9
-import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.2
@@ -32,39 +31,6 @@ ApplicationWindow {
     ViewSettings {
         id: viewSettings
         x: parent.x + width / 2
-    }
-
-    MessageDialog {
-        id: messageDialog
-
-        function showInfo(infoDescription) {
-            messageDialog.text = infoDescription
-            messageDialog.icon = StandardIcon.Information
-            messageDialog.open()
-        }
-
-        function showWarning(warningDescription) {
-            messageDialog.text = warningDescription
-            messageDialog.icon = StandardIcon.Warning
-            messageDialog.open()
-        }
-
-        function showError(errorDescription) {
-            messageDialog.text = errorDescription
-            messageDialog.icon = StandardIcon.Critical
-            messageDialog.open()
-        }
-    }
-
-    FileDialog {
-        id: fileDialogChooseDb
-
-        title: qsTr("Укажите базу данных")
-        selectMultiple: false
-
-        onAccepted: {
-            milkCore.db.openDb(fileUrl.toString().replace("file://", ""))
-        }
     }
 
     SwipeView {
@@ -111,27 +77,27 @@ ApplicationWindow {
     }
     Connections {
         target: milkCore.db.deliverers.dao
-        onSqlError: messageDialog.showError(errorDescription)
+        onSqlError: dialogs.dbErrorsDialog.text = errorDescription
     }
     Connections {
         target: milkCore.db.localities.dao
-        onSqlError: messageDialog.showError(errorDescription)
+        onSqlError: dialogs.dbErrorsDialog.text = errorDescription
     }
     Connections {
         target: milkCore.db.milkPoints.dao
-        onSqlError: messageDialog.showError(errorDescription)
+        onSqlError: dialogs.dbErrorsDialog.text = errorDescription
     }
     Connections {
         target: milkCore.db.milkReception.dao
-        onSqlError: messageDialog.showError(errorDescription)
+        onSqlError: dialogs.dbErrorsDialog.text = errorDescription
     }
 
     Component.onCompleted: {
         milkCore.settings.readSettings();
-        if (!milkCore.settings.main.lastChoosenDb.isEmpty)
+        if (milkCore.settings.main.lastChoosenDb) {
             milkCore.db.openDb(milkCore.settings.main.lastChoosenDb);
-        else {
-            fileDialogChooseDb.open()
+        } else {
+            dialogs.messageDialog.showInfo(qsTr("Создайте или выберите базу данных для дальнейшей работы"))
         }
     }
 
