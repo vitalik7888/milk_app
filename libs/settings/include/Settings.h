@@ -26,6 +26,7 @@ public:
     CalcSettings *calc() const { return m_calc; }
 
 public slots:
+    void writeLastChoosenDb();
     void writeMainSettings();
     void writeCalcSettings();
     void writePrintSettings();

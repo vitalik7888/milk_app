@@ -73,6 +73,13 @@ Settings::~Settings()
 {
 }
 
+void Settings::writeLastChoosenDb()
+{
+    m_settings->beginGroup(GROUP_MAIN);
+    m_settings->setValue(LAST_CHOOSEN_DB, main()->lastChoosenDb());
+    m_settings->endGroup();
+}
+
 void Settings::writeMainSettings()
 {
     m_settings->beginGroup(GROUP_MAIN);
