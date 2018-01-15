@@ -1,7 +1,8 @@
 INCLUDEPATH += $$PWD
 
-SOURCES += \
+SOURCES +=
 
 HEADERS += \
-    $$PWD/IDbExporter.h
+    $$PWD/IDbExporter.h \
+    $$PWD/ICalcExporter.h
 

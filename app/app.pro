@@ -22,12 +22,14 @@ HEADERS += \
     include/Constants.h \
     include/DbExporter.h \
     include/MilkCore.h \
-    include/MilkPlugins.h
+    include/MilkPlugins.h \
+    include/CalcExporter.h
 
 SOURCES += src/main.cpp \
     src/DbExporter.cpp \
     src/MilkCore.cpp \
-    src/MilkPlugins.cpp
+    src/MilkPlugins.cpp \
+    src/CalcExporter.cpp
 
 RESOURCES += \
     res.qrc \

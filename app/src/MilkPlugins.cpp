@@ -11,6 +11,7 @@ MilkPlugins::MilkPlugins(QObject *parent) :
     QObject(parent)
 {
     m_dbExporter = new DbExporter(this);
+    m_calcExporter = new CalcExporter(this);
 }
 
 void MilkPlugins::load()
@@ -31,16 +32,21 @@ void MilkPlugins::load()
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
-            auto dbExporter = qobject_cast<IDbExporter *>(plugin);
-            if (dbExporter) {
-                m_dbExporter->setDbExporter(dbExporter);
-                qInfo() << "Loaded db utils plugin";
+            {
+                auto dbExporter = qobject_cast<IDbExporter *>(plugin);
+                if (dbExporter) {
+                    m_dbExporter->setDbExporter(dbExporter);
+                    qInfo() << "Loaded db utils plugin";
+                }
+            }
+            {
+                auto calcExporter = qobject_cast<ICalcExporter *>(plugin);
+                if (calcExporter) {
+                    m_calcExporter->setCalcExporter(calcExporter);
+                    qInfo() << "Loaded calc exporter plugin";
+                }
             }
         }
     }
 }
 
-DbExporter *MilkPlugins::dbExporter() const
-{
-    return m_dbExporter;
-}

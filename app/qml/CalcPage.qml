@@ -121,6 +121,7 @@ Page {
                             filter.getDelivererId(), filter.getMilkPointId(),
                             filter.getDateFrom(), filter.getDateTo())
                 buttonPrint.enabled = true
+                buttonExport.enabled = true
             }
         }
 
@@ -131,6 +132,24 @@ Page {
 
             onClicked: {
                 milkCore.printCalculations(viewCalc.model.calcItemRoot, true)
+            }
+        }
+
+        Button {
+            id: buttonExport
+            text: qsTr("Экспорт")
+            visible: !milkCore.plugins.calcExporter.isNull()
+            enabled: false
+
+            onClicked: {
+                var path = "calc_export.csv";
+                if (milkCore.plugins.calcExporter.exportToCsv(viewCalc.model.calcItemRoot, path)) {
+                    dialogs.messageDialog.showInfo(qsTr("Данные успешно экспортированы в файл '" + path + "'"))
+                    console.log(qsTr("Calculations are exported to " + path))
+                } else {
+                    dialogs.messageDialog.showInfo(qsTr("Данные не удалось экспортировать"))
+                    console.log(qsTr("Calculations are not exported"))
+                }
             }
         }
     }
