@@ -29,12 +29,7 @@ Popup {
                 id: viewTables
                 anchors.fill: parent
 
-                model: ListModel {
-                    ListElement { tableName: "Населённые пункты"; isChoosen: true }
-                    ListElement { tableName: "Сдатчики"; isChoosen: true }
-                    ListElement { tableName: "Молокопункты"; isChoosen: true }
-                    ListElement { tableName: "Сдачи молока"; isChoosen: true }
-                }
+                model: ListModel {}
 
                 delegate: ItemDelegate {
                     width: parent.width
@@ -114,7 +109,7 @@ Popup {
     }
 
     Component.onCompleted:  {
-//        for (var i = 0; i < milkCore.db.models.length; ++i)
-//            viewTables.model.append({tableName: milkCore.db.models[i].dao.tableName, isChoosen: true})
+        for (var i = 0; i < milkCore.db.models.length; ++i)
+            viewTables.model.append({tableName: milkCore.db.models[i].dao.tableName, isChoosen: true})
     }
 }

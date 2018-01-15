@@ -22,7 +22,7 @@ class DBLIBRARYSHARED_EXPORT Database : public QObject
     Q_PROPERTY(MilkPointsModel* milkPoints READ milkPoints NOTIFY milkPointsChanged)
     Q_PROPERTY(MilkReceptionModel* milkReception READ milkReception NOTIFY milkReceptionChanged)
     Q_PROPERTY(QString dbPath READ dbPath NOTIFY dbPathChanged)
-    Q_PROPERTY(QQmlListProperty<MilkModel> models READ _models)
+    Q_PROPERTY(QQmlListProperty<DB_NAMESPACE::MilkModel> models READ _models)
 
 public:
     explicit Database(QObject *parent = nullptr);
