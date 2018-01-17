@@ -4,8 +4,6 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
-
 TARGET = htmlbuilderlibrary
 TEMPLATE = lib
 CONFIG += create_prl
